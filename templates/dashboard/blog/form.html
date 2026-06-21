@@ -1,0 +1,102 @@
+{% extends 'base_dashboard.html' %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block dashboard_content %}
+<div class="mb-4">
+  <h3 class="mb-0">{{ title }}</h3>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="needs-validation">
+  {% csrf_token %}
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card card-body border-0 shadow-sm mb-3">
+        <div class="mb-3">
+          <label for="{{ form.title.id_for_label }}" class="form-label">
+            Blog Sarlavhasi <span class="text-danger">*</span>
+          </label>
+          {{ form.title }}
+          {% if form.title.errors %}
+          <small class="text-danger d-block mt-1">{{ form.title.errors|first }}</small>
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.excerpt.id_for_label }}" class="form-label">
+            Qisqa Mazmuni <span class="text-muted">(ixtiyoriy)</span>
+          </label>
+          {{ form.excerpt }}
+          <small class="text-muted d-block mt-1">Blog ro'yxatida ko'rsatiladigan qisqa matn</small>
+          {% if form.excerpt.errors %}
+          <small class="text-danger d-block mt-1">{{ form.excerpt.errors|first }}</small>
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.content.id_for_label }}" class="form-label">
+            Mazmuni <span class="text-danger">*</span>
+          </label>
+          {{ form.content }}
+          {% if form.content.errors %}
+          <small class="text-danger d-block mt-1">{{ form.content.errors|first }}</small>
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.featured_image.id_for_label }}" class="form-label">
+            Sarlavhali Rasm <span class="text-muted">(ixtiyoriy)</span>
+          </label>
+          {{ form.featured_image }}
+          <small class="text-muted d-block mt-1">Blog ro'yxatida va tafsilotida ko'rsatiladigan rasm</small>
+          {% if form.featured_image.errors %}
+          <small class="text-danger d-block mt-1">{{ form.featured_image.errors|first }}</small>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card card-body border-0 shadow-sm mb-3">
+        <h6 class="card-title">Nashr Parametrlari</h6>
+        <div class="form-check form-switch">
+          {{ form.is_published }}
+          <label for="{{ form.is_published.id_for_label }}" class="form-check-label">
+            Foydalanuvchilarga ko'rsatish
+          </label>
+        </div>
+        <small class="text-muted d-block mt-2">
+          Agar bu toggle o'chirilgan bo'lsa, blog foydalanuvchilarga ko'rinmaydi.
+        </small>
+      </div>
+
+      <div class="card card-body border-0 shadow-sm mb-3">
+        <h6 class="card-title">Harakatlar</h6>
+        <button type="submit" class="btn btn-primary w-100 mb-2">
+          <i class="bi bi-check-lg me-1"></i> Saqlash
+        </button>
+        <a href="{% url 'blog:list' %}" class="btn btn-outline-secondary w-100">
+          Bekor qilish
+        </a>
+      </div>
+    </div>
+  </div>
+</form>
+
+<style>
+#{{ form.title.id_for_label }},
+#{{ form.excerpt.id_for_label }},
+#{{ form.content.id_for_label }} {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+#{{ form.title.id_for_label }}:focus,
+#{{ form.excerpt.id_for_label }}:focus,
+#{{ form.content.id_for_label }}:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.15);
+}
+</style>
+{% endblock %}

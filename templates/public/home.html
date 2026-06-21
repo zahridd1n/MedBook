@@ -1,0 +1,866 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ business.name }} — Online Booking{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset & tokens ─────────────────────────────────────── */
+  :root {
+    --ink: #0f172a;
+    --ink-soft: #334155;
+    --ink-muted: #64748b;
+    --surface: #ffffff;
+    --surface-alt: #f8fafc;
+    --border: rgba(226,232,240,0.8);
+    --indigo: #6366f1;
+    --indigo-dark: #4f46e5;
+    --indigo-light: #eef2ff;
+    --emerald: #10b981;
+    --radius-card: 1.25rem;
+    --shadow-card: 0 4px 24px rgba(15,23,42,0.07);
+    --shadow-elevated: 0 16px 48px rgba(15,23,42,0.14);
+  }
+
+  body { background: var(--surface-alt); color: var(--ink); }
+
+  /* ── HERO ───────────────────────────────────────────────── */
+  .bk-hero {
+    position: relative;
+    background: var(--ink);
+    overflow: hidden;
+    padding: 5rem 0 4rem;
+    isolation: isolate;
+  }
+
+  /* animated mesh blobs */
+  .bk-hero::before,
+  .bk-hero::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    animation: drift 12s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  .bk-hero::before {
+    width: 560px; height: 560px;
+    background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+    top: -180px; left: -100px;
+  }
+  .bk-hero::after {
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, #10b981 0%, transparent 70%);
+    bottom: -120px; right: -60px;
+    animation-delay: -6s;
+  }
+
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(40px, 30px) scale(1.08); }
+  }
+
+  .bk-hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--indigo);
+    background: rgba(99,102,241,0.12);
+    border: 1px solid rgba(99,102,241,0.25);
+    padding: 0.35rem 0.85rem;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+  }
+  .bk-hero__eyebrow span { width: 6px; height: 6px; background: var(--indigo); border-radius: 50%; display: block; animation: pulse 2s ease infinite; }
+  @keyframes pulse { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.5; transform:scale(1.4); } }
+
+  .bk-hero__title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+  }
+  .bk-hero__title em {
+    font-style: normal;
+    background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 50%, #10b981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bk-hero__desc {
+    color: rgba(255,255,255,0.6);
+    font-size: 1.1rem;
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 2rem;
+  }
+
+  .bk-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+  .bk-hero__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+  }
+  .bk-hero__meta-item i { color: var(--indigo); font-size: 1rem; }
+
+  /* floating booking card */
+  .bk-hero__card {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-card);
+    padding: 2rem 1.75rem;
+    box-shadow: 0 32px 64px rgba(0,0,0,0.35);
+    position: relative;
+    z-index: 2;
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-10px); }
+  }
+
+  .bk-hero__card-title {
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 1.05rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .bk-hero__card-title i { color: var(--indigo); }
+
+  .bk-stat {
+    text-align: center;
+    padding: 0.75rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+  }
+  .bk-stat__num { font-size: 1.5rem; font-weight: 700; color: #fff; line-height: 1; }
+  .bk-stat__label { font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .btn-book-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-dark) 100%);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.85rem 1.5rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    border: none;
+    width: 100%;
+    justify-content: center;
+    margin-top: 1.25rem;
+    transition: all 0.25s;
+    box-shadow: 0 8px 20px rgba(99,102,241,0.35);
+  }
+  .btn-book-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(99,102,241,0.45);
+    color: #fff;
+  }
+
+  .divider-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .divider-tag hr { flex: 1; border-color: rgba(255,255,255,0.1); }
+  .divider-tag span { font-size: 0.75rem; color: rgba(255,255,255,0.35); white-space: nowrap; }
+
+  .btn-book-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.75);
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: 0.6rem;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: all 0.2s;
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-book-ghost:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+  /* ── SECTION HEADERS ─────────────────────────────────────── */
+  .bk-section { padding: 4.5rem 0; }
+  .bk-section + .bk-section { padding-top: 0; }
+
+  .bk-section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--indigo);
+    margin-bottom: 0.5rem;
+  }
+  .bk-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .bk-section-sub {
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    max-width: 480px;
+  }
+
+  /* ── SERVICE CARDS ───────────────────────────────────────── */
+  .bk-service-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding: 1.75rem 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+  }
+  .bk-service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--indigo), var(--emerald));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .bk-service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated);
+    border-color: rgba(99,102,241,0.2);
+  }
+  .bk-service-card:hover::before { opacity: 1; }
+
+  .bk-service-icon {
+    width: 48px; height: 48px;
+    background: var(--indigo-light);
+    border-radius: 0.75rem;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--indigo);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .bk-service-name {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin-bottom: 0.35rem;
+  }
+  .bk-service-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .bk-service-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--indigo);
+  }
+  .bk-service-duration {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    display: flex; align-items: center; gap: 0.25rem;
+  }
+  .bk-service-desc {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    flex-grow: 1;
+  }
+  .btn-service {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--indigo);
+    background: var(--indigo-light);
+    border-radius: 0.6rem;
+    text-decoration: none;
+    border: none;
+    transition: all 0.2s;
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-service:hover {
+    background: var(--indigo);
+    color: #fff;
+  }
+
+  /* ── TEAM CARDS ─────────────────────────────────────────── */
+  .bk-team-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding: 1.75rem 1.25rem;
+    text-align: center;
+    transition: all 0.25s;
+  }
+  .bk-team-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card);
+  }
+  .bk-avatar {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, var(--indigo), var(--indigo-dark));
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: 0 8px 20px rgba(99,102,241,0.3);
+  }
+  .bk-team-name { font-weight: 700; color: var(--ink); margin-bottom: 0.2rem; font-size: 0.95rem; }
+  .bk-team-role { font-size: 0.78rem; color: var(--ink-muted); }
+
+  /* ── HOURS SIDEBAR ───────────────────────────────────────── */
+  .bk-hours-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-card);
+    position: sticky;
+    top: 1.5rem;
+  }
+  .bk-hours-title {
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .bk-hours-title i { color: var(--indigo); }
+
+  .bk-hours-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--surface-alt);
+    font-size: 0.85rem;
+  }
+  .bk-hours-row:last-child { border-bottom: none; }
+  .bk-hours-day {
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+  .bk-hours-day.today {
+    color: var(--indigo);
+    font-weight: 700;
+  }
+  .bk-hours-time { color: var(--ink-muted); }
+  .bk-badge-closed {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #ef4444;
+    background: #fef2f2;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid #fecaca;
+  }
+  .bk-badge-open {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--emerald);
+    background: #ecfdf5;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid #a7f3d0;
+  }
+
+  /* ── CTA STRIP ───────────────────────────────────────────── */
+  .bk-cta {
+    background: linear-gradient(135deg, var(--ink) 0%, #1e293b 100%);
+    border-radius: 1.5rem;
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .bk-cta::before {
+    content: '';
+    position: absolute;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(99,102,241,0.25), transparent 70%);
+    top: -100px; right: -80px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* ── FAQ ─────────────────────────────────────────────────── */
+  .bk-accordion .accordion-item {
+    background: var(--surface);
+    border: 1px solid var(--border) !important;
+    border-radius: 0.875rem !important;
+    overflow: hidden;
+    margin-bottom: 0.625rem;
+  }
+  .bk-accordion .accordion-button {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: var(--surface);
+    box-shadow: none;
+    padding: 1.1rem 1.25rem;
+  }
+  .bk-accordion .accordion-button:not(.collapsed) {
+    background: var(--indigo-light);
+    color: var(--indigo);
+    box-shadow: none;
+  }
+  .bk-accordion .accordion-button:focus { box-shadow: none; }
+  .bk-accordion .accordion-body { font-size: 0.875rem; color: var(--ink-muted); line-height: 1.7; padding: 0.75rem 1.25rem 1.25rem; }
+
+  /* ── BLOG CARDS ──────────────────────────────────────────── */
+  .bk-blog-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: all 0.25s;
+  }
+  .bk-blog-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-elevated);
+  }
+  .bk-blog-thumb {
+    height: 180px;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.25);
+    font-size: 3rem;
+    flex-shrink: 0;
+  }
+  .bk-blog-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+  .bk-blog-date { font-size: 0.72rem; color: var(--ink-muted); margin-bottom: 0.5rem; }
+  .bk-blog-title { font-weight: 700; color: var(--ink); font-size: 0.95rem; line-height: 1.4; margin-bottom: 0.5rem; }
+  .bk-blog-excerpt { font-size: 0.82rem; color: var(--ink-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
+  .bk-blog-cta { font-size: 0.78rem; font-weight: 600; color: var(--indigo); margin-top: 1rem; display: flex; align-items: center; gap: 0.3rem; }
+
+  /* ── FOOTER ─────────────────────────────────────────────── */
+  .bk-footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.45);
+    padding: 2.5rem 0;
+    margin-top: 5rem;
+    font-size: 0.85rem;
+  }
+  .bk-footer strong { color: rgba(255,255,255,0.85); }
+
+  /* ── UTILS ───────────────────────────────────────────────── */
+  .gap-section { height: 1px; background: var(--border); margin: 0 0 3rem; }
+</style>
+{% endblock %}
+
+{% block body %}
+
+{% include 'public/includes/navbar.html' %}
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<header class="bk-hero">
+  <div class="container" style="position:relative;z-index:2;">
+    <div class="row align-items-center g-5">
+
+      <!-- Left: Copy -->
+      <div class="col-lg-7">
+        <div class="bk-hero__eyebrow">
+          <span></span>
+          Onlayn Band Qilish
+        </div>
+
+        <h1 class="bk-hero__title">
+          {% if business.logo %}
+            <!-- <img src="{{ business.logo.url }}" alt="{{ business.name }}" height="48" style="border-radius:8px;object-fit:contain;vertical-align:middle;margin-bottom:0.5rem;display:block;"> -->
+          {% endif %}
+          Tashrifingizni band qiling<br>
+          <em>{{ business.name }}</em>
+        </h1>
+
+        {% if business.about %}
+          <p class="bk-hero__desc">{{ business.about }}</p>
+        {% else %}
+          <p class="bk-hero__desc">Tez, qulay va muammosiz band qilish — istalgan vaqtda, istalgan qurilmada.</p>
+        {% endif %}
+
+        <a href="{% url 'public-booking-step1' business.slug %}" class="btn-book-primary d-inline-flex" style="width:auto;">
+            <i class="bi bi-calendar-check-fill"></i>
+            Band Qilish
+          <i class="bi bi-arrow-right"></i>
+        </a>
+
+        <div class="bk-hero__meta">
+          {% if business.address %}
+            <div class="bk-hero__meta-item">
+              <i class="bi bi-geo-alt-fill"></i>
+              {{ business.address }}
+            </div>
+          {% endif %}
+          {% if business.phone %}
+            <div class="bk-hero__meta-item">
+              <i class="bi bi-telephone-fill"></i>
+              {{ business.phone }}
+            </div>
+          {% endif %}
+          <div class="bk-hero__meta-item">
+            <i class="bi bi-clock-fill"></i>
+            14 kun oldin band qilish
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Floating card -->
+      <div class="col-lg-5">
+        <div class="bk-hero__card">
+          <div class="bk-hero__card-title">
+            <i class="bi bi-bar-chart-fill"></i>
+            Tez Ko'rinish
+          </div>
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <div class="bk-stat">
+                <div class="bk-stat__num">{{ services|length }}</div>
+                <div class="bk-stat__label">Xizmatlar</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="bk-stat">
+                <div class="bk-stat__num">{{ employees|length }}</div>
+                <div class="bk-stat__label">Mutaxassislar</div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-2">
+            <div class="col-6">
+              <div class="bk-stat">
+                <div class="bk-stat__num" style="font-size:1.1rem;">30m</div>
+                <div class="bk-stat__label">Vaqt oralig'i</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="bk-stat">
+                <div class="bk-stat__num" style="font-size:1.1rem;">24/7</div>
+                <div class="bk-stat__label">Band Qilish</div>
+              </div>
+            </div>
+          </div>
+
+          <a href="{% url 'public-booking-step1' business.slug %}" class="btn-book-primary">
+            <i class="bi bi-lightning-fill"></i>
+            Band Qilish
+          </a>
+
+          <div class="divider-tag">
+            <hr><span>yoki ko'rish</span><hr>
+          </div>
+
+          {% if blog_posts %}
+          <a href="{% url 'public-blog-list' business.slug %}" class="btn-book-ghost">
+            <i class="bi bi-newspaper"></i>
+            Blogimizni O'qing
+          </a>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════ -->
+<main class="container py-5">
+  <div class="row g-5">
+
+    <!-- ── LEFT / MAIN COLUMN ── -->
+    <div class="col-lg-8">
+
+      <!-- Services ─────────────────────────────── -->
+      <section class="bk-section" style="padding-top:0;">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+          <div>
+            <div class="bk-section-label">Nima taklif qilamiz</div>
+            <h2 class="bk-section-title mb-0">Xizmatlarimiz</h2>
+          </div>
+          <a href="{% url 'public-booking-step1' business.slug %}" class="btn-service" style="width:auto;padding:.5rem 1rem;">
+            Hammasini ko'rish <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="row g-3">
+          {% for service in services %}
+            <div class="col-md-6 d-flex">
+              <div class="bk-service-card d-flex flex-column w-100">
+                <div class="bk-service-icon">
+                  <i class="bi bi-scissors"></i>
+                </div>
+                <div class="bk-service-name">{{ service.name }}</div>
+                <div class="bk-service-meta">
+                  <span class="bk-service-price">${{ service.price }}</span>
+                  <span class="bk-service-duration">
+                    <i class="bi bi-clock"></i> {{ service.duration }} daqiqa
+                  </span>
+                </div>
+                <p class="bk-service-desc">
+                  {{ service.description|default:"Sizning ehtiyojlaringizga mos professional xizmat." }}
+                </p>
+                <a href="{% url 'public-booking-step1' business.slug %}?service={{ service.id }}" class="btn-service">
+                  Xizmatni band qilish <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          {% empty %}
+            <div class="col-12">
+              <div class="text-center py-5" style="color:var(--ink-muted);">
+                <i class="bi bi-calendar-x" style="font-size:2.5rem;opacity:.4;"></i>
+                <p class="mt-2 mb-0">Hali faol xizmatlar yo'q.</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+
+      <!-- Divider -->
+      {% if employees %}
+      <div class="gap-section"></div>
+
+      <!-- Team ─────────────────────────────────── -->
+      <section class="bk-section" style="padding-top:0;">
+        <div class="bk-section-label">Kimlar bilan uchrashasiz</div>
+        <h2 class="bk-section-title mb-1">Mutaxassislarimiz</h2>
+        <p class="bk-section-sub mb-4">O'zingizga eng qulay mutaxassisni tanlang.</p>
+
+        <div class="row g-3">
+          {% for employee in employees %}
+            <div class="col-6 col-sm-4 col-md-3">
+              <div class="bk-team-card">
+                <div class="bk-avatar">{{ employee.name|slice:":2"|upper }}</div>
+                <div class="bk-team-name">{{ employee.name }}</div>
+                <div class="bk-team-role">{{ employee.title|default:"Mutaxassis" }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- FAQ ──────────────────────────────────── -->
+      {% if faqs %}
+      <div class="gap-section"></div>
+
+      <section class="bk-section" style="padding-top:0;">
+        <div class="bk-section-label">Savollaringiz bormi?</div>
+        <h2 class="bk-section-title mb-4">Tez-tez so'raladigan</h2>
+
+        <div class="accordion bk-accordion" id="businessFaqs">
+          {% for faq in faqs %}
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button"
+                  data-bs-toggle="collapse" data-bs-target="#faq-{{ faq.id }}">
+                  {{ faq.question }}
+                </button>
+              </h2>
+              <div id="faq-{{ faq.id }}" class="accordion-collapse collapse" data-bs-parent="#businessFaqs">
+                <div class="accordion-body">{{ faq.answer }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- Blog ─────────────────────────────────── -->
+      {% if blog_posts %}
+      <div class="gap-section"></div>
+
+      <section class="bk-section" style="padding-top:0;">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+          <div>
+            <div class="bk-section-label">Jamoamizdan</div>
+            <h2 class="bk-section-title mb-0">Oxirgi maqolalar</h2>
+          </div>
+          <a href="{% url 'public-blog-list' business.slug %}" class="btn-service" style="width:auto;padding:.5rem 1rem;">
+            Barcha maqolalar <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="row g-3">
+          {% for post in blog_posts %}
+            <div class="col-md-6 d-flex">
+              <a href="{% url 'public-blog-detail' business.slug post.slug %}" class="bk-blog-card">
+                {% if post.featured_image %}
+                  <img src="{{ post.featured_image.url }}" alt="{{ post.title }}"
+                    style="height:180px;object-fit:cover;width:100%;">
+                {% else %}
+                  <div class="bk-blog-thumb">
+                    <i class="bi bi-file-earmark-text"></i>
+                  </div>
+                {% endif %}
+                <div class="bk-blog-body">
+                  <div class="bk-blog-date">
+                    <i class="bi bi-calendar3 me-1"></i>{{ post.created_at|date:"d M Y" }}
+                  </div>
+                  <div class="bk-blog-title">{{ post.title }}</div>
+                  <div class="bk-blog-excerpt">
+                    {{ post.excerpt|default:post.content|truncatewords:18 }}
+                  </div>
+                  <div class="bk-blog-cta">
+                    Batafsil <i class="bi bi-arrow-right"></i>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- CTA strip ────────────────────────────── -->
+      <div class="bk-cta mt-2">
+        <div class="row align-items-center g-3">
+          <div class="col-md-8">
+            <p class="text-white-50 small mb-1" style="letter-spacing:.08em;text-transform:uppercase;font-weight:600;">Tayyormisiz?</p>
+            <h3 style="font-family:'Playfair Display',serif;font-weight:800;color:#fff;margin:0;font-size:1.6rem;">
+              Bugun band qiling.
+            </h3>
+          </div>
+          <div class="col-md-4 text-md-end">
+            <a href="{% url 'public-booking-step1' business.slug %}" class="btn-book-primary d-inline-flex" style="width:auto;">
+              <i class="bi bi-calendar-check-fill"></i>
+               Boshlash
+              <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /col-lg-8 -->
+
+
+    <!-- ── RIGHT / SIDEBAR ── -->
+    <div class="col-lg-4">
+      <div class="bk-hours-card">
+        <div class="bk-hours-title">
+          <i class="bi bi-clock-history"></i>
+          Ish Vaqti
+        </div>
+
+        {% for wh in working_hours %}
+          <div class="bk-hours-row">
+            <span class="bk-hours-day">
+              {% if wh.day == 0 %}Dushanba
+              {% elif wh.day == 1 %}Seshanba
+              {% elif wh.day == 2 %}Chorshanba
+              {% elif wh.day == 3 %}Payshanba
+              {% elif wh.day == 4 %}Juma
+              {% elif wh.day == 5 %}Shanba
+              {% else %}Yakshanba{% endif %}
+            </span>
+            <span>
+              {% if wh.is_open %}
+                <span class="bk-hours-time">{{ wh.open_time|time:"H:i" }} – {{ wh.close_time|time:"H:i" }}</span>
+              {% else %}
+                <span class="bk-badge-closed">Yopiq</span>
+              {% endif %}
+            </span>
+          </div>
+        {% empty %}
+          <p class="text-muted small mb-0">Hali ish vaqti belgilanmagan.</p>
+        {% endfor %}
+
+        <!-- Quick book CTA in sidebar -->
+        <a href="{% url 'public-booking-step1' business.slug %}"
+           class="btn-book-primary mt-4" style="font-size:0.875rem;">
+          <i class="bi bi-calendar-plus"></i>
+          Vaqt band qilish
+        </a>
+
+        {% if business.address or business.phone %}
+        <div class="mt-4 pt-3" style="border-top:1px solid var(--border);">
+          <p class="bk-hours-title mb-2" style="font-size:0.85rem;">
+            <i class="bi bi-info-circle"></i> Aloqa
+          </p>
+          {% if business.address %}
+            <div class="d-flex gap-2 align-items-start mb-2 small" style="color:var(--ink-muted);">
+              <i class="bi bi-geo-alt-fill text-primary mt-1"></i>
+              <span>{{ business.address }}</span>
+            </div>
+          {% endif %}
+          {% if business.phone %}
+            <div class="d-flex gap-2 align-items-center small" style="color:var(--ink-muted);">
+              <i class="bi bi-telephone-fill text-primary"></i>
+              <a href="tel:{{ business.phone }}" style="color:inherit;text-decoration:none;">{{ business.phone }}</a>
+            </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</main>
+
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer class="bk-footer">
+  <div class="container">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+      <div>
+        <strong>{{ business.name }}</strong> &nbsp;·&nbsp; Barcha huquqlar himoyalangan.
+      </div>
+      <div>
+        Tomonidan quvvatlanadi <strong style="color:rgba(255,255,255,0.7);">BookSaaS</strong>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% endblock %}

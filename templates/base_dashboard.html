@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+<style>
+.sidebar { width:var(--sidebar-width); min-height:100vh; background:var(--sidebar-bg); position:fixed; top:0; left:0; z-index:1000; overflow-y:auto; transition:transform .3s; }
+.sidebar-brand { padding:1.25rem; border-bottom:1px solid rgba(255,255,255,.08); }
+.sidebar-brand a { color:#fff; text-decoration:none; font-size:1.1rem; font-weight:700; }
+.sidebar-section { padding:.5rem 1.25rem .2rem; font-size:.7rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.3); }
+.sidebar .nav-link { color:rgba(255,255,255,.65); padding:.55rem 1.25rem; display:flex; align-items:center; gap:.6rem; font-size:.875rem; border-left:3px solid transparent; transition:.15s; }
+.sidebar .nav-link:hover, .sidebar .nav-link.active { color:#fff; background:rgba(99,102,241,.18); border-left-color:var(--primary); }
+.sidebar .nav-link i { width:1rem; font-size:.95rem; }
+.main-content { margin-left:var(--sidebar-width); min-height:100vh; display:flex; flex-direction:column; }
+.topbar { background:#fff; border-bottom:1px solid #e5e7eb; padding:.75rem 1.5rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+.page-wrapper { padding:1.5rem; flex:1; }
+.card-stat { border:none; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.07); }
+.icon-box { width:46px; height:46px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; }
+.table-card { border:none; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.07); overflow:hidden; }
+.table th { font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#6b7280; }
+@media(max-width:991px){ .sidebar{transform:translateX(-100%);} .sidebar.show{transform:translateX(0);} .main-content{margin-left:0;} }
+</style>
+{% endblock %}
+{% block body %}
+<div class="d-none position-fixed w-100 h-100 bg-dark bg-opacity-50" id="overlay" style="z-index:999" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <a href="{% url 'dashboard:home' %}"><i class="bi bi-calendar-check-fill me-2" style="color:var(--primary)"></i>BookSaaS</a>
+  </div>
+  <nav class="mt-1">
+    <div class="sidebar-section">Main</div>
+    <a href="{% url 'dashboard:home' %}" class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+    <a href="{% url 'appointments:list' %}" class="nav-link {% if 'appointments' in request.path %}active{% endif %}"><i class="bi bi-calendar3"></i> Appointments</a>
+    <a href="{% url 'customers:list' %}" class="nav-link {% if 'customers' in request.path %}active{% endif %}"><i class="bi bi-people"></i> Customers</a>
+
+    <div class="sidebar-section mt-2">Manage</div>
+    <a href="{% url 'services:list' %}" class="nav-link {% if 'services' in request.path %}active{% endif %}"><i class="bi bi-briefcase"></i> Services</a>
+    <a href="{% url 'employees:list' %}" class="nav-link {% if 'employees' in request.path %}active{% endif %}"><i class="bi bi-person-badge"></i> Employees</a>
+    <a href="{% url 'blog:list' %}" class="nav-link {% if 'blog' in request.path %}active{% endif %}"><i class="bi bi-newspaper"></i> Blog</a>
+
+    <div class="sidebar-section mt-2">Settings</div>
+    <a href="{% url 'business:setup' %}" class="nav-link {% if 'setup' in request.path %}active{% endif %}"><i class="bi bi-building"></i> Business Info</a>
+    <a href="{% url 'business:working_hours' %}" class="nav-link {% if 'working-hours' in request.path %}active{% endif %}"><i class="bi bi-clock"></i> Working Hours</a>
+    <a href="{% url 'business:faq_list' %}" class="nav-link {% if request.path == '/dashboard/faq/' %}active{% endif %}"><i class="bi bi-question-circle"></i> FAQ</a>
+    <a href="{% url 'business:telegram' %}" class="nav-link {% if 'telegram' in request.path %}active{% endif %}">
+      <i class="bi bi-telegram"></i> Telegram
+      {% if user.business.telegram_notifications_enabled %}
+        <span class="ms-auto badge bg-success" style="font-size:.6rem">ON</span>
+      {% elif user.business.telegram_chat_id %}
+        <span class="ms-auto badge bg-warning text-dark" style="font-size:.6rem">OFF</span>
+      {% endif %}
+    </a>
+
+    {% if user.is_authenticated %}
+    <div class="sidebar-section mt-2">Your Page</div>
+    <a href="/{{ user.business.slug }}/" class="nav-link" target="_blank"><i class="bi bi-box-arrow-up-right"></i> View Public Page</a>
+    {% endif %}
+  </nav>
+</aside>
+
+<div class="main-content">
+  <header class="topbar">
+    <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-sm btn-light d-lg-none" onclick="openSidebar()"><i class="bi bi-list fs-5"></i></button>
+      <span class="fw-semibold">{% block page_title %}Dashboard{% endblock %}</span>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <a href="{% url 'notifications:list' %}" class="btn btn-sm btn-light position-relative">
+        <i class="bi bi-bell"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notif-badge" style="display:none;font-size:.6rem"></span>
+      </a>
+      <div class="dropdown">
+        <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <span class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center me-1" style="width:24px;height:24px;font-size:.7rem">{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}</span>
+          <span class="d-none d-md-inline">{{ user.get_full_name }}</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+          <li><span class="dropdown-item-text text-muted small">{{ user.email }}</span></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="{% url 'business:setup' %}"><i class="bi bi-gear me-2"></i>Settings</a></li>
+          <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+  <div class="page-wrapper">
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }} alert-dismissible fade show rounded-3 mb-3">{{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    {% endfor %}
+    {% block dashboard_content %}{% endblock %}
+  </div>
+</div>
+<script>
+function openSidebar(){document.getElementById('sidebar').classList.add('show');document.getElementById('overlay').classList.remove('d-none');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('show');document.getElementById('overlay').classList.add('d-none');}
+async function pollNotif(){
+  try{const r=await fetch('{% url "notifications:unread_count" %}');const d=await r.json();
+  const b=document.getElementById('notif-badge');
+  if(d.count>0){b.textContent=d.count;b.style.display='';}else{b.style.display='none';}}catch(e){}
+}
+pollNotif(); setInterval(pollNotif,30000);
+</script>
+{% endblock %}

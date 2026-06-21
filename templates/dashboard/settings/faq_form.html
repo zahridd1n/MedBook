@@ -1,0 +1,49 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}{{ action }} FAQ{% endblock %}
+{% block dashboard_content %}
+
+<div class="d-flex align-items-center gap-2 mb-4">
+  <a href="{% url 'business:faq_list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+  <h4 class="fw-bold mb-0">{{ action }} FAQ</h4>
+</div>
+
+<div class="row">
+  <div class="col-lg-7">
+    <div class="card table-card">
+      <div class="card-body p-4">
+        <form method="post">{% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-medium">Question *</label>
+            {{ form.question }}
+            {% if form.question.errors %}<div class="text-danger small mt-1">{{ form.question.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium">Answer *</label>
+            {{ form.answer }}
+            {% if form.answer.errors %}<div class="text-danger small mt-1">{{ form.answer.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-medium">Order</label>
+              {{ form.order }}
+              <div class="text-muted small mt-1">Lower numbers appear first.</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-medium d-block">Active</label>
+              <div class="form-check form-switch mt-2">
+                {{ form.is_active }}
+                <label class="form-check-label text-muted small" for="id_is_active">Show on public page</label>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check-lg me-1"></i>Save</button>
+            <a href="{% url 'business:faq_list' %}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

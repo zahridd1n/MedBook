@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Choose Service & Staff — {{ business.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .booking-progress { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+  .progress-step {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85rem;
+    background: #e2e8f0; color: #94a3b8;
+    transition: all 0.3s ease;
+  }
+  .progress-step.active { background: #6366f1; color: white; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+  .progress-step.done { background: #10b981; color: white; }
+  .progress-line { width: 40px; height: 2px; background: #e2e8f0; align-self: center; }
+  .progress-line.done { background: #10b981; }
+  .service-card {
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    border: 1px solid rgba(226,232,240,0.8);
+    border-radius: 1rem; cursor: pointer; text-decoration: none;
+  }
+  .service-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(99,102,241,0.08);
+    border-color: #6366f1;
+  }
+  .service-card.selected {
+    border-color: #6366f1;
+    background: rgba(99,102,241,0.03);
+    box-shadow: 0 4px 15px rgba(99,102,241,0.12);
+  }
+  .staff-card {
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    border: 1px solid rgba(226,232,240,0.8);
+    border-radius: 1rem; cursor: pointer; text-decoration: none; text-align: center;
+  }
+  .staff-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(99,102,241,0.08);
+    border-color: #6366f1;
+  }
+  .staff-avatar {
+    width: 64px; height: 64px;
+    background: rgba(99,102,241,0.1); color: #6366f1;
+    font-size: 1.5rem; font-weight: 700;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 0.75rem;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+{% include 'public/includes/navbar.html' %}
+<div class="container py-5" style="max-width: 800px;">
+  <!-- Progress -->
+  <div class="booking-progress">
+    <div class="progress-step active">1</div>
+    <div class="progress-line"></div>
+    <div class="progress-step">2</div>
+    <div class="progress-line"></div>
+    <div class="progress-step">3</div>
+  </div>
+
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-dark">Xizmatni tanlang</h2>
+    <p class="text-muted">Xizmatni tanlang yoki xodimni tanlash uchun o'tkazib yuboring <strong>{{ business.name }}</strong>.</p>
+  </div>
+
+  <!-- Services -->
+  <div class="row g-3 mb-4">
+    {% for service in services %}
+      <div class="col-md-6">
+        <a href="?service={{ service.id }}"
+           class="card p-4 service-card h-100 d-block bg-white {% if selected_service and selected_service.id == service.id %}selected{% endif %}">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h5 class="fw-bold text-dark mb-0">{{ service.name }}</h5>
+            <span class="fs-5 fw-bold text-primary">${{ service.price }}</span>
+          </div>
+          <div class="text-muted small mb-2"><i class="bi bi-clock me-1"></i>{{ service.duration }} daqiqa</div>
+          {% if service.description %}
+            <p class="text-muted small mb-0">{{ service.description }}</p>
+          {% endif %}
+        </a>
+      </div>
+    {% empty %}
+      <div class="col-12"><div class="alert alert-info">Xizmatlar mavjud emas.</div></div>
+    {% endfor %}
+  </div>
+
+  <!-- Skip / Show Staff -->
+  <div class="text-center mb-4">
+    <a href="?service=0" class="btn btn-outline-secondary {% if selected_service %}btn-sm{% endif %}">
+      <i class="bi bi-skip-forward me-1"></i>O'tkazish — Barcha xodimlar
+    </a>
+  </div>
+
+  <!-- Employees Section -->
+  {% if selected_service or selected_service_id == '0' or selected_service_id %}
+  <hr class="my-4">
+  <div class="text-center mb-4">
+    <h3 class="fw-bold text-dark">Xodimni tanlang</h3>
+    {% if selected_service %}
+      <p class="text-muted">Kim bilan uchrashishni xohlaysiz <strong>{{ selected_service.name }}</strong>?</p>
+    {% else %}
+      <p class="text-muted">Kimga tashrif buyurmoqchisiz?</p>
+    {% endif %}
+  </div>
+
+  <div class="row g-3 justify-content-center">
+    <!-- Any Available option -->
+    <div class="col-6 col-sm-4">
+      <a href="{% url 'public-booking-step2' business.slug selected_service.id|default:'0' 0 %}" class="card p-4 staff-card h-100 d-block bg-white">
+        <div class="staff-avatar" style="background: rgba(16,185,129,0.1); color: #10b981;">
+          <i class="bi bi-shuffle"></i>
+        </div>
+        <h6 class="fw-bold text-dark mb-1">Istalgan</h6>
+        <p class="text-muted small mb-0">Birinchi bo'sh xodim</p>
+      </a>
+    </div>
+
+    {% for employee in employees %}
+      <div class="col-6 col-sm-4">
+        <a href="{% url 'public-booking-step2' business.slug selected_service.id|default:'0' employee.id %}" class="card p-4 staff-card h-100 d-block bg-white">
+          <div class="staff-avatar">{{ employee.name|slice:":2"|upper }}</div>
+          <h6 class="fw-bold text-dark mb-1">{{ employee.name }}</h6>
+          <p class="text-muted small mb-0">{{ employee.position|default:"Xodim" }}</p>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="text-center mt-4">
+    <a href="{% url 'public-home' business.slug %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Orqaga</a>
+  </div>
+</div>
+{% endblock %}

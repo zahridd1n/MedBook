@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / compiled files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+
+# Django-specific files
+*.sqlite3
+*.log
+media/
+static_collected/
+staticfiles/
+celerybeat-schedule/
+.env
+.DS_Store # macOS specific
+Thumbs.db # Windows specific
+db.sqlite3
+
+# Virtual environment
+venv/
+env/
+
+# Editor-specific files
+.idea/ # PyCharm
+.vscode/ # VS Code
+*.sublime-project
+*.sublime-workspace
+
+# Dependency management
+pip-wheel-metadata/
+.Python

@@ -1,0 +1,220 @@
+{% extends 'base_marketing.html' %}
+
+{% block title %}Features — BookSaaS{% endblock %}
+
+{% block extra_css %}
+<style>
+  .feature-hero {
+    background: radial-gradient(circle at 90% 10%, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.03) 90.1%);
+  }
+  .feature-illustration {
+    border-radius: 1rem;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    background: #ffffff;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+  }
+  .feature-header {
+    background: #f8fafc;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  }
+  .feature-tab-active {
+    color: #6366f1;
+    border-bottom: 2px solid #6366f1;
+    font-weight: 600;
+  }
+  /* Notification styling mockup */
+  .notification-bubble {
+    border-radius: 1rem;
+    background: #ffffff;
+    border-left: 4px solid #6366f1;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  .notification-bubble:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.1);
+  }
+</style>
+{% endblock %}
+
+{% block marketing_content %}
+<!-- Feature Hero Section -->
+<section class="feature-hero py-5 border-bottom">
+  <div class="container py-4 text-center">
+    <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3 fw-semibold">🚀 Core Features</span>
+    <h1 class="display-5 fw-bold text-dark mb-3">Smarter Scheduling, Happier Customers</h1>
+    <p class="lead text-muted max-w-2xl mx-auto" style="max-width: 700px;">
+      Discover how BookSaaS replaces manually managing calendars, phone reminders, and spreadsheet shifts with one fully-automated platform.
+    </p>
+  </div>
+</section>
+
+<!-- Detailed alternating features grid -->
+<section class="py-5 bg-white">
+  <div class="container py-5">
+    
+    <!-- Feature 1: Calendar & Scheduling -->
+    <div class="row align-items-center g-5 mb-5 pb-5">
+      <div class="col-lg-6">
+        <span class="badge bg-primary-subtle text-primary px-2.5 py-1.5 rounded mb-3 fw-bold small">CALENDAR</span>
+        <h2 class="fw-bold text-dark mb-3">Intuitive Booking Calendar</h2>
+        <p class="text-muted mb-4 lead">
+          Keep track of your entire team's availability on one unified calendar screen. Filter by specific employee, check shift patterns, and drag-and-drop bookings to reschedule.
+        </p>
+        <ul class="list-unstyled d-flex flex-column gap-3 text-muted">
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Multi-Staff view:</strong> Compare individual rosters side-by-side.</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Real-time updates:</strong> Bookings appear instantly without page refreshes.</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Double-booking prevention:</strong> Built-in controls protect calendars from overlaps.</li>
+        </ul>
+      </div>
+      <div class="col-lg-6">
+        <div class="feature-illustration p-4">
+          <div class="feature-header d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold text-dark small"><i class="bi bi-calendar-week me-1"></i> Multi-Staff Calendar View</span>
+            <span class="text-muted small">June 2026</span>
+          </div>
+          <!-- Visual calendar simulator -->
+          <div class="row g-2 text-center" style="font-size: 0.8rem;">
+            <div class="col-4 fw-bold pb-2 text-muted">Alice (Hair)</div>
+            <div class="col-4 fw-bold pb-2 text-muted">Bob (Nails)</div>
+            <div class="col-4 fw-bold pb-2 text-muted">Charlie (Spa)</div>
+            
+            <div class="col-4">
+              <div class="card bg-primary text-white p-2 border-0 rounded shadow-sm" style="font-size: 0.75rem;">
+                <strong>09:00 - 10:00</strong><br>Hair Styling<br><span style="font-size: 0.65rem;">Sarah K.</span>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card bg-light text-muted p-2 border-dashed rounded" style="font-size: 0.75rem; border: 1px dashed #cbd5e1;">
+                Available
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card bg-secondary text-white p-2 border-0 rounded" style="font-size: 0.75rem; background-color: #64748b !important;">
+                <strong>09:30 - 11:30</strong><br>Full Spa Treatment<br><span style="font-size: 0.65rem;">David R.</span>
+              </div>
+            </div>
+            
+            <div class="col-4 mt-2">
+              <div class="card bg-light text-muted p-2 border-dashed rounded" style="font-size: 0.75rem; border: 1px dashed #cbd5e1;">
+                Available
+              </div>
+            </div>
+            <div class="col-4 mt-2">
+              <div class="card bg-primary text-white p-2 border-0 rounded shadow-sm" style="font-size: 0.75rem;">
+                <strong>10:30 - 11:30</strong><br>Nail Care<br><span style="font-size: 0.65rem;">Jessica M.</span>
+              </div>
+            </div>
+            <div class="col-4 mt-2">
+              <div class="card bg-light text-muted p-2 border-dashed rounded" style="font-size: 0.75rem; border: 1px dashed #cbd5e1;">
+                Available
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Feature 2: Automated Telegram / Email Notifications -->
+    <div class="row align-items-center g-5 mb-5 pb-5 flex-lg-row-reverse">
+      <div class="col-lg-6">
+        <span class="badge bg-primary-subtle text-primary px-2.5 py-1.5 rounded mb-3 fw-bold small">NOTIFICATIONS</span>
+        <h2 class="fw-bold text-dark mb-3">Automatic Customer & Staff Alerts</h2>
+        <p class="text-muted mb-4 lead">
+          Reduce no-shows by up to 80% with automated notifications. Customers receive confirmation alerts and smart reminders via email or Telegram when they book, update, or cancel appointments.
+        </p>
+        <ul class="list-unstyled d-flex flex-column gap-3 text-muted">
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Telegram Webhook integration:</strong> Real-time Telegram messaging for instant alerts.</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Custom notification text:</strong> Write templates that match your brand tone.</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Staff reminders:</strong> Notify your employees immediately when a client schedules with them.</li>
+        </ul>
+      </div>
+      <div class="col-lg-6">
+        <div class="feature-illustration p-4 bg-light">
+          <div class="feature-header d-flex justify-content-between align-items-center mb-3 bg-white shadow-sm rounded">
+            <span class="fw-bold text-dark small"><i class="bi bi-send text-primary me-1"></i> Telegram Notification Sandbox</span>
+            <span class="badge bg-success-subtle text-success small">Connected</span>
+          </div>
+          <!-- Interactive Mockup for Telegram messaging -->
+          <div class="d-flex flex-column gap-3">
+            <div class="notification-bubble p-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold text-dark small"><i class="bi bi-telegram text-info me-1"></i> Telegram Notification</span>
+                <span class="text-muted small" style="font-size: 0.65rem;">Just now</span>
+              </div>
+              <p class="mb-1 text-dark small">🔔 <strong>Booking Confirmed!</strong></p>
+              <p class="mb-0 text-muted small" style="font-size: 0.75rem;">
+                Hi Sarah, your appointment for <strong>Hair Styling</strong> with Alice has been scheduled for tomorrow at <strong>09:00 AM</strong>.
+              </p>
+            </div>
+            
+            <div class="notification-bubble p-3" style="border-left-color: #10b981;">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold text-dark small"><i class="bi bi-telegram text-info me-1"></i> Telegram Notification</span>
+                <span class="text-muted small" style="font-size: 0.65rem;">1 hour ago</span>
+              </div>
+              <p class="mb-1 text-dark small">⏰ <strong>Roster Alert for Staff</strong></p>
+              <p class="mb-0 text-muted small" style="font-size: 0.75rem;">
+                Alice, a new booking (Hair Styling) has been added to your calendar. Client: Sarah K.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Feature 3: Staff & Roster Management -->
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="badge bg-primary-subtle text-primary px-2.5 py-1.5 rounded mb-3 fw-bold small">ROSTERING</span>
+        <h2 class="fw-bold text-dark mb-3">Roster Shifts & Custom Staff Permissions</h2>
+        <p class="text-muted mb-4 lead">
+          Set custom work hours, holiday rosters, and session breaks. Team members get individual profiles to check their schedule on any device without seeing master financial settings.
+        </p>
+        <ul class="list-unstyled d-flex flex-column gap-3 text-muted">
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Shift Hours:</strong> Design rosters and specific days off per staff.</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Role Control:</strong> Define access thresholds (Admin, Manager, Staff).</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Services allocation:</strong> Link employees to the specific services they provide.</li>
+        </ul>
+      </div>
+      <div class="col-lg-6">
+        <div class="feature-illustration p-4">
+          <div class="feature-header d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold text-dark small"><i class="bi bi-people me-1"></i> Roster & Working Hours Setup</span>
+            <span class="text-muted small">Weekly Schedule</span>
+          </div>
+          <!-- Weekly roster list preview -->
+          <div class="d-flex flex-column gap-2 text-muted" style="font-size: 0.8rem;">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2">
+              <span class="fw-bold text-dark">Monday - Friday</span>
+              <span class="badge bg-primary">09:00 AM - 05:00 PM</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2">
+              <span class="fw-bold text-dark">Saturday</span>
+              <span class="badge bg-warning text-dark">10:00 AM - 02:00 PM</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center pb-1">
+              <span class="fw-bold text-dark">Sunday</span>
+              <span class="badge bg-danger">Off (Holiday)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-light border-top">
+  <div class="container py-4 text-center">
+    <h3 class="fw-bold text-dark mb-3">Unlock scheduling freedom today</h3>
+    <p class="text-muted max-w-xl mx-auto mb-4" style="max-width: 600px;">
+      Setup takes less than 2 minutes. Start accepting digital bookings and automatic reminders right now.
+    </p>
+    <a href="{% url 'accounts:register' %}" class="btn btn-lg btn-primary px-4 py-2.5 fw-bold">Get Started Now</a>
+  </div>
+</section>
+{% endblock %}

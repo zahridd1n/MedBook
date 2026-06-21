@@ -1,0 +1,26 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}Notifications{% endblock %}
+{% block dashboard_content %}
+<h4 class="fw-bold mb-4">Notifications</h4>
+<div class="card table-card"><div class="card-body p-0">
+  {% if notifications %}
+  <div class="list-group list-group-flush">
+    {% for n in notifications %}
+    <div class="list-group-item d-flex gap-3 py-3 px-4 {% if not n.is_read %}bg-primary bg-opacity-5{% endif %}">
+      <div class="mt-1">
+        <div class="rounded-circle {% if n.notification_type == 'booking' %}bg-primary bg-opacity-10 text-primary{% else %}bg-secondary bg-opacity-10 text-secondary{% endif %} d-flex align-items-center justify-content-center" style="width:36px;height:36px">
+          <i class="bi {% if n.notification_type == 'booking' %}bi-calendar-plus{% else %}bi-info-circle{% endif %}"></i>
+        </div>
+      </div>
+      <div class="flex-fill">
+        <div class="fw-semibold">{{ n.title }}</div>
+        <div class="text-muted">{{ n.message }}</div>
+        <div class="text-muted small mt-1">{{ n.created_at|timesince }} ago</div>
+      </div>
+      {% if not n.is_read %}<span class="badge bg-primary align-self-start">New</span>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}<div class="text-center py-5 text-muted"><i class="bi bi-bell-slash fs-2 d-block mb-2"></i>No notifications yet.</div>{% endif %}
+</div></div>
+{% endblock %}

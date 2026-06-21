@@ -1,0 +1,113 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}Dashboard{% endblock %}
+{% block dashboard_content %}
+<div class="mb-4">
+  <h4 class="fw-bold mb-0">Salom, {{ user.first_name }} 👋</h4>
+  <p class="text-muted mb-0">{{ business.name }} &mdash;
+    <a href="/{{ business.slug }}/" target="_blank" class="text-decoration-none small">
+      Public page <i class="bi bi-arrow-up-right-square"></i>
+    </a>
+  </p>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="card card-stat p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="icon-box bg-primary bg-opacity-10 text-primary"><i class="bi bi-calendar-check"></i></div>
+        <div><div class="fw-bold fs-4">{{ total_appointments }}</div><div class="text-muted small">Total</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card card-stat p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="icon-box bg-success bg-opacity-10 text-success"><i class="bi bi-calendar-day"></i></div>
+        <div><div class="fw-bold fs-4">{{ today_count }}</div><div class="text-muted small">Today</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card card-stat p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="icon-box bg-warning bg-opacity-10 text-warning"><i class="bi bi-hourglass-split"></i></div>
+        <div><div class="fw-bold fs-4">{{ upcoming_appointments|length }}</div><div class="text-muted small">Upcoming</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card card-stat p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="icon-box bg-info bg-opacity-10 text-info"><i class="bi bi-people"></i></div>
+        <div><div class="fw-bold fs-4">{{ total_customers }}</div><div class="text-muted small">Customers</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card table-card">
+      <div class="card-header bg-white d-flex align-items-center justify-content-between py-3 px-4">
+        <h6 class="mb-0 fw-semibold">Upcoming Appointments</h6>
+        <a href="{% url 'appointments:list' %}" class="btn btn-sm btn-outline-primary">View all</a>
+      </div>
+      <div class="card-body p-0">
+        {% if upcoming_appointments %}
+        <table class="table table-hover mb-0">
+          <thead><tr><th class="ps-4">Customer</th><th>Service</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for a in upcoming_appointments %}
+            <tr>
+              <td class="ps-4"><div class="fw-medium">{{ a.customer.full_name }}</div><div class="text-muted small">{{ a.customer.phone }}</div></td>
+              <td>{{ a.service.name|default:"—" }}</td>
+              <td><div class="fw-medium">{{ a.date }}</div><div class="text-muted small">{{ a.time|time:"H:i" }}</div></td>
+              <td><span class="badge bg-{{ a.status_color }}">{{ a.get_status_display }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="text-center py-5 text-muted"><i class="bi bi-calendar-x fs-2 d-block mb-2"></i>No upcoming appointments</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card table-card mb-3">
+      <div class="card-header bg-white py-3 px-4"><h6 class="mb-0 fw-semibold">Quick Actions</h6></div>
+      <div class="card-body d-grid gap-2">
+        <a href="{% url 'appointments:create' %}" class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>New Appointment</a>
+        <a href="{% url 'services:create' %}" class="btn btn-outline-secondary"><i class="bi bi-briefcase me-2"></i>Add Service</a>
+        <a href="{% url 'employees:create' %}" class="btn btn-outline-secondary"><i class="bi bi-person-plus me-2"></i>Add Employee</a>
+        <a href="/{{ business.slug }}/" target="_blank" class="btn btn-outline-primary"><i class="bi bi-globe me-2"></i>View Public Page</a>
+      </div>
+    </div>
+    <!-- Telegram status card -->
+    <div class="card table-card">
+      <div class="card-body p-3">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="bi bi-telegram text-info fs-5"></i>
+          <span class="fw-semibold">Telegram</span>
+          {% if business.telegram_notifications_enabled %}
+            <span class="badge bg-success ms-auto">Active</span>
+          {% elif business.telegram_chat_id %}
+            <span class="badge bg-warning text-dark ms-auto">Paused</span>
+          {% else %}
+            <span class="badge bg-secondary ms-auto">Not connected</span>
+          {% endif %}
+        </div>
+        {% if business.telegram_chat_id %}
+          <p class="text-muted small mb-2">Notifications go to your Telegram chat.</p>
+        {% else %}
+          <p class="text-muted small mb-2">Connect Telegram to get instant booking alerts.</p>
+        {% endif %}
+        <a href="{% url 'business:telegram' %}" class="btn btn-sm btn-outline-secondary w-100">
+          <i class="bi bi-gear me-1"></i>Telegram Settings
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

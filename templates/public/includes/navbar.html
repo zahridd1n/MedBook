@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% url 'public-home' business.slug %}">
+      {% if business.logo %}
+        <img src="{{ business.logo.url }}" alt="{{ business.name }}" height="34" style="border-radius:6px;object-fit:contain;">
+      {% else %}
+        <i class="bi bi-calendar4-week text-primary fs-4"></i>
+      {% endif %}
+      <span style="color:var(--ink);">{{ business.name }}</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#publicNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="publicNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+        <li class="nav-item">
+          <a class="nav-link px-3" href="{% url 'public-home' business.slug %}">
+            <i class="bi bi-house me-1"></i>Bosh sahifa
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="{% url 'public-blog-list' business.slug %}">
+            <i class="bi bi-newspaper me-1"></i>Blog
+          </a>
+        </li>
+        <li class="nav-item ms-lg-1">
+          <a class="btn btn-primary btn-sm rounded-pill px-3" href="{% url 'public-booking-step1' business.slug %}">
+            <i class="bi bi-calendar-check me-1"></i>Band Qilish
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

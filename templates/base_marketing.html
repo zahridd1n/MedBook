@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block body %}
+<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-primary fs-5" href="{% url 'marketing:home' %}">
+      <i class="bi bi-calendar-check-fill me-2"></i>BookSaaS
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'marketing:features' %}">Features</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'marketing:pricing' %}">Pricing</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'marketing:faq' %}">FAQ</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'marketing:contact' %}">Contact</a></li>
+      </ul>
+      <div class="d-flex gap-2">
+        {% if user.is_authenticated %}
+          <a href="{% url 'dashboard:home' %}" class="btn btn-primary">Dashboard</a>
+        {% else %}
+          <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary">Login</a>
+          <a href="{% url 'accounts:register' %}" class="btn btn-primary">Get Started Free</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+{% block marketing_content %}{% endblock %}
+<footer class="bg-dark text-white py-5 mt-5">
+  <div class="container text-center">
+    <p class="fw-bold mb-1"><i class="bi bi-calendar-check-fill text-primary me-2"></i>BookSaaS</p>
+    <p class="text-white-50 small mb-0">© 2024 BookSaaS. The simplest booking platform for small businesses.</p>
+  </div>
+</footer>
+{% endblock %}

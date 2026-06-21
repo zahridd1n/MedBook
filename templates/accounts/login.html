@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Login — BookSaaS{% endblock %}
+{% block body %}
+<div class="min-vh-100 d-flex" style="background:linear-gradient(135deg,#6366f1,#4f46e5)">
+  <div class="m-auto w-100" style="max-width:400px;padding:1rem">
+    <div class="card border-0 shadow-lg rounded-4">
+      <div class="card-body p-4 p-md-5">
+        <div class="text-center mb-4">
+          <a href="/" class="text-decoration-none fs-4 fw-bold text-primary"><i class="bi bi-calendar-check-fill me-2"></i>BookSaaS</a>
+          <h5 class="mt-3 fw-bold mb-0">Welcome back</h5>
+        </div>
+        {% for msg in messages %}<div class="alert alert-{{ msg.tags }} py-2">{{ msg }}</div>{% endfor %}
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-medium">Email</label>
+            {{ form.username }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium d-flex justify-content-between">
+              Password <a href="{% url 'accounts:password_reset' %}" class="small">Forgot?</a>
+            </label>
+            {{ form.password }}
+          </div>
+          {% if form.non_field_errors %}<div class="alert alert-danger py-2">{{ form.non_field_errors.0 }}</div>{% endif %}
+          <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">Login</button>
+        </form>
+        <p class="text-center text-muted small mt-3 mb-0">No account? <a href="{% url 'accounts:register' %}">Register free</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

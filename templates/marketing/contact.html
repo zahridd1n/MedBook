@@ -1,0 +1,202 @@
+{% extends 'base_marketing.html' %}
+
+{% block title %}Contact Us — BookSaaS{% endblock %}
+
+{% block extra_css %}
+<style>
+  .contact-hero {
+    background: radial-gradient(circle at 0% 100%, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.02) 100%);
+  }
+  .contact-info-card {
+    border-radius: 1rem;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  }
+  .contact-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    background: rgba(99, 102, 241, 0.1);
+    color: #6366f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+  }
+  /* Form custom styling */
+  .form-floating > .form-control:focus ~ label::after {
+    background-color: transparent !important;
+  }
+  .form-control {
+    border: 1px solid rgba(226, 232, 240, 1);
+    border-radius: 0.75rem;
+    transition: all 0.2s ease-in-out;
+  }
+  .form-control:focus {
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+    border-color: #6366f1;
+  }
+  .btn-gradient {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    color: white !important;
+    border: none;
+    transition: all 0.3s ease;
+  }
+  .btn-gradient:hover {
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+    transform: translateY(-2px);
+  }
+</style>
+{% endblock %}
+
+{% block marketing_content %}
+<!-- Contact Hero -->
+<section class="contact-hero py-5 border-bottom">
+  <div class="container py-4 text-center">
+    <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3 fw-semibold">✉️ Contact Us</span>
+    <h1 class="display-5 fw-bold text-dark mb-3">Get in Touch With Our Team</h1>
+    <p class="lead text-muted max-w-2xl mx-auto" style="max-width: 600px;">
+      Have a question or looking for a custom setup? We're here to help. Send us a message and we'll reply shortly.
+    </p>
+  </div>
+</section>
+
+<!-- Contact Form and Details -->
+<section class="py-5 bg-white">
+  <div class="container py-4">
+    <div class="row g-5">
+      
+      <!-- Info channels column -->
+      <div class="col-lg-5">
+        <h4 class="fw-bold text-dark mb-4">Contact Information</h4>
+        <div class="d-flex flex-column gap-4">
+          
+          <!-- Channel 1: Email -->
+          <div class="contact-info-card p-4 d-flex align-items-start gap-3">
+            <div class="contact-icon-wrapper flex-shrink-0">
+              <i class="bi bi-envelope-at"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-1">Email Support</h6>
+              <p class="text-muted mb-0 small">Send queries directly to our inbox. We respond within 1 hour.</p>
+              <a href="mailto:support@booksaas.com" class="fw-semibold small text-decoration-none mt-2 d-inline-block">support@booksaas.com</a>
+            </div>
+          </div>
+          
+          <!-- Channel 2: Telegram Bot -->
+          <div class="contact-info-card p-4 d-flex align-items-start gap-3">
+            <div class="contact-icon-wrapper flex-shrink-0">
+              <i class="bi bi-telegram"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-1">Telegram Assistant</h6>
+              <p class="text-muted mb-0 small">Connect directly to our support bot on Telegram for interactive guides.</p>
+              <a href="https://t.me/BookSaaSBot" target="_blank" class="fw-semibold small text-decoration-none mt-2 d-inline-block">@BookSaaSBot</a>
+            </div>
+          </div>
+          
+          <!-- Channel 3: Address -->
+          <div class="contact-info-card p-4 d-flex align-items-start gap-3">
+            <div class="contact-icon-wrapper flex-shrink-0">
+              <i class="bi bi-geo-alt"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-1">Office Address</h6>
+              <p class="text-muted mb-0 small">BookSaaS Inc., 123 Scheduling Way, Suite 400<br>San Francisco, CA 94107</p>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+      <!-- Contact form column -->
+      <div class="col-lg-7">
+        <div class="card p-4 p-md-5 border-0 shadow-sm bg-light rounded-4">
+          <h4 class="fw-bold text-dark mb-4">Send a Message</h4>
+          
+          <form onsubmit="handleSubmit(event)">
+            <div class="row g-3">
+              
+              <!-- Name -->
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="contact-name" placeholder="Your Name" required>
+                  <label for="contact-name" class="text-muted">Your Name</label>
+                </div>
+              </div>
+              
+              <!-- Email -->
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input type="email" class="form-control" id="contact-email" placeholder="name@example.com" required>
+                  <label for="contact-email" class="text-muted">Email Address</label>
+                </div>
+              </div>
+              
+              <!-- Subject -->
+              <div class="col-12">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="contact-subject" placeholder="Subject" required>
+                  <label for="contact-subject" class="text-muted">Subject</label>
+                </div>
+              </div>
+              
+              <!-- Message -->
+              <div class="col-12">
+                <div class="form-floating">
+                  <textarea class="form-control" id="contact-message" placeholder="Type message here..." style="height: 150px" required></textarea>
+                  <label for="contact-message" class="text-muted">Your Message</label>
+                </div>
+              </div>
+              
+              <!-- Success Alert (Hidden initially) -->
+              <div class="col-12 d-none" id="success-alert">
+                <div class="alert alert-success d-flex align-items-center gap-2 mb-0 py-2.5 rounded-3">
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span class="small">Thank you! Your message has been successfully received. We will contact you soon.</span>
+                </div>
+              </div>
+              
+              <!-- Submit button -->
+              <div class="col-12 mt-4">
+                <button type="submit" id="submit-btn" class="btn btn-lg btn-gradient px-4 py-3 fw-bold w-100">Send Message</button>
+              </div>
+              
+            </div>
+          </form>
+          
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- Simple client-side form submission success helper -->
+{% block extra_js %}
+<script>
+  function handleSubmit(event) {
+    event.preventDefault();
+    const alertBox = document.getElementById('success-alert');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    // Disable button and show loader text
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    
+    // Simulate submission
+    setTimeout(() => {
+      alertBox.classList.remove('d-none');
+      submitBtn.textContent = 'Message Sent!';
+      
+      // Clear fields
+      document.getElementById('contact-name').value = '';
+      document.getElementById('contact-email').value = '';
+      document.getElementById('contact-subject').value = '';
+      document.getElementById('contact-message').value = '';
+    }, 1000);
+  }
+</script>
+{% endblock %}
+{% endblock %}

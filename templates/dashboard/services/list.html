@@ -1,0 +1,31 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}Services{% endblock %}
+{% block dashboard_content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h4 class="fw-bold mb-0">Services</h4>
+  <a href="{% url 'services:create' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Add Service</a>
+</div>
+<div class="card table-card">
+  <div class="card-body p-0">
+    {% if services %}
+    <table class="table table-hover mb-0">
+      <thead><tr><th class="ps-4">Name</th><th>Duration</th><th>Price</th><th>Status</th><th class="text-end pe-4">Actions</th></tr></thead>
+      <tbody>
+        {% for s in services %}
+        <tr>
+          <td class="ps-4"><div class="fw-medium">{{ s.name }}</div>{% if s.description %}<div class="text-muted small">{{ s.description|truncatechars:60 }}</div>{% endif %}</td>
+          <td>{{ s.duration_display }}</td>
+          <td>${{ s.price }}</td>
+          <td>{% if s.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Off</span>{% endif %}</td>
+          <td class="text-end pe-4">
+            <a href="{% url 'services:edit' s.pk %}" class="btn btn-sm btn-outline-secondary me-1"><i class="bi bi-pencil"></i></a>
+            <form method="post" action="{% url 'services:delete' s.pk %}" class="d-inline" onsubmit="return confirm('Delete?')">{% csrf_token %}<button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<div class="text-center py-5 text-muted"><i class="bi bi-briefcase fs-2 d-block mb-2"></i>No services.<div class="mt-3"><a href="{% url 'services:create' %}" class="btn btn-primary btn-sm">Add First</a></div></div>{% endif %}
+  </div>
+</div>
+{% endblock %}

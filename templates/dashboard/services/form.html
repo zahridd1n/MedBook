@@ -1,0 +1,23 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}{{ action }} Service{% endblock %}
+{% block dashboard_content %}
+<div class="d-flex align-items-center gap-2 mb-4">
+  <a href="{% url 'services:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+  <h4 class="fw-bold mb-0">{{ action }} Service</h4>
+</div>
+<div class="row justify-content-center"><div class="col-lg-6">
+  <div class="card table-card"><div class="card-body p-4">
+    <form method="post">{% csrf_token %}
+      <div class="row g-3">
+        <div class="col-12"><label class="form-label fw-medium">Name</label>{{ form.name }}</div>
+        <div class="col-12"><label class="form-label fw-medium">Description</label>{{ form.description }}</div>
+        <div class="col-md-6"><label class="form-label fw-medium">Duration (min)</label>{{ form.duration }}</div>
+        <div class="col-md-6"><label class="form-label fw-medium">Price ($)</label>{{ form.price }}</div>
+        <div class="col-md-6"><label class="form-label fw-medium">Order</label>{{ form.order }}</div>
+        <div class="col-md-6 d-flex align-items-end"><div class="form-check">{{ form.is_active }}<label class="form-check-label fw-medium ms-2">Active</label></div></div>
+      </div>
+      <div class="d-flex gap-2 mt-4"><button type="submit" class="btn btn-primary px-4">Save</button><a href="{% url 'services:list' %}" class="btn btn-outline-secondary">Cancel</a></div>
+    </form>
+  </div></div>
+</div></div>
+{% endblock %}

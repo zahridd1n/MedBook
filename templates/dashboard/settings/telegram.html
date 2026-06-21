@@ -1,0 +1,218 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}Telegram Notifications{% endblock %}
+{% block dashboard_content %}
+
+<div class="d-flex align-items-center gap-2 mb-4">
+  <a href="{% url 'dashboard:home' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+  <h4 class="fw-bold mb-0"><i class="bi bi-telegram text-info me-2"></i>Telegram Notifications</h4>
+</div>
+
+<div class="row g-4">
+
+  <!-- LEFT: Status + Actions -->
+  <div class="col-lg-7">
+
+    <!-- Connection Status Card -->
+    <div class="card table-card mb-4">
+      <div class="card-body p-4">
+        {% if business.telegram_chat_id %}
+          <!-- ✅ CONNECTED -->
+          <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="width:56px;height:56px;font-size:1.6rem">
+              <i class="bi bi-telegram text-info"></i>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <h5 class="fw-bold mb-0">Connected</h5>
+                <span class="badge bg-success">✓ Active</span>
+              </div>
+              <div class="text-muted small">Chat ID: <code>{{ business.telegram_chat_id }}</code></div>
+            </div>
+          </div>
+
+          <!-- Notifications toggle -->
+          <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3 mb-3">
+            <div>
+              <div class="fw-medium">Booking Notifications</div>
+              <div class="text-muted small">Get a Telegram message for every new booking</div>
+            </div>
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="toggle">
+              <button type="submit" class="btn btn-sm {% if business.telegram_notifications_enabled %}btn-success{% else %}btn-outline-secondary{% endif %}">
+                {% if business.telegram_notifications_enabled %}
+                  <i class="bi bi-bell-fill me-1"></i>ON
+                {% else %}
+                  <i class="bi bi-bell-slash me-1"></i>OFF
+                {% endif %}
+              </button>
+            </form>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="d-flex gap-2 flex-wrap">
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="test">
+              <button type="submit" class="btn btn-outline-primary">
+                <i class="bi bi-send me-1"></i>Send Test Message
+              </button>
+            </form>
+            <form method="post" onsubmit="return confirm('Disconnect Telegram?')">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="disconnect">
+              <button type="submit" class="btn btn-outline-danger">
+                <i class="bi bi-x-circle me-1"></i>Disconnect
+              </button>
+            </form>
+          </div>
+
+        {% else %}
+          <!-- ❌ NOT CONNECTED -->
+          <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="rounded-circle bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center" style="width:56px;height:56px;font-size:1.6rem">
+              <i class="bi bi-telegram text-secondary"></i>
+            </div>
+            <div>
+              <h5 class="fw-bold mb-0">Not Connected</h5>
+              <div class="text-muted small">Connect to receive instant booking alerts in Telegram</div>
+            </div>
+          </div>
+
+          {% if not bot_token_set %}
+            <div class="alert alert-warning rounded-3">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              <strong>TELEGRAM_BOT_TOKEN</strong> not set in your <code>.env</code> file.
+              Add it and restart the server.
+            </div>
+          {% elif not bot_username %}
+            <div class="alert alert-warning rounded-3">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              <strong>TELEGRAM_BOT_USERNAME</strong> not set in your <code>.env</code> file.
+            </div>
+          {% else %}
+            <!-- Step instructions -->
+            <div class="mb-3">
+              <div class="d-flex gap-3 mb-3">
+                <span class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center flex-shrink-0 fw-bold" style="width:28px;height:28px;font-size:.85rem">1</span>
+                <div>Click <strong>"Generate Link"</strong> below to create your unique connection link</div>
+              </div>
+              <div class="d-flex gap-3 mb-3">
+                <span class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center flex-shrink-0 fw-bold" style="width:28px;height:28px;font-size:.85rem">2</span>
+                <div>Open the link in Telegram — it will open <strong>@{{ bot_username }}</strong></div>
+              </div>
+              <div class="d-flex gap-3">
+                <span class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center flex-shrink-0 fw-bold" style="width:28px;height:28px;font-size:.85rem">3</span>
+                <div>Press <strong>START</strong> in the bot — done! ✅</div>
+              </div>
+            </div>
+
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="generate_link">
+              <button type="submit" class="btn btn-primary px-4">
+                <i class="bi bi-link-45deg me-1"></i>Generate Connection Link
+              </button>
+            </form>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Connection link (shown after generating) -->
+    {% if connect_url %}
+    <div class="card table-card border-primary mb-4" style="border:2px solid var(--primary)!important">
+      <div class="card-body p-4">
+        <h6 class="fw-semibold mb-3"><i class="bi bi-link-45deg me-1 text-primary"></i>Your Connection Link</h6>
+        <p class="text-muted small mb-3">Click the button below or copy the link and open it in Telegram:</p>
+
+        <a href="{{ connect_url }}" target="_blank" class="btn btn-primary btn-lg w-100 mb-3">
+          <i class="bi bi-telegram me-2"></i>Open in Telegram
+        </a>
+
+        <div class="input-group">
+          <input type="text" class="form-control form-control-sm font-monospace" value="{{ connect_url }}" id="connectUrl" readonly>
+          <button class="btn btn-outline-secondary btn-sm" onclick="copyLink()">
+            <i class="bi bi-clipboard"></i> Copy
+          </button>
+        </div>
+        <div class="text-muted small mt-2">
+          <i class="bi bi-shield-check text-success me-1"></i>
+          This link is one-time use and expires once clicked.
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <!-- RIGHT: Info panel -->
+  <div class="col-lg-5">
+    <div class="card table-card mb-3">
+      <div class="card-body p-4">
+        <h6 class="fw-semibold mb-3">What you'll receive</h6>
+        <div class="p-3 rounded-3 text-white" style="background:#0f172a;font-size:.85rem;font-family:monospace;line-height:1.7">
+          📅 <strong>New Booking!</strong><br>
+          ━━━━━━━━━━━━━━━━━<br>
+          👤 Customer: Alice Brown<br>
+          📞 Phone: +998901234567<br>
+          💼 Service: Consultation<br>
+          👨‍⚕️ Staff: Dr. Smith<br>
+          📆 Date: 15 January 2025<br>
+          🕐 Time: 14:00<br>
+          ━━━━━━━━━━━━━━━━━<br>
+          <em>Manage in your dashboard</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="card table-card">
+      <div class="card-body p-4">
+        <h6 class="fw-semibold mb-3">Bot info</h6>
+        <div class="d-flex justify-content-between py-2 border-bottom">
+          <span class="text-muted small">Bot</span>
+          <span class="fw-medium small">@{{ bot_username|default:"Not set" }}</span>
+        </div>
+        <div class="d-flex justify-content-between py-2 border-bottom">
+          <span class="text-muted small">Token</span>
+          <span class="fw-medium small">{% if bot_token_set %}<span class="text-success">✓ Set</span>{% else %}<span class="text-danger">✗ Missing</span>{% endif %}</span>
+        </div>
+        <div class="d-flex justify-content-between py-2 border-bottom">
+          <span class="text-muted small">Connection</span>
+          <span class="fw-medium small">{% if business.telegram_chat_id %}<span class="text-success">✓ Connected</span>{% else %}<span class="text-secondary">Not connected</span>{% endif %}</span>
+        </div>
+        <div class="d-flex justify-content-between py-2">
+          <span class="text-muted small">Notifications</span>
+          <span class="fw-medium small">{% if business.telegram_notifications_enabled %}<span class="text-success">✓ Enabled</span>{% else %}<span class="text-secondary">Disabled</span>{% endif %}</span>
+        </div>
+
+        {% if bot_token_set %}
+        <div class="mt-3">
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="set_webhook">
+            <button type="submit" class="btn btn-outline-secondary btn-sm w-100">
+              <i class="bi bi-arrow-repeat me-1"></i>Re-register Webhook
+            </button>
+          </form>
+          <div class="text-muted" style="font-size:.72rem;margin-top:.4rem">
+            Use this after changing your domain in production.
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function copyLink() {
+  const el = document.getElementById('connectUrl');
+  el.select();
+  document.execCommand('copy');
+  event.target.closest('button').innerHTML = '<i class="bi bi-check2"></i> Copied!';
+  setTimeout(() => { event.target.closest('button').innerHTML = '<i class="bi bi-clipboard"></i> Copy'; }, 2000);
+}
+</script>
+{% endblock %}

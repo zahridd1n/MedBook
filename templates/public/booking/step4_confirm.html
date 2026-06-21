@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Booking — {{ business.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .booking-progress { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+  .progress-step {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85rem;
+    background: #e2e8f0; color: #94a3b8;
+  }
+  .progress-step.active { background: #6366f1; color: white; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+  .progress-step.done { background: #10b981; color: white; }
+  .progress-line { width: 40px; height: 2px; background: #e2e8f0; align-self: center; }
+  .progress-line.done { background: #10b981; }
+  .form-control { border-radius: 0.75rem; border: 1px solid #e2e8f0; }
+  .form-control:focus { box-shadow: 0 0 0 4px rgba(99,102,241,0.15); border-color: #6366f1; }
+  .summary-row { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid #f1f5f9; }
+  .summary-row:last-child { border-bottom: none; }
+</style>
+{% endblock %}
+
+{% block body %}
+{% include 'public/includes/navbar.html' %}
+<div class="container py-5" style="max-width: 800px;">
+  <!-- Progress -->
+  <div class="booking-progress">
+    <div class="progress-step done"><i class="bi bi-check"></i></div>
+    <div class="progress-line done"></div>
+    <div class="progress-step done"><i class="bi bi-check"></i></div>
+    <div class="progress-line done"></div>
+    <div class="progress-step active">3</div>
+  </div>
+
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-dark">Bandni tasdiqlang</h2>
+    <p class="text-muted">Ma'lumotlaringizni tekshiring va kiriting.</p>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left: Contact Form -->
+    <div class="col-md-7">
+      <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-person-lines-fill text-primary me-2"></i>Sizning ma'lumotlaringiz</h5>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="service" value="{{ service.id|default:'0' }}">
+          <input type="hidden" name="employee" value="{{ employee.id|default:'' }}">
+          <input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}">
+          <input type="hidden" name="time" value="{{ time|time:'H:i' }}">
+
+          <div class="mb-3">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="customer_name" name="customer_name"
+                     placeholder="Your Name" value="{{ form.customer_name.value|default:'' }}" required>
+              <label for="customer_name" class="text-muted">To'liq ism</label>
+            </div>
+            {% if form.customer_name.errors %}
+              <div class="text-danger small mt-1">{{ form.customer_name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <div class="form-floating">
+              <input type="tel" class="form-control" id="customer_phone" name="customer_phone"
+                     placeholder="Phone" value="{{ form.customer_phone.value|default:'' }}" required>
+              <label for="customer_phone" class="text-muted">Telefon raqam</label>
+            </div>
+            {% if form.customer_phone.errors %}
+              <div class="text-danger small mt-1">{{ form.customer_phone.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-4">
+            <div class="form-floating">
+              <textarea class="form-control" id="notes" name="notes" placeholder="Notes" style="height: 90px">{{ form.notes.value|default:'' }}</textarea>
+              <label for="notes" class="text-muted">Izoh (ixtiyoriy)</label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-3 fw-bold fs-5 shadow">
+            <i class="bi bi-calendar-check me-2"></i>Bandni tasdiqlash
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right: Booking Summary -->
+    <div class="col-md-5">
+      <div class="card border-0 shadow-sm rounded-4 p-4 bg-light">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-receipt text-primary me-2"></i>Band qisqacha</h5>
+        <div class="d-flex flex-column">
+          <div class="summary-row">
+            <span class="text-muted">Xizmat</span>
+              <span class="fw-bold text-dark">{% if service %}{{ service.name }}{% else %}<em class="text-muted">Tanlanmagan</em>{% endif %}</span>
+          </div>
+          <div class="summary-row">
+            <span class="text-muted">Xodim</span>
+            <span class="fw-bold text-dark">{{ employee.name|default:"Istalgan" }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="text-muted">Sana</span>
+            <span class="fw-bold text-dark">{{ date|date:"d M Y" }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="text-muted">Vaqt</span>
+            <span class="fw-bold text-dark">{{ time|time:"H:i" }}</span>
+          </div>
+          {% if service %}
+          <div class="summary-row">
+            <span class="text-muted">Davomiyligi</span>
+            <span class="fw-bold text-dark">{{ service.duration }} min</span>
+          </div>
+          <div class="summary-row">
+            <span class="text-muted">Narx</span>
+            <span class="fw-bold text-primary fs-5">${{ service.price }}</span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="javascript:history.back()" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Orqaga</a>
+  </div>
+</div>
+{% endblock %}

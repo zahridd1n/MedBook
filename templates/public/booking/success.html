@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking Confirmed — {{ business.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .success-icon {
+    width: 80px; height: 80px;
+    background: rgba(16,185,129,0.1); color: #10b981;
+    border-radius: 50%; font-size: 2.5rem;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+{% include 'public/includes/navbar.html' %}
+<div class="container py-5 text-center" style="max-width: 600px;">
+  <div class="card border-0 shadow-sm rounded-4 p-5 bg-white">
+    <div class="success-icon">
+      <i class="bi bi-check-lg"></i>
+    </div>
+    <h2 class="fw-bold text-dark mb-2">Band Tasdiqlandi!</h2>
+    <p class="text-muted mb-4">
+      <strong>{{ business.name }}</strong> ga bandingiz muvaffaqiyatli rejalashtirildi.
+      Tez orada tasdiq xabarnomasini olasiz.
+    </p>
+
+    <div class="card bg-light border-0 rounded-3 p-3 text-start mb-4 mx-auto" style="max-width: 350px;">
+      <div class="d-flex justify-content-between py-1"><span class="text-muted small">Biznes</span><span class="fw-bold small text-dark">{{ business.name }}</span></div>
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+      <a href="{% url 'public-home' business.slug %}" class="btn btn-primary px-4 py-2 fw-semibold">
+        <i class="bi bi-house me-1"></i>{{ business.name }} ga qaytish
+      </a>
+      <a href="{% url 'public-booking-step1' business.slug %}" class="btn btn-outline-primary px-4 py-2 fw-semibold">
+        <i class="bi bi-plus-circle me-1"></i>Yana band qilish
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

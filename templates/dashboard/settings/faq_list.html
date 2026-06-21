@@ -1,0 +1,84 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}FAQ{% endblock %}
+{% block dashboard_content %}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div class="d-flex align-items-center gap-2">
+    <a href="{% url 'dashboard:home' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+    <h4 class="fw-bold mb-0"><i class="bi bi-question-circle text-primary me-2"></i>FAQ</h4>
+  </div>
+  <a href="{% url 'business:faq_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add FAQ</a>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    {% if faqs %}
+    <div class="card table-card">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th style="width:5%">#</th>
+                <th>Question</th>
+                <th style="width:10%" class="text-center">Status</th>
+                <th style="width:20%" class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for faq in faqs %}
+              <tr>
+                <td class="text-muted small">{{ faq.order }}</td>
+                <td>
+                  <div class="fw-medium">{{ faq.question }}</div>
+                  <div class="text-muted small text-truncate" style="max-width:400px">{{ faq.answer|truncatewords:15 }}</div>
+                </td>
+                <td class="text-center">
+                  {% if faq.is_active %}
+                    <span class="badge bg-success">Active</span>
+                  {% else %}
+                    <span class="badge bg-secondary">Hidden</span>
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  <a href="{% url 'business:faq_edit' faq.pk %}" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></a>
+                  <form method="post" action="{% url 'business:faq_delete' faq.pk %}" class="d-inline" onsubmit="return confirm('Delete this FAQ?')">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="card table-card">
+      <div class="card-body p-5 text-center">
+        <i class="bi bi-question-circle text-muted" style="font-size:3rem"></i>
+        <h5 class="fw-semibold mt-3">No FAQs Yet</h5>
+        <p class="text-muted">Add frequently asked questions to help your customers find answers quickly.</p>
+        <a href="{% url 'business:faq_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Your First FAQ</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card table-card">
+      <div class="card-body p-4">
+        <h6 class="fw-semibold mb-3"><i class="bi bi-info-circle text-info me-2"></i>About FAQ</h6>
+        <p class="text-muted small mb-2">FAQs appear on your public booking page to help customers understand your services.</p>
+        <ul class="list-unstyled text-muted small mb-0">
+          <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Use clear, simple questions.</li>
+          <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Set order numbers to control display order.</li>
+          <li><i class="bi bi-check-circle text-success me-2"></i>Toggle status to show/hide FAQs.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

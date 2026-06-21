@@ -1,0 +1,216 @@
+{% extends 'base_marketing.html' %}
+
+{% block title %}Frequently Asked Questions — BookSaaS{% endblock %}
+
+{% block extra_css %}
+<style>
+  .faq-hero {
+    background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.02) 100%);
+  }
+  .search-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 1.1rem;
+  }
+  .search-input {
+    padding-left: 50px;
+    height: 55px;
+    border-radius: 2rem;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+  }
+  .search-input:focus {
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.4);
+  }
+  .accordion-item {
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    border-radius: 1rem !important;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+  }
+  .accordion-button:not(.collapsed) {
+    background-color: rgba(99, 102, 241, 0.05);
+    color: #6366f1;
+    box-shadow: none;
+  }
+  .accordion-button:focus {
+    box-shadow: none;
+  }
+</style>
+{% endblock %}
+
+{% block marketing_content %}
+<!-- FAQ Hero -->
+<section class="faq-hero py-5 border-bottom">
+  <div class="container py-4 text-center">
+    <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3 fw-semibold">❓ Help Center</span>
+    <h1 class="display-5 fw-bold text-dark mb-3">Frequently Asked Questions</h1>
+    <p class="lead text-muted max-w-2xl mx-auto mb-4" style="max-width: 600px;">
+      Have questions about BookSaaS? Search below or click on any topic to find the answers you need.
+    </p>
+    
+    <!-- Live Search Bar -->
+    <div class="search-wrapper">
+      <i class="bi bi-search search-icon"></i>
+      <input type="text" id="faq-search" class="form-control search-input" placeholder="Search questions..." onkeyup="filterFAQ()">
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Accordions -->
+<section class="py-5 bg-white">
+  <div class="container py-4" style="max-width: 800px;">
+    
+    <div class="accordion" id="faqAccordion">
+      
+      <!-- FAQ 1 -->
+      <div class="accordion-item faq-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-1">
+            What is BookSaaS?
+          </button>
+        </h2>
+        <div id="faq-collapse-1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+          <div class="accordion-body text-muted">
+            BookSaaS is a modern, cloud-based scheduling platform built for service businesses. It provides an automated calendar, employee roster scheduling, custom public booking pages for clients, and instant Telegram/email reminder notifications.
+          </div>
+        </div>
+      </div>
+      
+      <!-- FAQ 2 -->
+      <div class="accordion-item faq-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-2">
+            How does the Telegram bot integration work?
+          </button>
+        </h2>
+        <div id="faq-collapse-2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body text-muted">
+            Our platform links with Telegram webhooks. Once activated in your settings, employees and managers receive instant notifications in Telegram whenever a new booking is registered, edited, or canceled. Clients can also opt-in to receive automated SMS/Telegram reminders.
+          </div>
+        </div>
+      </div>
+      
+      <!-- FAQ 3 -->
+      <div class="accordion-item faq-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-3">
+            Can I set separate shifts or rosters for different staff members?
+          </button>
+        </h2>
+        <div id="faq-collapse-3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body text-muted">
+            Yes! You can define precise weekly roster shifts, custom working hours, and days off individually for each of your staff members. The booking system automatically cross-references rosters and appointment schedules to avoid overlaps.
+          </div>
+        </div>
+      </div>
+      
+      <!-- FAQ 4 -->
+      <div class="accordion-item faq-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-4">
+            Can I use my own custom domain name for client bookings?
+          </button>
+        </h2>
+        <div id="faq-collapse-4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body text-muted">
+            Yes, custom domain mapping is supported on our Growth and Enterprise tiers. You can point your own domain (e.g. <code>bookings.mybusiness.com</code>) to our servers and provide a completely white-labeled experience to your clients.
+          </div>
+        </div>
+      </div>
+      
+      <!-- FAQ 5 -->
+      <div class="accordion-item faq-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-5">
+            Is there a free trial or free version?
+          </button>
+        </h2>
+        <div id="faq-collapse-5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body text-muted">
+            Absolutely! Our Starter plan is 100% free and includes 1 staff profile and up to 50 bookings per month. We also offer a 14-day free trial on the Growth plan so you can test our Telegram notifications and team calendar scheduling.
+          </div>
+        </div>
+      </div>
+      
+      <!-- FAQ 6 -->
+      <div class="accordion-item faq-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-6">
+            Is my customer data secure?
+          </button>
+        </h2>
+        <div id="faq-collapse-6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body text-muted">
+            Security is our priority. All traffic is encrypted using SSL (HTTPS), databases are backed up daily, and login paths use Django's robust authentication. We never sell customer data to third-party advertisers.
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- No results state -->
+    <div id="no-results" class="text-center py-4 d-none">
+      <i class="bi bi-search text-muted fs-3 mb-2 d-block"></i>
+      <h6 class="fw-bold mb-1">No matches found</h6>
+      <p class="text-muted small">Try searching for other terms like 'Telegram', 'domain', or 'free'.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Bottom Contact Card CTA -->
+<section class="py-5 bg-light border-top">
+  <div class="container py-3 text-center">
+    <div class="card max-w-xl mx-auto border-0 shadow-sm p-4 rounded-4" style="max-width: 550px;">
+      <h5 class="fw-bold text-dark">Still have questions?</h5>
+      <p class="text-muted small">Our support team is available 24/7. Shoot us a message and we'll get back to you within the hour.</p>
+      <div class="mt-3">
+        <a href="{% url 'marketing:contact' %}" class="btn btn-primary px-4 py-2 fw-semibold">Send a Message</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Search JS -->
+{% block extra_js %}
+<script>
+  function filterFAQ() {
+    const input = document.getElementById('faq-search');
+    const filter = input.value.toLowerCase();
+    const faqItems = document.getElementsByClassName('faq-item');
+    const noResults = document.getElementById('no-results');
+    let hasMatches = false;
+    
+    for (let i = 0; i < faqItems.length; i++) {
+      const item = faqItems[i];
+      const text = item.textContent || item.innerText;
+      
+      if (text.toLowerCase().indexOf(filter) > -1) {
+        item.classList.remove('d-none');
+        hasMatches = true;
+      } else {
+        item.classList.add('d-none');
+      }
+    }
+    
+    if (hasMatches) {
+      noResults.classList.add('d-none');
+    } else {
+      noResults.classList.remove('d-none');
+    }
+  }
+</script>
+{% endblock %}
+{% endblock %}

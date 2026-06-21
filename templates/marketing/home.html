@@ -1,0 +1,318 @@
+{% extends 'base_marketing.html' %}
+
+{% block title %}BookSaaS — Simple Booking & Roster Management for Small Businesses{% endblock %}
+
+{% block extra_css %}
+<style>
+  .hero-gradient {
+    background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 90.1%);
+  }
+  .text-gradient {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .btn-gradient {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    color: white !important;
+    border: none;
+    transition: all 0.3s ease;
+  }
+  .btn-gradient:hover {
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    transform: translateY(-2px);
+  }
+  .feature-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 1rem;
+  }
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.2);
+  }
+  .icon-box {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(99, 102, 241, 0.1);
+    color: #6366f1;
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+    transition: all 0.3s ease;
+  }
+  .feature-card:hover .icon-box {
+    background: #6366f1;
+    color: white;
+  }
+  .dashboard-mockup {
+    border-radius: 1rem;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.12);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    overflow: hidden;
+    background: #ffffff;
+  }
+  .mockup-header {
+    background: #0f172a;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .dot-red { background: #ef4444; }
+  .dot-yellow { background: #f59e0b; }
+  .dot-green { background: #10b981; }
+  .mockup-sidebar {
+    background: #0f172a;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    height: 100%;
+    min-height: 320px;
+  }
+  .mockup-sidebar .active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 0.375rem;
+  }
+  .mockup-sidebar a {
+    color: #94a3b8;
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+</style>
+{% endblock %}
+
+{% block marketing_content %}
+<!-- Hero Section -->
+<section class="hero-gradient py-5 border-bottom">
+  <div class="container py-5">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 text-center text-lg-start">
+        <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3 fw-semibold">📅 Modern Booking Solution</span>
+        <h1 class="display-4 fw-black text-dark mb-3" style="line-height: 1.15; font-weight: 800;">
+          Automate Your Business <br><span class="text-gradient">Bookings & Rosters</span>
+        </h1>
+        <p class="lead text-muted mb-4">
+          The simplest appointment scheduler for service-based businesses. Manage calendars, staff rosters, automatic Telegram/email reminders, and your own custom booking page in minutes.
+        </p>
+        <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3">
+          <a href="{% url 'accounts:register' %}" class="btn btn-lg btn-gradient px-4 py-3 fw-bold">Get Started Free</a>
+          <a href="{% url 'marketing:features' %}" class="btn btn-lg btn-outline-secondary px-4 py-3 fw-bold">Explore Features</a>
+        </div>
+        <div class="mt-4 text-muted small">
+          <i class="bi bi-shield-check text-success me-1"></i> No credit card required &nbsp;•&nbsp; <i class="bi bi-clock text-success me-1"></i> 2-minute setup
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <!-- Interactive CSS Mockup representing a clean Dashboard -->
+        <div class="dashboard-mockup">
+          <div class="mockup-header">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+            <span class="text-white-50 ms-2" style="font-size: 0.75rem;">dashboard.booksaas.com</span>
+          </div>
+          <div class="row g-0">
+            <!-- Mockup Sidebar -->
+            <div class="col-3 d-none d-md-block mockup-sidebar p-3">
+              <nav class="d-flex flex-column gap-1">
+                <a href="#" class="active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+                <a href="#"><i class="bi bi-calendar-event"></i> Appointments</a>
+                <a href="#"><i class="bi bi-person-badge"></i> Employees</a>
+                <a href="#"><i class="bi bi-briefcase"></i> Services</a>
+                <a href="#"><i class="bi bi-people"></i> Customers</a>
+                <a href="#"><i class="bi bi-gear"></i> Settings</a>
+              </nav>
+            </div>
+            <!-- Mockup Content Area -->
+            <div class="col-md-9 p-3 bg-light" style="min-height: 320px;">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="fw-bold text-dark" style="font-size: 0.9rem;">Overview</span>
+                <span class="badge bg-success" style="font-size: 0.7rem;">Live</span>
+              </div>
+              <!-- Mockup mini cards -->
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <div class="card border-0 shadow-sm p-2 bg-white">
+                    <span class="text-muted" style="font-size: 0.7rem;">Total Revenue</span>
+                    <span class="fw-bold text-success" style="font-size: 0.95rem;">$1,420.00</span>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="card border-0 shadow-sm p-2 bg-white">
+                    <span class="text-muted" style="font-size: 0.7rem;">Appointments</span>
+                    <span class="fw-bold text-dark" style="font-size: 0.95rem;">24 Today</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Mockup calendar schedule table preview -->
+              <div class="card border-0 shadow-sm p-2 bg-white mb-2">
+                <span class="fw-semibold text-muted mb-2" style="font-size: 0.75rem;">Today's Schedule</span>
+                <div class="d-flex align-items-center gap-2 border-bottom pb-2 mb-2" style="font-size: 0.75rem;">
+                  <span class="badge bg-primary-subtle text-primary">09:00</span>
+                  <div class="flex-grow-1">
+                    <p class="mb-0 fw-bold text-dark">Hair Styling</p>
+                    <p class="mb-0 text-muted" style="font-size: 0.65rem;">Customer: Sarah K. • Stylist: Alice</p>
+                  </div>
+                  <span class="badge bg-success-subtle text-success">Confirmed</span>
+                </div>
+                <div class="d-flex align-items-center gap-2" style="font-size: 0.75rem;">
+                  <span class="badge bg-primary-subtle text-primary">10:30</span>
+                  <div class="flex-grow-1">
+                    <p class="mb-0 fw-bold text-dark">Nail Care</p>
+                    <p class="mb-0 text-muted" style="font-size: 0.65rem;">Customer: Jessica M. • Stylist: Bob</p>
+                  </div>
+                  <span class="badge bg-warning-subtle text-warning">Pending</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-white border-bottom">
+  <div class="container">
+    <div class="row text-center g-4">
+      <div class="col-md-4">
+        <h3 class="display-5 fw-bold text-primary mb-1">99.9%</h3>
+        <p class="text-muted uppercase fw-semibold small">Service Uptime</p>
+      </div>
+      <div class="col-md-4 border-start border-end">
+        <h3 class="display-5 fw-bold text-primary mb-1">20,000+</h3>
+        <p class="text-muted uppercase fw-semibold small">Appointments Booked</p>
+      </div>
+      <div class="col-md-4">
+        <h3 class="display-5 fw-bold text-primary mb-1">500+</h3>
+        <p class="text-muted uppercase fw-semibold small">Active Businesses</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Highlights -->
+<section class="py-5 bg-light">
+  <div class="container py-5">
+    <div class="text-center max-w-2xl mx-auto mb-5">
+      <h2 class="fw-bold text-dark">Everything you need to streamline scheduling</h2>
+      <p class="text-muted lead">No more messy tables, Excel worksheets, or missed appointments. We've built a fully automated workflow.</p>
+    </div>
+    
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 p-4 feature-card shadow-sm">
+          <div class="icon-box">
+            <i class="bi bi-calendar-heart"></i>
+          </div>
+          <h5 class="fw-bold">Seamless Booking Page</h5>
+          <p class="text-muted mb-0">Get a public, mobile-responsive page matching your brand where customers can check availability and book instantly.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 p-4 feature-card shadow-sm">
+          <div class="icon-box">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <h5 class="fw-bold">Rosters & Staff Accounts</h5>
+          <p class="text-muted mb-0">Roster employees, assign services to specific staff members, and allow them to manage their own appointments and schedules.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 p-4 feature-card shadow-sm">
+          <div class="icon-box">
+            <i class="bi bi-send-fill"></i>
+          </div>
+          <h5 class="fw-bold">Telegram & Email Alerts</h5>
+          <p class="text-muted mb-0">Send instant confirmations and custom reminders to your employees and customers via Telegram or email automatically.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonial Section -->
+<section class="py-5 bg-white border-top border-bottom">
+  <div class="container py-5">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-7">
+        <h2 class="fw-bold text-dark">Loved by local service businesses</h2>
+        <p class="text-muted">Hear from owners who saved hours of admin work using BookSaaS.</p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card p-4 rounded-4 shadow-sm border-light-subtle h-100">
+          <div class="text-warning mb-3">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+          </div>
+          <p class="lead text-dark mb-4">"BookSaaS completely replaced our back-and-forth messaging. Clients now click the link on our Instagram bio, choose their stylist, and receive automatic Telegram reminders. Setup took us 5 minutes."</p>
+          <div class="d-flex align-items-center gap-3">
+            <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 48px; height: 48px;">
+              MD
+            </div>
+            <div>
+              <h6 class="mb-0 fw-bold text-dark">Marcus Davis</h6>
+              <span class="text-muted small">Owner, Davis Barbershop</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card p-4 rounded-4 shadow-sm border-light-subtle h-100">
+          <div class="text-warning mb-3">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+          </div>
+          <p class="lead text-dark mb-4">"Having multiple employees meant we had a nightmare coordination problem. BookSaaS lets each of my therapists manage their own hours, and patients love how simple it is."</p>
+          <div class="d-flex align-items-center gap-3">
+            <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 48px; height: 48px;">
+              EL
+            </div>
+            <div>
+              <h6 class="mb-0 fw-bold text-dark">Elena Lopez</h6>
+              <span class="text-muted small">Director, Lotus Wellness Spa</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action (CTA) Section -->
+<section class="py-5 bg-light">
+  <div class="container py-5">
+    <div class="card border-0 shadow-lg text-white p-5 rounded-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);">
+      <div class="row align-items-center g-4 text-center text-md-start">
+        <div class="col-md-8">
+          <h2 class="fw-bold mb-2">Ready to streamline your appointments?</h2>
+          <p class="text-white-50 mb-0 lead">Get started today and see why hundreds of business owners love BookSaaS.</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <a href="{% url 'accounts:register' %}" class="btn btn-lg btn-light px-4 py-3 fw-bold text-primary shadow">Create Free Account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

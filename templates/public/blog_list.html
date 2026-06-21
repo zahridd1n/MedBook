@@ -1,0 +1,324 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ business.name }} — Blog{% endblock %}
+
+{% block extra_css %}
+<style>
+  .blog-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .blog-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,224C672,213,768,171,864,160C960,149,1056,171,1152,181.3C1248,192,1344,192,1392,192L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+    background-size: cover;
+  }
+  
+  .blog-hero-content {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .blog-hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .blog-hero p {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    margin-bottom: 0;
+  }
+  
+  .blog-filter-bar {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-top: -2rem;
+    margin-bottom: 3rem;
+    position: relative;
+    z-index: 10;
+  }
+  
+  .blog-container {
+    padding: 2rem 0;
+  }
+  
+  .blog-card {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.15);
+  }
+  
+  .blog-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 250px;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  }
+  
+  .blog-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .blog-card:hover .blog-image {
+    transform: scale(1.05);
+  }
+  
+  .blog-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
+  .blog-image-placeholder i {
+    font-size: 3rem;
+    color: rgba(255,255,255,0.3);
+  }
+  
+  .blog-card-body {
+    padding: 1.75rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .blog-category {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+  }
+  
+  .blog-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+    transition: color 0.2s;
+  }
+  
+  .blog-card:hover .blog-title {
+    color: #667eea;
+  }
+  
+  .blog-excerpt {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+  
+  .blog-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .blog-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+  
+  .blog-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  
+  .blog-meta i {
+    color: #667eea;
+  }
+  
+  .blog-read-more {
+    color: #667eea;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  
+  .blog-card:hover .blog-read-more {
+    color: #764ba2;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+  
+  .empty-state-icon {
+    font-size: 5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-state h3 {
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  
+  .empty-state p {
+    color: #94a3b8;
+    margin-bottom: 0;
+    font-size: 1rem;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+{% include 'public/includes/navbar.html' %}
+<div class="blog-hero">
+  <div class="container">
+    <div class="blog-hero-content">
+      <h1>{{ business.name }} — Blog</h1>
+      <p>Eng so'nggi yangiliklar, maslahatlar va ma'lumotlar</p>
+    </div>
+  </div>
+</div>
+
+<div class="blog-container">
+  <div class="container">
+    {% if posts %}
+    <div class="row g-4">
+      {% for post in posts %}
+      <div class="col-md-6 col-lg-4">
+        <a href="{% url 'public-blog-detail' business.slug post.slug %}" class="text-decoration-none">
+          <div class="blog-card">
+            <div class="blog-image-wrapper">
+              {% if post.featured_image %}
+              <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="blog-image">
+              {% else %}
+              <div class="blog-image-placeholder">
+                <i class="bi bi-file-text"></i>
+              </div>
+              {% endif %}
+            </div>
+            <div class="blog-card-body">
+              <span class="blog-category"><i class="bi bi-bookmark-fill me-1"></i>Maqola</span>
+              <h3 class="blog-title">{{ post.title }}</h3>
+              {% if post.excerpt %}
+              <p class="blog-excerpt">{{ post.excerpt }}</p>
+              {% else %}
+              <p class="blog-excerpt">{{ post.content|truncatewords:20 }}</p>
+              {% endif %}
+              <div class="blog-card-footer">
+                <div class="blog-meta">
+                  <div class="blog-meta-item">
+                    <i class="bi bi-calendar3"></i>
+                    {{ post.created_at|date:"d.m.Y" }}
+                  </div>
+                  <div class="blog-meta-item">
+                    <i class="bi bi-eye"></i>
+                    {{ post.views_count }}
+                  </div>
+                </div>
+                <span class="blog-read-more">O'qish →</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if posts.has_other_pages %}
+    <nav class="mt-5" aria-label="Page navigation">
+      <ul class="pagination justify-content-center mb-0">
+        {% if posts.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page=1"><i class="bi bi-chevron-double-left"></i> Birinchi</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ posts.previous_page_number }}"><i class="bi bi-chevron-left"></i> Oldingi</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link"><i class="bi bi-chevron-left"></i> Oldingi</span>
+        </li>
+        {% endif %}
+
+        <li class="page-item active">
+          <span class="page-link">{{ posts.number }} / {{ posts.paginator.num_pages }}</span>
+        </li>
+
+        {% if posts.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ posts.next_page_number }}">Keyingi <i class="bi bi-chevron-right"></i></a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ posts.paginator.num_pages }}">Oxirgi <i class="bi bi-chevron-double-right"></i></a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Keyingi <i class="bi bi-chevron-right"></i></span>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <i class="bi bi-newspaper"></i>
+      </div>
+      <h3>Blog topilmadi</h3>
+      <p>Hozircha blog postlari joylantirilmagan</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

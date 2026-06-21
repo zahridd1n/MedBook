@@ -1,0 +1,38 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}Customers{% endblock %}
+{% block dashboard_content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h4 class="fw-bold mb-0">Customers CRM</h4>
+  <span class="badge bg-primary fs-6">{{ customers_data|length }}</span>
+</div>
+<div class="card table-card mb-3"><div class="card-body py-2">
+  <form method="get" class="d-flex gap-2">
+    <input type="text" name="q" value="{{ search }}" class="form-control form-control-sm" placeholder="Search name or phone...">
+    <button type="submit" class="btn btn-sm btn-primary">Search</button>
+    {% if search %}<a href="{% url 'customers:list' %}" class="btn btn-sm btn-outline-secondary">Clear</a>{% endif %}
+  </form>
+</div></div>
+<div class="card table-card"><div class="card-body p-0">
+  {% if customers_data %}
+  <table class="table table-hover mb-0">
+    <thead><tr><th class="ps-4">Customer</th><th>Phone</th><th>Bookings</th><th>Last Visit</th><th class="text-end pe-4">Actions</th></tr></thead>
+    <tbody>
+      {% for item in customers_data %}
+      <tr>
+        <td class="ps-4">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold" style="width:34px;height:34px;font-size:.8rem">{{ item.customer.full_name|first|upper }}</div>
+            <div class="fw-medium">{{ item.customer.full_name }}</div>
+          </div>
+        </td>
+        <td>{{ item.customer.phone }}</td>
+        <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ item.appointment_count }}</span></td>
+        <td>{{ item.last_visit|default:"—" }}</td>
+        <td class="text-end pe-4"><a href="{% url 'customers:detail' item.customer.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i> View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<div class="text-center py-5 text-muted"><i class="bi bi-people fs-2 d-block mb-2"></i>No customers yet.</div>{% endif %}
+</div></div>
+{% endblock %}

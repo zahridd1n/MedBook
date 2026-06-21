@@ -1,0 +1,54 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}Business Settings{% endblock %}
+{% block dashboard_content %}
+<h4 class="fw-bold mb-4">Business Settings</h4>
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card table-card"><div class="card-body p-4">
+      <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        <h6 class="fw-semibold text-uppercase text-muted small mb-3">Basic Info</h6>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6"><label class="form-label fw-medium">Business Name *</label>{{ form.name }}</div>
+          <div class="col-md-6"><label class="form-label fw-medium">Category</label>{{ form.category }}</div>
+          <div class="col-12"><label class="form-label fw-medium">About</label>{{ form.about }}</div>
+          <div class="col-12"><label class="form-label fw-medium">Logo</label>{{ form.logo }}{% if business and business.logo %}<div class="mt-2"><img src="{{ business.logo.url }}" style="height:60px;border-radius:8px;"></div>{% endif %}</div>
+        </div>
+        <h6 class="fw-semibold text-uppercase text-muted small mb-3">Contact</h6>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6"><label class="form-label fw-medium">Phone</label>{{ form.phone }}</div>
+          <div class="col-md-6"><label class="form-label fw-medium">Email</label>{{ form.email }}</div>
+          <div class="col-md-8"><label class="form-label fw-medium">Address</label>{{ form.address }}</div>
+          <div class="col-md-4"><label class="form-label fw-medium">City</label>{{ form.city }}</div>
+        </div>
+        <h6 class="fw-semibold text-uppercase text-muted small mb-3">Social</h6>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6"><label class="form-label fw-medium"><i class="bi bi-telegram text-info me-1"></i>Telegram</label>{{ form.telegram }}</div>
+          <div class="col-md-6"><label class="form-label fw-medium"><i class="bi bi-instagram text-danger me-1"></i>Instagram</label>{{ form.instagram }}</div>
+          <div class="col-md-6"><label class="form-label fw-medium">Website</label>{{ form.website }}</div>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+          {% if business %}<a href="/{{ business.slug }}/" target="_blank" class="btn btn-outline-secondary"><i class="bi bi-box-arrow-up-right me-1"></i>Preview</a>{% endif %}
+        </div>
+      </form>
+    </div></div>
+  </div>
+  {% if business %}
+  <div class="col-lg-4">
+    <div class="card table-card mb-3"><div class="card-body p-4">
+      <h6 class="fw-semibold mb-2">Your Public Page</h6>
+      <code class="d-block bg-light rounded p-2 mb-3 small text-break">{{ request.META.HTTP_HOST }}/{{ business.slug }}/</code>
+      <a href="/{{ business.slug }}/" target="_blank" class="btn btn-primary w-100"><i class="bi bi-globe me-2"></i>Open</a>
+    </div></div>
+    <div class="card table-card"><div class="card-body p-4">
+      <h6 class="fw-semibold mb-3">Quick Links</h6>
+      <div class="d-grid gap-2">
+        <a href="{% url 'business:working_hours' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-clock me-2"></i>Working Hours</a>
+        <a href="{% url 'business:faq_list' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-question-circle me-2"></i>FAQ</a>
+        <a href="{% url 'business:telegram' %}" class="btn btn-outline-info btn-sm"><i class="bi bi-telegram me-2"></i>Telegram Notifications</a>
+      </div>
+    </div></div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

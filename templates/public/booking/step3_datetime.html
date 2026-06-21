@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Select Date & Time — {{ business.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .booking-progress { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+  .progress-step {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85rem;
+    background: #e2e8f0; color: #94a3b8;
+  }
+  .progress-step.active { background: #6366f1; color: white; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+  .progress-step.done { background: #10b981; color: white; }
+  .progress-line { width: 40px; height: 2px; background: #e2e8f0; align-self: center; }
+  .progress-line.done { background: #10b981; }
+  .day-chip {
+    display: inline-flex; flex-direction: column; align-items: center;
+    padding: 0.75rem 1rem; border-radius: 1rem;
+    border: 1px solid rgba(226,232,240,0.8);
+    cursor: pointer; text-decoration: none;
+    transition: all 0.2s ease; min-width: 70px;
+    background: white; color: #334155;
+  }
+  .day-chip:hover, .day-chip.active {
+    border-color: #6366f1; background: rgba(99,102,241,0.05); color: #6366f1;
+  }
+  .day-chip.active { background: #6366f1; color: white; }
+  .day-chip .day-name { font-size: 0.7rem; text-transform: uppercase; font-weight: 600; }
+  .day-chip .day-num { font-size: 1.15rem; font-weight: 700; }
+  .slot-btn {
+    display: inline-block; padding: 0.6rem 1.25rem;
+    border-radius: 0.75rem; border: 1px solid rgba(226,232,240,0.8);
+    cursor: pointer; text-decoration: none;
+    font-weight: 600; font-size: 0.9rem;
+    transition: all 0.2s ease; background: white; color: #334155;
+  }
+  .slot-btn:hover { border-color: #6366f1; color: #6366f1; background: rgba(99,102,241,0.05); }
+  .calendar-ribbon { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; }
+  .calendar-ribbon::-webkit-scrollbar { height: 4px; }
+  .calendar-ribbon::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+</style>
+{% endblock %}
+
+{% block body %}
+{% include 'public/includes/navbar.html' %}
+<div class="container py-5" style="max-width: 800px;">
+  <!-- Progress -->
+  <div class="booking-progress">
+    <div class="progress-step done"><i class="bi bi-check"></i></div>
+    <div class="progress-line done"></div>
+    <div class="progress-step active">2</div>
+    <div class="progress-line"></div>
+    <div class="progress-step">3</div>
+  </div>
+
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-dark">Sana va vaqtni tanlang</h2>
+    <p class="text-muted">
+      {% if service %}<strong>{{ service.name }}</strong>{% endif %}
+      {% if service and employee %} with {% endif %}
+      {% if employee %}<strong>{{ employee.name }}</strong>{% endif %}
+      {% if not service and not employee %}
+        {{ business.name }}
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- Date Ribbon -->
+  <div class="calendar-ribbon mb-4">
+    {% for day in days %}
+      <a href="?date={{ day.date|date:'Y-m-d' }}"
+         class="day-chip {% if selected_date == day.date|date:'Y-m-d' %}active{% endif %}">
+        <span class="day-name">{{ day.date|date:'D' }}</span>
+        <span class="day-num">{{ day.date|date:'d' }}</span>
+        <span class="day-name">{{ day.date|date:'M' }}</span>
+      </a>
+    {% empty %}
+      <div class="alert alert-warning w-100 text-center">Keyingi 2 hafta ichida bo'sh kunlar yo'q.</div>
+    {% endfor %}
+  </div>
+
+  <!-- Time Slots -->
+  {% if selected_date %}
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+      <h5 class="fw-bold text-dark mb-3"><i class="bi bi-clock me-2 text-primary"></i>Bo'sh vaqtlar</h5>
+      <div class="d-flex flex-wrap gap-2">
+        {% for slot in selected_slots %}
+          <a href="{% url 'public-booking-step3' business.slug %}?service={{ service.id|default:'0' }}&employee={{ employee.id|default:'0' }}&date={{ selected_date }}&time={{ slot|time:'H:i' }}"
+             class="slot-btn">
+            {{ slot|time:"H:i" }}
+          </a>
+        {% empty %}
+          <div class="alert alert-info w-100 mb-0 text-center">Bu sana uchun bo'sh vaqt yo'q.</div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    {% if days %}
+      <div class="text-center text-muted py-4">
+        <i class="bi bi-hand-index-thumb fs-3 d-block mb-2 text-primary"></i>
+        <p class="fw-semibold">Bo'sh vaqtlarni ko'rish uchun yuqoridan sanani tanlang.</p>
+      </div>
+    {% endif %}
+  {% endif %}
+
+  <div class="text-center mt-3">
+    <a href="{% url 'public-booking-step1' business.slug %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Orqaga</a>
+  </div>
+</div>
+{% endblock %}

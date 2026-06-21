@@ -1,0 +1,464 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} — {{ business.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .breadcrumb-nav {
+    background: #f8fafc;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 0;
+  }
+  
+  .breadcrumb-nav .breadcrumb {
+    margin-bottom: 0;
+  }
+  
+  .blog-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 0;
+    margin-bottom: 2rem;
+  }
+  
+  .blog-title {
+    font-size: 2.75rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+  
+  .blog-meta {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    color: rgba(255,255,255,0.85);
+    font-size: 0.95rem;
+    flex-wrap: wrap;
+  }
+  
+  .blog-meta i {
+    margin-right: 0.5rem;
+  }
+  
+  .blog-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  
+  .featured-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 2rem 0;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+  }
+  
+  .blog-content {
+    line-height: 1.85;
+    color: #475569;
+    font-size: 1.05rem;
+    margin-bottom: 3rem;
+  }
+  
+  .blog-content h2 {
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid #667eea;
+  }
+  
+  .blog-content h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .blog-content p {
+    margin-bottom: 1.25rem;
+  }
+  
+  .blog-content ul, .blog-content ol {
+    margin-left: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .blog-content li {
+    margin-bottom: 0.75rem;
+  }
+  
+  .blog-content blockquote {
+    border-left: 4px solid #667eea;
+    background: #f8fafc;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+    font-style: italic;
+    color: #64748b;
+  }
+  
+  .blog-footer {
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 2rem 0;
+    margin: 3rem 0;
+  }
+  
+  .comments-section {
+    margin-top: 3rem;
+  }
+  
+  .comments-section h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .comment-count {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  
+  .comment-item {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .comment-item:last-child {
+    border-bottom: none;
+  }
+  
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .comment-avatar {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  
+  .comment-meta {
+    flex: 1;
+  }
+  
+  .comment-name {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 0.95rem;
+  }
+  
+  .comment-date {
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+  
+  .comment-content {
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-left: 3.5rem;
+  }
+  
+  .comment-form {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .comment-form h5 {
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .form-control {
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #6a3f91 100%);
+  }
+  
+  .sidebar-section {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.75rem;
+    margin-bottom: 1.75rem;
+  }
+  
+  .sidebar-section h6 {
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #667eea;
+  }
+  
+  .business-card-sidebar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  
+  .business-logo-sidebar {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 1rem;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .business-card-sidebar h6 {
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  
+  .business-card-sidebar p {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin-bottom: 1rem;
+  }
+  
+  .btn-business {
+    background: white;
+    color: #667eea;
+    border: none;
+    font-weight: 600;
+  }
+  
+  .btn-business:hover {
+    background: #f0f4ff;
+  }
+  
+  .empty-comments {
+    text-align: center;
+    padding: 2rem;
+    color: #94a3b8;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+{% include 'public/includes/navbar.html' %}
+<div class="breadcrumb-nav">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{% url 'public-home' business.slug %}">{{ business.name }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'public-blog-list' business.slug %}">Blog</a></li>
+        <li class="breadcrumb-item active">{{ post.title|truncatewords:5 }}</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="blog-header">
+  <div class="container">
+    <h1 class="blog-title">{{ post.title }}</h1>
+    <div class="blog-meta">
+      <div class="blog-meta-item">
+        <i class="bi bi-calendar3"></i>
+        {{ post.created_at|date:"d.m.Y" }}
+      </div>
+      <div class="blog-meta-item">
+        <i class="bi bi-eye"></i>
+        {{ post.views_count }} ta ko'rish
+      </div>
+      {% if comments|length %}
+      <div class="blog-meta-item">
+        <i class="bi bi-chat-left"></i>
+        {{ comments|length }} ta izoh
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+  <div class="row">
+    <div class="col-lg-8">
+      <article>
+        {% if post.featured_image %}
+        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="featured-image">
+        {% endif %}
+
+        <div class="blog-content">
+          {{ post.content|linebreaks }}
+        </div>
+        
+        <div class="blog-footer">
+          <div class="row">
+            <div class="col-md-6">
+              <p class="mb-0"><strong>Maqola muallifi:</strong></p>
+              <p class="text-muted mb-0">{{ business.name }}</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+              <p class="mb-0"><strong>Oxirgi yangilanish:</strong></p>
+              <p class="text-muted mb-0">{{ post.updated_at|date:"d.m.Y H:i" }}</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Comments Section -->
+      <section class="comments-section">
+        <h3><i class="bi bi-chat-left-text"></i> Izohlar <span class="comment-count">{{ comments|length }}</span></h3>
+
+        {% if comments %}
+        <div class="mb-4">
+          {% for comment in comments %}
+          <div class="comment-item">
+            <div class="comment-header">
+              <div class="comment-avatar">{{ comment.name|first|upper }}</div>
+              <div class="comment-meta">
+                <div class="comment-name">{{ comment.name }}</div>
+                <div class="comment-date">{{ comment.created_at|date:"d.m.Y H:i" }}</div>
+              </div>
+            </div>
+            <div class="comment-content">{{ comment.content }}</div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-comments">
+          <i class="bi bi-chat-left" style="font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 1rem;"></i>
+          <p>Hozircha izohlar yo'q. Siz birinchi bo'lib izoh qo'shishingiz mumkin!</p>
+        </div>
+        {% endif %}
+
+        <!-- Comment Form -->
+        <div class="comment-form">
+          <h5><i class="bi bi-pencil-square"></i> Izoh qo'shish</h5>
+          <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="{{ form.name.id_for_label }}" class="form-label">Ismingiz <span class="text-danger">*</span></label>
+              {{ form.name }}
+              {% if form.name.errors %}
+              <small class="text-danger d-block mt-1">{{ form.name.errors|first }}</small>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.email.id_for_label }}" class="form-label">Email <span class="text-danger">*</span></label>
+              {{ form.email }}
+              {% if form.email.errors %}
+              <small class="text-danger d-block mt-1">{{ form.email.errors|first }}</small>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.content.id_for_label }}" class="form-label">Izoh <span class="text-danger">*</span></label>
+              {{ form.content }}
+              {% if form.content.errors %}
+              <small class="text-danger d-block mt-1">{{ form.content.errors|first }}</small>
+              {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-send"></i> Jo'natish
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <div class="sidebar-section">
+        <h6><i class="bi bi-building"></i> Biznes Haqida</h6>
+        <div class="business-card-sidebar">
+          {% if business.logo %}
+          <div class="business-logo-sidebar">
+            <img src="{{ business.logo.url }}" alt="{{ business.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+          </div>
+          {% else %}
+          <div class="business-logo-sidebar">
+            <i class="bi bi-building" style="font-size: 2rem;"></i>
+          </div>
+          {% endif %}
+          <h6>{{ business.name }}</h6>
+          {% if business.about %}
+          <p>{{ business.about|truncatewords:15 }}</p>
+          {% else %}
+          <p>Biznesning veb-sahifasi</p>
+          {% endif %}
+          <a href="{% url 'public-home' business.slug %}" class="btn btn-sm btn-business w-100">
+            <i class="bi bi-arrow-right"></i> To'liq ma'lumot
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h6><i class="bi bi-newspaper"></i> Boshqa Bloglar</h6>
+        <a href="{% url 'public-blog-list' business.slug %}" class="btn btn-outline-primary w-100">
+          <i class="bi bi-arrow-right"></i> Barcha bloglar
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <h6><i class="bi bi-bookmark"></i> Xizmatlar</h6>
+        <p class="text-muted small mb-0">Ushbu biznesning xizmatlariga buyurtma berish uchun "Buyurtma" tugmasini bosing.</p>
+        <a href="{% url 'public-booking-step1' business.slug %}" class="btn btn-primary w-100 mt-3">
+          <i class="bi bi-calendar-check"></i> Buyurtma Berish
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

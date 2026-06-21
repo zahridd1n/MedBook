@@ -1,0 +1,77 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}Working Hours{% endblock %}
+{% block dashboard_content %}
+
+<div class="d-flex align-items-center gap-2 mb-4">
+  <a href="{% url 'dashboard:home' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+  <h4 class="fw-bold mb-0"><i class="bi bi-clock text-primary me-2"></i>Working Hours</h4>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card table-card">
+      <div class="card-body p-4">
+        <form method="post">{% csrf_token %}
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th style="width:30%">Day</th>
+                  <th style="width:15%" class="text-center">Open?</th>
+                  <th style="width:25%">Opens at</th>
+                  <th style="width:25%">Closes at</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for h in hours %}
+                <tr>
+                  <td>
+                    <span class="fw-medium">{{ h.get_day_display }}</span>
+                  </td>
+                  <td class="text-center">
+                    <div class="form-check form-switch d-flex justify-content-center mb-0">
+                      <input class="form-check-input" type="checkbox" name="is_open_{{ h.day }}" id="open_{{ h.day }}" {% if h.is_open %}checked{% endif %} onchange="toggleRow({{ h.day }})">
+                    </div>
+                  </td>
+                  <td>
+                    <input type="time" class="form-control form-control-sm" name="open_time_{{ h.day }}" id="open_time_{{ h.day }}" value="{{ h.open_time|date:'H:i' }}" {% if not h.is_open %}disabled{% endif %}>
+                  </td>
+                  <td>
+                    <input type="time" class="form-control form-control-sm" name="close_time_{{ h.day }}" id="close_time_{{ h.day }}" value="{{ h.close_time|date:'H:i' }}" {% if not h.is_open %}disabled{% endif %}>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-4">
+            <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check-lg me-1"></i>Save Working Hours</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card table-card">
+      <div class="card-body p-4">
+        <h6 class="fw-semibold mb-3"><i class="bi bi-info-circle text-info me-2"></i>Tips</h6>
+        <ul class="list-unstyled text-muted small mb-0">
+          <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Toggle the switch to mark a day as open or closed.</li>
+          <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Set the opening and closing times for each open day.</li>
+          <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Closed days won't show time slots on your booking page.</li>
+          <li><i class="bi bi-check-circle text-success me-2"></i>Don't forget to save after making changes!</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleRow(day) {
+  const checked = document.getElementById('open_' + day).checked;
+  document.getElementById('open_time_' + day).disabled = !checked;
+  document.getElementById('close_time_' + day).disabled = !checked;
+}
+</script>
+{% endblock %}
