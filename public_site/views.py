@@ -159,6 +159,8 @@ def booking_step4_confirm(request, slug):
         return redirect('public-booking-step1', slug=slug)
 
     if request.method == 'POST':
+        if not business.can_create_appointment():
+            return render(request, 'public/booking/limit_reached.html', {'business': business})
         form = BookingForm(request.POST)
         if form.is_valid():
             # Get or create customer

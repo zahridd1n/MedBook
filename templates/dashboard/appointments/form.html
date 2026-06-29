@@ -1,9 +1,9 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}{{ action }} Appointment{% endblock %}
+{% block page_title %}Qabul {{ action }}{% endblock %}
 {% block dashboard_content %}
 <div class="d-flex align-items-center gap-2 mb-4">
   <a href="{% url 'appointments:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
-  <h4 class="fw-bold mb-0">{{ action }} Appointment</h4>
+  <h4 class="fw-bold mb-0">Qabul {{ action }}</h4>
 </div>
 <div class="row justify-content-center">
   <div class="col-lg-7">
@@ -11,18 +11,18 @@
       <div class="card-body p-4">
         <form method="post">{% csrf_token %}
           <div class="row g-3">
-            <div class="col-md-6"><label class="form-label fw-medium">Customer Name</label>{{ form.customer_name }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Phone</label>{{ form.customer_phone }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Service</label>{{ form.service }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Employee</label>{{ form.employee }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Date</label>{{ form.date }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Time</label>{{ form.time }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Status</label>{{ form.status }}</div>
-            <div class="col-12"><label class="form-label fw-medium">Notes</label>{{ form.notes }}</div>
+            <div class="col-md-6"><label class="form-label fw-medium">Mijoz Ismi</label>{{ form.customer_name }}</div>
+            <div class="col-md-6"><label class="form-label fw-medium">Telefon</label>{{ form.customer_phone }}</div>
+            <div class="col-md-6"><label class="form-label fw-medium">Xizmat</label>{{ form.service }}</div>
+            <div class="col-md-6"><label class="form-label fw-medium">Xodim</label>{{ form.employee }}</div>
+            <div class="col-md-6"><label class="form-label fw-medium">Sana</label>{{ form.date }}</div>
+            <div class="col-md-6"><label class="form-label fw-medium">Vaqt</label>{{ form.time }}</div>
+            <div class="col-md-6"><label class="form-label fw-medium">Holat</label>{{ form.status }}</div>
+            <div class="col-12"><label class="form-label fw-medium">Eslatmalar</label>{{ form.notes }}</div>
           </div>
           <div class="d-flex gap-2 mt-4">
-            <button type="submit" class="btn btn-primary px-4">Save</button>
-            <a href="{% url 'appointments:list' %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary px-4">Saqlash</button>
+            <a href="{% url 'appointments:list' %}" class="btn btn-outline-secondary">Bekor qilish</a>
           </div>
         </form>
       </div>

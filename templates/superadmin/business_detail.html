@@ -1,0 +1,167 @@
+{% extends 'superadmin/base_superadmin.html' %}
+{% block title %}Biznes: {{ business.name }} — Admin{% endblock %}
+{% block page_title %}Biznes Batafsil{% endblock %}
+
+{% block sa_content %}
+<div class="row g-4">
+  <!-- Left Column: Business Info & Actions -->
+  <div class="col-lg-4">
+    
+    <!-- Business Profile Card -->
+    <div class="card stat-card mb-4">
+      <div class="card-body p-4 text-center">
+        {% if business.logo %}
+          <img src="{{ business.logo.url }}" alt="{{ business.name }}" class="rounded-3 mb-3 shadow-sm" style="width: 80px; height: 80px; object-fit: cover;">
+        {% else %}
+          <div class="rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 80px; height: 80px; background: rgba(99,102,241,.1); color: #6366f1; font-size: 2rem; font-weight: 800;">
+            {{ business.name|first|upper }}
+          </div>
+        {% endif %}
+        
+        <h5 class="fw-bold mb-1">{{ business.name }}</h5>
+        <div class="text-muted small mb-3">/{{ business.slug }}/</div>
+        
+        <div class="d-flex justify-content-center gap-2 mb-4">
+          <span class="badge-status badge-{{ business.subscription_plan }}">
+            {{ business.get_subscription_plan_display }}
+          </span>
+          {% if business.is_blocked %}
+            <span class="badge-status badge-blocked"><i class="bi bi-shield-x me-1"></i>Bloklangan</span>
+          {% else %}
+            <span class="badge-status badge-active"><i class="bi bi-check-circle me-1"></i>Faol</span>
+          {% endif %}
+        </div>
+
+        <form method="post" action="{% url 'superadmin:toggle_block' business.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          {% if business.is_blocked %}
+            <button type="submit" class="btn btn-success w-100"><i class="bi bi-unlock-fill me-2"></i>Blokdan chiqarish</button>
+          {% else %}
+            <button type="submit" class="btn btn-outline-danger w-100" onclick="return confirm('Rostdan ham bloklaysizmi?')"><i class="bi bi-lock-fill me-2"></i>Biznesni bloklash</button>
+          {% endif %}
+        </form>
+      </div>
+      <div class="card-footer bg-white border-top text-start p-3">
+        <div class="mb-2"><small class="text-muted fw-semibold">Owner:</small> <div>{{ business.owner.get_full_name }}</div></div>
+        <div class="mb-2"><small class="text-muted fw-semibold">Email:</small> <div>{{ business.owner.email }}</div></div>
+        <div class="mb-2"><small class="text-muted fw-semibold">Telefon:</small> <div>{{ business.phone|default:"Kiritilmagan" }}</div></div>
+        <div class="mb-2"><small class="text-muted fw-semibold">Kategoriya:</small> <div>{{ business.get_category_display }}</div></div>
+        <div class="mb-0"><small class="text-muted fw-semibold">Sana:</small> <div>{{ business.created_at|date:"d.m.Y H:i" }}</div></div>
+      </div>
+    </div>
+
+    <!-- Subscription Management Card -->
+    <div class="card stat-card mb-4">
+      <div class="card-header bg-white border-bottom p-3 fw-bold">
+        <i class="bi bi-credit-card-fill me-2 text-primary"></i>Obuna Boshqaruvi
+      </div>
+      <div class="card-body p-3">
+        <form method="post" action="{% url 'superadmin:update_subscription' business.pk %}">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">Tarif rejasi (Plan)</label>
+            <select name="subscription_plan" class="form-select">
+              {% for val, label in business.PLAN_CHOICES %}
+                <option value="{{ val }}" {% if business.subscription_plan == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">Obuna Holati</label>
+            <select name="subscription_status" class="form-select">
+              {% for val, label in business.SUB_STATUS_CHOICES %}
+                <option value="{{ val }}" {% if business.subscription_status == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">
+              Obuna tugash vaqti
+              {% if business.subscription_end %}
+                <span class="text-muted fw-normal">({{ business.subscription_end|date:"d.m.Y H:i" }})</span>
+              {% endif %}
+            </label>
+            <input type="datetime-local" name="subscription_end" class="form-control"
+                   value="{% if business.subscription_end %}{{ business.subscription_end|date:'Y-m-d\\TH:i' }}{% endif %}">
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Saqlash</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Change Owner Password Card -->
+    <div class="card stat-card">
+      <div class="card-header bg-white border-bottom p-3 fw-bold">
+        <i class="bi bi-key-fill me-2 text-warning"></i>Egasi Parolini O'zgartirish
+      </div>
+      <div class="card-body p-3">
+        <form method="post" action="{% url 'superadmin:change_owner_password' business.pk %}" onsubmit="return confirm('Parolni o\'zgartirishni tasdiqlaysizmi?')">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">Yangi parol</label>
+            <input type="password" name="new_password" class="form-control" placeholder="Kamida 6 belgi" minlength="6" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">Parolni takrorlang</label>
+            <input type="password" name="confirm_password" class="form-control" placeholder="Yana bir marta kiriting" required>
+          </div>
+          <button type="submit" class="btn btn-warning w-100"><i class="bi bi-shield-lock me-2"></i>Parolni yangilash</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Column: Stats & Lists -->
+  <div class="col-lg-8">
+    <!-- Quick Stats -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card stat-card p-3 d-flex flex-row align-items-center gap-3">
+          <div class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-calendar-check"></i></div>
+          <div><div class="fs-4 fw-bold lh-1 text-dark">{{ total_appointments }}</div><div class="small text-muted fw-semibold mt-1">Bandlovlar</div></div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card stat-card p-3 d-flex flex-row align-items-center gap-3">
+          <div class="stat-icon bg-success-subtle text-success"><i class="bi bi-people"></i></div>
+          <div><div class="fs-4 fw-bold lh-1 text-dark">{{ customers_count }}</div><div class="small text-muted fw-semibold mt-1">Mijozlar</div></div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card stat-card p-3 d-flex flex-row align-items-center gap-3">
+          <div class="stat-icon bg-warning-subtle text-warning"><i class="bi bi-person-badge"></i></div>
+          <div><div class="fs-4 fw-bold lh-1 text-dark">{{ employees.count }}</div><div class="small text-muted fw-semibold mt-1">Xodimlar</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Appointments -->
+    <div class="card sa-table-card mb-4">
+      <div class="card-header border-bottom">Oxirgi Bandlovlar (20 ta)</div>
+      <div class="table-responsive">
+        <table class="table sa-table mb-0">
+          <thead><tr><th>Sana/Vaqt</th><th>Mijoz</th><th>Xizmat</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for appt in appointments %}
+            <tr>
+              <td><div class="fw-semibold">{{ appt.date|date:"d.m.Y" }}</div><div class="text-muted small">{{ appt.time|time:"H:i" }}</div></td>
+              <td>{{ appt.customer.full_name }}</td>
+              <td><span class="badge bg-light text-dark border">{{ appt.service.name|default:"-" }}</span></td>
+              <td><span class="badge bg-{{ appt.status_color }}">{{ appt.get_status_display }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center py-4 text-muted">Bandlovlar yo'q</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -7,15 +7,16 @@
 <style>
   /* ── Reset & tokens ─────────────────────────────────────── */
   :root {
+    --brand-primary: {{ business.primary_color|default:'#6366f1' }};
+    --indigo: var(--brand-primary);
+    --indigo-dark: color-mix(in srgb, var(--brand-primary) 80%, #000);
+    --indigo-light: color-mix(in srgb, var(--brand-primary) 12%, #fff);
     --ink: #0f172a;
     --ink-soft: #334155;
     --ink-muted: #64748b;
     --surface: #ffffff;
     --surface-alt: #f8fafc;
     --border: rgba(226,232,240,0.8);
-    --indigo: #6366f1;
-    --indigo-dark: #4f46e5;
-    --indigo-light: #eef2ff;
     --emerald: #10b981;
     --radius-card: 1.25rem;
     --shadow-card: 0 4px 24px rgba(15,23,42,0.07);
@@ -23,6 +24,21 @@
   }
 
   body { background: var(--surface-alt); color: var(--ink); }
+
+  /* ── Generated style options ──────────────────────────── */
+  {% if business.button_style == 'square' %}
+  .btn-book-primary, .btn-service, .bk-service-card, .bk-team-card, .bk-hours-card, .bk-hero__card, .bk-blog-card, .bk-cta, .bk-accordion .accordion-item { border-radius: 0.5rem !important; }
+  {% elif business.button_style == 'pill' %}
+  .btn-book-primary, .btn-service { border-radius: 50rem !important; }
+  {% endif %}
+  {% if business.card_shadow == 'light' %}
+  .bk-service-card, .bk-team-card, .bk-hours-card, .bk-hero__card, .bk-blog-card { box-shadow: 0 1px 4px rgba(15,23,42,0.04) !important; }
+  {% elif business.card_shadow == 'strong' %}
+  .bk-service-card, .bk-team-card, .bk-hours-card, .bk-hero__card, .bk-blog-card { box-shadow: 0 12px 40px rgba(15,23,42,0.12) !important; }
+  {% endif %}
+  {% if business.custom_css %}
+  {{ business.custom_css|safe }}
+  {% endif %}
 
   /* ── HERO ───────────────────────────────────────────────── */
   .bk-hero {
@@ -32,10 +48,40 @@
     padding: 5rem 0 4rem;
     isolation: isolate;
   }
+  .bk-hero.has-banner {
+    padding: 0;
+    background: none;
+  }
+  .bk-hero__banner-wrap {
+    position: relative;
+    width: 100%;
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .bk-hero__banner-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .bk-hero__banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(15,23,42,0.92) 0%, rgba(15,23,42,0.65) 50%, rgba(15,23,42,0.8) 100%);
+  }
+  .bk-hero__banner-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 4rem 0;
+  }
 
-  /* animated mesh blobs */
-  .bk-hero::before,
-  .bk-hero::after {
+  /* animated mesh blobs (only when no banner) */
+  .bk-hero:not(.has-banner)::before,
+  .bk-hero:not(.has-banner)::after {
     content: '';
     position: absolute;
     border-radius: 50%;
@@ -44,12 +90,12 @@
     animation: drift 12s ease-in-out infinite alternate;
     pointer-events: none;
   }
-  .bk-hero::before {
+  .bk-hero:not(.has-banner)::before {
     width: 560px; height: 560px;
     background: radial-gradient(circle, #6366f1 0%, transparent 70%);
     top: -180px; left: -100px;
   }
-  .bk-hero::after {
+  .bk-hero:not(.has-banner)::after {
     width: 420px; height: 420px;
     background: radial-gradient(circle, #10b981 0%, transparent 70%);
     bottom: -120px; right: -60px;
@@ -501,9 +547,15 @@
 <!-- ══════════════════════════════════════
      HERO
 ══════════════════════════════════════ -->
-<header class="bk-hero">
-  <div class="container" style="position:relative;z-index:2;">
-    <div class="row align-items-center g-5">
+<header class="bk-hero{% if business.banner_image %} has-banner{% endif %}">
+{% if business.banner_image %}
+  <div class="bk-hero__banner-wrap">
+    <img src="{{ business.banner_image.url }}" alt="" class="bk-hero__banner-img">
+    <div class="bk-hero__banner-overlay"></div>
+    <div class="bk-hero__banner-content">
+{% endif %}
+      <div class="container"{% if not business.banner_image %} style="position:relative;z-index:2;"{% endif %}>
+        <div class="row align-items-center g-5">
 
       <!-- Left: Copy -->
       <div class="col-lg-7">
@@ -532,24 +584,7 @@
           <i class="bi bi-arrow-right"></i>
         </a>
 
-        <div class="bk-hero__meta">
-          {% if business.address %}
-            <div class="bk-hero__meta-item">
-              <i class="bi bi-geo-alt-fill"></i>
-              {{ business.address }}
-            </div>
-          {% endif %}
-          {% if business.phone %}
-            <div class="bk-hero__meta-item">
-              <i class="bi bi-telephone-fill"></i>
-              {{ business.phone }}
-            </div>
-          {% endif %}
-          <div class="bk-hero__meta-item">
-            <i class="bi bi-clock-fill"></i>
-            14 kun oldin band qilish
-          </div>
-        </div>
+
       </div>
 
       <!-- Right: Floating card -->
@@ -608,6 +643,10 @@
 
     </div>
   </div>
+{% if business.banner_image %}
+    </div>
+  </div>
+{% endif %}
 </header>
 
 

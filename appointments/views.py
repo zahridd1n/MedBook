@@ -50,6 +50,13 @@ def _get_or_create_customer(business, name, phone):
 @login_required
 def appointment_create(request):
     business = get_object_or_404(Business, owner=request.user)
+    if not business.can_create_appointment():
+        messages.error(
+            request,
+            f"Oylik qabullar limiti tugadi ({business.plan_display} — oyiga 50 ta)."
+            f" Yangilash uchun tarifni oshiring."
+        )
+        return redirect('appointments:list')
     if request.method == 'POST':
         form = AppointmentForm(request.POST, business=business)
         if form.is_valid():

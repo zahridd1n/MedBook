@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+<style>
+  /* ─── Super Admin Dark Sidebar ──────────────────────────────────────────── */
+  :root {
+    --sa-sidebar-w: 270px;
+    --sa-sidebar-bg: linear-gradient(180deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
+    --sa-accent: #818cf8;
+    --sa-accent-light: rgba(129, 140, 248, 0.12);
+    --sa-text-muted: rgba(255, 255, 255, 0.45);
+  }
+
+  .sa-sidebar {
+    width: var(--sa-sidebar-w);
+    min-height: 100vh;
+    background: var(--sa-sidebar-bg);
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    transition: transform .3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-right: 1px solid rgba(255,255,255,.04);
+  }
+
+  .sa-sidebar-brand {
+    padding: 1.5rem 1.25rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+  }
+  .sa-sidebar-brand a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .sa-sidebar-brand .brand-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; color: #fff;
+  }
+
+  .sa-section-label {
+    padding: .8rem 1.25rem .3rem;
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--sa-text-muted);
+  }
+
+  .sa-sidebar .nav-link {
+    color: rgba(255,255,255,.6);
+    padding: .6rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    font-size: .875rem;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: all .2s ease;
+    text-decoration: none;
+    margin: 1px 0;
+  }
+  .sa-sidebar .nav-link:hover {
+    color: #fff;
+    background: var(--sa-accent-light);
+    border-left-color: transparent;
+  }
+  .sa-sidebar .nav-link.active {
+    color: #fff;
+    background: var(--sa-accent-light);
+    border-left-color: var(--sa-accent);
+    font-weight: 600;
+  }
+  .sa-sidebar .nav-link i {
+    width: 1.1rem;
+    font-size: 1rem;
+    opacity: .85;
+  }
+  .sa-sidebar .nav-link.active i {
+    opacity: 1;
+    color: var(--sa-accent);
+  }
+  .sa-sidebar .nav-link .badge {
+    margin-left: auto;
+    font-size: .6rem;
+    font-weight: 600;
+  }
+
+  /* ─── Admin badge at bottom of sidebar ─────────────────────────────────── */
+  .sa-sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba(255,255,255,.06);
+    background: rgba(0,0,0,.15);
+  }
+  .sa-sidebar-footer .admin-avatar {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 700; color: #fff;
+  }
+
+  /* ─── Main Content ─────────────────────────────────────────────────────── */
+  .sa-main {
+    margin-left: var(--sa-sidebar-w);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f1f5f9;
+  }
+
+  .sa-topbar {
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: .85rem 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0,0,0,.03);
+  }
+  .sa-topbar .page-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #0f172a;
+  }
+
+  .sa-content {
+    padding: 1.75rem;
+    flex: 1;
+  }
+
+  /* ─── Stat Cards ───────────────────────────────────────────────────────── */
+  .stat-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.03);
+    transition: all .25s ease;
+    overflow: hidden;
+    position: relative;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    border-radius: 16px 0 0 16px;
+  }
+  .stat-card.accent-indigo::before { background: linear-gradient(180deg, #6366f1, #818cf8); }
+  .stat-card.accent-emerald::before { background: linear-gradient(180deg, #10b981, #34d399); }
+  .stat-card.accent-amber::before { background: linear-gradient(180deg, #f59e0b, #fbbf24); }
+  .stat-card.accent-rose::before { background: linear-gradient(180deg, #f43f5e, #fb7185); }
+  .stat-card.accent-sky::before { background: linear-gradient(180deg, #0ea5e9, #38bdf8); }
+  .stat-card.accent-violet::before { background: linear-gradient(180deg, #8b5cf6, #a78bfa); }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  }
+  .stat-card .stat-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem;
+  }
+  .stat-card .stat-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    line-height: 1.2;
+  }
+  .stat-card .stat-label {
+    font-size: .78rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  /* ─── Table styling ────────────────────────────────────────────────────── */
+  .sa-table-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.03);
+    overflow: hidden;
+  }
+  .sa-table-card .card-header {
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem 1.25rem;
+    font-weight: 700;
+    font-size: .9rem;
+    color: #0f172a;
+  }
+  .sa-table th {
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #64748b;
+    border-bottom-width: 1px;
+    padding: .75rem 1rem;
+    background: #f8fafc;
+  }
+  .sa-table td {
+    padding: .75rem 1rem;
+    font-size: .875rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .sa-table tbody tr:hover {
+    background: #f8fafc;
+  }
+
+  /* ─── Badges ───────────────────────────────────────────────────────────── */
+  .badge-status { font-size: .7rem; font-weight: 600; padding: .35em .7em; border-radius: 6px; }
+  .badge-active { background: rgba(16,185,129,.12); color: #059669; }
+  .badge-blocked { background: rgba(244,63,94,.12); color: #e11d48; }
+  .badge-trial { background: rgba(245,158,11,.12); color: #d97706; }
+  .badge-paid { background: rgba(16,185,129,.12); color: #059669; }
+  .badge-expired { background: rgba(100,116,139,.12); color: #475569; }
+  .badge-free { background: rgba(100,116,139,.08); color: #94a3b8; }
+  .badge-growth { background: rgba(99,102,241,.12); color: #6366f1; }
+  .badge-enterprise { background: rgba(168,85,247,.12); color: #a855f7; }
+
+  /* ─── Responsive ───────────────────────────────────────────────────────── */
+  @media (max-width: 991px) {
+    .sa-sidebar { transform: translateX(-100%); }
+    .sa-sidebar.show { transform: translateX(0); }
+    .sa-main { margin-left: 0; }
+  }
+
+  /* ─── Chart Container ──────────────────────────────────────────────────── */
+  .chart-container {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.03);
+    padding: 1.5rem;
+  }
+  .chart-container h6 {
+    font-weight: 700;
+    font-size: .85rem;
+    color: #0f172a;
+    margin-bottom: 1rem;
+  }
+
+  /* ─── Search bar ───────────────────────────────────────────────────────── */
+  .sa-search {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: .5rem .85rem;
+    font-size: .875rem;
+    background: #f8fafc;
+    transition: all .2s;
+  }
+  .sa-search:focus {
+    background: #fff;
+    border-color: var(--sa-accent);
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, .15);
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="d-none position-fixed w-100 h-100 bg-dark bg-opacity-50" id="sa-overlay" style="z-index:999" onclick="closeSaSidebar()"></div>
+
+<aside class="sa-sidebar" id="sa-sidebar">
+  <div class="sa-sidebar-brand">
+    <div class="brand-icon"><i class="bi bi-shield-lock-fill"></i></div>
+    <a href="{% url 'superadmin:dashboard' %}">BookSaaS <span style="color: var(--sa-accent); font-size:.7rem; font-weight:400;">Admin</span></a>
+  </div>
+
+  <nav class="mt-1" style="padding-bottom: 80px;">
+    <div class="sa-section-label">Umumiy</div>
+    <a href="{% url 'superadmin:dashboard' %}" class="nav-link {% if request.path == '/superadmin/' %}active{% endif %}">
+      <i class="bi bi-grid-1x2-fill"></i> Dashboard
+    </a>
+    <a href="{% url 'superadmin:businesses' %}" class="nav-link {% if 'businesses' in request.path %}active{% endif %}">
+      <i class="bi bi-buildings-fill"></i> Bizneslar
+    </a>
+    <a href="{% url 'superadmin:statistics' %}" class="nav-link {% if 'statistics' in request.path %}active{% endif %}">
+      <i class="bi bi-graph-up"></i> Statistikalar
+    </a>
+
+    <div class="sa-section-label mt-3">Sozlamalar</div>
+    <a href="{% url 'superadmin:site_settings' %}" class="nav-link {% if 'site-settings' in request.path %}active{% endif %}">
+      <i class="bi bi-sliders"></i> Sayt Sozlamalari
+    </a>
+    <a href="{% url 'marketing:home' %}" class="nav-link" target="_blank">
+      <i class="bi bi-box-arrow-up-right"></i> Marketing Sahifasi
+    </a>
+
+    <div class="sa-section-label mt-3">Tizim</div>
+    <a href="{% url 'admin:index' %}" class="nav-link" target="_blank">
+      <i class="bi bi-database-fill-gear"></i> Django Admin
+    </a>
+  </nav>
+
+  <div class="sa-sidebar-footer">
+    <div class="d-flex align-items-center gap-2">
+      <div class="admin-avatar">
+        {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+      </div>
+      <div class="flex-grow-1">
+        <div class="text-white small fw-semibold" style="font-size:.8rem; line-height:1.2;">{{ user.get_full_name }}</div>
+        <div style="font-size:.65rem; color: var(--sa-text-muted);">Super Admin</div>
+      </div>
+      <a href="{% url 'accounts:logout' %}" class="text-white-50" title="Chiqish"><i class="bi bi-box-arrow-right"></i></a>
+    </div>
+  </div>
+</aside>
+
+<div class="sa-main">
+  <header class="sa-topbar">
+    <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-sm btn-light d-lg-none" onclick="openSaSidebar()"><i class="bi bi-list fs-5"></i></button>
+      <span class="page-title">{% block page_title %}Dashboard{% endblock %}</span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge bg-warning text-dark" style="font-size:.7rem;"><i class="bi bi-shield-fill me-1"></i>Admin Mode</span>
+    </div>
+  </header>
+
+  <div class="sa-content">
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }} alert-dismissible fade show rounded-3 mb-3" style="font-size:.875rem;">
+      {{ msg }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+    {% block sa_content %}{% endblock %}
+  </div>
+</div>
+
+<script>
+function openSaSidebar(){document.getElementById('sa-sidebar').classList.add('show');document.getElementById('sa-overlay').classList.remove('d-none');}
+function closeSaSidebar(){document.getElementById('sa-sidebar').classList.remove('show');document.getElementById('sa-overlay').classList.add('d-none');}
+</script>
+{% endblock %}

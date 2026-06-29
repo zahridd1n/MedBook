@@ -1,14 +1,42 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Dashboard{% endblock %}
+{% block page_title %}Boshqaruv paneli{% endblock %}
 {% block dashboard_content %}
 <div class="mb-4">
   <h4 class="fw-bold mb-0">Salom, {{ user.first_name }} 👋</h4>
   <p class="text-muted mb-0">{{ business.name }} &mdash;
     <a href="/{{ business.slug }}/" target="_blank" class="text-decoration-none small">
-      Public page <i class="bi bi-arrow-up-right-square"></i>
+      Ommaviy sahifa <i class="bi bi-arrow-up-right-square"></i>
     </a>
+    &middot;
+    <span class="badge rounded-pill
+      {% if business.subscription_plan == 'free' %}bg-secondary
+      {% elif business.subscription_plan == 'growth' %}bg-primary
+      {% else %}bg-dark{% endif %}">
+      {{ business.plan_display }}
+    </span>
   </p>
 </div>
+
+{% if sub_expiring %}
+<div class="alert alert-warning alert-dismissible fade show rounded-3 d-flex align-items-center gap-2" role="alert">
+  <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+  <div>
+    <strong>Obuna tugashiga {{ days_left }} kun qoldi.</strong>
+    Tarifingizni uzaytirmasangiz, barcha pullik funksiyalar o'chiriladi va sahifangiz Free rejimiga tushiriladi.
+  </div>
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endif %}
+
+{% if was_downgraded %}
+<div class="alert alert-danger rounded-3 d-flex align-items-center gap-2" role="alert">
+  <i class="bi bi-arrow-down-circle-fill fs-5"></i>
+  <div>
+    <strong>Tarifingiz muddati tugadi.</strong>
+    Sahifangiz <strong>Free</strong> rejimiga tushirildi. Pullik funksiyalarni qayta yoqish uchun tarifni uzaytiring.
+  </div>
+</div>
+{% endif %}
 
 <!-- Stats -->
 <div class="row g-3 mb-4">
@@ -16,7 +44,7 @@
     <div class="card card-stat p-3">
       <div class="d-flex align-items-center gap-3">
         <div class="icon-box bg-primary bg-opacity-10 text-primary"><i class="bi bi-calendar-check"></i></div>
-        <div><div class="fw-bold fs-4">{{ total_appointments }}</div><div class="text-muted small">Total</div></div>
+        <div><div class="fw-bold fs-4">{{ total_appointments }}</div><div class="text-muted small">Jami</div></div>
       </div>
     </div>
   </div>
@@ -24,7 +52,7 @@
     <div class="card card-stat p-3">
       <div class="d-flex align-items-center gap-3">
         <div class="icon-box bg-success bg-opacity-10 text-success"><i class="bi bi-calendar-day"></i></div>
-        <div><div class="fw-bold fs-4">{{ today_count }}</div><div class="text-muted small">Today</div></div>
+        <div><div class="fw-bold fs-4">{{ today_count }}</div><div class="text-muted small">Bugun</div></div>
       </div>
     </div>
   </div>
@@ -32,7 +60,7 @@
     <div class="card card-stat p-3">
       <div class="d-flex align-items-center gap-3">
         <div class="icon-box bg-warning bg-opacity-10 text-warning"><i class="bi bi-hourglass-split"></i></div>
-        <div><div class="fw-bold fs-4">{{ upcoming_appointments|length }}</div><div class="text-muted small">Upcoming</div></div>
+        <div><div class="fw-bold fs-4">{{ upcoming_appointments|length }}</div><div class="text-muted small">Kelgusi</div></div>
       </div>
     </div>
   </div>
@@ -40,7 +68,7 @@
     <div class="card card-stat p-3">
       <div class="d-flex align-items-center gap-3">
         <div class="icon-box bg-info bg-opacity-10 text-info"><i class="bi bi-people"></i></div>
-        <div><div class="fw-bold fs-4">{{ total_customers }}</div><div class="text-muted small">Customers</div></div>
+        <div><div class="fw-bold fs-4">{{ total_customers }}</div><div class="text-muted small">Mijozlar</div></div>
       </div>
     </div>
   </div>
@@ -50,13 +78,13 @@
   <div class="col-lg-7">
     <div class="card table-card">
       <div class="card-header bg-white d-flex align-items-center justify-content-between py-3 px-4">
-        <h6 class="mb-0 fw-semibold">Upcoming Appointments</h6>
-        <a href="{% url 'appointments:list' %}" class="btn btn-sm btn-outline-primary">View all</a>
+        <h6 class="mb-0 fw-semibold">Kelgusi qabullar</h6>
+        <a href="{% url 'appointments:list' %}" class="btn btn-sm btn-outline-primary">Barchasini ko'rish</a>
       </div>
       <div class="card-body p-0">
         {% if upcoming_appointments %}
         <table class="table table-hover mb-0">
-          <thead><tr><th class="ps-4">Customer</th><th>Service</th><th>Date</th><th>Status</th></tr></thead>
+          <thead><tr><th class="ps-4">Mijoz</th><th>Xizmat</th><th>Sana</th><th>Holat</th></tr></thead>
           <tbody>
             {% for a in upcoming_appointments %}
             <tr>
@@ -69,21 +97,22 @@
           </tbody>
         </table>
         {% else %}
-        <div class="text-center py-5 text-muted"><i class="bi bi-calendar-x fs-2 d-block mb-2"></i>No upcoming appointments</div>
+        <div class="text-center py-5 text-muted"><i class="bi bi-calendar-x fs-2 d-block mb-2"></i>Kelgusi qabullar yo'q</div>
         {% endif %}
       </div>
     </div>
   </div>
   <div class="col-lg-5">
     <div class="card table-card mb-3">
-      <div class="card-header bg-white py-3 px-4"><h6 class="mb-0 fw-semibold">Quick Actions</h6></div>
+      <div class="card-header bg-white py-3 px-4"><h6 class="mb-0 fw-semibold">Tezkor harakatlar</h6></div>
       <div class="card-body d-grid gap-2">
-        <a href="{% url 'appointments:create' %}" class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>New Appointment</a>
-        <a href="{% url 'services:create' %}" class="btn btn-outline-secondary"><i class="bi bi-briefcase me-2"></i>Add Service</a>
-        <a href="{% url 'employees:create' %}" class="btn btn-outline-secondary"><i class="bi bi-person-plus me-2"></i>Add Employee</a>
-        <a href="/{{ business.slug }}/" target="_blank" class="btn btn-outline-primary"><i class="bi bi-globe me-2"></i>View Public Page</a>
+        <a href="{% url 'appointments:create' %}" class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>Yangi qabul</a>
+        <a href="{% url 'services:create' %}" class="btn btn-outline-secondary"><i class="bi bi-briefcase me-2"></i>Xizmat qo'shish</a>
+        <a href="{% url 'employees:create' %}" class="btn btn-outline-secondary"><i class="bi bi-person-plus me-2"></i>Xodim qo'shish</a>
+        <a href="/{{ business.slug }}/" target="_blank" class="btn btn-outline-primary"><i class="bi bi-globe me-2"></i>Ommaviy sahifani ko'rish</a>
       </div>
     </div>
+    {% if business.can_use_telegram %}
     <!-- Telegram status card -->
     <div class="card table-card">
       <div class="card-body p-3">
@@ -91,23 +120,39 @@
           <i class="bi bi-telegram text-info fs-5"></i>
           <span class="fw-semibold">Telegram</span>
           {% if business.telegram_notifications_enabled %}
-            <span class="badge bg-success ms-auto">Active</span>
+            <span class="badge bg-success ms-auto">Faol</span>
           {% elif business.telegram_chat_id %}
-            <span class="badge bg-warning text-dark ms-auto">Paused</span>
+            <span class="badge bg-warning text-dark ms-auto">To'xtatilgan</span>
           {% else %}
-            <span class="badge bg-secondary ms-auto">Not connected</span>
+            <span class="badge bg-secondary ms-auto">Ulanmagan</span>
           {% endif %}
         </div>
         {% if business.telegram_chat_id %}
-          <p class="text-muted small mb-2">Notifications go to your Telegram chat.</p>
+          <p class="text-muted small mb-2">Xabarnomalar Telegram chatingizga boradi.</p>
         {% else %}
-          <p class="text-muted small mb-2">Connect Telegram to get instant booking alerts.</p>
+          <p class="text-muted small mb-2">Darhol qabul xabarnomalarini olish uchun Telegramni ulang.</p>
         {% endif %}
         <a href="{% url 'business:telegram' %}" class="btn btn-sm btn-outline-secondary w-100">
-          <i class="bi bi-gear me-1"></i>Telegram Settings
+          <i class="bi bi-gear me-1"></i>Telegram sozlamalari
         </a>
       </div>
     </div>
+    {% else %}
+    <!-- Telegram card (locked for free plan) -->
+    <div class="card table-card opacity-75">
+      <div class="card-body p-3">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="bi bi-telegram text-info fs-5"></i>
+          <span class="fw-semibold">Telegram</span>
+          <span class="badge bg-secondary ms-auto"><i class="bi bi-lock me-1"></i>Pullik</span>
+        </div>
+        <p class="text-muted small mb-2">Telegram xabarnomalar faqat pullik tariflarda mavjud.</p>
+        <a href="{% url 'marketing:pricing' %}" class="btn btn-sm btn-warning w-100">
+          <i class="bi bi-star me-1"></i>Tarifni oshirish
+        </a>
+      </div>
+    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

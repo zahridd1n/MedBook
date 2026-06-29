@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.conf import settings
 
 from .models import Business, WorkingHours, FAQ
-from .forms import BusinessSetupForm, FAQForm
+from .forms import BusinessSetupForm, FAQForm, BrandingForm
 
 
 def _get_business(request):
@@ -23,11 +23,26 @@ def dashboard_home(request):
     if not business:
         return redirect('business:setup')
 
+    if business.is_blocked:
+        return render(request, 'dashboard/blocked.html')
+
+    was_downgraded = business.enforce_subscription()
+
     today = timezone.localdate()
+    now = timezone.now()
     appts = business.appointments.select_related('customer', 'service', 'employee')
+
+    sub_expiring = False
+    days_left = None
+    if business.subscription_end and business.subscription_plan != 'free':
+        days_left = (business.subscription_end - now).days
+        sub_expiring = days_left <= 7
 
     context = {
         'business': business,
+        'sub_expiring': sub_expiring,
+        'days_left': days_left,
+        'was_downgraded': was_downgraded,
         'total_appointments': appts.count(),
         'today_count': appts.filter(date=today).count(),
         'upcoming_appointments': (
@@ -147,6 +162,35 @@ def faq_delete(request, pk):
     return redirect('business:faq_list')
 
 
+# ─── Branding / Page Customization ────────────────────────────────────────────
+
+@login_required
+def branding_settings(request):
+    business = get_object_or_404(Business, owner=request.user)
+    is_paid = business.subscription_plan != 'free'
+
+    if request.method == 'POST':
+        if not is_paid:
+            messages.error(request, 'Sahifa dizaynini sozlash faqat pullik tariflarda mavjud.')
+            return redirect('business:branding')
+        form = BrandingForm(request.POST, request.FILES, instance=business)
+        if form.is_valid():
+            if request.POST.get('remove_banner'):
+                business.banner_image.delete(save=False)
+                business.banner_image = None
+            form.save()
+            messages.success(request, 'Dizayn sozlamalari saqlandi.')
+            return redirect('business:branding')
+    else:
+        form = BrandingForm(instance=business)
+
+    return render(request, 'dashboard/settings/branding.html', {
+        'business': business,
+        'form': form,
+        'is_paid': is_paid,
+    })
+
+
 # ─── Telegram Settings ────────────────────────────────────────────────────────
 
 @login_required
@@ -243,4 +287,79 @@ def telegram_settings(request):
         'bot_token_set': bot_token_set,
         'bot_username': bot_username,
         'webhook_info': webhook_info,
+    })
+
+
+# ─── CSS Documentation ────────────────────────────────────────────────────────
+
+CSS_SECTIONS = [
+    {
+        'title': 'Logotipni kattaroq qilish',
+        'tag': 'img',
+        'code': '.bk-hero__title img { height: 64px !important; }',
+        'desc': 'Logotip rasmini kattalashtirish',
+    },
+    {
+        'title': 'Hero matn rangini o\'zgartirish',
+        'tag': 'text',
+        'code': '.bk-hero__desc { color: rgba(255,255,255,0.8) !important; }',
+        'desc': 'Slogan matni rangini oqroq qilish',
+    },
+    {
+        'title': 'Kartochka fon rangini o\'zgartirish',
+        'tag': 'card',
+        'code': '.bk-service-card, .bk-team-card, .bk-hours-card { background: #fffaf0 !important; }',
+        'desc': 'Xizmat va jamoa kartochkalari fon rangi',
+    },
+    {
+        'title': 'Narx rangini yashil qilish',
+        'tag': 'price',
+        'code': '.bk-service-price { color: #10b981 !important; font-size: 1.3rem !important; }',
+        'desc': 'Xizmat narxini yashil va kattaroq ko\'rsatish',
+    },
+    {
+        'title': 'Orqa fon rangini o\'zgartirish',
+        'tag': 'body',
+        'code': 'body { background: #f0f4ff !important; }',
+        'desc': 'Butun sahifa fon rangini o\'zgartirish',
+    },
+    {
+        'title': 'Tugma hover effekti',
+        'tag': 'button',
+        'code': '.btn-book-primary:hover { transform: scale(1.05) !important; }',
+        'desc': 'Tugma ustiga bosganda kattalashishi',
+    },
+    {
+        'title': 'Kartochka chegarasi (border)',
+        'tag': 'card',
+        'code': '.bk-service-card { border: 2px solid #e0e7ff !important; }',
+        'desc': 'Xizmat kartochkalariga chegara qo\'shish',
+    },
+    {
+        'title': 'Hero balandligi',
+        'tag': 'hero',
+        'code': '.bk-hero { padding: 6rem 0 5rem !important; }',
+        'desc': 'Bosh qism balandligini oshirish',
+    },
+    {
+        'title': 'Xizmat kartochkasida icon rang',
+        'tag': 'icon',
+        'code': '.bk-service-icon { background: #fef3c7 !important; color: #d97706 !important; }',
+        'desc': 'Xizmat ikonkalari rangini o\'zgartirish',
+    },
+    {
+        'title': 'Footer matn rangini o\'zgartirish',
+        'tag': 'footer',
+        'code': '.bk-footer { background: #1e293b !important; color: #94a3b8 !important; }',
+        'desc': 'Pastki qism ranglarini o\'zgartirish',
+    },
+]
+
+
+@login_required
+def css_docs(request):
+    business = get_object_or_404(Business, owner=request.user)
+    return render(request, 'dashboard/settings/css_docs.html', {
+        'business': business,
+        'sections': CSS_SECTIONS,
     })

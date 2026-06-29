@@ -1,0 +1,111 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}Sahifa Dizayni{% endblock %}
+{% block dashboard_content %}
+
+<div class="d-flex align-items-center gap-2 mb-4">
+  <a href="{% url 'dashboard:home' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+  <h4 class="fw-bold mb-0"><i class="bi bi-palette text-primary me-2"></i>Sahifa Dizayni</h4>
+</div>
+
+{% if not is_paid %}
+<div class="alert alert-warning rounded-3 d-flex align-items-center gap-3 mb-4">
+  <i class="bi bi-lock-fill fs-3 text-warning"></i>
+  <div>
+    <strong>Bu funksiya faqat pullik tariflarda mavjud.</strong><br>
+    <span>Ommaviy sahifangiz dizaynini o'zgartirish uchun <strong>"O'sish"</strong> yoki <strong>"Korporativ"</strong> tarifiga o'ting.</span>
+    <a href="{% url 'marketing:pricing' %}" class="btn btn-sm btn-warning mt-2"><i class="bi bi-star me-1"></i>Tarifni oshirish</a>
+  </div>
+</div>
+{% endif %}
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card table-card">
+      <div class="card-body p-4">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Asosiy Rang</label>
+            <div class="d-flex align-items-center gap-3">
+              {{ form.primary_color }}
+              <span class="text-muted small">Sahifangizning asosiy rangini tanlang</span>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Banner Rasm</label>
+            {{ form.banner_image }}
+            <div class="text-muted small mt-1">Ommaviy sahifangiz tepasida ko'rinadi (tavsiya: 1200x400px)</div>
+            {% if business.banner_image %}
+            <div class="mt-2">
+              <img src="{{ business.banner_image.url }}" class="rounded-3 border" style="max-height:120px;width:100%;object-fit:cover;">
+              <label class="d-flex align-items-center gap-1 mt-1 small text-muted">
+                <input type="checkbox" name="remove_banner"> Rasmni o'chirish
+              </label>
+            </div>
+            {% endif %}
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Tugma shakli</label>
+              {{ form.button_style }}
+              <div class="text-muted small mt-1">Tugmalar qanday ko'rinishda bo'lsin</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Kartochka soyasi</label>
+              {{ form.card_shadow }}
+              <div class="text-muted small mt-1">Kartochkalar atrofidagi soya</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">
+              Maxsus CSS
+              {% if not business.can_use_custom_css %}<span class="badge bg-secondary ms-1"><i class="bi bi-lock"></i> Korporativ</span>{% endif %}
+            </label>
+            {{ form.custom_css }}
+            <div class="d-flex align-items-center justify-content-between mt-2">
+              <div class="text-muted small">
+                <i class="bi bi-info-circle me-1"></i> CSS biladiganlar uchun.
+              </div>
+              <a href="{% url 'business:css_docs' %}" target="_blank" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-book me-1"></i>CSS Documentation
+              </a>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary px-4" {% if not is_paid %}disabled{% endif %}>
+            <i class="bi bi-check-lg me-1"></i>Saqlash
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card table-card">
+      <div class="card-body p-4">
+        <h6 class="fw-semibold mb-3"><i class="bi bi-eye me-1 text-primary"></i>Qanday ko'rinadi</h6>
+        <div class="rounded-3 border overflow-hidden" style="background:#f8fafc">
+          {% if business.banner_image %}
+          <img src="{{ business.banner_image.url }}" style="width:100%;height:140px;object-fit:cover;display:block;">
+          {% else %}
+          <div class="d-flex align-items-center justify-content-center text-muted" style="height:100px;background:#e9ecef">
+            <i class="bi bi-image fs-1 opacity-50"></i>
+          </div>
+          {% endif %}
+          <div class="p-3 text-center">
+            <div class="small rounded-2 text-white d-inline-block px-3 py-1 fw-bold" style="background:{{ business.primary_color|default:'#6366f1' }}">
+              {{ business.name }}
+            </div>
+            <p class="text-muted small mt-2 mb-0">Sahifangiz banner va rang bilan</p>
+          </div>
+        </div>
+        <hr>
+        <div class="small text-muted">
+          <p class="mb-1"><i class="bi bi-info-circle me-1"></i>O'zgarishlar avtomatik ommaviy sahifangizda qo'llaniladi.</p>
+          <a href="/{{ business.slug }}/" target="_blank" class="btn btn-sm btn-outline-secondary w-100 mt-2">
+            <i class="bi bi-box-arrow-up-right me-1"></i>Ommaviy sahifani ko'rish
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

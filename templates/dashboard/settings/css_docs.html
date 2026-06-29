@@ -1,0 +1,58 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}CSS Documentation{% endblock %}
+{% block dashboard_content %}
+
+<div class="d-flex align-items-center gap-2 mb-4">
+  <a href="{% url 'business:branding' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+  <h4 class="fw-bold mb-0"><i class="bi bi-file-code text-primary me-2"></i>CSS Documentation</h4>
+</div>
+
+<p class="text-muted mb-4">Quyidagi kodlardan foydalanib sahifangizni yanada chiroyli qilishingiz mumkin. Kodni <strong>nusxalash</strong> tugmasini bosib oling va <strong>Sahifa Dizayni → Maxsus CSS</strong> maydoniga joylang.</p>
+
+<div class="row g-4">
+  {% for section in sections %}
+  <div class="col-lg-6">
+    <div class="card table-card h-100">
+      <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between py-3 px-4">
+        <h6 class="mb-0 fw-semibold">{{ section.title }}</h6>
+        <span class="badge bg-light text-dark border">{{ section.tag }}</span>
+      </div>
+      <div class="card-body p-0">
+        <div class="p-3" style="background:#0f172a;font-family:monospace;font-size:.82rem;line-height:1.7;color:#e2e8f0;overflow-x:auto;">
+          <pre style="margin:0;white-space:pre-wrap;">{{ section.code }}</pre>
+        </div>
+      </div>
+      <div class="card-footer bg-white border-top p-3">
+        <div class="d-flex align-items-center justify-content-between">
+          <small class="text-muted">{{ section.desc }}</small>
+          <button class="btn btn-sm btn-outline-secondary copy-btn" data-code="{{ section.code|escape }}">
+            <i class="bi bi-clipboard me-1"></i>Nusxalash
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="alert alert-info rounded-3 mt-4">
+  <i class="bi bi-lightbulb me-2"></i>
+  <strong>Maslahat:</strong> Kodlarni bittadan sinab ko'ring. Agar noto'g'ri kod yozsangiz, sahifangiz buzilishi mumkin. Har doim avval bir dona kodni qo'shib, natijani tekshiring.
+</div>
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const code = this.dataset.code;
+    navigator.clipboard.writeText(code).then(() => {
+      this.innerHTML = '<i class="bi bi-check2 me-1"></i>Nusxalandi!';
+      setTimeout(() => {
+        this.innerHTML = '<i class="bi bi-clipboard me-1"></i>Nusxalash';
+      }, 2000);
+    });
+  });
+});
+</script>
+{% endblock %}
+{% endblock %}

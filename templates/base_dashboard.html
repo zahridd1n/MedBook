@@ -25,32 +25,40 @@
     <a href="{% url 'dashboard:home' %}"><i class="bi bi-calendar-check-fill me-2" style="color:var(--primary)"></i>BookSaaS</a>
   </div>
   <nav class="mt-1">
-    <div class="sidebar-section">Main</div>
-    <a href="{% url 'dashboard:home' %}" class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}"><i class="bi bi-grid-1x2"></i> Dashboard</a>
-    <a href="{% url 'appointments:list' %}" class="nav-link {% if 'appointments' in request.path %}active{% endif %}"><i class="bi bi-calendar3"></i> Appointments</a>
-    <a href="{% url 'customers:list' %}" class="nav-link {% if 'customers' in request.path %}active{% endif %}"><i class="bi bi-people"></i> Customers</a>
+    <div class="sidebar-section">Asosiy</div>
+    <a href="{% url 'dashboard:home' %}" class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}"><i class="bi bi-grid-1x2"></i> Boshqaruv paneli</a>
+    <a href="{% url 'appointments:list' %}" class="nav-link {% if 'appointments' in request.path %}active{% endif %}"><i class="bi bi-calendar3"></i> Qabullar</a>
+    <a href="{% url 'customers:list' %}" class="nav-link {% if 'customers' in request.path %}active{% endif %}"><i class="bi bi-people"></i> Mijozlar</a>
 
-    <div class="sidebar-section mt-2">Manage</div>
-    <a href="{% url 'services:list' %}" class="nav-link {% if 'services' in request.path %}active{% endif %}"><i class="bi bi-briefcase"></i> Services</a>
-    <a href="{% url 'employees:list' %}" class="nav-link {% if 'employees' in request.path %}active{% endif %}"><i class="bi bi-person-badge"></i> Employees</a>
+    <div class="sidebar-section mt-2">Boshqarish</div>
+    <a href="{% url 'services:list' %}" class="nav-link {% if 'services' in request.path %}active{% endif %}"><i class="bi bi-briefcase"></i> Xizmatlar</a>
+    <a href="{% url 'employees:list' %}" class="nav-link {% if 'employees' in request.path %}active{% endif %}"><i class="bi bi-person-badge"></i> Xodimlar</a>
     <a href="{% url 'blog:list' %}" class="nav-link {% if 'blog' in request.path %}active{% endif %}"><i class="bi bi-newspaper"></i> Blog</a>
 
-    <div class="sidebar-section mt-2">Settings</div>
-    <a href="{% url 'business:setup' %}" class="nav-link {% if 'setup' in request.path %}active{% endif %}"><i class="bi bi-building"></i> Business Info</a>
-    <a href="{% url 'business:working_hours' %}" class="nav-link {% if 'working-hours' in request.path %}active{% endif %}"><i class="bi bi-clock"></i> Working Hours</a>
+    <div class="sidebar-section mt-2">Sozlamalar</div>
+    <a href="{% url 'business:setup' %}" class="nav-link {% if 'setup' in request.path %}active{% endif %}"><i class="bi bi-building"></i> Biznes ma'lumotlari</a>
+    <a href="{% url 'business:working_hours' %}" class="nav-link {% if 'working-hours' in request.path %}active{% endif %}"><i class="bi bi-clock"></i> Ish vaqtlari</a>
+    <a href="{% url 'business:branding' %}" class="nav-link {% if 'branding' in request.path %}active{% endif %}">
+      <i class="bi bi-palette"></i> Sahifa dizayni
+      {% if not user.business.can_use_custom_css %}
+        <span class="ms-auto badge bg-secondary" style="font-size:.6rem"><i class="bi bi-lock"></i></span>
+      {% endif %}
+    </a>
     <a href="{% url 'business:faq_list' %}" class="nav-link {% if request.path == '/dashboard/faq/' %}active{% endif %}"><i class="bi bi-question-circle"></i> FAQ</a>
     <a href="{% url 'business:telegram' %}" class="nav-link {% if 'telegram' in request.path %}active{% endif %}">
       <i class="bi bi-telegram"></i> Telegram
-      {% if user.business.telegram_notifications_enabled %}
-        <span class="ms-auto badge bg-success" style="font-size:.6rem">ON</span>
+      {% if not user.business.can_use_telegram %}
+        <span class="ms-auto badge bg-secondary" style="font-size:.6rem"><i class="bi bi-lock"></i></span>
+      {% elif user.business.telegram_notifications_enabled %}
+        <span class="ms-auto badge bg-success" style="font-size:.6rem">YONIQ</span>
       {% elif user.business.telegram_chat_id %}
-        <span class="ms-auto badge bg-warning text-dark" style="font-size:.6rem">OFF</span>
+        <span class="ms-auto badge bg-warning text-dark" style="font-size:.6rem">O'CHIQ</span>
       {% endif %}
     </a>
 
     {% if user.is_authenticated %}
-    <div class="sidebar-section mt-2">Your Page</div>
-    <a href="/{{ user.business.slug }}/" class="nav-link" target="_blank"><i class="bi bi-box-arrow-up-right"></i> View Public Page</a>
+    <div class="sidebar-section mt-2">Sizning sahifangiz</div>
+    <a href="/{{ user.business.slug }}/" class="nav-link" target="_blank"><i class="bi bi-box-arrow-up-right"></i> Ommaviy sahifani ko'rish</a>
     {% endif %}
   </nav>
 </aside>
@@ -59,7 +67,15 @@
   <header class="topbar">
     <div class="d-flex align-items-center gap-3">
       <button class="btn btn-sm btn-light d-lg-none" onclick="openSidebar()"><i class="bi bi-list fs-5"></i></button>
-      <span class="fw-semibold">{% block page_title %}Dashboard{% endblock %}</span>
+      <span class="fw-semibold">{% block page_title %}Boshqaruv paneli{% endblock %}</span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge rounded-pill px-3 py-2
+        {% if user.business.subscription_plan == 'free' %}bg-secondary
+        {% elif user.business.subscription_plan == 'growth' %}bg-primary
+        {% else %}bg-dark{% endif %}">
+        <i class="bi bi-box"></i> {{ user.business.plan_display }}
+      </span>
     </div>
     <div class="d-flex align-items-center gap-3">
       <a href="{% url 'notifications:list' %}" class="btn btn-sm btn-light position-relative">
@@ -74,8 +90,8 @@
         <ul class="dropdown-menu dropdown-menu-end shadow-sm">
           <li><span class="dropdown-item-text text-muted small">{{ user.email }}</span></li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="{% url 'business:setup' %}"><i class="bi bi-gear me-2"></i>Settings</a></li>
-          <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+          <li><a class="dropdown-item" href="{% url 'business:setup' %}"><i class="bi bi-gear me-2"></i>Sozlamalar</a></li>
+          <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Chiqish</a></li>
         </ul>
       </div>
     </div>

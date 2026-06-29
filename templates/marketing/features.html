@@ -1,220 +1,486 @@
 {% extends 'base_marketing.html' %}
 
-{% block title %}Features — BookSaaS{% endblock %}
+{% block title %}Imkoniyatlar — BookSaaS{% endblock %}
 
 {% block extra_css %}
 <style>
-  .feature-hero {
-    background: radial-gradient(circle at 90% 10%, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.03) 90.1%);
-  }
-  .feature-illustration {
-    border-radius: 1rem;
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    background: #ffffff;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
-    overflow: hidden;
-  }
-  .feature-header {
-    background: #f8fafc;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-  }
-  .feature-tab-active {
-    color: #6366f1;
-    border-bottom: 2px solid #6366f1;
-    font-weight: 600;
-  }
-  /* Notification styling mockup */
-  .notification-bubble {
-    border-radius: 1rem;
-    background: #ffffff;
-    border-left: 4px solid #6366f1;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-  }
-  .notification-bubble:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.1);
-  }
+/* ══════════════════════════════════════════
+   FEATURES PAGE
+══════════════════════════════════════════ */
+.feat-hero {
+  padding: 5rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.feat-hero-orb-1 {
+  position: absolute;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(124,58,237,.2) 0%, transparent 70%);
+  top: -200px; right: -100px;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+.feat-hero-orb-2 {
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(6,182,212,.15) 0%, transparent 70%);
+  bottom: -150px; left: -100px;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+/* Feature row blocks */
+.feat-row {
+  padding: 6rem 0;
+  position: relative;
+}
+.feat-row + .feat-row {
+  border-top: 1px solid var(--mkt-border);
+}
+
+/* Illustration panels */
+.feat-illustration {
+  background: var(--mkt-surface);
+  border: 1px solid var(--mkt-border);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.04);
+  transition: transform .4s cubic-bezier(.4,0,.2,1), box-shadow .4s;
+}
+.feat-illustration:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 50px 100px rgba(0,0,0,.45), 0 0 40px rgba(124,58,237,.12);
+}
+.feat-illu-header {
+  background: rgba(255,255,255,.03);
+  border-bottom: 1px solid var(--mkt-border);
+  padding: .75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.feat-illu-title {
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--mkt-text-soft);
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.feat-illu-body { padding: 1.25rem; }
+
+/* Feature text column */
+.feat-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--mkt-cyan);
+  background: rgba(6,182,212,.08);
+  border: 1px solid rgba(6,182,212,.2);
+  padding: .28rem .75rem;
+  border-radius: 100px;
+  margin-bottom: 1.25rem;
+}
+.feat-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 800;
+  color: var(--mkt-text);
+  line-height: 1.2;
+  letter-spacing: -.02em;
+  margin-bottom: .85rem;
+}
+.feat-desc {
+  font-size: .95rem;
+  color: var(--mkt-text-soft);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+.feat-check-list {
+  list-style: none;
+  padding: 0; margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+}
+.feat-check-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  font-size: .875rem;
+  color: var(--mkt-text-soft);
+  line-height: 1.6;
+}
+.feat-check-icon {
+  width: 20px; height: 20px;
+  background: rgba(16,185,129,.12);
+  border: 1.5px solid rgba(16,185,129,.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.feat-check-icon i { font-size: .65rem; color: #34d399; }
+.feat-check-list li strong { color: var(--mkt-text); }
+
+/* Calendar illustration */
+.cal-grid-header {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .5rem;
+  margin-bottom: .75rem;
+}
+.cal-staff-col {
+  background: rgba(255,255,255,.025);
+  border: 1px solid var(--mkt-border);
+  border-radius: .5rem;
+  padding: .5rem .6rem;
+  font-size: .65rem;
+  color: var(--mkt-text-soft);
+  font-weight: 600;
+  text-align: center;
+}
+.cal-grid-body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .5rem;
+}
+.cal-slot {
+  border-radius: .5rem;
+  padding: .5rem .6rem;
+  font-size: .62rem;
+  line-height: 1.4;
+}
+.cal-slot-busy {
+  background: rgba(124,58,237,.15);
+  border: 1px solid rgba(124,58,237,.25);
+  color: #c4b5fd;
+}
+.cal-slot-free {
+  background: rgba(255,255,255,.02);
+  border: 1px dashed rgba(255,255,255,.08);
+  color: var(--mkt-text-muted);
+  text-align: center;
+  display: flex; align-items: center; justify-content: center;
+}
+.cal-slot-busy2 {
+  background: rgba(6,182,212,.1);
+  border: 1px solid rgba(6,182,212,.2);
+  color: #67e8f9;
+}
+
+/* Notification illustration */
+.notif-list { display: flex; flex-direction: column; gap: .6rem; }
+.notif-card-item {
+  background: rgba(255,255,255,.025);
+  border: 1px solid var(--mkt-border);
+  border-left: 3px solid;
+  border-radius: .6rem;
+  padding: .65rem .85rem;
+  transition: transform .2s;
+}
+.notif-card-item:hover { transform: translateX(3px); }
+.notif-card-item.violet { border-left-color: var(--mkt-violet); }
+.notif-card-item.green  { border-left-color: #10b981; }
+.notif-card-item.cyan   { border-left-color: var(--mkt-cyan); }
+.notif-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .3rem;
+}
+.notif-card-source {
+  font-size: .62rem;
+  font-weight: 700;
+  color: var(--mkt-text-soft);
+  display: flex; align-items: center; gap: .3rem;
+}
+.notif-card-time { font-size: .58rem; color: var(--mkt-text-muted); }
+.notif-card-text { font-size: .7rem; color: var(--mkt-text-soft); line-height: 1.5; }
+.notif-card-text strong { color: var(--mkt-text); }
+
+/* Staff roster illustration */
+.roster-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .55rem .65rem;
+  border-radius: .45rem;
+  margin-bottom: .35rem;
+  background: rgba(255,255,255,.025);
+  border: 1px solid var(--mkt-border);
+  font-size: .7rem;
+}
+.roster-name { color: var(--mkt-text); font-weight: 600; }
+.roster-badge {
+  padding: .12rem .45rem;
+  border-radius: 3px;
+  font-size: .6rem;
+  font-weight: 700;
+}
+
+/* CTA section at bottom */
+.feat-cta {
+  padding: 5rem 0;
+  background: var(--mkt-surface);
+  border-top: 1px solid var(--mkt-border);
+  text-align: center;
+}
 </style>
 {% endblock %}
 
 {% block marketing_content %}
-<!-- Feature Hero Section -->
-<section class="feature-hero py-5 border-bottom">
-  <div class="container py-4 text-center">
-    <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3 fw-semibold">🚀 Core Features</span>
-    <h1 class="display-5 fw-bold text-dark mb-3">Smarter Scheduling, Happier Customers</h1>
-    <p class="lead text-muted max-w-2xl mx-auto" style="max-width: 700px;">
-      Discover how BookSaaS replaces manually managing calendars, phone reminders, and spreadsheet shifts with one fully-automated platform.
-    </p>
+
+<!-- ══════════════════════════════════════════
+     FEATURES HERO
+══════════════════════════════════════════ -->
+<section class="feat-hero">
+  <div class="feat-hero-orb-1"></div>
+  <div class="feat-hero-orb-2"></div>
+  <div class="container" style="max-width:1200px;position:relative;z-index:2;">
+    <div class="text-center mkt-reveal">
+      <div class="mkt-pill mb-4"><span class="mkt-pill-dot"></span> Asosiy imkoniyatlar</div>
+      <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(2.2rem,5vw,3.75rem);font-weight:900;color:var(--mkt-text);letter-spacing:-.025em;line-height:1.1;margin-bottom:1.25rem;">
+        Aqlliroq jadvallar,<br>
+        <span class="mkt-gtext">xursandroq mijozlar</span>
+      </h1>
+      <p style="font-size:1.05rem;color:var(--mkt-text-soft);max-width:600px;margin:0 auto;line-height:1.8;">
+        BookSaaS qanday qilib qo'lda jadvallarni yozish, telefon orqali eslatmalar qilish va Excel varoqlarini bitta to'liq avtomatlashtirilgan tizim bilan almashtiradi.
+      </p>
+    </div>
   </div>
 </section>
 
-<!-- Detailed alternating features grid -->
-<section class="py-5 bg-white">
-  <div class="container py-5">
-    
-    <!-- Feature 1: Calendar & Scheduling -->
-    <div class="row align-items-center g-5 mb-5 pb-5">
-      <div class="col-lg-6">
-        <span class="badge bg-primary-subtle text-primary px-2.5 py-1.5 rounded mb-3 fw-bold small">CALENDAR</span>
-        <h2 class="fw-bold text-dark mb-3">Intuitive Booking Calendar</h2>
-        <p class="text-muted mb-4 lead">
-          Keep track of your entire team's availability on one unified calendar screen. Filter by specific employee, check shift patterns, and drag-and-drop bookings to reschedule.
+<!-- ══════════════════════════════════════════
+     FEATURE 1: CALENDAR
+══════════════════════════════════════════ -->
+<section style="background:var(--mkt-bg);padding:5rem 0;">
+  <div class="container" style="max-width:1200px;">
+
+    <!-- Feature 1 -->
+    <div class="row align-items-center g-5 feat-row" style="padding-top:0;border-top:none;">
+      <div class="col-lg-6 mkt-reveal">
+        <div class="feat-tag"><i class="bi bi-calendar-week-fill"></i> Taqvim</div>
+        <div class="feat-title">Qulay band qilish taqvimi</div>
+        <p class="feat-desc">
+          Barcha xodimlaringizning bo'sh vaqtlarini bitta yaxlit taqvimda kuzatib boring. Aniq bir xodim bo'yicha filtrlang va jadvallarni osongina boshqaring.
         </p>
-        <ul class="list-unstyled d-flex flex-column gap-3 text-muted">
-          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Multi-Staff view:</strong> Compare individual rosters side-by-side.</li>
-          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Real-time updates:</strong> Bookings appear instantly without page refreshes.</li>
-          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Double-booking prevention:</strong> Built-in controls protect calendars from overlaps.</li>
+        <ul class="feat-check-list">
+          <li>
+            <div class="feat-check-icon"><i class="bi bi-check-lg"></i></div>
+            <span><strong>Ko'p xodimlar ko'rinishi:</strong> Xodimlar jadvallarini yonma-yon solishtirish.</span>
+          </li>
+          <li>
+            <div class="feat-check-icon"><i class="bi bi-check-lg"></i></div>
+            <span><strong>Haqiqiy vaqtda yangilanish:</strong> Band qilishlar darhol, sahifa yangilanmasdan ko'rinadi.</span>
+          </li>
+          <li>
+            <div class="feat-check-icon"><i class="bi bi-check-lg"></i></div>
+            <span><strong>Ustma-ust tushishdan himoya:</strong> Taqvimlarda ikki marta yozib yuborishning oldi olinadi.</span>
+          </li>
         </ul>
       </div>
-      <div class="col-lg-6">
-        <div class="feature-illustration p-4">
-          <div class="feature-header d-flex justify-content-between align-items-center mb-3">
-            <span class="fw-bold text-dark small"><i class="bi bi-calendar-week me-1"></i> Multi-Staff Calendar View</span>
-            <span class="text-muted small">June 2026</span>
+      <div class="col-lg-6 mkt-reveal mkt-reveal-d2">
+        <div class="feat-illustration">
+          <div class="feat-illu-header">
+            <div class="feat-illu-title">
+              <i class="bi bi-calendar-week" style="color:var(--mkt-violet-2);"></i>
+              Ko'p xodimlar taqvim ko'rinishi
+            </div>
+            <span style="font-size:.65rem;color:var(--mkt-text-muted);">Iyun 2026</span>
           </div>
-          <!-- Visual calendar simulator -->
-          <div class="row g-2 text-center" style="font-size: 0.8rem;">
-            <div class="col-4 fw-bold pb-2 text-muted">Alice (Hair)</div>
-            <div class="col-4 fw-bold pb-2 text-muted">Bob (Nails)</div>
-            <div class="col-4 fw-bold pb-2 text-muted">Charlie (Spa)</div>
-            
-            <div class="col-4">
-              <div class="card bg-primary text-white p-2 border-0 rounded shadow-sm" style="font-size: 0.75rem;">
-                <strong>09:00 - 10:00</strong><br>Hair Styling<br><span style="font-size: 0.65rem;">Sarah K.</span>
-              </div>
+          <div class="feat-illu-body">
+            <div class="cal-grid-header">
+              <div class="cal-staff-col"><i class="bi bi-person-fill me-1"></i>Alice (Soch)</div>
+              <div class="cal-staff-col"><i class="bi bi-person-fill me-1"></i>Bob (Tirnoq)</div>
+              <div class="cal-staff-col"><i class="bi bi-person-fill me-1"></i>Charlie (Spa)</div>
             </div>
-            <div class="col-4">
-              <div class="card bg-light text-muted p-2 border-dashed rounded" style="font-size: 0.75rem; border: 1px dashed #cbd5e1;">
-                Available
+            <div class="cal-grid-body">
+              <div class="cal-slot cal-slot-busy">
+                <strong>09:00–10:00</strong><br>Soch turmagi<br>
+                <span style="font-size:.58rem;opacity:.7;">Sarah K.</span>
               </div>
-            </div>
-            <div class="col-4">
-              <div class="card bg-secondary text-white p-2 border-0 rounded" style="font-size: 0.75rem; background-color: #64748b !important;">
-                <strong>09:30 - 11:30</strong><br>Full Spa Treatment<br><span style="font-size: 0.65rem;">David R.</span>
+              <div class="cal-slot cal-slot-free">Bo'sh</div>
+              <div class="cal-slot cal-slot-busy2">
+                <strong>09:30–11:30</strong><br>To'liq Spa<br>
+                <span style="font-size:.58rem;opacity:.7;">David R.</span>
               </div>
-            </div>
-            
-            <div class="col-4 mt-2">
-              <div class="card bg-light text-muted p-2 border-dashed rounded" style="font-size: 0.75rem; border: 1px dashed #cbd5e1;">
-                Available
+              <div class="cal-slot cal-slot-free">Bo'sh</div>
+              <div class="cal-slot cal-slot-busy">
+                <strong>10:30–11:30</strong><br>Tirnoq par.<br>
+                <span style="font-size:.58rem;opacity:.7;">Jessica M.</span>
               </div>
+              <div class="cal-slot cal-slot-free">Bo'sh</div>
             </div>
-            <div class="col-4 mt-2">
-              <div class="card bg-primary text-white p-2 border-0 rounded shadow-sm" style="font-size: 0.75rem;">
-                <strong>10:30 - 11:30</strong><br>Nail Care<br><span style="font-size: 0.65rem;">Jessica M.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 2: Notifications -->
+    <div class="row align-items-center g-5 feat-row flex-lg-row-reverse">
+      <div class="col-lg-6 mkt-reveal">
+        <div class="feat-tag"><i class="bi bi-send-fill"></i> Xabarnomalar</div>
+        <div class="feat-title">Avtomatik mijoz va xodim eslatmalari</div>
+        <p class="feat-desc">
+          Avtomatik xabarnomalar orqali qabulga kelmaslik holatlarini 80% gacha kamaytiring. Mijozlar qabulga yozilganda, Telegram yoki Email'dan xabar oladi.
+        </p>
+        <ul class="feat-check-list">
+          <li>
+            <div class="feat-check-icon"><i class="bi bi-check-lg"></i></div>
+            <span><strong>Telegram integratsiyasi:</strong> Darhol xabar yuborish uchun bepul Telegram bot orqali bog'lanish.</span>
+          </li>
+          <li>
+            <div class="feat-check-icon"><i class="bi bi-check-lg"></i></div>
+            <span><strong>O'z xabar matningiz:</strong> Brendingiz ovoziga mos xabarlarni o'zingiz yozing.</span>
+          </li>
+          <li>
+            <div class="feat-check-icon"><i class="bi bi-check-lg"></i></div>
+            <span><strong>Xodimlar uchun:</strong> Yangi qabul yozilganda ustani ham onlayn tarzda ogohlantiradi.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-6 mkt-reveal mkt-reveal-d2">
+        <div class="feat-illustration">
+          <div class="feat-illu-header">
+            <div class="feat-illu-title">
+              <i class="bi bi-telegram" style="color:var(--mkt-cyan);"></i>
+              Xabarnoma namunalari
+            </div>
+            <span style="background:rgba(16,185,129,.12);color:#34d399;padding:.15rem .45rem;border-radius:3px;font-size:.6rem;font-weight:700;">Ulangan</span>
+          </div>
+          <div class="feat-illu-body">
+            <div class="notif-list">
+              <div class="notif-card-item violet">
+                <div class="notif-card-header">
+                  <div class="notif-card-source"><i class="bi bi-telegram" style="color:var(--mkt-cyan);"></i> Telegram xabarnomasi</div>
+                  <span class="notif-card-time">Hozirgina</span>
+                </div>
+                <div class="notif-card-text">
+                  🔔 <strong>Qabul tasdiqlandi!</strong><br>
+                  Salom Sarah, Alice bilan <strong>Soch turmagi</strong> uchun qabulingiz ertaga soat <strong>09:00</strong> ga belgilandi.
+                </div>
               </div>
-            </div>
-            <div class="col-4 mt-2">
-              <div class="card bg-light text-muted p-2 border-dashed rounded" style="font-size: 0.75rem; border: 1px dashed #cbd5e1;">
-                Available
+              <div class="notif-card-item green">
+                <div class="notif-card-header">
+                  <div class="notif-card-source"><i class="bi bi-envelope-fill" style="color:#34d399;"></i> Email xabarnomasi</div>
+                  <span class="notif-card-time">2 soat oldin</span>
+                </div>
+                <div class="notif-card-text">
+                  ✅ <strong>Bugungi eslatma</strong><br>
+                  Siz bugun soat <strong>14:00</strong> da Lotus Wellness Spa'da qabulga yozilgansiz.
+                </div>
+              </div>
+              <div class="notif-card-item cyan">
+                <div class="notif-card-header">
+                  <div class="notif-card-source"><i class="bi bi-telegram" style="color:var(--mkt-cyan);"></i> Xodim eslatmasi</div>
+                  <span class="notif-card-time">1 soat oldin</span>
+                </div>
+                <div class="notif-card-text">
+                  ⏰ <strong>Jadval eslatmasi</strong><br>
+                  Alice, taqvimingizga yangi qabul qo'shildi. Mijoz: Sarah K.
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
-    <!-- Feature 2: Automated Telegram / Email Notifications -->
-    <div class="row align-items-center g-5 mb-5 pb-5 flex-lg-row-reverse">
-      <div class="col-lg-6">
-        <span class="badge bg-primary-subtle text-primary px-2.5 py-1.5 rounded mb-3 fw-bold small">NOTIFICATIONS</span>
-        <h2 class="fw-bold text-dark mb-3">Automatic Customer & Staff Alerts</h2>
-        <p class="text-muted mb-4 lead">
-          Reduce no-shows by up to 80% with automated notifications. Customers receive confirmation alerts and smart reminders via email or Telegram when they book, update, or cancel appointments.
+
+    <!-- Feature 3: Staff Management -->
+    <div class="row align-items-center g-5 feat-row">
+      <div class="col-lg-6 mkt-reveal">
+        <div class="feat-tag"><i class="bi bi-people-fill"></i> Jadvallar</div>
+        <div class="feat-title">Smenalar va maxsus xodim ruxsatlari</div>
+        <p class="feat-desc">
+          Ish soatlari, dam olish kunlari va tanaffuslarni maxsus sozlang. Xodimlar alohida profilga ega bo'lib, ular barcha moliyaviy ma'lumotlarni ko'rmasdan o'z ish vaqtlarini telefonda boshqara oladilar.
         </p>
-        <ul class="list-unstyled d-flex flex-column gap-3 text-muted">
-          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Telegram Webhook integration:</strong> Real-time Telegram messaging for instant alerts.</li>
-          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Custom notification text:</strong> Write templates that match your brand tone.</li>
-          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Staff reminders:</strong> Notify your employees immediately when a client schedules with them.</li>
+        <ul class="feat-check-list">
+          <li>
+            <div class="feat-check-icon"><i class="bi bi-check-lg"></i></div>
+            <span><strong>Smena soatlari:</strong> Xodimlar uchun jadvallar va maxsus dam olish kunlarini yozing.</span>
+          </li>
+          <li>
+            <div class="feat-check-icon"><i class="bi bi-check-lg"></i></div>
+            <span><strong>Rol nazorati:</strong> Tizim ruxsatlari chegaralarini sozlang (Admin, Xodim).</span>
+          </li>
+          <li>
+            <div class="feat-check-icon"><i class="bi bi-check-lg"></i></div>
+            <span><strong>Xizmatlarni biriktirish:</strong> Qaysi xodim nima qila olishini aniq belgilang.</span>
+          </li>
         </ul>
       </div>
-      <div class="col-lg-6">
-        <div class="feature-illustration p-4 bg-light">
-          <div class="feature-header d-flex justify-content-between align-items-center mb-3 bg-white shadow-sm rounded">
-            <span class="fw-bold text-dark small"><i class="bi bi-send text-primary me-1"></i> Telegram Notification Sandbox</span>
-            <span class="badge bg-success-subtle text-success small">Connected</span>
-          </div>
-          <!-- Interactive Mockup for Telegram messaging -->
-          <div class="d-flex flex-column gap-3">
-            <div class="notification-bubble p-3">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="fw-bold text-dark small"><i class="bi bi-telegram text-info me-1"></i> Telegram Notification</span>
-                <span class="text-muted small" style="font-size: 0.65rem;">Just now</span>
-              </div>
-              <p class="mb-1 text-dark small">🔔 <strong>Booking Confirmed!</strong></p>
-              <p class="mb-0 text-muted small" style="font-size: 0.75rem;">
-                Hi Sarah, your appointment for <strong>Hair Styling</strong> with Alice has been scheduled for tomorrow at <strong>09:00 AM</strong>.
-              </p>
+      <div class="col-lg-6 mkt-reveal mkt-reveal-d2">
+        <div class="feat-illustration">
+          <div class="feat-illu-header">
+            <div class="feat-illu-title">
+              <i class="bi bi-people" style="color:var(--mkt-violet-2);"></i>
+              Jadval va ish vaqtlarini sozlash
             </div>
-            
-            <div class="notification-bubble p-3" style="border-left-color: #10b981;">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="fw-bold text-dark small"><i class="bi bi-telegram text-info me-1"></i> Telegram Notification</span>
-                <span class="text-muted small" style="font-size: 0.65rem;">1 hour ago</span>
+            <span style="font-size:.65rem;color:var(--mkt-text-muted);">Haftalik jadval</span>
+          </div>
+          <div class="feat-illu-body">
+            <div>
+              <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;padding:.4rem .6rem;background:rgba(124,58,237,.08);border-radius:.4rem;border:1px solid rgba(124,58,237,.15);">
+                <div style="width:28px;height:28px;background:var(--mkt-gradient);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:#fff;flex-shrink:0;">AL</div>
+                <div>
+                  <div style="font-size:.7rem;font-weight:700;color:var(--mkt-text);">Alice Johnson</div>
+                  <div style="font-size:.58rem;color:var(--mkt-text-muted);">Soch mutaxassisi</div>
+                </div>
               </div>
-              <p class="mb-1 text-dark small">⏰ <strong>Roster Alert for Staff</strong></p>
-              <p class="mb-0 text-muted small" style="font-size: 0.75rem;">
-                Alice, a new booking (Hair Styling) has been added to your calendar. Client: Sarah K.
-              </p>
+              <div class="roster-row">
+                <span class="roster-name">Dushanba – Juma</span>
+                <span class="roster-badge" style="background:rgba(124,58,237,.15);color:#c4b5fd;">09:00 – 17:00</span>
+              </div>
+              <div class="roster-row">
+                <span class="roster-name">Shanba</span>
+                <span class="roster-badge" style="background:rgba(245,158,11,.12);color:#fbbf24;">10:00 – 14:00</span>
+              </div>
+              <div class="roster-row">
+                <span class="roster-name">Yakshanba</span>
+                <span class="roster-badge" style="background:rgba(239,68,68,.1);color:#fca5a5;">Dam olish kuni</span>
+              </div>
+              <div style="margin-top:.75rem;padding:.45rem .65rem;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.15);border-radius:.4rem;font-size:.65rem;color:#6ee7b7;display:flex;align-items:center;gap:.4rem;">
+                <i class="bi bi-shield-check-fill"></i> Jadval ziddiyati topilmadi
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
-    <!-- Feature 3: Staff & Roster Management -->
-    <div class="row align-items-center g-5">
-      <div class="col-lg-6">
-        <span class="badge bg-primary-subtle text-primary px-2.5 py-1.5 rounded mb-3 fw-bold small">ROSTERING</span>
-        <h2 class="fw-bold text-dark mb-3">Roster Shifts & Custom Staff Permissions</h2>
-        <p class="text-muted mb-4 lead">
-          Set custom work hours, holiday rosters, and session breaks. Team members get individual profiles to check their schedule on any device without seeing master financial settings.
-        </p>
-        <ul class="list-unstyled d-flex flex-column gap-3 text-muted">
-          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Shift Hours:</strong> Design rosters and specific days off per staff.</li>
-          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Role Control:</strong> Define access thresholds (Admin, Manager, Staff).</li>
-          <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Services allocation:</strong> Link employees to the specific services they provide.</li>
-        </ul>
-      </div>
-      <div class="col-lg-6">
-        <div class="feature-illustration p-4">
-          <div class="feature-header d-flex justify-content-between align-items-center mb-3">
-            <span class="fw-bold text-dark small"><i class="bi bi-people me-1"></i> Roster & Working Hours Setup</span>
-            <span class="text-muted small">Weekly Schedule</span>
-          </div>
-          <!-- Weekly roster list preview -->
-          <div class="d-flex flex-column gap-2 text-muted" style="font-size: 0.8rem;">
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-2">
-              <span class="fw-bold text-dark">Monday - Friday</span>
-              <span class="badge bg-primary">09:00 AM - 05:00 PM</span>
-            </div>
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-2">
-              <span class="fw-bold text-dark">Saturday</span>
-              <span class="badge bg-warning text-dark">10:00 AM - 02:00 PM</span>
-            </div>
-            <div class="d-flex justify-content-between align-items-center pb-1">
-              <span class="fw-bold text-dark">Sunday</span>
-              <span class="badge bg-danger">Off (Holiday)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
+
   </div>
 </section>
 
-<!-- Call to Action -->
-<section class="py-5 bg-light border-top">
-  <div class="container py-4 text-center">
-    <h3 class="fw-bold text-dark mb-3">Unlock scheduling freedom today</h3>
-    <p class="text-muted max-w-xl mx-auto mb-4" style="max-width: 600px;">
-      Setup takes less than 2 minutes. Start accepting digital bookings and automatic reminders right now.
-    </p>
-    <a href="{% url 'accounts:register' %}" class="btn btn-lg btn-primary px-4 py-2.5 fw-bold">Get Started Now</a>
+<!-- ══════════════════════════════════════════
+     CTA
+══════════════════════════════════════════ -->
+<section class="feat-cta">
+  <div class="container" style="max-width:700px;">
+    <div class="mkt-reveal">
+      <div class="mkt-pill mb-4" style="justify-content:center;"><span class="mkt-pill-dot"></span> Boshlashga tayyormisiz?</div>
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(1.75rem,4vw,2.75rem);font-weight:900;color:var(--mkt-text);letter-spacing:-.02em;line-height:1.2;margin-bottom:1rem;">
+        Jadval erkinligiga bugun erishing
+      </h2>
+      <p style="color:var(--mkt-text-soft);font-size:.95rem;line-height:1.75;margin-bottom:2rem;max-width:520px;margin-left:auto;margin-right:auto;">
+        Sozlash ishlari 2 daqiqadan kam vaqt oladi. Raqamli band qilish va eslatmalardan hoziroq foydalanishni boshlang.
+      </p>
+      <div style="display:flex;justify-content:center;gap:.85rem;flex-wrap:wrap;">
+        <a href="{% url 'accounts:register' %}" class="mkt-btn-primary" style="font-size:1rem;padding:.95rem 2rem;">
+          <i class="bi bi-rocket-takeoff-fill"></i> Hozir boshlang
+        </a>
+        <a href="{% url 'marketing:pricing' %}" class="mkt-btn-ghost" style="font-size:1rem;padding:.95rem 2rem;">
+          Narxlarni ko'rish <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
   </div>
 </section>
+
 {% endblock %}

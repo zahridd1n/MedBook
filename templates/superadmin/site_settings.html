@@ -1,0 +1,149 @@
+{% extends 'superadmin/base_superadmin.html' %}
+{% block title %}Sayt Sozlamalari — Admin{% endblock %}
+{% block page_title %}Sayt Sozlamalari (Marketing){% endblock %}
+
+{% block sa_content %}
+<form method="post" enctype="multipart/form-data" class="row g-4">
+  {% csrf_token %}
+  
+  <div class="col-lg-6">
+    <!-- Hero Section Content -->
+    <div class="card stat-card mb-4">
+      <div class="card-header bg-white border-bottom p-3 fw-bold">
+        <i class="bi bi-text-paragraph me-2 text-primary"></i>Bosh Sahifa Matnlari
+      </div>
+      <div class="card-body p-4">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{{ form.hero_title.label }}</label>
+          {{ form.hero_title }}
+          <div class="form-text text-muted">{{ form.hero_title.help_text }}</div>
+          {% if form.hero_title.errors %}<div class="text-danger small mt-1">{{ form.hero_title.errors }}</div>{% endif %}
+        </div>
+        <div class="mb-0">
+          <label class="form-label fw-semibold">{{ form.hero_subtitle.label }}</label>
+          {{ form.hero_subtitle }}
+          <div class="form-text text-muted">{{ form.hero_subtitle.help_text }}</div>
+          {% if form.hero_subtitle.errors %}<div class="text-danger small mt-1">{{ form.hero_subtitle.errors }}</div>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="card stat-card">
+      <div class="card-header bg-white border-bottom p-3 fw-bold">
+        <i class="bi bi-bar-chart-fill me-2 text-primary"></i>Statistikalar (Marketing sahifa uchun)
+      </div>
+      <div class="card-body p-4">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{{ form.stats_uptime.label }}</label>
+          {{ form.stats_uptime }}
+          <div class="form-text text-muted">{{ form.stats_uptime.help_text }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{{ form.stats_appointments.label }}</label>
+          {{ form.stats_appointments }}
+          <div class="form-text text-muted">{{ form.stats_appointments.help_text }}</div>
+        </div>
+        <div class="mb-0">
+          <label class="form-label fw-semibold">{{ form.stats_businesses.label }}</label>
+          {{ form.stats_businesses }}
+          <div class="form-text text-muted">{{ form.stats_businesses.help_text }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact & Branding Section -->
+    <div class="card stat-card mb-4 mt-4">
+      <div class="card-header bg-white border-bottom p-3 fw-bold">
+        <i class="bi bi-megaphone-fill me-2 text-primary"></i>Brending va Aloqa
+      </div>
+      <div class="card-body p-4">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{{ form.logo.label }}</label>
+          {{ form.logo }}
+          <div class="form-text text-muted">{{ form.logo.help_text }}</div>
+          {% if form.instance.logo %}
+          <div class="mt-2"><img src="{{ form.instance.logo.url }}" height="40" alt="Logo"></div>
+          {% endif %}
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{{ form.contact_phone.label }}</label>
+          {{ form.contact_phone }}
+          <div class="form-text text-muted">{{ form.contact_phone.help_text }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{{ form.contact_email.label }}</label>
+          {{ form.contact_email }}
+          <div class="form-text text-muted">{{ form.contact_email.help_text }}</div>
+        </div>
+        <div class="mb-0">
+          <label class="form-label fw-semibold">{{ form.contact_telegram.label }}</label>
+          {{ form.contact_telegram }}
+          <div class="form-text text-muted">{{ form.contact_telegram.help_text }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <!-- Pricing Section -->
+    <div class="card stat-card mb-4">
+      <div class="card-header bg-white border-bottom p-3 fw-bold">
+        <i class="bi bi-tags-fill me-2 text-primary"></i>Tariflar Narxi (UZS)
+      </div>
+      <div class="card-body p-4">
+        
+        <h6 class="fw-bold mb-3 border-bottom pb-2">Starter (Free)</h6>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">{{ form.starter_price.label }}</label>
+          <div class="input-group">
+            {{ form.starter_price }}
+            <span class="input-group-text bg-light border-start-0 text-muted">UZS</span>
+          </div>
+        </div>
+
+        <h6 class="fw-bold mb-3 border-bottom pb-2 text-primary">Growth</h6>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">{{ form.growth_price_monthly.label }}</label>
+            <div class="input-group">
+              {{ form.growth_price_monthly }}
+              <span class="input-group-text bg-light border-start-0 text-muted">UZS</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">{{ form.growth_price_yearly.label }}</label>
+            <div class="input-group">
+              {{ form.growth_price_yearly }}
+              <span class="input-group-text bg-light border-start-0 text-muted">UZS</span>
+            </div>
+          </div>
+        </div>
+
+        <h6 class="fw-bold mb-3 border-bottom pb-2" style="color:#a855f7;">Enterprise</h6>
+        <div class="row g-3 mb-0">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">{{ form.enterprise_price_monthly.label }}</label>
+            <div class="input-group">
+              {{ form.enterprise_price_monthly }}
+              <span class="input-group-text bg-light border-start-0 text-muted">UZS</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">{{ form.enterprise_price_yearly.label }}</label>
+            <div class="input-group">
+              {{ form.enterprise_price_yearly }}
+              <span class="input-group-text bg-light border-start-0 text-muted">UZS</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="card-footer bg-light p-3 text-end">
+        <button type="submit" class="btn btn-primary px-4 fw-bold">Sozlamalarni Saqlash</button>
+      </div>
+    </div>
+  </div>
+
+</form>
+{% endblock %}

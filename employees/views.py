@@ -18,6 +18,13 @@ def employee_list(request):
 @login_required
 def employee_create(request):
     business = get_object_or_404(Business, owner=request.user)
+    if not business.can_add_employee():
+        messages.error(
+            request,
+            f"Xodimlar limiti tugadi ({business.plan_display} — {business.max_employees} ta)."
+            f" Yangilash uchun <a href='{''}'>tarifni oshiring</a>."
+        )
+        return redirect('employees:list')
     if request.method == 'POST':
         form = EmployeeForm(request.POST, request.FILES, business=business)
         if form.is_valid():

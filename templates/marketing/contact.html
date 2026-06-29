@@ -1,202 +1,379 @@
 {% extends 'base_marketing.html' %}
 
-{% block title %}Contact Us — BookSaaS{% endblock %}
+{% block title %}Biz bilan aloqa — BookSaaS{% endblock %}
 
 {% block extra_css %}
 <style>
-  .contact-hero {
-    background: radial-gradient(circle at 0% 100%, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.02) 100%);
-  }
-  .contact-info-card {
-    border-radius: 1rem;
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    background: #ffffff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
-  }
-  .contact-icon-wrapper {
-    width: 48px;
-    height: 48px;
-    background: rgba(99, 102, 241, 0.1);
-    color: #6366f1;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-  }
-  /* Form custom styling */
-  .form-floating > .form-control:focus ~ label::after {
-    background-color: transparent !important;
-  }
-  .form-control {
-    border: 1px solid rgba(226, 232, 240, 1);
-    border-radius: 0.75rem;
-    transition: all 0.2s ease-in-out;
-  }
-  .form-control:focus {
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
-    border-color: #6366f1;
-  }
-  .btn-gradient {
-    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-    color: white !important;
-    border: none;
-    transition: all 0.3s ease;
-  }
-  .btn-gradient:hover {
-    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
-    transform: translateY(-2px);
-  }
+/* ══════════════════════════════════════════
+   CONTACT PAGE
+══════════════════════════════════════════ */
+.contact-hero {
+  padding: 5rem 0 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.contact-hero-glow {
+  position: absolute;
+  top: -200px; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 500px;
+  background: radial-gradient(ellipse, rgba(124,58,237,.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Contact section layout */
+.contact-section {
+  padding: 0 0 6rem;
+  background: var(--mkt-bg);
+}
+
+/* Info cards */
+.contact-info-card {
+  background: var(--mkt-glass);
+  border: 1px solid var(--mkt-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: border-color .25s, transform .25s;
+}
+.contact-info-card:hover {
+  border-color: rgba(124,58,237,.25);
+  transform: translateY(-2px);
+}
+.contact-icon {
+  width: 44px; height: 44px;
+  border-radius: .75rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.contact-icon-violet { background: rgba(124,58,237,.12); color: var(--mkt-violet-2); border: 1px solid rgba(124,58,237,.2); }
+.contact-icon-cyan   { background: rgba(6,182,212,.1); color: #67e8f9; border: 1px solid rgba(6,182,212,.2); }
+.contact-icon-green  { background: rgba(16,185,129,.1); color: #6ee7b7; border: 1px solid rgba(16,185,129,.2); }
+
+.contact-info-title {
+  font-weight: 700;
+  color: var(--mkt-text);
+  font-size: .9rem;
+  margin-bottom: .3rem;
+}
+.contact-info-desc {
+  color: var(--mkt-text-muted);
+  font-size: .8rem;
+  line-height: 1.6;
+  margin-bottom: .35rem;
+}
+.contact-info-link {
+  color: var(--mkt-violet-2) !important;
+  text-decoration: none !important;
+  font-size: .825rem;
+  font-weight: 600;
+  transition: opacity .2s;
+}
+.contact-info-link:hover { opacity: .75; }
+
+/* Form card */
+.contact-form-card {
+  background: var(--mkt-glass);
+  border: 1px solid var(--mkt-border);
+  border-radius: 1.25rem;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.contact-form-card::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, rgba(124,58,237,.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Form inputs */
+.form-group { margin-bottom: 1.25rem; }
+.form-label-custom {
+  display: block;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--mkt-text-soft);
+  margin-bottom: .5rem;
+  letter-spacing: .02em;
+}
+.form-input-custom {
+  width: 100%;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--mkt-border);
+  border-radius: .75rem;
+  padding: .8rem 1rem;
+  color: var(--mkt-text);
+  font-size: .875rem;
+  font-family: 'Inter', sans-serif;
+  transition: border-color .25s, background .25s, box-shadow .25s;
+  outline: none;
+}
+.form-input-custom::placeholder { color: var(--mkt-text-muted); }
+.form-input-custom:focus {
+  border-color: rgba(124,58,237,.45);
+  background: rgba(124,58,237,.04);
+  box-shadow: 0 0 0 4px rgba(124,58,237,.08);
+}
+textarea.form-input-custom {
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.6;
+}
+
+/* Success alert */
+#success-alert {
+  background: rgba(16,185,129,.08);
+  border: 1px solid rgba(16,185,129,.2);
+  border-radius: .75rem;
+  padding: .85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .875rem;
+  color: #6ee7b7;
+  margin-bottom: 1.25rem;
+}
+#success-alert i { font-size: 1.1rem; flex-shrink: 0; }
+
+/* Submit button */
+#submit-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .9rem 1.5rem;
+  background: var(--mkt-gradient);
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  border: none;
+  border-radius: .75rem;
+  cursor: pointer;
+  transition: all .25s;
+  box-shadow: 0 0 24px var(--mkt-violet-glow);
+  margin-top: .5rem;
+}
+#submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px var(--mkt-violet-glow);
+}
+#submit-btn:disabled { opacity: .65; cursor: not-allowed; transform: none; }
 </style>
 {% endblock %}
 
 {% block marketing_content %}
-<!-- Contact Hero -->
-<section class="contact-hero py-5 border-bottom">
-  <div class="container py-4 text-center">
-    <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3 fw-semibold">✉️ Contact Us</span>
-    <h1 class="display-5 fw-bold text-dark mb-3">Get in Touch With Our Team</h1>
-    <p class="lead text-muted max-w-2xl mx-auto" style="max-width: 600px;">
-      Have a question or looking for a custom setup? We're here to help. Send us a message and we'll reply shortly.
-    </p>
-  </div>
-</section>
 
-<!-- Contact Form and Details -->
-<section class="py-5 bg-white">
-  <div class="container py-4">
-    <div class="row g-5">
-      
-      <!-- Info channels column -->
-      <div class="col-lg-5">
-        <h4 class="fw-bold text-dark mb-4">Contact Information</h4>
-        <div class="d-flex flex-column gap-4">
-          
-          <!-- Channel 1: Email -->
-          <div class="contact-info-card p-4 d-flex align-items-start gap-3">
-            <div class="contact-icon-wrapper flex-shrink-0">
-              <i class="bi bi-envelope-at"></i>
-            </div>
-            <div>
-              <h6 class="fw-bold text-dark mb-1">Email Support</h6>
-              <p class="text-muted mb-0 small">Send queries directly to our inbox. We respond within 1 hour.</p>
-              <a href="mailto:support@booksaas.com" class="fw-semibold small text-decoration-none mt-2 d-inline-block">support@booksaas.com</a>
-            </div>
-          </div>
-          
-          <!-- Channel 2: Telegram Bot -->
-          <div class="contact-info-card p-4 d-flex align-items-start gap-3">
-            <div class="contact-icon-wrapper flex-shrink-0">
-              <i class="bi bi-telegram"></i>
-            </div>
-            <div>
-              <h6 class="fw-bold text-dark mb-1">Telegram Assistant</h6>
-              <p class="text-muted mb-0 small">Connect directly to our support bot on Telegram for interactive guides.</p>
-              <a href="https://t.me/BookSaaSBot" target="_blank" class="fw-semibold small text-decoration-none mt-2 d-inline-block">@BookSaaSBot</a>
-            </div>
-          </div>
-          
-          <!-- Channel 3: Address -->
-          <div class="contact-info-card p-4 d-flex align-items-start gap-3">
-            <div class="contact-icon-wrapper flex-shrink-0">
-              <i class="bi bi-geo-alt"></i>
-            </div>
-            <div>
-              <h6 class="fw-bold text-dark mb-1">Office Address</h6>
-              <p class="text-muted mb-0 small">BookSaaS Inc., 123 Scheduling Way, Suite 400<br>San Francisco, CA 94107</p>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-      
-      <!-- Contact form column -->
-      <div class="col-lg-7">
-        <div class="card p-4 p-md-5 border-0 shadow-sm bg-light rounded-4">
-          <h4 class="fw-bold text-dark mb-4">Send a Message</h4>
-          
-          <form onsubmit="handleSubmit(event)">
-            <div class="row g-3">
-              
-              <!-- Name -->
-              <div class="col-md-6">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="contact-name" placeholder="Your Name" required>
-                  <label for="contact-name" class="text-muted">Your Name</label>
-                </div>
-              </div>
-              
-              <!-- Email -->
-              <div class="col-md-6">
-                <div class="form-floating">
-                  <input type="email" class="form-control" id="contact-email" placeholder="name@example.com" required>
-                  <label for="contact-email" class="text-muted">Email Address</label>
-                </div>
-              </div>
-              
-              <!-- Subject -->
-              <div class="col-12">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="contact-subject" placeholder="Subject" required>
-                  <label for="contact-subject" class="text-muted">Subject</label>
-                </div>
-              </div>
-              
-              <!-- Message -->
-              <div class="col-12">
-                <div class="form-floating">
-                  <textarea class="form-control" id="contact-message" placeholder="Type message here..." style="height: 150px" required></textarea>
-                  <label for="contact-message" class="text-muted">Your Message</label>
-                </div>
-              </div>
-              
-              <!-- Success Alert (Hidden initially) -->
-              <div class="col-12 d-none" id="success-alert">
-                <div class="alert alert-success d-flex align-items-center gap-2 mb-0 py-2.5 rounded-3">
-                  <i class="bi bi-check-circle-fill"></i>
-                  <span class="small">Thank you! Your message has been successfully received. We will contact you soon.</span>
-                </div>
-              </div>
-              
-              <!-- Submit button -->
-              <div class="col-12 mt-4">
-                <button type="submit" id="submit-btn" class="btn btn-lg btn-gradient px-4 py-3 fw-bold w-100">Send Message</button>
-              </div>
-              
-            </div>
-          </form>
-          
-        </div>
-      </div>
-      
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="contact-hero">
+  <div class="contact-hero-glow"></div>
+  <div class="container" style="max-width:1200px;position:relative;z-index:2;">
+    <div class="mkt-reveal">
+      <div class="mkt-pill mb-4" style="justify-content:center;"><span class="mkt-pill-dot"></span> Biz bilan aloqa</div>
+      <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(2.2rem,5vw,3.75rem);font-weight:900;color:var(--mkt-text);letter-spacing:-.025em;line-height:1.1;margin-bottom:1.25rem;">
+        Bizning jamoamiz<br>
+        <span class="mkt-gtext">bilan bog'laning</span>
+      </h1>
+      <p style="font-size:1rem;color:var(--mkt-text-soft);max-width:520px;margin:0 auto;line-height:1.8;">
+        Savolingiz bormi yoki maxsus sozlamalar kerakmi? Biz yordam berishga tayyormiz. Xabar yuboring va tez orada javob qaytaramiz.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- Simple client-side form submission success helper -->
+<!-- ══════════════════════════════════════════
+     CONTACT SECTION
+══════════════════════════════════════════ -->
+<section class="contact-section">
+  <div class="container" style="max-width:1100px;">
+    <div class="row g-5">
+
+      <!-- Info column -->
+      <div class="col-lg-5 mkt-reveal">
+        <h4 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--mkt-text);font-size:1.1rem;margin-bottom:1.5rem;">
+          Aloqa ma'lumotlari
+        </h4>
+        <div style="display:flex;flex-direction:column;gap:.85rem;">
+
+          <!-- Email -->
+          <div class="contact-info-card">
+            <div class="contact-icon contact-icon-violet">
+              <i class="bi bi-envelope-at-fill"></i>
+            </div>
+            <div>
+              <div class="contact-info-title">Email orqali yordam</div>
+              <div class="contact-info-desc">Savollaringizni to'g'ridan-to'g'ri pochtamizga yuboring. Biz 1 soat ichida javob beramiz.</div>
+              <a href="mailto:{{ site_settings.contact_email }}" class="contact-info-link">
+                <i class="bi bi-arrow-right me-1" style="font-size:.75rem;"></i>{{ site_settings.contact_email }}
+              </a>
+            </div>
+          </div>
+
+          <!-- Telegram -->
+          <div class="contact-info-card">
+            <div class="contact-icon contact-icon-cyan">
+              <i class="bi bi-telegram"></i>
+            </div>
+            <div>
+              <div class="contact-info-title">Telegram yordamchi</div>
+              <div class="contact-info-desc">Interaktiv yordam uchun to'g'ridan-to'g'ri Telegramdagi qo'llab-quvvatlash botimizga ulaning.</div>
+              <a href="{{ site_settings.contact_telegram }}" target="_blank" rel="noopener noreferrer" class="contact-info-link">
+                <i class="bi bi-arrow-right me-1" style="font-size:.75rem;"></i>Biz bilan bog'lanish
+              </a>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="contact-info-card">
+            <div class="contact-icon contact-icon-green">
+              <i class="bi bi-geo-alt-fill"></i>
+            </div>
+            <div>
+              <div class="contact-info-title">Ofis manzili</div>
+              <div class="contact-info-desc">
+                Telefon: {{ site_settings.contact_phone }}<br>
+                Toshkent shahar, Yunusobod tumani,<br>
+                Amir Temur ko'chasi 123-uy
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Response time badge -->
+        <div style="margin-top:1.5rem;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.15);border-radius:.875rem;padding:1rem 1.25rem;display:flex;align-items:center;gap:.75rem;">
+          <div style="width:10px;height:10px;background:#10b981;border-radius:50%;animation:mktPulse 2s ease infinite;flex-shrink:0;"></div>
+          <div>
+            <div style="font-size:.8rem;font-weight:700;color:#6ee7b7;margin-bottom:.1rem;">O'rtacha javob vaqti</div>
+            <div style="font-size:.75rem;color:var(--mkt-text-muted);">Ish soatlarida 1 soatdan kam</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form column -->
+      <div class="col-lg-7 mkt-reveal mkt-reveal-d2">
+        <div class="contact-form-card">
+          <h4 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--mkt-text);font-size:1.1rem;margin-bottom:1.75rem;position:relative;z-index:1;">
+            Xabar yuborish
+          </h4>
+
+          <!-- Success alert (hidden initially) -->
+          <div class="d-none" id="success-alert">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Rahmat! Xabaringiz muvaffaqiyatli qabul qilindi. Tez orada siz bilan bog'lanamiz.</span>
+          </div>
+
+          <form onsubmit="handleSubmit(event)" style="position:relative;z-index:1;">
+            <div class="row g-3">
+              <!-- Name -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label-custom" for="contact-name">Ismingiz</label>
+                  <input
+                    type="text"
+                    class="form-input-custom"
+                    id="contact-name"
+                    placeholder="Ism Familiya"
+                    required
+                  >
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label-custom" for="contact-email">Email manzil</label>
+                  <input
+                    type="email"
+                    class="form-input-custom"
+                    id="contact-email"
+                    placeholder="sizning@email.uz"
+                    required
+                  >
+                </div>
+              </div>
+
+              <!-- Subject -->
+              <div class="col-12">
+                <div class="form-group">
+                  <label class="form-label-custom" for="contact-subject">Mavzu</label>
+                  <input
+                    type="text"
+                    class="form-input-custom"
+                    id="contact-subject"
+                    placeholder="Qanday mavzuda murojaat qilmoqchisiz?"
+                    required
+                  >
+                </div>
+              </div>
+
+              <!-- Message -->
+              <div class="col-12">
+                <div class="form-group" style="margin-bottom:.5rem;">
+                  <label class="form-label-custom" for="contact-message">Xabaringiz</label>
+                  <textarea
+                    class="form-input-custom"
+                    id="contact-message"
+                    placeholder="Batafsil yozing, sizga qanday yordam bera olishimizni tushuntiring..."
+                    required
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Submit -->
+              <div class="col-12">
+                <button type="submit" id="submit-btn">
+                  <i class="bi bi-send-fill"></i>
+                  Xabar yuborish
+                </button>
+                <p style="text-align:center;font-size:.75rem;color:var(--mkt-text-muted);margin-top:.85rem;">
+                  <i class="bi bi-shield-check-fill" style="color:#10b981;"></i>
+                  Ma'lumotlaringiz SSL orqali himoyalangan va uchinchi shaxslarga berilmaydi.
+                </p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
 {% block extra_js %}
 <script>
-  function handleSubmit(event) {
-    event.preventDefault();
-    const alertBox = document.getElementById('success-alert');
-    const submitBtn = document.getElementById('submit-btn');
-    
-    // Disable button and show loader text
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
-    
-    // Simulate submission
-    setTimeout(() => {
-      alertBox.classList.remove('d-none');
-      submitBtn.textContent = 'Message Sent!';
-      
-      // Clear fields
-      document.getElementById('contact-name').value = '';
-      document.getElementById('contact-email').value = '';
-      document.getElementById('contact-subject').value = '';
-      document.getElementById('contact-message').value = '';
-    }, 1000);
-  }
+function handleSubmit(event) {
+  event.preventDefault();
+  const alertBox = document.getElementById('success-alert');
+  const submitBtn = document.getElementById('submit-btn');
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Yuborilmoqda...';
+
+  setTimeout(() => {
+    alertBox.classList.remove('d-none');
+    submitBtn.innerHTML = '<i class="bi bi-check-lg"></i> Xabar yuborildi!';
+
+    document.getElementById('contact-name').value    = '';
+    document.getElementById('contact-email').value   = '';
+    document.getElementById('contact-subject').value = '';
+    document.getElementById('contact-message').value = '';
+
+    // Smooth scroll to alert
+    alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 1000);
+}
 </script>
-{% endblock %}
 {% endblock %}

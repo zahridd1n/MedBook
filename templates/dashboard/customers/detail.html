@@ -11,21 +11,21 @@
       <div class="rounded-circle bg-primary bg-opacity-10 text-primary mx-auto d-flex align-items-center justify-content-center fw-bold" style="width:72px;height:72px;font-size:2rem;">{{ customer.full_name|first|upper }}</div>
       <h5 class="fw-bold mt-3 mb-0">{{ customer.full_name }}</h5>
       <ul class="list-group list-group-flush mt-3 text-start">
-        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Phone</span><span class="fw-medium">{{ customer.phone }}</span></li>
+        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Telefon</span><span class="fw-medium">{{ customer.phone }}</span></li>
         {% if customer.email %}<li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Email</span><span class="fw-medium">{{ customer.email }}</span></li>{% endif %}
-        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Bookings</span><span class="badge bg-primary">{{ customer.appointment_count }}</span></li>
-        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Last visit</span><span>{{ customer.last_visit|default:"—" }}</span></li>
-        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Since</span><span>{{ customer.created_at|date:"M d, Y" }}</span></li>
+        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Qabullar</span><span class="badge bg-primary">{{ customer.appointment_count }}</span></li>
+        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Oxirgi tashrif</span><span>{{ customer.last_visit|default:"—" }}</span></li>
+        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Qachondan</span><span>{{ customer.created_at|date:"M d, Y" }}</span></li>
       </ul>
     </div>
   </div>
   <div class="col-lg-8">
     <div class="card table-card">
-      <div class="card-header bg-white py-3 px-4"><h6 class="mb-0 fw-semibold">Appointment History</h6></div>
+      <div class="card-header bg-white py-3 px-4"><h6 class="mb-0 fw-semibold">Qabullar tarixi</h6></div>
       <div class="card-body p-0">
         {% if appointments %}
         <table class="table table-hover mb-0">
-          <thead><tr><th class="ps-4">Service</th><th>Employee</th><th>Date</th><th>Status</th></tr></thead>
+          <thead><tr><th class="ps-4">Xizmat</th><th>Xodim</th><th>Sana</th><th>Holat</th></tr></thead>
           <tbody>
             {% for a in appointments %}
             <tr>
@@ -37,7 +37,7 @@
             {% endfor %}
           </tbody>
         </table>
-        {% else %}<div class="text-center py-4 text-muted">No appointments yet.</div>{% endif %}
+        {% else %}<div class="text-center py-4 text-muted">Hali qabullar yo'q.</div>{% endif %}
       </div>
     </div>
   </div>

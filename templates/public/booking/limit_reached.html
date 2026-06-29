@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Limit reached — {{ business.name }}{% endblock %}
+{% block body %}
+{% include 'public/includes/navbar.html' %}
+<div class="container py-5 text-center" style="max-width:600px">
+  <div class="py-5">
+    <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size:4rem"></i>
+    <h2 class="fw-bold text-dark mt-4">Oylik qabullar limiti tugadi</h2>
+    <p class="text-muted mt-3">
+      {{ business.name }} oylik qabullar chegarasiga yetdi.
+      Iltimos, keyinroq urinib ko'ring yoki biznes egasiga murojaat qiling.
+    </p>
+    <a href="/{{ business.slug }}/" class="btn btn-primary mt-3">
+      <i class="bi bi-arrow-left me-2"></i>Bosh sahifaga qaytish
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends 'superadmin/base_superadmin.html' %}
+{% block title %}Bizneslar — Admin{% endblock %}
+{% block page_title %}Bizneslar Ro'yxati{% endblock %}
+
+{% block sa_content %}
+<!-- Filters & Search -->
+<div class="card sa-table-card mb-4">
+  <div class="card-body p-3">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold text-muted">Qidiruv</label>
+        <div class="input-group">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+          <input type="text" name="q" value="{{ query }}" class="form-control sa-search border-start-0" placeholder="Biznes nomi, email...">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small fw-semibold text-muted">Kategoriya</label>
+        <select name="category" class="form-select form-select-sm">
+          <option value="">Barchasi</option>
+          {% for val, label in category_choices %}
+            <option value="{{ val }}" {% if val == selected_category %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small fw-semibold text-muted">Status</label>
+        <select name="status" class="form-select form-select-sm">
+          <option value="">Barchasi</option>
+          <option value="active" {% if selected_status == 'active' %}selected{% endif %}>Faol</option>
+          <option value="blocked" {% if selected_status == 'blocked' %}selected{% endif %}>Bloklangan</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small fw-semibold text-muted">Plan</label>
+        <select name="plan" class="form-select form-select-sm">
+          <option value="">Barchasi</option>
+          <option value="free" {% if selected_plan == 'free' %}selected{% endif %}>Free</option>
+          <option value="growth" {% if selected_plan == 'growth' %}selected{% endif %}>Growth</option>
+          <option value="enterprise" {% if selected_plan == 'enterprise' %}selected{% endif %}>Enterprise</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="bi bi-funnel-fill me-1"></i>Filtrlash</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Results Count -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <span class="text-muted" style="font-size:.85rem;">
+    <strong>{{ total_count }}</strong> ta biznes topildi
+  </span>
+</div>
+
+<!-- Businesses Table -->
+<div class="card sa-table-card">
+  <div class="table-responsive">
+    <table class="table sa-table mb-0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Biznes</th>
+          <th>Egasi</th>
+          <th>Kategoriya</th>
+          <th>Plan</th>
+          <th>Obuna</th>
+          <th>Status</th>
+          <th>Sana</th>
+          <th class="text-end">Amallar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in businesses %}
+        <tr>
+          <td class="text-muted" style="font-size:.8rem;">{{ forloop.counter }}</td>
+          <td>
+            <a href="{% url 'superadmin:business_detail' b.pk %}" class="text-decoration-none fw-semibold">
+              <div class="d-flex align-items-center gap-2">
+                {% if b.logo %}
+                  <img src="{{ b.logo.url }}" alt="" width="32" height="32" class="rounded-2" style="object-fit:cover;">
+                {% else %}
+                  <div class="rounded-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;background:rgba(99,102,241,.1);color:#6366f1;font-size:.75rem;font-weight:700;">
+                    {{ b.name|first|upper }}
+                  </div>
+                {% endif %}
+                <div>
+                  <div>{{ b.name }}</div>
+                  <div class="text-muted" style="font-size:.7rem;">{{ b.slug }}</div>
+                </div>
+              </div>
+            </a>
+          </td>
+          <td>
+            <div style="font-size:.8rem;">{{ b.owner.get_full_name }}</div>
+            <div class="text-muted" style="font-size:.7rem;">{{ b.owner.email }}</div>
+          </td>
+          <td><span class="text-muted" style="font-size:.8rem;">{{ b.get_category_display }}</span></td>
+          <td>
+            <span class="badge-status badge-{{ b.subscription_plan }}">
+              {{ b.get_subscription_plan_display }}
+            </span>
+          </td>
+          <td>
+            {% if b.subscription_status == 'active' %}
+              <span class="badge-status badge-paid">Faol</span>
+            {% elif b.subscription_status == 'trial' %}
+              <span class="badge-status badge-trial">Trial</span>
+            {% elif b.subscription_status == 'expired' %}
+              <span class="badge-status badge-expired">Tugagan</span>
+            {% else %}
+              <span class="badge-status badge-blocked">Bekor</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if b.is_blocked %}
+              <span class="badge-status badge-blocked"><i class="bi bi-shield-x me-1"></i>Bloklangan</span>
+            {% else %}
+              <span class="badge-status badge-active"><i class="bi bi-check-circle me-1"></i>Faol</span>
+            {% endif %}
+          </td>
+          <td class="text-muted" style="font-size:.8rem;">{{ b.created_at|date:"d.m.Y" }}</td>
+          <td class="text-end">
+            <div class="d-flex gap-1 justify-content-end">
+              <a href="{% url 'superadmin:business_detail' b.pk %}" class="btn btn-sm btn-outline-primary" title="Batafsil">
+                <i class="bi bi-eye"></i>
+              </a>
+              <form method="post" action="{% url 'superadmin:toggle_block' b.pk %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'superadmin:businesses' %}?q={{ query }}&category={{ selected_category }}&status={{ selected_status }}&plan={{ selected_plan }}">
+                {% if b.is_blocked %}
+                  <button type="submit" class="btn btn-sm btn-outline-success" title="Blokdan chiqarish">
+                    <i class="bi bi-unlock-fill"></i>
+                  </button>
+                {% else %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Bloklash" onclick="return confirm('{{ b.name }} ni bloklashni xohlaysizmi?')">
+                    <i class="bi bi-lock-fill"></i>
+                  </button>
+                {% endif %}
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9" class="text-center py-5">
+            <div class="text-muted">
+              <i class="bi bi-inbox display-4 d-block mb-2" style="opacity:.3;"></i>
+              Hech qanday biznes topilmadi
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

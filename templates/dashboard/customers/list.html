@@ -1,21 +1,21 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Customers{% endblock %}
+{% block page_title %}Mijozlar{% endblock %}
 {% block dashboard_content %}
 <div class="d-flex align-items-center justify-content-between mb-4">
-  <h4 class="fw-bold mb-0">Customers CRM</h4>
+  <h4 class="fw-bold mb-0">Mijozlar (CRM)</h4>
   <span class="badge bg-primary fs-6">{{ customers_data|length }}</span>
 </div>
 <div class="card table-card mb-3"><div class="card-body py-2">
   <form method="get" class="d-flex gap-2">
-    <input type="text" name="q" value="{{ search }}" class="form-control form-control-sm" placeholder="Search name or phone...">
-    <button type="submit" class="btn btn-sm btn-primary">Search</button>
-    {% if search %}<a href="{% url 'customers:list' %}" class="btn btn-sm btn-outline-secondary">Clear</a>{% endif %}
+    <input type="text" name="q" value="{{ search }}" class="form-control form-control-sm" placeholder="Ism yoki telefonni qidiring...">
+    <button type="submit" class="btn btn-sm btn-primary">Qidirish</button>
+    {% if search %}<a href="{% url 'customers:list' %}" class="btn btn-sm btn-outline-secondary">Tozalash</a>{% endif %}
   </form>
 </div></div>
 <div class="card table-card"><div class="card-body p-0">
   {% if customers_data %}
   <table class="table table-hover mb-0">
-    <thead><tr><th class="ps-4">Customer</th><th>Phone</th><th>Bookings</th><th>Last Visit</th><th class="text-end pe-4">Actions</th></tr></thead>
+    <thead><tr><th class="ps-4">Mijoz</th><th>Telefon</th><th>Qabullar</th><th>Oxirgi tashrif</th><th class="text-end pe-4">Harakatlar</th></tr></thead>
     <tbody>
       {% for item in customers_data %}
       <tr>
@@ -28,11 +28,11 @@
         <td>{{ item.customer.phone }}</td>
         <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ item.appointment_count }}</span></td>
         <td>{{ item.last_visit|default:"—" }}</td>
-        <td class="text-end pe-4"><a href="{% url 'customers:detail' item.customer.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i> View</a></td>
+        <td class="text-end pe-4"><a href="{% url 'customers:detail' item.customer.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i> Ko'rish</a></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-  {% else %}<div class="text-center py-5 text-muted"><i class="bi bi-people fs-2 d-block mb-2"></i>No customers yet.</div>{% endif %}
+  {% else %}<div class="text-center py-5 text-muted"><i class="bi bi-people fs-2 d-block mb-2"></i>Hali mijozlar yo'q.</div>{% endif %}
 </div></div>
 {% endblock %}

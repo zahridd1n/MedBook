@@ -1,6 +1,7 @@
 import secrets
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 from django.utils.text import slugify
 
 
@@ -28,6 +29,40 @@ class Business(models.Model):
     instagram = models.CharField(max_length=100, blank=True)
     website = models.URLField(blank=True)
 
+    # ─── Branding / Customization ────────────────────────────────────────────
+    BUTTON_STYLE_CHOICES = [
+        ('rounded', 'Yumaloq (Rounded)'),
+        ('square', 'To\'rtburchak (Square)'),
+        ('pill', 'Pill shaklida'),
+    ]
+    SHADOW_CHOICES = [
+        ('light', 'Yengil'),
+        ('medium', 'O\'rtacha'),
+        ('strong', 'Kuchli'),
+    ]
+
+    primary_color = models.CharField(
+        max_length=7, default='#6366f1',
+        help_text='Public sahifa asosiy rangi (hex masalan #6366f1)',
+    )
+    banner_image = models.ImageField(
+        upload_to='business/banners/', blank=True, null=True,
+        help_text='Public sahifa banner rasmi (pullik tariflar uchun)',
+    )
+    button_style = models.CharField(
+        max_length=20, choices=BUTTON_STYLE_CHOICES, default='rounded',
+        help_text='Tugmalar shakli',
+    )
+    card_shadow = models.CharField(
+        max_length=20, choices=SHADOW_CHOICES, default='medium',
+        help_text='Kartochkalar soyasi',
+    )
+    custom_css = models.TextField(
+        blank=True,
+        help_text='Maxsus CSS (faqat Korporativ tarif)',
+    )
+    # ─────────────────────────────────────────────────────────────────────────
+
     # ─── Telegram Bot Integration ────────────────────────────────────────────
     telegram_chat_id = models.CharField(
         max_length=50, blank=True,
@@ -44,6 +79,33 @@ class Business(models.Model):
     # ─────────────────────────────────────────────────────────────────────────
 
     is_active = models.BooleanField(default=True)
+    is_blocked = models.BooleanField(
+        default=False,
+        help_text='Admin tomonidan bloklangan biznes dashboardga kira olmaydi',
+    )
+
+    # ─── Subscription / Payment ───────────────────────────────────────────────
+    PLAN_CHOICES = [
+        ('free', 'Free / Starter'),
+        ('growth', 'Growth'),
+        ('enterprise', 'Enterprise'),
+    ]
+    SUB_STATUS_CHOICES = [
+        ('trial', 'Trial'),
+        ('active', 'Active'),
+        ('expired', 'Expired'),
+        ('cancelled', 'Cancelled'),
+    ]
+    subscription_plan = models.CharField(
+        max_length=20, choices=PLAN_CHOICES, default='free',
+    )
+    subscription_status = models.CharField(
+        max_length=20, choices=SUB_STATUS_CHOICES, default='trial',
+    )
+    subscription_start = models.DateTimeField(null=True, blank=True)
+    subscription_end = models.DateTimeField(null=True, blank=True)
+    # ─────────────────────────────────────────────────────────────────────────
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -62,6 +124,80 @@ class Business(models.Model):
                 n += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
+    # ─── Plan / Subscription helpers ────────────────────────────────────────
+    PLAN_LIMITS = {
+        'free':     {'max_employees': 1, 'max_appointments_monthly': 50},
+        'growth':   {'max_employees': 5, 'max_appointments_monthly': None},
+        'enterprise': {'max_employees': None, 'max_appointments_monthly': None},
+    }
+
+    @property
+    def plan_data(self):
+        return self.PLAN_LIMITS.get(self.subscription_plan, self.PLAN_LIMITS['free'])
+
+    @property
+    def max_employees(self):
+        return self.plan_data['max_employees']
+
+    @property
+    def max_appointments_monthly(self):
+        return self.plan_data['max_appointments_monthly']
+
+    def can_add_employee(self):
+        mx = self.max_employees
+        if mx is None:
+            return True
+        return self.employees.count() < mx
+
+    def can_create_appointment(self):
+        mx = self.max_appointments_monthly
+        if mx is None:
+            return True
+        now = timezone.now()
+        count = self.appointments.filter(
+            date__year=now.year,
+            date__month=now.month,
+        ).exclude(status='cancelled').count()
+        return count < mx
+
+    def can_use_telegram(self):
+        return self.subscription_plan in ('growth', 'enterprise')
+
+    def can_use_custom_domain(self):
+        return self.subscription_plan in ('growth', 'enterprise')
+
+    def can_use_custom_css(self):
+        return self.subscription_plan == 'enterprise'
+
+    def can_use_api(self):
+        return self.subscription_plan == 'enterprise'
+
+    @property
+    def plan_display(self):
+        return dict(self.PLAN_CHOICES).get(self.subscription_plan, 'Free / Starter')
+
+    def enforce_subscription(self):
+        from django.utils import timezone
+        now = timezone.now()
+        changed = False
+
+        if self.subscription_end and self.subscription_end < now:
+            if self.subscription_status != 'expired':
+                self.subscription_status = 'expired'
+                changed = True
+            if self.subscription_plan != 'free':
+                self.subscription_plan = 'free'
+                changed = True
+
+        if self.subscription_status == 'expired' and self.subscription_plan != 'free':
+            self.subscription_plan = 'free'
+            changed = True
+
+        if changed:
+            self.save(update_fields=['subscription_status', 'subscription_plan'])
+
+        return changed
 
     # ─── Telegram helpers ────────────────────────────────────────────────────
     def generate_connect_token(self):

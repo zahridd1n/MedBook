@@ -1,36 +1,642 @@
 {% extends 'base.html' %}
+
 {% block body %}
-<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
-  <div class="container">
-    <a class="navbar-brand fw-bold text-primary fs-5" href="{% url 'marketing:home' %}">
-      <i class="bi bi-calendar-check-fill me-2"></i>BookSaaS
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="nav">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a class="nav-link" href="{% url 'marketing:features' %}">Features</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'marketing:pricing' %}">Pricing</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'marketing:faq' %}">FAQ</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'marketing:contact' %}">Contact</a></li>
-      </ul>
-      <div class="d-flex gap-2">
-        {% if user.is_authenticated %}
-          <a href="{% url 'dashboard:home' %}" class="btn btn-primary">Dashboard</a>
+<body class="mkt-body">
+
+<!-- ════════════════════════════════════════════
+     GLOBAL MARKETING DESIGN SYSTEM
+════════════════════════════════════════════ -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Design Tokens ── */
+:root {
+  --mkt-bg:           #05050f;
+  --mkt-surface:      #0d0d1f;
+  --mkt-surface-2:    #11112a;
+  --mkt-border:       rgba(255,255,255,0.06);
+  --mkt-violet:       #7c3aed;
+  --mkt-violet-2:     #8b5cf6;
+  --mkt-violet-glow:  rgba(124,58,237,0.35);
+  --mkt-cyan:         #06b6d4;
+  --mkt-cyan-glow:    rgba(6,182,212,0.25);
+  --mkt-gradient:     linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+  --mkt-gradient-r:   linear-gradient(135deg, #06b6d4 0%, #7c3aed 100%);
+  --mkt-gtext:        linear-gradient(135deg, #c4b5fd 0%, #7c3aed 30%, #38bdf8 70%, #06b6d4 100%);
+  --mkt-text:         #f1f5f9;
+  --mkt-text-soft:    #94a3b8;
+  --mkt-text-muted:   #475569;
+  --mkt-glass:        rgba(255,255,255,0.025);
+  --mkt-glass-2:      rgba(255,255,255,0.05);
+  --mkt-nav-h:        72px;
+  --mkt-radius:       1rem;
+}
+
+/* ── Body ── */
+body.mkt-body {
+  background: var(--mkt-bg) !important;
+  color: var(--mkt-text) !important;
+  font-family: 'Inter', sans-serif !important;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+body.mkt-body * { box-sizing: border-box; }
+
+/* ── Noise texture overlay ── */
+body.mkt-body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Utility: gradient text ── */
+.mkt-gtext {
+  background: var(--mkt-gtext);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Utility: reveal on scroll ── */
+.mkt-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(.4,0,.2,1), transform 0.65s cubic-bezier(.4,0,.2,1);
+}
+.mkt-reveal.visible { opacity: 1; transform: none; }
+.mkt-reveal-d1 { transition-delay: .1s; }
+.mkt-reveal-d2 { transition-delay: .18s; }
+.mkt-reveal-d3 { transition-delay: .26s; }
+.mkt-reveal-d4 { transition-delay: .34s; }
+.mkt-reveal-d5 { transition-delay: .42s; }
+
+/* ── Utility: glass card ── */
+.mkt-glass-card {
+  background: var(--mkt-glass);
+  border: 1px solid var(--mkt-border);
+  border-radius: var(--mkt-radius);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ── Utility: section label pill ── */
+.mkt-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--mkt-violet-2);
+  background: rgba(124,58,237,.1);
+  border: 1px solid rgba(124,58,237,.22);
+  padding: .3rem .9rem;
+  border-radius: 100px;
+}
+.mkt-pill-dot {
+  width: 5px; height: 5px;
+  background: var(--mkt-violet-2);
+  border-radius: 50%;
+  animation: mktPulse 2s ease infinite;
+}
+@keyframes mktPulse { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.4; transform:scale(1.5); } }
+
+/* ── Utility: CTA buttons ── */
+.mkt-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .85rem 1.75rem;
+  background: var(--mkt-gradient);
+  color: #fff !important;
+  font-weight: 600;
+  font-size: .9rem;
+  border-radius: .75rem;
+  text-decoration: none !important;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s, box-shadow .25s;
+  box-shadow: 0 0 28px var(--mkt-violet-glow);
+  white-space: nowrap;
+}
+.mkt-btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+  opacity: 0;
+  transition: opacity .25s;
+}
+.mkt-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 44px var(--mkt-violet-glow); color: #fff !important; }
+.mkt-btn-primary:hover::after { opacity: 1; }
+
+.mkt-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .85rem 1.75rem;
+  background: transparent;
+  color: var(--mkt-text-soft) !important;
+  font-weight: 500;
+  font-size: .9rem;
+  border-radius: .75rem;
+  text-decoration: none !important;
+  border: 1px solid var(--mkt-border);
+  cursor: pointer;
+  transition: all .25s;
+  white-space: nowrap;
+}
+.mkt-btn-ghost:hover {
+  border-color: rgba(255,255,255,.14);
+  background: var(--mkt-glass-2);
+  color: var(--mkt-text) !important;
+  transform: translateY(-1px);
+}
+
+/* ── Section spacing ── */
+.mkt-section { padding: 6rem 0; }
+
+/* ════════════════════════════════════════════
+   FLOATING NAVBAR
+════════════════════════════════════════════ */
+.mkt-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  padding: .9rem 1rem;
+  transition: padding .35s cubic-bezier(.4,0,.2,1);
+}
+.mkt-nav.is-scrolled { padding: .45rem 1rem; }
+
+.mkt-nav-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: rgba(5,5,15,.72);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--mkt-border);
+  border-radius: 1rem;
+  padding: .65rem 1.25rem;
+  transition: background .35s, box-shadow .35s;
+}
+.mkt-nav.is-scrolled .mkt-nav-wrap {
+  background: rgba(5,5,15,.92);
+  box-shadow: 0 8px 48px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06);
+}
+
+/* Brand */
+.mkt-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--mkt-text) !important;
+  text-decoration: none !important;
+  flex-shrink: 0;
+}
+.mkt-brand-icon {
+  width: 32px; height: 32px;
+  background: var(--mkt-gradient);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 16px var(--mkt-violet-glow);
+  font-size: .9rem;
+}
+
+/* Links */
+.mkt-nav-links {
+  display: flex;
+  align-items: center;
+  gap: .1rem;
+  list-style: none;
+  margin: 0; padding: 0;
+  flex: 1;
+  justify-content: center;
+}
+.mkt-nav-links li a {
+  color: var(--mkt-text-soft) !important;
+  text-decoration: none !important;
+  font-size: .875rem;
+  font-weight: 500;
+  padding: .45rem .85rem;
+  border-radius: .5rem;
+  transition: color .2s, background .2s;
+  display: block;
+}
+.mkt-nav-links li a:hover {
+  color: var(--mkt-text) !important;
+  background: rgba(255,255,255,.055);
+}
+
+/* Actions */
+.mkt-nav-actions { display: flex; align-items: center; gap: .6rem; flex-shrink: 0; }
+
+.mkt-nav-login {
+  color: var(--mkt-text-soft) !important;
+  text-decoration: none !important;
+  font-size: .875rem;
+  font-weight: 500;
+  padding: .45rem .85rem;
+  border-radius: .5rem;
+  transition: color .2s, background .2s;
+}
+.mkt-nav-login:hover { color: var(--mkt-text) !important; background: rgba(255,255,255,.055); }
+
+.mkt-nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .5rem 1rem;
+  background: var(--mkt-gradient);
+  color: #fff !important;
+  font-size: .8rem;
+  font-weight: 600;
+  border-radius: .6rem;
+  text-decoration: none !important;
+  transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 0 18px var(--mkt-violet-glow);
+  white-space: nowrap;
+}
+.mkt-nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 28px var(--mkt-violet-glow); color: #fff !important; }
+
+/* Mobile toggle */
+.mkt-nav-toggle {
+  display: none;
+  background: var(--mkt-glass-2);
+  border: 1px solid var(--mkt-border);
+  color: var(--mkt-text);
+  width: 36px; height: 36px;
+  border-radius: .5rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background .2s;
+}
+.mkt-nav-toggle:hover { background: rgba(255,255,255,.08); }
+
+/* Mobile drawer */
+.mkt-nav-drawer {
+  display: none;
+  position: fixed;
+  top: 80px; left: .75rem; right: .75rem;
+  background: rgba(13,13,31,.97);
+  border: 1px solid var(--mkt-border);
+  border-radius: 1rem;
+  padding: 1rem;
+  z-index: 9998;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  flex-direction: column;
+  gap: .25rem;
+  animation: drawerIn .2s ease;
+}
+@keyframes drawerIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:none; } }
+.mkt-nav-drawer.is-open { display: flex; }
+.mkt-nav-drawer a {
+  color: var(--mkt-text-soft) !important;
+  text-decoration: none !important;
+  font-size: .9rem;
+  font-weight: 500;
+  padding: .65rem .85rem;
+  border-radius: .6rem;
+  transition: color .2s, background .2s;
+  display: block;
+}
+.mkt-nav-drawer a:hover { color: var(--mkt-text) !important; background: rgba(255,255,255,.055); }
+.mkt-nav-drawer .mkt-nav-cta { justify-content: center; margin-top: .5rem; padding: .7rem 1rem; }
+
+@media (max-width: 900px) {
+  .mkt-nav-links { display: none; }
+  .mkt-nav-actions { display: none; }
+  .mkt-nav-toggle { display: flex; }
+}
+
+/* ════════════════════════════════════════════
+   PREMIUM FOOTER
+════════════════════════════════════════════ */
+.mkt-footer {
+  background: #030308;
+  border-top: 1px solid var(--mkt-border);
+  padding: 5rem 0 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.mkt-footer::before {
+  content: '';
+  position: absolute;
+  top: -250px; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 500px;
+  background: radial-gradient(ellipse, rgba(124,58,237,.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.mkt-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--mkt-text) !important;
+  text-decoration: none !important;
+  margin-bottom: .85rem;
+}
+.mkt-footer-desc {
+  color: var(--mkt-text-muted);
+  font-size: .85rem;
+  line-height: 1.75;
+  max-width: 270px;
+}
+.mkt-footer-col-title {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--mkt-text-soft);
+  margin-bottom: 1.25rem;
+}
+.mkt-footer-col-links {
+  list-style: none;
+  padding: 0; margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+}
+.mkt-footer-col-links a {
+  color: var(--mkt-text-muted) !important;
+  text-decoration: none !important;
+  font-size: .85rem;
+  transition: color .2s, transform .2s;
+  display: inline-block;
+}
+.mkt-footer-col-links a:hover { color: var(--mkt-text) !important; transform: translateX(2px); }
+.mkt-footer-bottom {
+  margin-top: 4rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--mkt-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  color: var(--mkt-text-muted);
+  font-size: .8rem;
+}
+.mkt-footer-bottom a {
+  color: var(--mkt-text-muted) !important;
+  text-decoration: none !important;
+  transition: color .2s;
+}
+.mkt-footer-bottom a:hover { color: var(--mkt-text) !important; }
+</style>
+
+<!-- ══════════════════════════════════════════
+     FLOATING NAVBAR
+══════════════════════════════════════════ -->
+<nav class="mkt-nav" id="mktNav" role="navigation">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1rem;">
+    <div class="mkt-nav-wrap">
+
+      <a class="mkt-nav-brand" href="{% url 'marketing:home' %}">
+        {% if site_settings.logo %}
+        <img src="{{ site_settings.logo.url }}" alt="BookSaaS Logo" style="height:32px;border-radius:4px;">
         {% else %}
-          <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary">Login</a>
-          <a href="{% url 'accounts:register' %}" class="btn btn-primary">Get Started Free</a>
+        <div class="mkt-brand-icon">
+          <i class="bi bi-calendar-check-fill" style="color:#fff;"></i>
+        </div>
+        BookSaaS
+        {% endif %}
+      </a>
+
+      <ul class="mkt-nav-links">
+        <li><a href="{% url 'marketing:features' %}">Imkoniyatlar</a></li>
+        <li><a href="{% url 'marketing:pricing' %}">Narxlar</a></li>
+        <li><a href="{% url 'marketing:faq' %}">FAQ</a></li>
+        <li><a href="{% url 'marketing:contact' %}">Aloqa</a></li>
+      </ul>
+
+      <div class="mkt-nav-actions">
+        {% if user.is_authenticated %}
+          <a href="{% url 'dashboard:home' %}" class="mkt-nav-cta">
+            <i class="bi bi-grid-fill"></i> Boshqaruv paneli
+          </a>
+        {% else %}
+          <a href="{% url 'accounts:login' %}" class="mkt-nav-login">Kirish</a>
+          <a href="{% url 'accounts:register' %}" class="mkt-nav-cta">
+            Bepul boshlash <i class="bi bi-arrow-right"></i>
+          </a>
         {% endif %}
       </div>
+
+      <button class="mkt-nav-toggle" id="mktNavToggle" aria-label="Menyuni ochish/yopish" aria-expanded="false">
+        <i class="bi bi-list" id="mktNavToggleIcon"></i>
+      </button>
     </div>
   </div>
 </nav>
+
+<!-- Mobile Drawer -->
+<div class="mkt-nav-drawer" id="mktNavDrawer" role="menu">
+  <a href="{% url 'marketing:features' %}">Imkoniyatlar</a>
+  <a href="{% url 'marketing:pricing' %}">Narxlar</a>
+  <a href="{% url 'marketing:faq' %}">FAQ</a>
+  <a href="{% url 'marketing:contact' %}">Aloqa</a>
+  {% if user.is_authenticated %}
+    <a href="{% url 'dashboard:home' %}" class="mkt-nav-cta">
+      <i class="bi bi-grid-fill"></i> Boshqaruv paneli
+    </a>
+  {% else %}
+    <a href="{% url 'accounts:login' %}">Kirish</a>
+    <a href="{% url 'accounts:register' %}" class="mkt-nav-cta">
+      Bepul boshlash <i class="bi bi-arrow-right"></i>
+    </a>
+  {% endif %}
+</div>
+
+<!-- Spacer for fixed navbar -->
+<div style="height: var(--mkt-nav-h, 72px);"></div>
+
+<!-- ══════════════════════════════════════════
+     PAGE CONTENT
+══════════════════════════════════════════ -->
 {% block marketing_content %}{% endblock %}
-<footer class="bg-dark text-white py-5 mt-5">
-  <div class="container text-center">
-    <p class="fw-bold mb-1"><i class="bi bi-calendar-check-fill text-primary me-2"></i>BookSaaS</p>
-    <p class="text-white-50 small mb-0">© 2024 BookSaaS. The simplest booking platform for small businesses.</p>
+
+<!-- ══════════════════════════════════════════
+     PREMIUM FOOTER
+══════════════════════════════════════════ -->
+<footer class="mkt-footer">
+  <div class="container" style="max-width:1200px;">
+    <div class="row g-5">
+      <div class="col-lg-4 col-md-6">
+        <a href="{% url 'marketing:home' %}" class="mkt-footer-brand">
+          {% if site_settings.logo %}
+          <img src="{{ site_settings.logo.url }}" alt="BookSaaS Logo" style="height:32px;border-radius:4px;">
+          {% else %}
+          <div class="mkt-brand-icon">
+            <i class="bi bi-calendar-check-fill" style="color:#fff;font-size:.8rem;"></i>
+          </div>
+          BookSaaS
+          {% endif %}
+        </a>
+        <p class="mkt-footer-desc">
+          Kichik bizneslar uchun eng qulay onlayn band qilish platformasi. Xodimlar, xizmatlar va qabullarni bir joyda boshqaring.
+        </p>
+      </div>
+      <div class="col-lg-2 col-md-3 col-6">
+        <div class="mkt-footer-col-title">Mahsulot</div>
+        <ul class="mkt-footer-col-links">
+          <li><a href="{% url 'marketing:features' %}">Imkoniyatlar</a></li>
+          <li><a href="{% url 'marketing:pricing' %}">Narxlar</a></li>
+          <li><a href="{% url 'marketing:faq' %}">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-2 col-md-3 col-6">
+        <div class="mkt-footer-col-title">Kompaniya</div>
+        <ul class="mkt-footer-col-links">
+          <li><a href="{% url 'marketing:contact' %}">Aloqa</a></li>
+          <li><a href="{% url 'accounts:login' %}">Kirish</a></li>
+          <li><a href="{% url 'accounts:register' %}">Ro'yxatdan o'tish</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="mkt-footer-col-title">Biz bilan bog'laning</div>
+        <p style="color:var(--mkt-text-muted);font-size:.85rem;line-height:1.7;margin-bottom:1rem;">
+          Savollaringiz bormi? Jamoamiz 1 soat ichida javob beradi. 
+          <br><br>Telefon: {{ site_settings.contact_phone }}
+        </p>
+        <a href="mailto:{{ site_settings.contact_email }}" style="color:var(--mkt-violet-2) !important;text-decoration:none;font-size:.875rem;font-weight:500;display:inline-flex;align-items:center;gap:.4rem;">
+          <i class="bi bi-envelope-fill"></i> {{ site_settings.contact_email }}
+        </a>
+        <div style="margin-top:1.5rem;display:flex;gap:.75rem;">
+          <a href="{{ site_settings.contact_telegram }}" style="width:34px;height:34px;background:rgba(255,255,255,.05);border:1px solid var(--mkt-border);border-radius:.5rem;display:flex;align-items:center;justify-content:center;color:var(--mkt-text-soft) !important;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='rgba(124,58,237,.15)';this.style.borderColor='rgba(124,58,237,.3)'" onmouseout="this.style.background='rgba(255,255,255,.05)';this.style.borderColor='var(--mkt-border)'">
+            <i class="bi bi-telegram" style="font-size:.9rem;"></i>
+          </a>
+          <a href="#" style="width:34px;height:34px;background:rgba(255,255,255,.05);border:1px solid var(--mkt-border);border-radius:.5rem;display:flex;align-items:center;justify-content:center;color:var(--mkt-text-soft) !important;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='rgba(124,58,237,.15)';this.style.borderColor='rgba(124,58,237,.3)'" onmouseout="this.style.background='rgba(255,255,255,.05)';this.style.borderColor='var(--mkt-border)'">
+            <i class="bi bi-instagram" style="font-size:.9rem;"></i>
+          </a>
+          <a href="#" style="width:34px;height:34px;background:rgba(255,255,255,.05);border:1px solid var(--mkt-border);border-radius:.5rem;display:flex;align-items:center;justify-content:center;color:var(--mkt-text-soft) !important;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='rgba(124,58,237,.15)';this.style.borderColor='rgba(124,58,237,.3)'" onmouseout="this.style.background='rgba(255,255,255,.05)';this.style.borderColor='var(--mkt-border)'">
+            <i class="bi bi-linkedin" style="font-size:.9rem;"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mkt-footer-bottom">
+      <div>© 2024 BookSaaS. Barcha huquqlar himoyalangan.</div>
+      <div style="display:flex;gap:1.5rem;">
+        <a href="#">Maxfiylik siyosati</a>
+        <a href="#">Foydalanish shartlari</a>
+      </div>
+    </div>
   </div>
 </footer>
+
+<!-- ══════════════════════════════════════════
+     MARKETING BASE SCRIPTS
+══════════════════════════════════════════ -->
+<script>
+(function() {
+  // ── Navbar scroll effect
+  const nav = document.getElementById('mktNav');
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        nav.classList.toggle('is-scrolled', window.scrollY > 20);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // ── Mobile drawer toggle
+  const toggle  = document.getElementById('mktNavToggle');
+  const drawer  = document.getElementById('mktNavDrawer');
+  const togIcon = document.getElementById('mktNavToggleIcon');
+  if (toggle && drawer) {
+    toggle.addEventListener('click', () => {
+      const open = drawer.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', open);
+      togIcon.className = open ? 'bi bi-x' : 'bi bi-list';
+    });
+    // Close on outside click
+    document.addEventListener('click', e => {
+      if (!nav.contains(e.target) && !drawer.contains(e.target)) {
+        drawer.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        togIcon.className = 'bi bi-list';
+      }
+    });
+  }
+
+  // ── Intersection Observer reveal
+  const revealEls = document.querySelectorAll('.mkt-reveal');
+  if (revealEls.length) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => io.observe(el));
+  }
+
+  // ── Counter animation
+  function runCounter(el) {
+    const raw    = el.dataset.target || '0';
+    const suffix = el.dataset.suffix || '';
+    const prefix = el.dataset.prefix || '';
+    const num    = parseFloat(raw);
+    const isFloat = raw.includes('.');
+    const dur    = 1600;
+    const t0     = performance.now();
+    function tick(now) {
+      const p = Math.min((now - t0) / dur, 1);
+      const e = 1 - Math.pow(1 - p, 3); // cubic ease out
+      const v = num * e;
+      el.textContent = prefix + (isFloat ? v.toFixed(1) : Math.round(v).toLocaleString()) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  const counterEls = document.querySelectorAll('[data-counter]');
+  if (counterEls.length) {
+    const cio = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { runCounter(e.target); cio.unobserve(e.target); } });
+    }, { threshold: 0.5 });
+    counterEls.forEach(el => cio.observe(el));
+  }
+
+  // ── Tilt effect on hero mockup
+  const tiltEl = document.getElementById('mktHeroMockup');
+  if (tiltEl) {
+    tiltEl.addEventListener('mousemove', e => {
+      const r = tiltEl.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width  / 2) / (r.width  / 2);
+      const y = (e.clientY - r.top  - r.height / 2) / (r.height / 2);
+      tiltEl.style.transform = `perspective(800px) rotateY(${x * 6}deg) rotateX(${-y * 4}deg) translateZ(10px)`;
+    });
+    tiltEl.addEventListener('mouseleave', () => {
+      tiltEl.style.transform = '';
+    });
+  }
+})();
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
 {% endblock %}

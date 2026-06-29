@@ -1,0 +1,127 @@
+{% extends 'superadmin/base_superadmin.html' %}
+{% block title %}Statistikalar — Admin{% endblock %}
+{% block page_title %}Platforma Statistikasi{% endblock %}
+
+{% block sa_content %}
+<div class="row g-4 mb-4">
+  <div class="col-lg-8">
+    <div class="chart-container h-100">
+      <h6><i class="bi bi-calendar-check me-2 text-primary"></i>Oxirgi 6 Oy: Bandlovlar O'sishi</h6>
+      <canvas id="monthsChart" height="100"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="chart-container h-100">
+      <h6><i class="bi bi-tags-fill me-2 text-primary"></i>Obunalar Taqvimi</h6>
+      <canvas id="planChart" height="200"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Top 10 Businesses -->
+  <div class="col-lg-7">
+    <div class="card sa-table-card h-100">
+      <div class="card-header border-bottom">Top 10 Bizneslar (Bandlovlar soni bo'yicha)</div>
+      <div class="table-responsive">
+        <table class="table sa-table mb-0">
+          <thead><tr><th>#</th><th>Biznes</th><th>Kategoriya</th><th class="text-end">Bandlovlar</th></tr></thead>
+          <tbody>
+            {% for b in top_businesses %}
+            <tr>
+              <td class="text-muted">{{ forloop.counter }}</td>
+              <td><a href="{% url 'superadmin:business_detail' b.pk %}" class="fw-bold text-decoration-none">{{ b.name }}</a></td>
+              <td><span class="text-muted small">{{ b.get_category_display }}</span></td>
+              <td class="text-end fw-bold text-dark fs-5">{{ b.appt_count }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center py-4 text-muted">Ma'lumot yo'q</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Breakdown List -->
+  <div class="col-lg-5">
+    <div class="card sa-table-card h-100">
+      <div class="card-header border-bottom">Kategoriyalar Bo'yicha Bizneslar</div>
+      <div class="table-responsive">
+        <table class="table sa-table mb-0">
+          <thead><tr><th>Kategoriya</th><th class="text-end">Soni</th></tr></thead>
+          <tbody>
+            {% for c in categories %}
+            <tr>
+              <td class="fw-semibold text-dark">{{ c.category|title }}</td>
+              <td class="text-end"><span class="badge bg-light text-dark border px-3 py-2 fs-6">{{ c.count }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="2" class="text-center py-4 text-muted">Ma'lumot yo'q</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  // Months Trend Line Chart
+  const mCtx = document.getElementById('monthsChart').getContext('2d');
+  new Chart(mCtx, {
+    type: 'line',
+    data: {
+      labels: {{ months_labels|safe }},
+      datasets: [{
+        label: 'Bandlovlar',
+        data: {{ months_data|safe }},
+        borderColor: '#6366f1',
+        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#fff',
+        pointBorderColor: '#6366f1',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,.04)' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // Plans Doughnut Chart
+  const pCtx = document.getElementById('planChart').getContext('2d');
+  const planLabels = {{ plan_labels|safe }};
+  const planValues = {{ plan_values|safe }};
+  const planColors = ['#94a3b8', '#6366f1', '#a855f7']; // Match plan colors (free, growth, enterprise)
+  new Chart(pCtx, {
+    type: 'doughnut',
+    data: {
+      labels: planLabels,
+      datasets: [{
+        data: planValues,
+        backgroundColor: planColors.slice(0, planLabels.length),
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '70%',
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 15, font: { size: 11 }, usePointStyle: true } }
+      }
+    }
+  });
+</script>
+{% endblock %}

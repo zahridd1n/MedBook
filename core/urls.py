@@ -12,6 +12,9 @@ from public_site.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # Super Admin Dashboard
+    path('superadmin/', include('superadmin.urls')),
+
     # Telegram Bot webhook (CSRF exempt, no login needed)
     path('telegram/webhook/<str:token>/', telegram_webhook, name='telegram_webhook'),
 
