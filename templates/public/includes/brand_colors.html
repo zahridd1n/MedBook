@@ -1,0 +1,29 @@
+{% block brand_vars %}
+<style>
+  :root {
+    --brand: {{ business.primary_color|default:'#6366f1' }};
+    --brand-dark: color-mix(in srgb, var(--brand) 80%, #000);
+    --brand-light: color-mix(in srgb, var(--brand) 12%, #fff);
+    --brand-rgb: {{ business.primary_color|default:'#6366f1'|slice:'1:'|add:' ' }};
+  }
+  .btn-primary { --bs-btn-bg: var(--brand); --bs-btn-border-color: var(--brand); }
+  .btn-primary:hover { --bs-btn-hover-bg: var(--brand-dark); --bs-btn-hover-border-color: var(--brand-dark); }
+  .btn-primary:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 30%, transparent); }
+  .btn-outline-primary { --bs-btn-color: var(--brand); --bs-btn-border-color: var(--brand); }
+  .btn-outline-primary:hover { --bs-btn-hover-bg: var(--brand); --bs-btn-hover-border-color: var(--brand); }
+  .text-primary { color: var(--brand) !important; }
+  .bg-primary { background: var(--brand) !important; }
+  .border-primary { border-color: var(--brand) !important; }
+  .progress-step.active { background: var(--brand) !important; box-shadow: 0 4px 12px color-mix(in srgb, var(--brand) 40%, transparent) !important; }
+  .day-chip:hover, .day-chip.active { border-color: var(--brand) !important; }
+  .day-chip.active { background: var(--brand) !important; color: white !important; }
+  .slot-btn:hover { border-color: var(--brand) !important; color: var(--brand) !important; background: var(--brand-light) !important; }
+  .form-control:focus { border-color: var(--brand) !important; box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 20%, transparent) !important; }
+  a { color: var(--brand); }
+  a:hover { color: var(--brand-dark); }
+  .service-card:hover { border-color: var(--brand) !important; }
+  .staff-card:hover { border-color: var(--brand) !important; }
+  .staff-avatar { background: var(--brand-light) !important; color: var(--brand) !important; }
+  .service-card.selected { border-color: var(--brand) !important; background: var(--brand-light) !important; }
+</style>
+{% endblock %}

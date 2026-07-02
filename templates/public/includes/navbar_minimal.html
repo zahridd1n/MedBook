@@ -1,0 +1,330 @@
+<style>
+:root { --brand: {{ business.primary_color|default:'#6366f1' }}; --brand-dark: color-mix(in srgb, var(--brand) 80%, #000); }
+/* ── Minimal Luxury — Linear ── */
+.nav-min {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.nav-min-inner {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-bottom: 1px solid transparent;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-min.scrolled .nav-min-inner {
+  border-bottom-color: rgba(226,232,240,0.6);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.nav-min.hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+/* Brand */
+.nav-min-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding: 6px 10px;
+  margin-left: -10px;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+.nav-min-brand:hover { background: rgba(0,0,0,0.03); }
+.nav-min-brand-mark {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--brand);
+  letter-spacing: -0.04em;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-min-brand:hover .nav-min-brand-mark { transform: scale(1.05); }
+.nav-min-brand-name {
+  font-size: 14px;
+  font-weight: 650;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  transition: color 0.3s;
+}
+
+/* Links */
+.nav-min-links {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav-min-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 480;
+  color: #64748b;
+  letter-spacing: -0.01em;
+  transition: color 0.3s;
+}
+.nav-min-link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 16px;
+  right: 16px;
+  height: 1.5px;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 2px;
+}
+.nav-min-link:hover { color: #0f172a; }
+.nav-min-link:hover::after { transform: scaleX(1); }
+.nav-min-link.active { color: var(--brand); }
+.nav-min-link.active::after { transform: scaleX(1); background: var(--brand); }
+.nav-min-link i {
+  font-size: 14px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-min-link:hover i { transform: translateY(-1px); }
+
+/* CTA */
+.nav-min-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  height: 36px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 570;
+  color: #fff;
+  background: #0f172a;
+  border-radius: 6px;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.nav-min-cta:hover {
+  background: var(--brand);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--brand) 25%, transparent);
+}
+.nav-min-cta:active { transform: translateY(0) scale(0.98); }
+.nav-min-cta i {
+  font-size: 14px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-min-cta:hover i { transform: translateX(3px); }
+
+/* Hamburger */
+.nav-min-hamburger {
+  display: none;
+  width: 36px; height: 36px;
+  align-items: center; justify-content: center;
+  border: none; background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+.nav-min-hamburger:hover { background: rgba(0,0,0,0.04); }
+.nav-min-hamburger span,
+.nav-min-hamburger span::before,
+.nav-min-hamburger span::after {
+  display: block;
+  width: 18px; height: 1.5px;
+  background: #0f172a;
+  border-radius: 2px;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.nav-min-hamburger span::before,
+.nav-min-hamburger span::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+.nav-min-hamburger span::before { top: -6px; }
+.nav-min-hamburger span::after { top: 6px; }
+.nav-min-hamburger.open span { background: transparent; }
+.nav-min-hamburger.open span::before { top: 0; transform: rotate(45deg); }
+.nav-min-hamburger.open span::after { top: 0; transform: rotate(-45deg); }
+
+/* Mobile Overlay */
+.nav-min-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 32px;
+}
+.nav-min-overlay.open { opacity: 1; pointer-events: auto; }
+.nav-min-overlay-item {
+  opacity: 0;
+  transform: translateX(-16px);
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-min-overlay.open .nav-min-overlay-item { opacity: 1; transform: translateX(0); }
+.nav-min-overlay-item:nth-child(1) { transition-delay: 0.05s; }
+.nav-min-overlay-item:nth-child(2) { transition-delay: 0.1s; }
+.nav-min-overlay-item:nth-child(3) { transition-delay: 0.15s; }
+.nav-min-overlay-item:nth-child(4) { transition-delay: 0.2s; }
+.nav-min-overlay-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 500;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  border-radius: 8px;
+  transition: all 0.3s;
+  width: 100%;
+  max-width: 300px;
+}
+.nav-min-overlay-link:hover { background: rgba(0,0,0,0.03); }
+.nav-min-overlay-link i { font-size: 18px; color: var(--brand); width: 24px; }
+.nav-min-overlay-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 32px;
+  margin-top: 16px;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+  background: #0f172a;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 300px;
+  transition: all 0.3s;
+}
+.nav-min-overlay-cta:hover { background: var(--brand); }
+
+@media (max-width: 768px) {
+  .nav-min-links { display: none; }
+  .nav-min-cta { display: none; }
+  .nav-min-hamburger { display: flex; }
+  .nav-min-inner { height: 56px; padding: 0 16px; }
+}
+@media (min-width: 769px) {
+  .nav-min-hamburger { display: none; }
+  .nav-min-overlay { display: none !important; }
+}
+</style>
+
+<div class="nav-min" id="navMin">
+  <div class="nav-min-inner">
+    <a class="nav-min-brand" href="{% url 'public-home' business.slug %}">
+      {% if business.logo %}
+        <img src="{{ business.logo.url }}" alt="" style="height:22px;width:auto;border-radius:4px;">
+      {% else %}
+        <span class="nav-min-brand-mark">{{ business.name|slice:":2"|upper }}</span>
+      {% endif %}
+      <span class="nav-min-brand-name">{{ business.name }}</span>
+    </a>
+
+    <ul class="nav-min-links">
+      <li><a class="nav-min-link" href="{% url 'public-home' business.slug %}">Bosh sahifa</a></li>
+      <li><a class="nav-min-link" href="{% url 'public-home' business.slug %}#employees">Mutaxassislar</a></li>
+      <li><a class="nav-min-link" href="{% url 'public-blog-list' business.slug %}">Blog</a></li>
+    </ul>
+
+    <div style="display:flex;align-items:center;gap:6px;">
+      <a class="nav-min-cta" href="{% url 'public-booking-step1' business.slug %}">
+        Band Qilish <i class="bi bi-arrow-right"></i>
+      </a>
+      <button class="nav-min-hamburger" id="navMinHamburger" aria-label="Menu">
+        <span></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="nav-min-overlay" id="navMinOverlay">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;max-width:300px;">
+    <a href="{% url 'public-home' business.slug %}" class="nav-min-overlay-item nav-min-overlay-link" onclick="closeMinMenu()">
+      <i class="bi bi-house"></i>Bosh sahifa
+    </a>
+    <a href="{% url 'public-home' business.slug %}#employees" class="nav-min-overlay-item nav-min-overlay-link" onclick="closeMinMenu()">
+      <i class="bi bi-people"></i>Mutaxassislar
+    </a>
+    <a href="{% url 'public-blog-list' business.slug %}" class="nav-min-overlay-item nav-min-overlay-link" onclick="closeMinMenu()">
+      <i class="bi bi-journal"></i>Blog
+    </a>
+    <a href="{% url 'public-booking-step1' business.slug %}" class="nav-min-overlay-item nav-min-overlay-cta" onclick="closeMinMenu()">
+      Band Qilish <i class="bi bi-arrow-right"></i>
+    </a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var nav = document.getElementById('navMin');
+  var hamburger = document.getElementById('navMinHamburger');
+  var overlay = document.getElementById('navMinOverlay');
+  var lastScroll = 0;
+  var ticking = false;
+
+  function updateScroll() {
+    var sy = window.scrollY;
+    if (sy > 40) { nav.classList.add('scrolled'); }
+    else { nav.classList.remove('scrolled'); }
+
+    if (sy > lastScroll && sy > 300) {
+      nav.classList.add('hidden');
+    } else {
+      nav.classList.remove('hidden');
+    }
+    lastScroll = sy;
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', function() {
+    if (!ticking) { requestAnimationFrame(updateScroll); ticking = true; }
+  }, { passive: true });
+  updateScroll();
+
+  function toggleMinMenu() {
+    var isOpen = overlay.classList.toggle('open');
+    hamburger.classList.toggle('open');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  function closeMinMenu() {
+    overlay.classList.remove('open');
+    hamburger.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  if (hamburger) { hamburger.addEventListener('click', toggleMinMenu); }
+  window.closeMinMenu = closeMinMenu;
+})();
+</script>

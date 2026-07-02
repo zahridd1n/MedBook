@@ -10,7 +10,7 @@ import json
 from .decorators import superuser_required
 from .models import SiteSettings
 from .forms import SiteSettingsForm
-from business.models import Business
+from business.models import Business, Payment
 from appointments.models import Appointment
 from accounts.models import User
 
@@ -293,3 +293,50 @@ def change_owner_password(request, pk):
             business.owner.save(update_fields=['password'])
             messages.success(request, f'"{business.owner.get_full_name}" paroli muvaffaqiyatli o\'zgartirildi.')
     return redirect('superadmin:business_detail', pk=pk)
+
+
+# ─── Payment Management ───────────────────────────────────────────────────────
+
+@superuser_required
+def payment_list(request):
+    status_filter = request.GET.get('status', '')
+    payments = Payment.objects.select_related('business__owner').all()
+    if status_filter:
+        payments = payments.filter(status=status_filter)
+    context = {
+        'payments': payments,
+        'status_filter': status_filter,
+    }
+    return render(request, 'superadmin/payments.html', context)
+
+
+@superuser_required
+def payment_detail(request, pk):
+    payment = get_object_or_404(Payment.objects.select_related('business__owner'), pk=pk)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'approve':
+            payment.status = 'approved'
+            business = payment.business
+            business.subscription_plan = 'growth' if payment.plan == 'pro' else 'enterprise'
+            business.subscription_status = 'active'
+            business.subscription_start = timezone.now()
+            business.subscription_end = timezone.now() + timedelta(days=30)
+            business.save(update_fields=[
+                'subscription_plan', 'subscription_status',
+                'subscription_start', 'subscription_end',
+            ])
+            messages.success(request, f'"{business.name}" to\'lovi tasdiqlandi — {payment.get_plan_display()} faollashtirildi.')
+        elif action == 'reject':
+            reason = request.POST.get('rejected_reason', '').strip()
+            payment.status = 'rejected'
+            payment.rejected_reason = reason
+            messages.warning(request, f'"{payment.business.name}" to\'lovi rad etildi.')
+        payment.save(update_fields=['status', 'rejected_reason'])
+        return redirect('superadmin:payment_list')
+
+    context = {
+        'payment': payment,
+    }
+    return render(request, 'superadmin/payment_detail.html', context)

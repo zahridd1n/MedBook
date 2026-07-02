@@ -3,6 +3,7 @@
 {% block title %}{{ business.name }} — Online Booking{% endblock %}
 
 {% block extra_css %}
+{% include 'public/includes/brand_colors.html' %}
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   /* ── Reset & tokens ─────────────────────────────────────── */
@@ -709,7 +710,7 @@
       <div class="gap-section"></div>
 
       <!-- Team ─────────────────────────────────── -->
-      <section class="bk-section" style="padding-top:0;">
+      <section id="employees" class="bk-section" style="padding-top:0;">
         <div class="bk-section-label">Kimlar bilan uchrashasiz</div>
         <h2 class="bk-section-title mb-1">Mutaxassislarimiz</h2>
         <p class="bk-section-sub mb-4">O'zingizga eng qulay mutaxassisni tanlang.</p>
@@ -717,11 +718,17 @@
         <div class="row g-3">
           {% for employee in employees %}
             <div class="col-6 col-sm-4 col-md-3">
-              <div class="bk-team-card">
-                <div class="bk-avatar">{{ employee.name|slice:":2"|upper }}</div>
-                <div class="bk-team-name">{{ employee.name }}</div>
-                <div class="bk-team-role">{{ employee.title|default:"Mutaxassis" }}</div>
-              </div>
+              <a href="{% url 'public-employee-detail' business.slug employee.id %}" class="text-decoration-none">
+                <div class="bk-team-card">
+                  {% if employee.photo %}
+                    <img src="{{ employee.photo.url }}" class="rounded-circle mx-auto mb-3" style="width:72px;height:72px;object-fit:cover;box-shadow:0 8px 20px rgba(99,102,241,0.3);" alt="">
+                  {% else %}
+                    <div class="bk-avatar">{{ employee.name|slice:":2"|upper }}</div>
+                  {% endif %}
+                  <div class="bk-team-name">{{ employee.name }}</div>
+                  <div class="bk-team-role">{{ employee.position|default:"Mutaxassis" }}</div>
+                </div>
+              </a>
             </div>
           {% endfor %}
         </div>

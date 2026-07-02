@@ -12,7 +12,7 @@
   <i class="bi bi-lock-fill fs-3 text-warning"></i>
   <div>
     <strong>Bu funksiya faqat pullik tariflarda mavjud.</strong><br>
-    <span>Ommaviy sahifangiz dizaynini o'zgartirish uchun <strong>"O'sish"</strong> yoki <strong>"Korporativ"</strong> tarifiga o'ting.</span>
+    <span>Ommaviy sahifangiz dizaynini o'zgartirish uchun <strong>"Pro"</strong> yoki <strong>"Max"</strong> tarifiga o'ting.</span>
     <a href="{% url 'marketing:pricing' %}" class="btn btn-sm btn-warning mt-2"><i class="bi bi-star me-1"></i>Tarifni oshirish</a>
   </div>
 </div>
@@ -58,8 +58,20 @@
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold">
+              <i class="bi bi-layout-text-sidebar me-1"></i>Menyu uslubi
+              {% if not is_paid %}<span class="badge bg-secondary ms-1"><i class="bi bi-lock"></i> Pro</span>{% endif %}
+            </label>
+            {{ form.navbar_style }}
+            <div class="d-flex align-items-center gap-3 mt-2">
+              <div class="d-flex align-items-center gap-1 small text-muted"><span style="display:inline-block;width:10px;height:10px;border-radius:4px;background:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.2);backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,0.06);"></span> Glass Ultra</div>
+              <div class="d-flex align-items-center gap-1 small text-muted"><span style="display:inline-block;width:10px;height:10px;border-radius:0;background:#0f172a;"></span> Minimal</div>
+              <div class="d-flex align-items-center gap-1 small text-muted"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);"></span> Modern</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">
               Maxsus CSS
-              {% if not business.can_use_custom_css %}<span class="badge bg-secondary ms-1"><i class="bi bi-lock"></i> Korporativ</span>{% endif %}
+              {% if not business.can_use_custom_css %}<span class="badge bg-secondary ms-1"><i class="bi bi-lock"></i> Max</span>{% endif %}
             </label>
             {{ form.custom_css }}
             <div class="d-flex align-items-center justify-content-between mt-2">

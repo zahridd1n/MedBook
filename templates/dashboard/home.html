@@ -1,158 +1,226 @@
 {% extends 'base_dashboard.html' %}
 {% block page_title %}Boshqaruv paneli{% endblock %}
 {% block dashboard_content %}
-<div class="mb-4">
-  <h4 class="fw-bold mb-0">Salom, {{ user.first_name }} 👋</h4>
-  <p class="text-muted mb-0">{{ business.name }} &mdash;
-    <a href="/{{ business.slug }}/" target="_blank" class="text-decoration-none small">
-      Ommaviy sahifa <i class="bi bi-arrow-up-right-square"></i>
-    </a>
-    &middot;
-    <span class="badge rounded-pill
-      {% if business.subscription_plan == 'free' %}bg-secondary
-      {% elif business.subscription_plan == 'growth' %}bg-primary
-      {% else %}bg-dark{% endif %}">
-      {{ business.plan_display }}
-    </span>
-  </p>
-</div>
-
-{% if sub_expiring %}
-<div class="alert alert-warning alert-dismissible fade show rounded-3 d-flex align-items-center gap-2" role="alert">
-  <i class="bi bi-exclamation-triangle-fill fs-5"></i>
-  <div>
-    <strong>Obuna tugashiga {{ days_left }} kun qoldi.</strong>
-    Tarifingizni uzaytirmasangiz, barcha pullik funksiyalar o'chiriladi va sahifangiz Free rejimiga tushiriladi.
-  </div>
-  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-</div>
-{% endif %}
 
 {% if was_downgraded %}
-<div class="alert alert-danger rounded-3 d-flex align-items-center gap-2" role="alert">
-  <i class="bi bi-arrow-down-circle-fill fs-5"></i>
-  <div>
-    <strong>Tarifingiz muddati tugadi.</strong>
-    Sahifangiz <strong>Free</strong> rejimiga tushirildi. Pullik funksiyalarni qayta yoqish uchun tarifni uzaytiring.
-  </div>
+<div class="alert alert-warning mb-4">
+  <i class="bi bi-arrow-down-circle-fill me-2"></i>
+  Obuna muddati tugadi. Tarif <strong>Start</strong>ga qaytarildi.
+  <a href="{% url 'business:payment' %}" class="fw-semibold ms-2">Yangilash →</a>
 </div>
 {% endif %}
 
-<!-- Stats -->
+{% if sub_expiring %}
+<div class="alert alert-warning mb-4">
+  <i class="bi bi-clock-history me-2"></i>
+  Obunangiz <strong>{{ days_left }} kun</strong> ichida tugaydi.
+  <a href="{% url 'business:payment' %}" class="fw-semibold ms-2">Uzaytirish →</a>
+</div>
+{% endif %}
+
+<!-- Page header -->
+<div class="d-flex align-items-start justify-content-between mb-6" style="margin-bottom:24px;">
+  <div>
+    <h4 class="mb-1" style="font-size:20px;font-weight:700;letter-spacing:-.02em;">
+      Salom, {{ user.first_name }} 👋
+    </h4>
+    <p class="text-muted mb-0" style="font-size:13px;">
+      {{ business.name }} &mdash;
+      <a href="/{{ business.slug }}/" target="_blank" class="text-decoration-none" style="color:var(--p);">
+        ommaviy sahifani ko'rish <i class="bi bi-arrow-up-right" style="font-size:11px;"></i>
+      </a>
+    </p>
+  </div>
+  <a href="{% url 'appointments:create' %}" class="btn btn-primary d-none d-md-flex align-items-center gap-2" style="height:38px;">
+    <i class="bi bi-plus-lg"></i> Yangi qabul
+  </a>
+</div>
+
+<!-- Stat cards -->
 <div class="row g-3 mb-4">
-  <div class="col-6 col-lg-3">
-    <div class="card card-stat p-3">
-      <div class="d-flex align-items-center gap-3">
-        <div class="icon-box bg-primary bg-opacity-10 text-primary"><i class="bi bi-calendar-check"></i></div>
-        <div><div class="fw-bold fs-4">{{ total_appointments }}</div><div class="text-muted small">Jami</div></div>
+  <div class="col-6 col-xl-3">
+    <div class="card stat-card p-4">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="stat-icon" style="background:#eef2ff;color:#6366f1;">
+          <i class="bi bi-calendar-check"></i>
+        </div>
+        <span class="badge" style="background:#f0fdf4;color:#16a34a;font-size:11px;">Jami</span>
       </div>
+      <div class="stat-value">{{ total_appointments }}</div>
+      <div class="stat-label">Jami qabullar</div>
     </div>
   </div>
-  <div class="col-6 col-lg-3">
-    <div class="card card-stat p-3">
-      <div class="d-flex align-items-center gap-3">
-        <div class="icon-box bg-success bg-opacity-10 text-success"><i class="bi bi-calendar-day"></i></div>
-        <div><div class="fw-bold fs-4">{{ today_count }}</div><div class="text-muted small">Bugun</div></div>
+  <div class="col-6 col-xl-3">
+    <div class="card stat-card p-4">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="stat-icon" style="background:#f0fdf4;color:#16a34a;">
+          <i class="bi bi-calendar-day"></i>
+        </div>
+        <span class="badge" style="background:#eff6ff;color:#1d4ed8;font-size:11px;">Bugun</span>
       </div>
+      <div class="stat-value">{{ today_count }}</div>
+      <div class="stat-label">Bugungi qabullar</div>
     </div>
   </div>
-  <div class="col-6 col-lg-3">
-    <div class="card card-stat p-3">
-      <div class="d-flex align-items-center gap-3">
-        <div class="icon-box bg-warning bg-opacity-10 text-warning"><i class="bi bi-hourglass-split"></i></div>
-        <div><div class="fw-bold fs-4">{{ upcoming_appointments|length }}</div><div class="text-muted small">Kelgusi</div></div>
+  <div class="col-6 col-xl-3">
+    <div class="card stat-card p-4">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="stat-icon" style="background:#fffbeb;color:#d97706;">
+          <i class="bi bi-hourglass-split"></i>
+        </div>
+        <span class="badge" style="background:#fffbeb;color:#d97706;font-size:11px;">Rejalashtirilgan</span>
       </div>
+      <div class="stat-value">{{ upcoming_count|default:upcoming_appointments|length }}</div>
+      <div class="stat-label">Kutilayotgan</div>
     </div>
   </div>
-  <div class="col-6 col-lg-3">
-    <div class="card card-stat p-3">
-      <div class="d-flex align-items-center gap-3">
-        <div class="icon-box bg-info bg-opacity-10 text-info"><i class="bi bi-people"></i></div>
-        <div><div class="fw-bold fs-4">{{ total_customers }}</div><div class="text-muted small">Mijozlar</div></div>
+  <div class="col-6 col-xl-3">
+    <div class="card stat-card p-4">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="stat-icon" style="background:#fdf4ff;color:#9333ea;">
+          <i class="bi bi-people"></i>
+        </div>
+        <span class="badge" style="background:#fdf4ff;color:#9333ea;font-size:11px;">CRM</span>
       </div>
+      <div class="stat-value">{{ total_customers }}</div>
+      <div class="stat-label">Jami mijozlar</div>
     </div>
   </div>
 </div>
 
-<div class="row g-3">
-  <div class="col-lg-7">
-    <div class="card table-card">
-      <div class="card-header bg-white d-flex align-items-center justify-content-between py-3 px-4">
-        <h6 class="mb-0 fw-semibold">Kelgusi qabullar</h6>
-        <a href="{% url 'appointments:list' %}" class="btn btn-sm btn-outline-primary">Barchasini ko'rish</a>
+<!-- Content grid -->
+<div class="row g-4">
+
+  <!-- Upcoming appointments table -->
+  <div class="col-lg-8">
+    <div class="card h-100">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <span style="font-size:13.5px;font-weight:600;">Kutilayotgan qabullar</span>
+        <a href="{% url 'appointments:list' %}" class="btn btn-sm btn-outline-secondary" style="font-size:12px;height:30px;display:flex;align-items:center;">
+          Barchasi <i class="bi bi-arrow-right ms-1"></i>
+        </a>
       </div>
       <div class="card-body p-0">
         {% if upcoming_appointments %}
-        <table class="table table-hover mb-0">
-          <thead><tr><th class="ps-4">Mijoz</th><th>Xizmat</th><th>Sana</th><th>Holat</th></tr></thead>
+        <table class="table mb-0">
+          <thead>
+            <tr>
+              <th class="ps-4">Mijoz</th>
+              <th>Xizmat</th>
+              <th>Sana</th>
+              <th>Holat</th>
+            </tr>
+          </thead>
           <tbody>
             {% for a in upcoming_appointments %}
             <tr>
-              <td class="ps-4"><div class="fw-medium">{{ a.customer.full_name }}</div><div class="text-muted small">{{ a.customer.phone }}</div></td>
-              <td>{{ a.service.name|default:"—" }}</td>
-              <td><div class="fw-medium">{{ a.date }}</div><div class="text-muted small">{{ a.time|time:"H:i" }}</div></td>
-              <td><span class="badge bg-{{ a.status_color }}">{{ a.get_status_display }}</span></td>
+              <td class="ps-4">
+                <div style="font-weight:500;color:var(--gray-900);">{{ a.customer.full_name }}</div>
+                <div style="font-size:12px;color:var(--gray-400);">{{ a.customer.phone }}</div>
+              </td>
+              <td style="color:var(--gray-600);">{{ a.service.name|default:"—" }}</td>
+              <td>
+                <div style="font-weight:500;">{{ a.date }}</div>
+                <div style="font-size:12px;color:var(--gray-400);">{{ a.time|time:"H:i" }}</div>
+              </td>
+              <td>
+                {% if a.status == 'new' %}
+                  <span class="badge-status" style="background:#eff6ff;color:#1d4ed8;">Yangi</span>
+                {% elif a.status == 'confirmed' %}
+                  <span class="badge-status" style="background:#f0fdf4;color:#15803d;">Tasdiqlangan</span>
+                {% elif a.status == 'completed' %}
+                  <span class="badge-status" style="background:var(--gray-100);color:var(--gray-500);">Bajarildi</span>
+                {% else %}
+                  <span class="badge-status" style="background:#fef2f2;color:#b91c1c;">Bekor</span>
+                {% endif %}
+              </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
         {% else %}
-        <div class="text-center py-5 text-muted"><i class="bi bi-calendar-x fs-2 d-block mb-2"></i>Kelgusi qabullar yo'q</div>
+        <div class="empty-state">
+          <div class="empty-icon"><i class="bi bi-calendar-x" style="color:var(--gray-400);"></i></div>
+          <div class="empty-title">Kutilayotgan qabullar yo'q</div>
+          <div class="empty-desc mb-3">Yangi qabul qo'shing yoki mijozlar bandlov qilishini kuting.</div>
+          <a href="{% url 'appointments:create' %}" class="btn btn-primary btn-sm">Qabul qo'shish</a>
+        </div>
         {% endif %}
       </div>
     </div>
   </div>
-  <div class="col-lg-5">
-    <div class="card table-card mb-3">
-      <div class="card-header bg-white py-3 px-4"><h6 class="mb-0 fw-semibold">Tezkor harakatlar</h6></div>
-      <div class="card-body d-grid gap-2">
-        <a href="{% url 'appointments:create' %}" class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>Yangi qabul</a>
-        <a href="{% url 'services:create' %}" class="btn btn-outline-secondary"><i class="bi bi-briefcase me-2"></i>Xizmat qo'shish</a>
-        <a href="{% url 'employees:create' %}" class="btn btn-outline-secondary"><i class="bi bi-person-plus me-2"></i>Xodim qo'shish</a>
-        <a href="/{{ business.slug }}/" target="_blank" class="btn btn-outline-primary"><i class="bi bi-globe me-2"></i>Ommaviy sahifani ko'rish</a>
+
+  <!-- Right column -->
+  <div class="col-lg-4 d-flex flex-column gap-3">
+
+    <!-- Quick actions -->
+    <div class="card">
+      <div class="card-header"><span style="font-size:13.5px;font-weight:600;">Tezkor harakatlar</span></div>
+      <div class="card-body d-grid gap-2" style="padding:14px;">
+        <a href="{% url 'appointments:create' %}" class="btn btn-primary w-100 justify-content-center d-flex align-items-center gap-2">
+          <i class="bi bi-plus-circle"></i> Yangi qabul
+        </a>
+        <a href="{% url 'services:create' %}" class="btn btn-outline-secondary w-100 justify-content-center d-flex align-items-center gap-2">
+          <i class="bi bi-grid-3x3-gap"></i> Xizmat qo'shish
+        </a>
+        <a href="{% url 'employees:create' %}" class="btn btn-outline-secondary w-100 justify-content-center d-flex align-items-center gap-2">
+          <i class="bi bi-person-plus"></i> Xodim qo'shish
+        </a>
       </div>
     </div>
-    {% if business.can_use_telegram %}
-    <!-- Telegram status card -->
-    <div class="card table-card">
-      <div class="card-body p-3">
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <i class="bi bi-telegram text-info fs-5"></i>
-          <span class="fw-semibold">Telegram</span>
-          {% if business.telegram_notifications_enabled %}
-            <span class="badge bg-success ms-auto">Faol</span>
-          {% elif business.telegram_chat_id %}
-            <span class="badge bg-warning text-dark ms-auto">To'xtatilgan</span>
+
+    <!-- Telegram status -->
+    <div class="card">
+      <div class="card-body" style="padding:16px;">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="stat-icon" style="background:#e0f2fe;color:#0284c7;width:38px;height:38px;font-size:16px;">
+            <i class="bi bi-telegram"></i>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;">Telegram</div>
+            {% if business.telegram_notifications_enabled %}
+              <div style="font-size:11.5px;color:#16a34a;">● Yoniq — xabarlar yuborilmoqda</div>
+            {% elif business.telegram_chat_id %}
+              <div style="font-size:11.5px;color:#d97706;">● Ulangan, lekin o'chirilgan</div>
+            {% else %}
+              <div style="font-size:11.5px;color:var(--gray-400);">○ Ulanmagan</div>
+            {% endif %}
+          </div>
+        </div>
+        <a href="{% url 'business:telegram' %}" class="btn btn-outline-secondary btn-sm w-100">
+          Telegram sozlamalari
+        </a>
+      </div>
+    </div>
+
+    <!-- Plan card -->
+    <div class="card" style="background:linear-gradient(135deg,#0d1117 0%,#1e1b4b 100%);border-color:rgba(99,102,241,.3);">
+      <div class="card-body" style="padding:16px;">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);">Joriy tarif</span>
+          {% if business.subscription_plan == 'free' %}
+            <span class="badge" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);">Start</span>
+          {% elif business.subscription_plan == 'growth' %}
+            <span class="badge" style="background:rgba(99,102,241,.3);color:#a5b4fc;">Pro</span>
           {% else %}
-            <span class="badge bg-secondary ms-auto">Ulanmagan</span>
+            <span class="badge" style="background:rgba(168,85,247,.3);color:#d8b4fe;">Max</span>
           {% endif %}
         </div>
-        {% if business.telegram_chat_id %}
-          <p class="text-muted small mb-2">Xabarnomalar Telegram chatingizga boradi.</p>
-        {% else %}
-          <p class="text-muted small mb-2">Darhol qabul xabarnomalarini olish uchun Telegramni ulang.</p>
-        {% endif %}
-        <a href="{% url 'business:telegram' %}" class="btn btn-sm btn-outline-secondary w-100">
-          <i class="bi bi-gear me-1"></i>Telegram sozlamalari
-        </a>
-      </div>
-    </div>
-    {% else %}
-    <!-- Telegram card (locked for free plan) -->
-    <div class="card table-card opacity-75">
-      <div class="card-body p-3">
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <i class="bi bi-telegram text-info fs-5"></i>
-          <span class="fw-semibold">Telegram</span>
-          <span class="badge bg-secondary ms-auto"><i class="bi bi-lock me-1"></i>Pullik</span>
+        <div style="font-size:22px;font-weight:700;color:#fff;letter-spacing:-.03em;">{{ business.plan_display }}</div>
+        {% if business.subscription_plan == 'free' %}
+        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:4px;">
+          {{ business.employees.count }}/{{ business.max_employees }} xodim &middot; Cheklangan funksiyalar
         </div>
-        <p class="text-muted small mb-2">Telegram xabarnomalar faqat pullik tariflarda mavjud.</p>
-        <a href="{% url 'marketing:pricing' %}" class="btn btn-sm btn-warning w-100">
-          <i class="bi bi-star me-1"></i>Tarifni oshirish
+        {% endif %}
+        {% if business.subscription_plan != 'enterprise' %}
+        <a href="{% url 'business:upgrade' %}" class="btn btn-sm mt-3 w-100" style="background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;font-size:12px;">
+          <i class="bi bi-arrow-up-circle me-1"></i> Tarifni oshirish
         </a>
+        {% endif %}
       </div>
     </div>
-    {% endif %}
+
   </div>
 </div>
+
 {% endblock %}

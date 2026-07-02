@@ -20,19 +20,19 @@ class SiteSettings(models.Model):
 
     # ─── Pricing (UZS) ───────────────────────────────────────────────────────
     starter_price = models.PositiveIntegerField(
-        default=0, help_text='Starter plan narxi (UZS/oy)'
+        default=0, help_text='Start plan narxi (UZS/oy)'
     )
     growth_price_monthly = models.PositiveIntegerField(
-        default=99000, help_text='Growth plan oylik narxi (UZS)'
+        default=99000, help_text='Pro plan oylik narxi (UZS)'
     )
     growth_price_yearly = models.PositiveIntegerField(
-        default=79000, help_text='Growth plan yillik narxi (UZS/oy)'
+        default=79000, help_text='Pro plan yillik narxi (UZS/oy)'
     )
     enterprise_price_monthly = models.PositiveIntegerField(
-        default=249000, help_text='Enterprise plan oylik narxi (UZS)'
+        default=249000, help_text='Max plan oylik narxi (UZS)'
     )
     enterprise_price_yearly = models.PositiveIntegerField(
-        default=199000, help_text='Enterprise plan yillik narxi (UZS/oy)'
+        default=199000, help_text='Max plan yillik narxi (UZS/oy)'
     )
 
     # ─── Stats displayed on marketing page ────────────────────────────────────
@@ -66,6 +66,14 @@ class SiteSettings(models.Model):
         max_length=150,
         default='https://t.me/BookSaaSBot',
         help_text='Telegram bot yoki guruh havolasi'
+    )
+    payment_card_number = models.CharField(
+        max_length=50, default='9860 0101 2345 6789',
+        help_text='Karta raqami (to\'lov uchun)'
+    )
+    payment_card_holder = models.CharField(
+        max_length=200, default='SUPER ADMIN',
+        help_text='Karta egasining ismi familyasi'
     )
 
     updated_at = models.DateTimeField(auto_now=True)

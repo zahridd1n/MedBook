@@ -57,9 +57,18 @@ class Business(models.Model):
         max_length=20, choices=SHADOW_CHOICES, default='medium',
         help_text='Kartochkalar soyasi',
     )
+    NAVBAR_STYLE_CHOICES = [
+        ('glass', 'Glass Ultra — Vision Pro uslubi'),
+        ('minimal', 'Minimal Luxury — Linear uslubi'),
+        ('modern', 'Modern Creative — Framer uslubi'),
+    ]
+    navbar_style = models.CharField(
+        max_length=20, choices=NAVBAR_STYLE_CHOICES, default='glass',
+        help_text='Sahifa menyusi uslubi (pullik tariflar uchun)',
+    )
     custom_css = models.TextField(
         blank=True,
-        help_text='Maxsus CSS (faqat Korporativ tarif)',
+        help_text='Maxsus CSS (faqat Max tarif)',
     )
     # ─────────────────────────────────────────────────────────────────────────
 
@@ -86,15 +95,15 @@ class Business(models.Model):
 
     # ─── Subscription / Payment ───────────────────────────────────────────────
     PLAN_CHOICES = [
-        ('free', 'Free / Starter'),
-        ('growth', 'Growth'),
-        ('enterprise', 'Enterprise'),
+        ('free',       'Start'),
+        ('growth',     'Pro'),
+        ('enterprise', 'Max'),
     ]
     SUB_STATUS_CHOICES = [
-        ('trial', 'Trial'),
-        ('active', 'Active'),
-        ('expired', 'Expired'),
-        ('cancelled', 'Cancelled'),
+        ('trial',     'Sinov'),
+        ('active',    'Faol'),
+        ('expired',   'Muddati tugagan'),
+        ('cancelled', 'Bekor qilingan'),
     ]
     subscription_plan = models.CharField(
         max_length=20, choices=PLAN_CHOICES, default='free',
@@ -126,10 +135,44 @@ class Business(models.Model):
         super().save(*args, **kwargs)
 
     # ─── Plan / Subscription helpers ────────────────────────────────────────
+    # Har bir tarif uchun cheklovlar va narxlar
     PLAN_LIMITS = {
-        'free':     {'max_employees': 1, 'max_appointments_monthly': 50},
-        'growth':   {'max_employees': 5, 'max_appointments_monthly': None},
-        'enterprise': {'max_employees': None, 'max_appointments_monthly': None},
+        'free': {
+            'max_employees':           1,
+            'max_appointments_monthly': 50,
+            'telegram':                True,   # oddiy Telegram xabarnoma
+            'email':                   True,
+            'custom_domain':           False,
+            'branding':                False,
+            'custom_css':              False,
+            'api':                     False,
+            'price_monthly':           0,
+            'price_label':             "0 UZS",
+        },
+        'growth': {
+            'max_employees':           5,
+            'max_appointments_monthly': None,  # cheksiz
+            'telegram':                True,
+            'email':                   True,
+            'custom_domain':           True,
+            'branding':                True,
+            'custom_css':              False,
+            'api':                     False,
+            'price_monthly':           99000,
+            'price_label':             "99 000 UZS",
+        },
+        'enterprise': {
+            'max_employees':           None,   # cheksiz
+            'max_appointments_monthly': None,
+            'telegram':                True,
+            'email':                   True,
+            'custom_domain':           True,
+            'branding':                True,
+            'custom_css':              True,
+            'api':                     True,
+            'price_monthly':           249000,
+            'price_label':             "249 000 UZS",
+        },
     }
 
     @property
@@ -162,20 +205,27 @@ class Business(models.Model):
         return count < mx
 
     def can_use_telegram(self):
-        return self.subscription_plan in ('growth', 'enterprise')
+        return True  # Barcha tariflarda Telegram bor
 
     def can_use_custom_domain(self):
-        return self.subscription_plan in ('growth', 'enterprise')
+        return self.plan_data.get('custom_domain', False)
 
     def can_use_custom_css(self):
-        return self.subscription_plan == 'enterprise'
+        return self.plan_data.get('custom_css', False)
 
     def can_use_api(self):
-        return self.subscription_plan == 'enterprise'
+        return self.plan_data.get('api', False)
+
+    def can_use_branding(self):
+        return self.plan_data.get('branding', False)
 
     @property
     def plan_display(self):
-        return dict(self.PLAN_CHOICES).get(self.subscription_plan, 'Free / Starter')
+        return dict(self.PLAN_CHOICES).get(self.subscription_plan, 'Start')
+
+    @property
+    def plan_price_label(self):
+        return self.plan_data.get('price_label', '0 UZS')
 
     def enforce_subscription(self):
         from django.utils import timezone
@@ -256,3 +306,31 @@ class FAQ(models.Model):
 
     def __str__(self):
         return self.question
+
+
+class Payment(models.Model):
+    PAYMENT_PLAN_CHOICES = [
+        ('pro', 'Pro'),
+        ('max', 'Max'),
+    ]
+    STATUS_CHOICES = [
+        ('pending', 'Kutilmoqda'),
+        ('approved', 'Tasdiqlangan'),
+        ('rejected', 'Bekor qilingan'),
+    ]
+
+    business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='payments')
+    plan = models.CharField(max_length=20, choices=PAYMENT_PLAN_CHOICES)
+    amount = models.PositiveIntegerField(help_text='To\'lov summasi (UZS)')
+    receipt = models.FileField(upload_to='payments/receipts/', help_text='Chek rasmi')
+    note = models.TextField(blank=True, help_text='Foydalanuvchi izohi')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    rejected_reason = models.TextField(blank=True, help_text='Rad etish sababi (superadmin)')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.business.name} – {self.get_plan_display()} ({self.get_status_display()})'

@@ -6,7 +6,8 @@ from notifications.views import telegram_webhook
 from blog.views import blog_public_list, blog_public_detail
 from public_site.views import (
     public_home, booking_step1_service,
-    booking_step3_datetime, booking_step4_confirm, booking_success
+    booking_step3_datetime, booking_step4_confirm, booking_success,
+    public_employee_detail,
 )
 
 urlpatterns = [
@@ -42,6 +43,9 @@ urlpatterns = [
     re_path(r'^(?P<slug>[\w-]+)/book/confirm/$', booking_step4_confirm, name='public-booking-step3'),
     re_path(r'^(?P<slug>[\w-]+)/book/success/$', booking_success, name='public-booking-success'),
     
+    # Employee detail
+    re_path(r'^(?P<slug>[\w-]+)/employees/(?P<employee_id>\d+)/$', public_employee_detail, name='public-employee-detail'),
+
     # Blog URLs
     re_path(r'^(?P<slug>[\w-]+)/blog/$', blog_public_list, name='public-blog-list'),
     re_path(r'^(?P<slug>[\w-]+)/blog/(?P<post_slug>[\w-]+)/$', blog_public_detail, name='public-blog-detail'),

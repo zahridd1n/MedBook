@@ -1,0 +1,442 @@
+<style>
+:root { --brand: {{ business.primary_color|default:'#6366f1' }}; --brand-dark: color-mix(in srgb, var(--brand) 80%, #000); }
+/* ── Glass Ultra — Apple Vision Pro ── */
+.nav-glass {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: calc(100% - 32px);
+  max-width: 1200px;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.nav-glass.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+.nav-glass.hidden { opacity: 0; transform: translateX(-50%) translateY(-24px); pointer-events: none; }
+.nav-glass.scrolled { top: 10px; }
+.nav-glass-inner {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  height: 60px;
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.6),
+    0 8px 32px rgba(0,0,0,0.06),
+    0 2px 8px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-glass.scrolled .nav-glass-inner {
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.82);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.5),
+    0 12px 48px rgba(0,0,0,0.1),
+    0 4px 12px rgba(0,0,0,0.06);
+}
+.nav-glass-noise {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+.nav-glass-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.3) 0%, transparent 60%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: inherit;
+}
+.nav-glass-inner:hover .nav-glass-glow { opacity: 1; }
+
+/* Brand */
+.nav-glass-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding: 0 12px;
+  height: 40px;
+  border-radius: 10px;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-glass-brand:hover { background: rgba(0,0,0,0.04); }
+.nav-glass-brand-icon {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 13px; font-weight: 800;
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-glass-brand:hover .nav-glass-brand-icon { transform: scale(1.08) rotate(-2deg); }
+.nav-glass-brand-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* Links */
+.nav-glass-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav-glass-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  height: 36px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+  border-radius: 8px;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  white-space: nowrap;
+}
+.nav-glass-link i { font-size: 14px; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.nav-glass-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: rgba(99,102,241,0.08);
+  transform: scaleX(0.85) scaleY(0.5);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-glass-link:hover {
+  color: #0f172a;
+}
+.nav-glass-link:hover::before {
+  transform: scaleX(1) scaleY(1);
+  opacity: 1;
+}
+.nav-glass-link:hover i { transform: translateY(-1px); }
+.nav-glass-link.active {
+  color: var(--brand);
+}
+.nav-glass-link.active::before {
+  background: rgba(99,102,241,0.1);
+  transform: scaleX(1) scaleY(1);
+  opacity: 1;
+}
+
+/* CTA */
+.nav-glass-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  height: 36px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  border-radius: 9px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--brand) 35%, transparent);
+  white-space: nowrap;
+}
+.nav-glass-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+  transform: translateX(-100%) rotate(10deg);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-glass-cta:hover::before { transform: translateX(100%) rotate(10deg); }
+.nav-glass-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--brand) 45%, transparent);
+}
+.nav-glass-cta:active { transform: translateY(0) scale(0.98); }
+.nav-glass-cta i {
+  font-size: 14px;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-glass-cta:hover i { transform: translateX(3px) scale(1.1); }
+.nav-glass-cta-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transform: scale(0);
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
+}
+@keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+/* 💎 Hamburger */
+.nav-glass-hamburger {
+  display: none;
+  width: 36px; height: 36px;
+  align-items: center; justify-content: center;
+  border: none; background: transparent;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.3s;
+  position: relative;
+}
+.nav-glass-hamburger:hover { background: rgba(0,0,0,0.05); }
+.nav-glass-hamburger span {
+  display: block;
+  width: 18px; height: 2px;
+  background: #0f172a;
+  border-radius: 2px;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.nav-glass-hamburger span::before,
+.nav-glass-hamburger span::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%; height: 2px;
+  background: #0f172a;
+  border-radius: 2px;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-glass-hamburger span::before { top: -6px; }
+.nav-glass-hamburger span::after { top: 6px; }
+.nav-glass-hamburger.open span { background: transparent; }
+.nav-glass-hamburger.open span::before { top: 0; transform: rotate(45deg); }
+.nav-glass-hamburger.open span::after { top: 0; transform: rotate(-45deg); }
+
+/* 🌙 Mobile Overlay */
+.nav-glass-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(48px) saturate(180%);
+  -webkit-backdrop-filter: blur(48px) saturate(180%);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 32px;
+}
+.nav-glass-overlay.open { opacity: 1; pointer-events: auto; }
+.nav-glass-overlay-item {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-glass-overlay.open .nav-glass-overlay-item { opacity: 1; transform: translateY(0) scale(1); }
+.nav-glass-overlay-item:nth-child(1) { transition-delay: 0.05s; }
+.nav-glass-overlay-item:nth-child(2) { transition-delay: 0.1s; }
+.nav-glass-overlay-item:nth-child(3) { transition-delay: 0.15s; }
+.nav-glass-overlay-item:nth-child(4) { transition-delay: 0.2s; }
+.nav-glass-overlay-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 24px;
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: 600;
+  color: #0f172a;
+  border-radius: 14px;
+  transition: all 0.3s;
+  width: 100%;
+  max-width: 320px;
+}
+.nav-glass-overlay-link:hover { background: rgba(0,0,0,0.04); }
+.nav-glass-overlay-link i { font-size: 20px; color: var(--brand); }
+.nav-glass-overlay-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 32px;
+  margin-top: 16px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  border-radius: 14px;
+  width: 100%;
+  max-width: 320px;
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--brand) 35%, transparent);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-glass { top: 12px; width: calc(100% - 24px); }
+  .nav-glass-links { display: none; }
+  .nav-glass-cta { display: none; }
+  .nav-glass-hamburger { display: flex; }
+  .nav-glass.scrolled .nav-glass-inner { height: 56px; }
+  .nav-glass-inner { height: 56px; border-radius: 14px; padding: 0 4px; }
+  .nav-glass-brand { padding: 0 8px; }
+  .nav-glass-brand-name { font-size: 13px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
+}
+@media (min-width: 769px) {
+  .nav-glass-hamburger { display: none; }
+  .nav-glass-overlay { display: none !important; }
+}
+</style>
+
+<div id="navGlass" class="nav-glass visible">
+  <div class="nav-glass-inner" id="navGlassInner">
+    <div class="nav-glass-noise"></div>
+    <div class="nav-glass-glow" id="navGlassGlow"></div>
+
+    <a class="nav-glass-brand" href="{% url 'public-home' business.slug %}">
+      {% if business.logo %}
+        <img src="{{ business.logo.url }}" alt="" style="width:28px;height:28px;border-radius:7px;object-fit:cover;">
+      {% else %}
+        <span class="nav-glass-brand-icon">{{ business.name|first|upper }}</span>
+      {% endif %}
+      <span class="nav-glass-brand-name">{{ business.name }}</span>
+    </a>
+
+    <ul class="nav-glass-links">
+      <li><a class="nav-glass-link" href="{% url 'public-home' business.slug %}"><i class="bi bi-house"></i>Bosh sahifa</a></li>
+      <li><a class="nav-glass-link" href="{% url 'public-home' business.slug %}#employees"><i class="bi bi-people"></i>Mutaxassislar</a></li>
+      <li><a class="nav-glass-link" href="{% url 'public-blog-list' business.slug %}"><i class="bi bi-journal"></i>Blog</a></li>
+    </ul>
+
+    <div style="display:flex;align-items:center;gap:6px;">
+      <a class="nav-glass-cta" href="{% url 'public-booking-step1' business.slug %}" id="navGlassCta">
+        <i class="bi bi-calendar-check"></i>Band Qilish
+      </a>
+      <button class="nav-glass-hamburger" id="navGlassHamburger" aria-label="Menu">
+        <span></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Overlay -->
+<div class="nav-glass-overlay" id="navGlassOverlay">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;max-width:320px;">
+    <a href="{% url 'public-home' business.slug %}" class="nav-glass-overlay-item nav-glass-overlay-link" onclick="closeGlassMenu()">
+      <i class="bi bi-house"></i>Bosh sahifa
+    </a>
+    <a href="{% url 'public-home' business.slug %}#employees" class="nav-glass-overlay-item nav-glass-overlay-link" onclick="closeGlassMenu()">
+      <i class="bi bi-people"></i>Mutaxassislar
+    </a>
+    <a href="{% url 'public-blog-list' business.slug %}" class="nav-glass-overlay-item nav-glass-overlay-link" onclick="closeGlassMenu()">
+      <i class="bi bi-journal"></i>Blog
+    </a>
+    <a href="{% url 'public-booking-step1' business.slug %}" class="nav-glass-overlay-item nav-glass-overlay-cta" onclick="closeGlassMenu()">
+      <i class="bi bi-calendar-check"></i>Band Qilish
+    </a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var nav = document.getElementById('navGlass');
+  var inner = document.getElementById('navGlassInner');
+  var glow = document.getElementById('navGlassGlow');
+  var cta = document.getElementById('navGlassCta');
+  var hamburger = document.getElementById('navGlassHamburger');
+  var overlay = document.getElementById('navGlassOverlay');
+  var lastScroll = 0;
+  var ticking = false;
+
+  function updateScroll() {
+    var sy = window.scrollY;
+    if (sy > 80) {
+      nav.classList.add('scrolled');
+      if (sy > lastScroll && sy > 200) {
+        nav.classList.remove('visible');
+        nav.classList.add('hidden');
+      } else {
+        nav.classList.remove('hidden');
+        nav.classList.add('visible');
+      }
+    } else {
+      nav.classList.remove('scrolled', 'hidden');
+      nav.classList.add('visible');
+    }
+    lastScroll = sy;
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', function() {
+    if (!ticking) { requestAnimationFrame(updateScroll); ticking = true; }
+  }, { passive: true });
+  updateScroll();
+
+  // Mouse light reflection
+  if (glow) {
+    inner.addEventListener('mousemove', function(e) {
+      var rect = inner.getBoundingClientRect();
+      var x = ((e.clientX - rect.left) / rect.width) * 100;
+      var y = ((e.clientY - rect.top) / rect.height) * 100;
+      glow.style.setProperty('--mx', x + '%');
+      glow.style.setProperty('--my', y + '%');
+    });
+  }
+
+  // Ripple on CTA
+  if (cta) {
+    cta.addEventListener('click', function(e) {
+      var rect = cta.getBoundingClientRect();
+      var ri = document.createElement('span');
+      ri.className = 'nav-glass-cta-ripple';
+      var s = Math.max(rect.width, rect.height);
+      ri.style.width = ri.style.height = s + 'px';
+      ri.style.left = (e.clientX - rect.left - s/2) + 'px';
+      ri.style.top = (e.clientY - rect.top - s/2) + 'px';
+      cta.appendChild(ri);
+      setTimeout(function() { ri.remove(); }, 600);
+    });
+  }
+
+  // Mobile menu
+  function toggleGlassMenu() {
+    var isOpen = overlay.classList.toggle('open');
+    hamburger.classList.toggle('open');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  function closeGlassMenu() {
+    overlay.classList.remove('open');
+    hamburger.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  if (hamburger) { hamburger.addEventListener('click', toggleGlassMenu); }
+})();
+</script>

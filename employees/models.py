@@ -15,6 +15,7 @@ class Employee(models.Model):
     bio = models.TextField(blank=True)
     services = models.ManyToManyField(Service, blank=True, related_name='employees')
     is_active = models.BooleanField(default=True)
+    is_visible_on_public = models.BooleanField(default=True, verbose_name='Ommaviy sahifada ko\'rinish')
     order = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 

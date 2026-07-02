@@ -4,8 +4,9 @@ from django.contrib import messages
 from django.utils import timezone
 from django.conf import settings
 
-from .models import Business, WorkingHours, FAQ
+from .models import Business, WorkingHours, FAQ, Payment
 from .forms import BusinessSetupForm, FAQForm, BrandingForm
+from superadmin.models import SiteSettings
 
 
 def _get_business(request):
@@ -67,6 +68,8 @@ def business_setup(request):
         if form.is_valid():
             b = form.save(commit=False)
             b.owner = request.user
+            if not b.subscription_plan:
+                b.subscription_plan = 'free'
             b.save()
             if not business:
                 # Create default working hours for new business
@@ -363,3 +366,68 @@ def css_docs(request):
         'business': business,
         'sections': CSS_SECTIONS,
     })
+
+
+# ─── Upgrade / Payment ────────────────────────────────────────────────────────
+
+@login_required
+def upgrade_view(request):
+    business = _get_business(request)
+    if not business:
+        return redirect('business:setup')
+
+    site = SiteSettings.load()
+    plans = [
+        {'id': 'pro',  'name': 'Pro',  'price_monthly': site.growth_price_monthly,
+         'price_yearly': site.growth_price_yearly},
+        {'id': 'max',  'name': 'Max',  'price_monthly': site.enterprise_price_monthly,
+         'price_yearly': site.enterprise_price_yearly},
+    ]
+
+    context = {
+        'business': business,
+        'plans': plans,
+    }
+    return render(request, 'dashboard/upgrade.html', context)
+
+
+@login_required
+def payment_view(request):
+    business = _get_business(request)
+    if not business:
+        return redirect('business:setup')
+
+    plan_id = request.GET.get('plan') or request.POST.get('plan')
+    if plan_id not in ('pro', 'max'):
+        messages.error(request, 'Noto\'g\'ri tarif tanlandi.')
+        return redirect('business:upgrade')
+
+    site = SiteSettings.load()
+    plan_name = 'Pro' if plan_id == 'pro' else 'Max'
+    amount = site.growth_price_monthly if plan_id == 'pro' else site.enterprise_price_monthly
+
+    if request.method == 'POST':
+        receipt = request.FILES.get('receipt')
+        note = request.POST.get('note', '')
+        if not receipt:
+            messages.error(request, 'Chek rasmini yuklang.')
+        else:
+            Payment.objects.create(
+                business=business,
+                plan=plan_id,
+                amount=amount,
+                receipt=receipt,
+                note=note,
+            )
+            messages.success(request, 'To\'lovingiz qabul qilindi. Admin tekshirgandan so\'ng tarifingiz faollashtiriladi.')
+            return redirect('dashboard:home')
+
+    context = {
+        'business': business,
+        'plan_name': plan_name,
+        'plan_id': plan_id,
+        'amount': amount,
+        'card_number': site.payment_card_number,
+        'card_holder': site.payment_card_holder,
+    }
+    return render(request, 'dashboard/payment.html', context)

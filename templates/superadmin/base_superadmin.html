@@ -292,6 +292,9 @@
     <a href="{% url 'superadmin:statistics' %}" class="nav-link {% if 'statistics' in request.path %}active{% endif %}">
       <i class="bi bi-graph-up"></i> Statistikalar
     </a>
+    <a href="{% url 'superadmin:payment_list' %}" class="nav-link {% if 'payments' in request.path %}active{% endif %}">
+      <i class="bi bi-credit-card-fill"></i> To'lovlar
+    </a>
 
     <div class="sa-section-label mt-3">Sozlamalar</div>
     <a href="{% url 'superadmin:site_settings' %}" class="nav-link {% if 'site-settings' in request.path %}active{% endif %}">

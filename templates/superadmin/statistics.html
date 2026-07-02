@@ -6,7 +6,7 @@
 <div class="row g-4 mb-4">
   <div class="col-lg-8">
     <div class="chart-container h-100">
-      <h6><i class="bi bi-calendar-check me-2 text-primary"></i>Oxirgi 6 Oy: Bandlovlar O'sishi</h6>
+      <h6><i class="bi bi-calendar-check me-2 text-primary"></i>Oxirgi 6 Oy: Bandlovlar Proi</h6>
       <canvas id="monthsChart" height="100"></canvas>
     </div>
   </div>
@@ -104,7 +104,7 @@
   const pCtx = document.getElementById('planChart').getContext('2d');
   const planLabels = {{ plan_labels|safe }};
   const planValues = {{ plan_values|safe }};
-  const planColors = ['#94a3b8', '#6366f1', '#a855f7']; // Match plan colors (free, growth, enterprise)
+  const planColors = ['#94a3b8', '#6366f1', '#a855f7']; // Match plan colors (start, pro, max)
   new Chart(pCtx, {
     type: 'doughnut',
     data: {

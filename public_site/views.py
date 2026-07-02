@@ -17,7 +17,7 @@ def public_home(request, slug):
     return render(request, 'public/home.html', {
         'business': business,
         'services': business.services.filter(is_active=True).order_by('order'),
-        'employees': business.employees.filter(is_active=True).order_by('order'),
+        'employees': business.employees.filter(is_active=True, is_visible_on_public=True).order_by('order'),
         'faqs': business.faqs.filter(is_active=True).order_by('order'),
         'working_hours': business.working_hours.all().order_by('day'),
         'blog_posts': business.blog_posts.filter(is_published=True).order_by('-created_at')[:3],
@@ -27,7 +27,7 @@ def public_home(request, slug):
 def booking_step1_service(request, slug):
     business = get_object_or_404(Business, slug=slug, is_active=True)
     services = business.services.filter(is_active=True).order_by('order')
-    employees = business.employees.filter(is_active=True).order_by('order')
+    employees = business.employees.filter(is_active=True, is_visible_on_public=True).order_by('order')
 
     selected_service_id = request.GET.get('service')
     selected_service = None
@@ -206,6 +206,32 @@ def booking_step4_confirm(request, slug):
     return render(request, 'public/booking/step4_confirm.html', {
         'business': business, 'service': service, 'employee': employee,
         'date': appt_date, 'time': appt_time, 'form': form,
+    })
+
+
+def public_employee_detail(request, slug, employee_id):
+    business = get_object_or_404(Business, slug=slug, is_active=True)
+    employee = get_object_or_404(Employee, pk=employee_id, business=business, is_visible_on_public=True)
+
+    total_bookings = Appointment.objects.filter(
+        business=business, employee=employee, status__in=['new', 'confirmed', 'completed']
+    ).count()
+
+    completed_bookings = Appointment.objects.filter(
+        business=business, employee=employee, status='completed'
+    ).count()
+
+    completion_pct = int((completed_bookings / total_bookings * 100)) if total_bookings > 0 else 0
+    completion_offset = 100 - completion_pct
+
+    return render(request, 'public/employee_detail.html', {
+        'business': business,
+        'employee': employee,
+        'services': employee.services.filter(is_active=True),
+        'total_bookings': total_bookings,
+        'completed_bookings': completed_bookings,
+        'completion_pct': completion_pct,
+        'completion_offset': completion_offset,
     })
 
 

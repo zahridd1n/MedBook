@@ -12,6 +12,7 @@ class SiteSettingsForm(forms.ModelForm):
             'enterprise_price_monthly', 'enterprise_price_yearly',
             'stats_uptime', 'stats_appointments', 'stats_businesses',
             'logo', 'contact_phone', 'contact_email', 'contact_telegram',
+            'payment_card_number', 'payment_card_holder',
         ]
         widgets = {
             'hero_title': forms.TextInput(attrs={
@@ -56,15 +57,21 @@ class SiteSettingsForm(forms.ModelForm):
             'contact_telegram': forms.TextInput(attrs={
                 'class': 'form-control', 'placeholder': 'https://t.me/BookSaaSBot',
             }),
+            'payment_card_number': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': '9860 0101 2345 6789',
+            }),
+            'payment_card_holder': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'SUPER ADMIN',
+            }),
         }
         labels = {
             'hero_title': 'Bosh Sarlavha',
             'hero_subtitle': 'Taglavha',
-            'starter_price': 'Starter narxi (UZS/oy)',
-            'growth_price_monthly': 'Growth oylik (UZS)',
-            'growth_price_yearly': 'Growth yillik (UZS/oy)',
-            'enterprise_price_monthly': 'Enterprise oylik (UZS)',
-            'enterprise_price_yearly': 'Enterprise yillik (UZS/oy)',
+            'starter_price': 'Start narxi (UZS/oy)',
+            'growth_price_monthly': 'Pro oylik (UZS)',
+            'growth_price_yearly': 'Pro yillik (UZS/oy)',
+            'enterprise_price_monthly': 'Max oylik (UZS)',
+            'enterprise_price_yearly': 'Max yillik (UZS/oy)',
             'stats_uptime': 'Uptime ko\'rsatkichi',
             'stats_appointments': 'Jami Bandlovlar',
             'stats_businesses': 'Faol Bizneslar',
@@ -72,4 +79,6 @@ class SiteSettingsForm(forms.ModelForm):
             'contact_phone': 'Aloqa Telefon Raqami',
             'contact_email': 'Aloqa Email Manzili',
             'contact_telegram': 'Telegram Havolasi',
+            'payment_card_number': 'Karta raqami',
+            'payment_card_holder': 'Karta egasi (ism familya)',
         }

@@ -1,0 +1,125 @@
+{% extends 'superadmin/base_superadmin.html' %}
+{% block title %}To'lov #{{ payment.id }} — Superadmin{% endblock %}
+{% block sa_content %}
+
+<div class="d-flex align-items-center gap-2 mb-4">
+  <a href="{% url 'superadmin:payment_list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+  <h4 class="fw-bold mb-0">To'lov #{{ payment.id }}</h4>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card sa-table-card mb-4">
+      <div class="card-header bg-white border-bottom p-3 fw-bold d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-receipt me-2 text-primary"></i>To'lov ma'lumotlari</span>
+        <span class="badge-status
+          {% if payment.status == 'pending' %}badge-trial
+          {% elif payment.status == 'approved' %}badge-paid
+          {% else %}badge-blocked{% endif %}">
+          {{ payment.get_status_display }}
+        </span>
+      </div>
+      <div class="card-body p-4">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="text-muted small fw-semibold mb-1">Biznes</div>
+            <div class="fw-bold">{{ payment.business.name }}</div>
+          </div>
+          <div class="col-md-6">
+            <div class="text-muted small fw-semibold mb-1">Egasi</div>
+            <div class="fw-bold">{{ payment.business.owner.get_full_name|default:payment.business.owner.email }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small fw-semibold mb-1">Email</div>
+            <div>{{ payment.business.owner.email }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small fw-semibold mb-1">Telefon</div>
+            <div>{{ payment.business.phone|default:"—" }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small fw-semibold mb-1">Joriy tarif</div>
+            <div>{{ payment.business.plan_display }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small fw-semibold mb-1">So'ralgan tarif</div>
+            <div><span class="badge {% if payment.plan == 'pro' %}bg-primary{% else %}bg-dark{% endif %} fs-6">{{ payment.get_plan_display }}</span></div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small fw-semibold mb-1">Summa</div>
+            <div class="fw-bold fs-5">{{ payment.amount|floatformat:0 }} UZS</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small fw-semibold mb-1">Yuborilgan sana</div>
+            <div>{{ payment.created_at|date:"d.m.Y H:i" }}</div>
+          </div>
+          <div class="col-12">
+            <div class="text-muted small fw-semibold mb-1">Izoh</div>
+            <div class="p-2 rounded bg-light">{{ payment.note|default:"—" }}</div>
+          </div>
+          {% if payment.rejected_reason %}
+          <div class="col-12">
+            <div class="text-muted small fw-semibold mb-1 text-danger">Rad etish sababi</div>
+            <div class="p-2 rounded bg-danger bg-opacity-10 text-danger">{{ payment.rejected_reason }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% if payment.status == 'pending' %}
+    <div class="card sa-table-card">
+      <div class="card-header bg-white border-bottom p-3 fw-bold">
+        <i class="bi bi-check2-circle me-2 text-success"></i>To'lovni tasdiqlash
+      </div>
+      <div class="card-body p-4">
+        <form method="post">
+          {% csrf_token %}
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-1"></i>
+            <strong>{{ payment.get_plan_display }}</strong> tarifi <strong>30 kun</strong> ga faollashtiriladi.
+            Biznes egasiga tarif tasdiqlangani haqida xabar beriladi.
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" name="action" value="approve" class="btn btn-success px-4">
+              <i class="bi bi-check-lg me-1"></i>Tasdiqlash
+            </button>
+            <button type="button" class="btn btn-danger px-4" data-bs-toggle="collapse" data-bs-target="#rejectForm">
+              <i class="bi bi-x-lg me-1"></i>Rad etish
+            </button>
+          </div>
+          <div class="collapse mt-3" id="rejectForm">
+            <div class="card card-body border-danger">
+              <label class="form-label fw-semibold text-danger">Rad etish sababi</label>
+              <textarea name="rejected_reason" class="form-control mb-2" rows="2" placeholder="Sababini kiriting..."></textarea>
+              <button type="submit" name="action" value="reject" class="btn btn-danger">
+                <i class="bi bi-x-lg me-1"></i>Rad etish
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card sa-table-card">
+      <div class="card-header bg-white border-bottom p-3 fw-bold">
+        <i class="bi bi-image me-2 text-primary"></i>Chek rasmi
+      </div>
+      <div class="card-body p-0">
+        <a href="{{ payment.receipt.url }}" target="_blank">
+          <img src="{{ payment.receipt.url }}" alt="Chek" class="w-100" style="display:block;">
+        </a>
+      </div>
+      <div class="card-footer bg-white border-top p-2 text-center">
+        <a href="{{ payment.receipt.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-box-arrow-up-right me-1"></i>Asl hajmda ochish
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}  {# /sa_content #}

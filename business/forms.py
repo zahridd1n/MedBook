@@ -39,11 +39,12 @@ class FAQForm(forms.ModelForm):
 class BrandingForm(forms.ModelForm):
     class Meta:
         model = Business
-        fields = ('primary_color', 'banner_image', 'button_style', 'card_shadow', 'custom_css')
+        fields = ('primary_color', 'banner_image', 'button_style', 'card_shadow', 'navbar_style', 'custom_css')
         widgets = {
             'primary_color': forms.TextInput(attrs={'class': 'form-control', 'type': 'color', 'style': 'height:48px;padding:4px'}),
             'banner_image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'button_style': forms.Select(attrs={'class': 'form-select'}),
             'card_shadow': forms.Select(attrs={'class': 'form-select'}),
+            'navbar_style': forms.Select(attrs={'class': 'form-select'}),
             'custom_css': forms.Textarea(attrs={'class': 'form-control', 'rows': 6, 'placeholder': '/* Maxsus CSS kodlari (ixtiyoriy) */'}),
         }

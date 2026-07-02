@@ -13,4 +13,6 @@ urlpatterns = [
     path('branding/', views.branding_settings, name='branding'),
     path('branding/css-docs/', views.css_docs, name='css_docs'),
     path('telegram/', views.telegram_settings, name='telegram'),
+    path('upgrade/', views.upgrade_view, name='upgrade'),
+    path('payment/', views.payment_view, name='payment'),
 ]
