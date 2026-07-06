@@ -1,111 +1,221 @@
 {% extends 'base.html' %}
 
-{% block title %}Select Date & Time — {{ business.name }}{% endblock %}
+{% block title %}Sana & Vaqt tanlash — {{ business.name }}{% endblock %}
 
 {% block extra_css %}
 {% include 'public/includes/brand_colors.html' %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  .booking-progress { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
-  .progress-step {
-    width: 36px; height: 36px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.85rem;
-    background: #e2e8f0; color: #94a3b8;
-  }
-  .progress-step.active { background: var(--brand); color: white; box-shadow: 0 4px 12px color-mix(in srgb, var(--brand) 40%, transparent); }
-  .progress-step.done { background: #10b981; color: white; }
-  .progress-line { width: 40px; height: 2px; background: #e2e8f0; align-self: center; }
-  .progress-line.done { background: #10b981; }
-  .day-chip {
-    display: inline-flex; flex-direction: column; align-items: center;
-    padding: 0.75rem 1rem; border-radius: 1rem;
-    border: 1px solid rgba(226,232,240,0.8);
-    cursor: pointer; text-decoration: none;
-    transition: all 0.2s ease; min-width: 70px;
-    background: white; color: #334155;
-  }
-  .day-chip:hover, .day-chip.active { border-color: var(--brand); background: var(--brand-light); }
-  .day-chip.active { background: var(--brand); color: white; border-color: var(--brand); }
-  .day-chip .day-name { font-size: 0.7rem; text-transform: uppercase; font-weight: 600; }
-  .day-chip .day-num { font-size: 1.15rem; font-weight: 700; }
-  .slot-btn {
-    display: inline-block; padding: 0.6rem 1.25rem;
-    border-radius: 0.75rem; border: 1px solid rgba(226,232,240,0.8);
-    cursor: pointer; text-decoration: none;
-    font-weight: 600; font-size: 0.9rem;
-    transition: all 0.2s ease; background: white; color: #334155;
-  }
-  .slot-btn:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
-  .calendar-ribbon { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; }
-  .calendar-ribbon::-webkit-scrollbar { height: 4px; }
-  .calendar-ribbon::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+:root {
+  --ink: #0a0f1e; --ink-soft: #1e293b; --ink-muted: #475569; --ink-subtle: #94a3b8;
+  --surface: #ffffff; --surface-alt: #f8fafc; --border: rgba(226,232,240,0.7);
+  --border-strong: #e2e8f0;
+  --shadow-sm: 0 2px 8px rgba(10,15,30,0.06); --shadow: 0 4px 24px rgba(10,15,30,0.08);
+}
+body { background: var(--surface-alt); color: var(--ink); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+.booking-page { min-height: 100vh; padding-bottom: 4rem; }
+.booking-inner { max-width: 780px; margin: 0 auto; padding: 2.5rem 1rem 3rem; }
+
+/* Progress */
+.bk-progress { display: flex; align-items: center; justify-content: center; margin-bottom: 2.5rem; }
+.bk-step { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; position: relative; z-index: 1; }
+.bk-step-circle {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.875rem;
+  background: var(--border-strong); color: var(--ink-subtle);
+  border: 2px solid transparent; transition: all 0.35s;
+}
+.bk-step.active .bk-step-circle { background: var(--brand); color: #fff; border-color: var(--brand); box-shadow: 0 4px 16px color-mix(in srgb, var(--brand) 35%, transparent); }
+.bk-step.done .bk-step-circle { background: #10b981; color: #fff; border-color: #10b981; }
+.bk-step-label { font-size: 0.68rem; font-weight: 600; color: var(--ink-subtle); white-space: nowrap; }
+.bk-step.active .bk-step-label { color: var(--brand); }
+.bk-step.done .bk-step-label { color: #10b981; }
+.bk-step-line { flex: 1; height: 2px; background: var(--border-strong); min-width: 40px; max-width: 100px; transition: background 0.35s; }
+.bk-step-line.done { background: #10b981; }
+
+/* Summary bar */
+.booking-summary-bar {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 1rem; padding: 1rem 1.25rem;
+  display: flex; align-items: center; gap: 0.875rem; flex-wrap: wrap;
+  margin-bottom: 1.75rem; box-shadow: var(--shadow-sm);
+}
+.summary-tag {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: color-mix(in srgb, var(--brand) 8%, transparent);
+  color: var(--brand); padding: 0.3rem 0.75rem;
+  border-radius: 100px; font-size: 0.78rem; font-weight: 600;
+  border: 1px solid color-mix(in srgb, var(--brand) 15%, transparent);
+}
+.summary-tag i { font-size: 0.7rem; }
+
+/* Heading */
+.booking-heading { text-align: center; margin-bottom: 1.75rem; }
+.booking-heading h2 { font-size: 1.5rem; font-weight: 800; color: var(--ink); margin-bottom: 0.35rem; letter-spacing: -0.02em; }
+.booking-heading p { color: var(--ink-muted); font-size: 0.9rem; margin: 0; }
+
+/* Calendar ribbon */
+.calendar-ribbon { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; scroll-snap-type: x mandatory; }
+.calendar-ribbon::-webkit-scrollbar { height: 4px; }
+.calendar-ribbon::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+.day-chip {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 0.875rem 1.1rem; border-radius: 0.875rem; min-width: 72px;
+  border: 1px solid var(--border-strong); cursor: pointer;
+  text-decoration: none; background: var(--surface); color: var(--ink-soft);
+  transition: all 0.22s; scroll-snap-align: start; flex-shrink: 0;
+}
+.day-chip:hover { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 5%, transparent); color: var(--brand); }
+.day-chip.active { background: var(--brand); border-color: var(--brand); color: #fff; box-shadow: 0 4px 16px color-mix(in srgb, var(--brand) 30%, transparent); }
+.day-chip .day-name { font-size: 0.65rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.06em; opacity: 0.6; }
+.day-chip.active .day-name { opacity: 0.85; }
+.day-chip .day-num { font-size: 1.2rem; font-weight: 800; line-height: 1.2; }
+.day-chip .day-month { font-size: 0.62rem; text-transform: uppercase; font-weight: 600; opacity: 0.5; }
+.day-chip.active .day-month { opacity: 0.8; }
+
+/* Time slots */
+.time-slots-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 1.25rem; padding: 1.5rem; box-shadow: var(--shadow-sm);
+  margin-top: 1.25rem;
+}
+.time-slots-heading {
+  font-weight: 700; font-size: 0.9rem; color: var(--ink);
+  margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.time-slots-heading i { color: var(--brand); }
+
+.slot-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.6rem 1rem; border-radius: 0.625rem;
+  border: 1px solid var(--border-strong); cursor: pointer;
+  font-weight: 600; font-size: 0.875rem; transition: all 0.2s;
+  background: var(--surface); color: var(--ink-soft); text-decoration: none;
+  min-width: 72px;
+}
+.slot-btn:hover {
+  border-color: var(--brand); color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 6%, transparent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--brand) 15%, transparent);
+}
+
+.bk-hint {
+  text-align: center; padding: 3rem 1rem; color: var(--ink-muted);
+}
+.bk-hint i { font-size: 2.5rem; display: block; margin-bottom: 1rem; color: var(--brand); opacity: 0.3; }
+.bk-hint p { margin: 0; font-weight: 500; font-size: 0.9rem; }
+
+.bk-empty-slots {
+  text-align: center; padding: 2rem; color: var(--ink-muted);
+  background: var(--surface-alt); border-radius: 0.875rem;
+}
+
+.btn-back {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--ink-muted); font-size: 0.85rem; font-weight: 600;
+  text-decoration: none; transition: color 0.2s;
+}
+.btn-back:hover { color: var(--ink); }
 </style>
 {% endblock %}
 
 {% block body %}
 {% include 'public/includes/navbar.html' %}
-<div class="container py-5" style="max-width: 800px;">
-  <!-- Progress -->
-  <div class="booking-progress">
-    <div class="progress-step done"><i class="bi bi-check-lg"></i></div>
-    <div class="progress-line done"></div>
-    <div class="progress-step active">2</div>
-    <div class="progress-line"></div>
-    <div class="progress-step">3</div>
-  </div>
 
-  <div class="text-center mb-4">
-    <h2 class="fw-bold text-dark">Sana va vaqtni tanlang</h2>
-    <p class="text-muted">
-      {% if service %}<strong>{{ service.name }}</strong>{% endif %}
-      {% if service and employee %} &mdash; {% endif %}
-      {% if employee %}<strong>{{ employee.name }}</strong>{% endif %}
-      {% if not service and not employee %}
-        {{ business.name }}
-      {% endif %}
-    </p>
-  </div>
+<div class="booking-page">
+  <div class="booking-inner">
 
-  <!-- Date Ribbon -->
-  <div class="calendar-ribbon mb-4">
-    {% for day in days %}
-      <a href="?date={{ day.date|date:'Y-m-d' }}"
-         class="day-chip {% if selected_date == day.date|date:'Y-m-d' %}active{% endif %}">
-        <span class="day-name">{{ day.date|date:'D' }}</span>
-        <span class="day-num">{{ day.date|date:'d' }}</span>
-        <span class="day-name">{{ day.date|date:'M' }}</span>
-      </a>
-    {% empty %}
-      <div class="alert alert-warning w-100 text-center">Keyingi 2 hafta ichida bo'sh kunlar yo'q.</div>
-    {% endfor %}
-  </div>
-
-  <!-- Time Slots -->
-  {% if selected_date %}
-    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-      <h5 class="fw-bold text-dark mb-3"><i class="bi bi-clock me-2" style="color:var(--brand);"></i>Bo'sh vaqtlar</h5>
-      <div class="d-flex flex-wrap gap-2">
-        {% for slot in selected_slots %}
-          <a href="{% url 'public-booking-step3' business.slug %}?service={{ service.id|default:'0' }}&employee={{ employee.id|default:'0' }}&date={{ selected_date }}&time={{ slot|time:'H:i' }}"
-             class="slot-btn">
-            {{ slot|time:"H:i" }}
-          </a>
-        {% empty %}
-          <div class="alert alert-info w-100 mb-0 text-center">Bu sana uchun bo'sh vaqt yo'q.</div>
-        {% endfor %}
+    <!-- Progress -->
+    <div class="bk-progress">
+      <div class="bk-step done">
+        <div class="bk-step-circle"><i class="bi bi-check-lg"></i></div>
+        <div class="bk-step-label">Xizmat</div>
+      </div>
+      <div class="bk-step-line done"></div>
+      <div class="bk-step active">
+        <div class="bk-step-circle">2</div>
+        <div class="bk-step-label">Sana & Vaqt</div>
+      </div>
+      <div class="bk-step-line"></div>
+      <div class="bk-step">
+        <div class="bk-step-circle">3</div>
+        <div class="bk-step-label">Tasdiqlash</div>
       </div>
     </div>
-  {% else %}
-    {% if days %}
-      <div class="text-center text-muted py-4">
-        <i class="bi bi-hand-index-thumb fs-3 d-block mb-2" style="color:var(--brand);"></i>
-        <p class="fw-semibold">Bo'sh vaqtlarni ko'rish uchun yuqoridan sanani tanlang.</p>
-      </div>
-    {% endif %}
-  {% endif %}
 
-  <div class="text-center mt-3">
-    <a href="{% url 'public-booking-step1' business.slug %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Orqaga</a>
+    <!-- Summary bar -->
+    {% if service or employee %}
+    <div class="booking-summary-bar">
+      <span style="font-size:.8rem;font-weight:600;color:var(--ink-subtle);">Tanlangan:</span>
+      {% if service %}
+        <span class="summary-tag"><i class="bi bi-scissors"></i>{{ service.name }} — {{ service.price }} so'm</span>
+      {% endif %}
+      {% if employee %}
+        <span class="summary-tag"><i class="bi bi-person-check"></i>{{ employee.name }}</span>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Heading -->
+    <div class="booking-heading">
+      <h2>Sana va vaqtni tanlang</h2>
+      <p>Qulay vaqtni tanlang</p>
+    </div>
+
+    <!-- Calendar ribbon -->
+    <div class="calendar-ribbon mb-2">
+      {% for day in days %}
+        <a href="?date={{ day.date|date:'Y-m-d' }}"
+           class="day-chip {% if selected_date == day.date|date:'Y-m-d' %}active{% endif %}">
+          <span class="day-name">{{ day.date|date:'D' }}</span>
+          <span class="day-num">{{ day.date|date:'d' }}</span>
+          <span class="day-month">{{ day.date|date:'M' }}</span>
+        </a>
+      {% empty %}
+        <div class="bk-empty-slots w-100 text-center">
+          <p class="mb-0">Keyingi 2 hafta ichida bo'sh kunlar yo'q.</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Time Slots -->
+    {% if selected_date %}
+      <div class="time-slots-card">
+        <div class="time-slots-heading">
+          <i class="bi bi-clock"></i> Bo'sh vaqtlar — {{ selected_date }}
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          {% for slot in selected_slots %}
+            <a href="{% url 'public-booking-step3' business.slug %}?service={{ service.id|default:'0' }}&employee={{ employee.id|default:'0' }}&date={{ selected_date }}&time={{ slot|time:'H:i' }}"
+               class="slot-btn">
+              {{ slot|time:"H:i" }}
+            </a>
+          {% empty %}
+            <div class="bk-empty-slots w-100">
+              <p class="mb-0">Bu sana uchun bo'sh vaqt yo'q.</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      {% if days %}
+      <div class="bk-hint">
+        <i class="bi bi-hand-index-thumb"></i>
+        <p>Bo'sh vaqtlarni ko'rish uchun yuqoridan sanani tanlang.</p>
+      </div>
+      {% endif %}
+    {% endif %}
+
+    <div class="text-center mt-4">
+      <a href="{% url 'public-booking-step1' business.slug %}" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Orqaga
+      </a>
+    </div>
+
   </div>
 </div>
 {% endblock %}

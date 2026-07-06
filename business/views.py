@@ -176,14 +176,25 @@ def branding_settings(request):
         if not is_paid:
             messages.error(request, 'Sahifa dizaynini sozlash faqat pullik tariflarda mavjud.')
             return redirect('business:branding')
+
+        # Handle remove banner separately (before form saves old value back)
+        if request.POST.get('remove_banner') and not request.FILES.get('banner_image'):
+            if business.banner_image:
+                business.banner_image.delete(save=False)
+            business.banner_image = None
+            business.save(update_fields=['banner_image'])
+            messages.success(request, 'Banner rasmi o\'chirildi.')
+            return redirect('business:branding')
+
         form = BrandingForm(request.POST, request.FILES, instance=business)
         if form.is_valid():
-            if request.POST.get('remove_banner'):
-                business.banner_image.delete(save=False)
-                business.banner_image = None
             form.save()
             messages.success(request, 'Dizayn sozlamalari saqlandi.')
             return redirect('business:branding')
+        else:
+            for field, errors in form.errors.items():
+                for err in errors:
+                    messages.error(request, f'{field}: {err}')
     else:
         form = BrandingForm(instance=business)
 
@@ -431,3 +442,76 @@ def payment_view(request):
         'card_holder': site.payment_card_holder,
     }
     return render(request, 'dashboard/payment.html', context)
+
+
+# ─── Custom Domain ─────────────────────────────────────────────────────────────
+
+import secrets, socket
+from django.http import HttpResponseForbidden
+
+@login_required
+def custom_domain_settings(request):
+    business = get_object_or_404(Business, owner=request.user)
+    can_use = business.can_use_custom_domain()
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'save_domain':
+            if not can_use:
+                return HttpResponseForbidden('Faqat pullik tariflarda mavjud')
+
+            domain = request.POST.get('custom_domain', '').strip().lower()
+            domain = domain.replace('https://', '').replace('http://', '').replace('/', '')
+
+            if domain:
+                if Business.objects.filter(custom_domain=domain).exclude(pk=business.pk).exists():
+                    messages.error(request, 'Bu domen allaqachon boshqa biznes tomonidan ishlatilmoqda.')
+                else:
+                    business.custom_domain = domain
+                    business.domain_verified = False
+                    business.domain_verify_token = secrets.token_urlsafe(32)
+                    business.save(update_fields=['custom_domain', 'domain_verified', 'domain_verify_token'])
+                    messages.success(request, 'Domen saqlandi. Iltimos, DNS sozlamalarini qo\'shing va tasdiqlang.')
+            else:
+                # Clear
+                business.custom_domain = None
+                business.domain_verified = False
+                business.domain_verify_token = ''
+                business.save(update_fields=['custom_domain', 'domain_verified', 'domain_verify_token'])
+                messages.success(request, 'Domen o\'chirildi.')
+
+            return redirect('business:custom_domain')
+
+        elif action == 'verify':
+            if not business.custom_domain or not business.domain_verify_token:
+                messages.error(request, 'Avval domen kiriting.')
+                return redirect('business:custom_domain')
+
+            verified = _verify_domain_txt(business.custom_domain, business.domain_verify_token)
+            if verified:
+                business.domain_verified = True
+                business.save(update_fields=['domain_verified'])
+                messages.success(request, 'Domen muvaffaqiyatli tasdiqlandi! ✅')
+            else:
+                messages.error(request, 'TXT record topilmadi. DNS sozlamalari tarqalishini kuting va qayta urinib ko\'ring.')
+
+            return redirect('business:custom_domain')
+
+    return render(request, 'dashboard/settings/custom_domain.html', {
+        'business': business,
+        'can_use': can_use,
+    })
+
+
+def _verify_domain_txt(domain, token):
+    try:
+        import dns.resolver
+        answers = dns.resolver.resolve(domain, 'TXT', lifetime=10)
+        for rdata in answers:
+            txt = b''.join(rdata.strings).decode('utf-8') if isinstance(rdata.strings, list) else str(rdata)
+            if token in txt:
+                return True
+    except Exception:
+        pass
+    return False

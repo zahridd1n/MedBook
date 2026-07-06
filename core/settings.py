@@ -8,7 +8,11 @@ environ.Env.read_env(BASE_DIR / '.env')
 
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-dev-only-change-me-in-production')
 DEBUG = env('DEBUG', default=True)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '*'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.bookflow.uz'])
+PRIMARY_DOMAIN = env('PRIMARY_DOMAIN', default='bookflow.uz')
+
+# Allow all hosts — custom domain SaaS requires dynamic host validation
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -35,6 +39,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'core.middleware.CustomDomainMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -70,16 +75,25 @@ DATABASES = {
     }
 }
 
-# PostgreSQL (when DB_NAME is set in .env)
+# PostgreSQL (when DB_NAME is set in .env AND psycopg2 is installed)
 if env('DB_NAME', default=None):
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST', default='localhost'),
-        'PORT': env('DB_PORT', default='5432'),
-    }
+    try:
+        import psycopg2
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env('DB_NAME'),
+            'USER': env('DB_USER'),
+            'PASSWORD': env('DB_PASSWORD'),
+            'HOST': env('DB_HOST', default='localhost'),
+            'PORT': env('DB_PORT', default='5432'),
+            'CONN_MAX_AGE': env.int('DB_CONN_MAX_AGE', default=300),
+        }
+    except ImportError:
+        import warnings
+        warnings.warn(
+            'DB_NAME is set but psycopg2 is not installed. '
+            'Falling back to SQLite. Install psycopg2-binary for PostgreSQL.'
+        )
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -90,8 +104,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'uz'
+LANGUAGES = [
+    ('uz', 'Uzbek'),
+    ('ru', 'Russian'),
+    ('en', 'English'),
+]
+TIME_ZONE = 'Asia/Tashkent'
 USE_I18N = True
 USE_TZ = True
 
@@ -116,26 +135,29 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
-# In dev mode run tasks synchronously (no Redis needed)
-CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_TASK_ALWAYS_EAGER', default=True)
+CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_TASK_ALWAYS_EAGER', default=False)
+CELERY_WORKER_CONCURRENCY = env.int('CELERY_WORKER_CONCURRENCY', default=4)
+CELERY_TASK_SOFT_TIME_LIMIT = 60
+CELERY_TASK_TIME_LIMIT = 120
 
-# Email
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# Django Cache (Redis)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': REDIS_URL,
+        'KEY_PREFIX': 'bookflow',
+        'TIMEOUT': 300,
+    }
+}
 
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
-EMAIL_HOST_USER = "hatamovz047786@gmail.com"
-EMAIL_HOST_PASSWORD = "vfrlijfwaompdpbx"   # yoki env orqali o'qilgan qiymat
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
-# EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
-# EMAIL_PORT = env.int('EMAIL_PORT', default=587)
-# EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
-# EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
-# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
-# DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='noreply@booksaas.com')
+# Email (SMTP)
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = env.int('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='noreply@BookFlow.com')
 
 # Telegram Bot
 TELEGRAM_BOT_TOKEN = env('TELEGRAM_BOT_TOKEN', default='')

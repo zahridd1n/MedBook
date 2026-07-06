@@ -70,6 +70,17 @@ class Business(models.Model):
         blank=True,
         help_text='Maxsus CSS (faqat Max tarif)',
     )
+
+    # ─── Custom Domain ─────────────────────────────────────────────────────────
+    custom_domain = models.CharField(
+        max_length=255, blank=True, null=True, unique=True,
+        help_text='Masalan: booking.meningklinikam.uz',
+    )
+    domain_verified = models.BooleanField(default=False)
+    domain_verify_token = models.CharField(
+        max_length=64, blank=True, default='',
+        help_text='DNS TXT record uchun token (avtomatik generatsiya qilinadi)',
+    )
     # ─────────────────────────────────────────────────────────────────────────
 
     # ─── Telegram Bot Integration ────────────────────────────────────────────

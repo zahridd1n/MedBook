@@ -277,8 +277,14 @@
 
 <aside class="sa-sidebar" id="sa-sidebar">
   <div class="sa-sidebar-brand">
-    <div class="brand-icon"><i class="bi bi-shield-lock-fill"></i></div>
-    <a href="{% url 'superadmin:dashboard' %}">BookSaaS <span style="color: var(--sa-accent); font-size:.7rem; font-weight:400;">Admin</span></a>
+    <a href="{% url 'superadmin:dashboard' %}">
+      {% if site_settings.logo %}
+      <img src="{{ site_settings.logo.url }}" alt="BookFlow" style="height:26px;width:auto;border-radius:4px;vertical-align:middle;">
+      {% else %}
+      <span class="brand-icon"><i class="bi bi-shield-lock-fill"></i></span>
+      {% endif %}
+      <span style="margin-left:8px;font-weight:700;">BookFlow <span style="color: var(--sa-accent); font-size:.7rem; font-weight:400;">Admin</span></span>
+    </a>
   </div>
 
   <nav class="mt-1" style="padding-bottom: 80px;">

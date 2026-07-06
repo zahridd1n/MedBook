@@ -1,0 +1,159 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}Maxsus domen{% endblock %}
+{% block dashboard_content %}
+<style>
+.dns-table{font-size:.8rem}
+.dns-table th{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;padding:8px 12px;background:#fafafa;border-bottom:1.5px solid #e5e7eb}
+.dns-table td{padding:10px 12px;border-bottom:1px solid #f3f4f6;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem}
+.copy-btn{background:none;border:1px solid #d1d5db;border-radius:6px;padding:2px 8px;font-size:.7rem;cursor:pointer;color:#6b7280;transition:all .12s}
+.copy-btn:hover{background:#f3f4f6;border-color:#9ca3af;color:#111827}
+</style>
+
+<div class="page-header">
+  <div>
+    <h4 class="page-header-title mb-0">Maxsus domen</h4>
+    <p class="page-header-sub">O'z domeningizni ulang</p>
+  </div>
+</div>
+
+{% if not can_use %}
+<div class="card mb-3" style="border:1.5px solid #fef08a;background:#fffbeb;">
+  <div class="card-body p-4 text-center">
+    <div style="font-size:2rem;margin-bottom:8px;">🔒</div>
+    <h6 class="fw-semibold mb-1">Maxsus domen faqat Pro va Max tariflarida mavjud</h6>
+    <p class="text-muted small mb-3">O'z domeningizni ulash uchun tarifingizni yangilang</p>
+    <a href="{% url 'business:upgrade' %}" class="btn btn-primary btn-sm">Tarifni yangilash</a>
+  </div>
+</div>
+{% endif %}
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-body p-4">
+        <h6 class="fw-semibold mb-3" style="font-size:.9rem;">
+          <i class="bi bi-globe2 me-2 text-primary"></i>Domen sozlamalari
+        </h6>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-medium" style="font-size:.82rem;">Sizning domeningiz</label>
+            <div class="input-group">
+              <input type="text" name="custom_domain" class="form-control" placeholder="booking.meningklinikam.uz"
+                     value="{{ business.custom_domain|default:'' }}" {% if not can_use %}disabled{% endif %}>
+              <button type="submit" name="action" value="save_domain" class="btn btn-primary" {% if not can_use %}disabled{% endif %}>
+                <i class="bi bi-check-lg me-1"></i>Saqlash
+              </button>
+            </div>
+            <div class="form-text small text-muted">Faqat domen nomini kiriting (http:// yoki https:// siz)</div>
+          </div>
+        </form>
+
+        {% if business.custom_domain %}
+        <div class="mt-4">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <h6 class="fw-semibold mb-0" style="font-size:.82rem;">
+              <i class="bi bi-shield-check me-1"></i>Tasdiqlash holati
+            </h6>
+            {% if business.domain_verified %}
+            <span class="badge fw-semibold" style="background:#f0fdf4;color:#16a34a;font-size:.72rem;padding:4px 10px;border-radius:5px;">
+              <i class="bi bi-check-circle me-1"></i>Tasdiqlangan
+            </span>
+            {% else %}
+            <span class="badge fw-semibold" style="background:#fef2f2;color:#dc2626;font-size:.72rem;padding:4px 10px;border-radius:5px;">
+              <i class="bi bi-x-circle me-1"></i>Tasdiqlanmagan
+            </span>
+            {% endif %}
+          </div>
+
+          {% if not business.domain_verified %}
+          <div class="alert" style="background:#f0f4ff;border:1px solid #dbeafe;border-radius:8px;font-size:.8rem;">
+            <div class="fw-semibold mb-2" style="color:#1d4ed8;">
+              <i class="bi bi-info-circle me-1"></i>DNS sozlamalari
+            </div>
+            <p class="small text-muted mb-3">Domeningizning DNS boshqaruv paneliga quyidagi TXT recordni qo'shing:</p>
+
+            <table class="table dns-table mb-3">
+              <thead>
+                <tr><th>Tur</th><th>Nom</th><th>Qiymat</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>TXT</td>
+                  <td>@ <span class="text-muted fw-normal" style="font-family:inherit;">(yoki <em>domeningiz</em>)</span></td>
+                  <td>
+                    <code id="verifyToken">{{ business.domain_verify_token }}</code>
+                    <button class="copy-btn ms-2" onclick="navigator.clipboard.writeText(document.getElementById('verifyToken').textContent);this.textContent='Nusxalandi';setTimeout(()=>this.textContent='Nusxalash',2000);">
+                      Nusxalash
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="small text-muted mb-2">DNS o'zgarishlari tarqalgach (bir necha daqiqa - 48 soat), tasdiqlash tugmasini bosing:</p>
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" name="action" value="verify" class="btn btn-sm btn-primary">
+                <i class="bi bi-arrow-repeat me-1"></i>Tasdiqlash
+              </button>
+            </form>
+          </div>
+          {% else %}
+          <div class="alert" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:.8rem;">
+            <div class="fw-semibold mb-1" style="color:#15803d;">
+              <i class="bi bi-check-circle me-1"></i>Domen tasdiqlangan
+            </div>
+            <p class="small text-muted mb-0">
+              Mijozlaringiz <strong>{{ business.custom_domain }}</strong> orqali to'g'ridan-to'g'ri sizning sahifangizga kira oladi.
+            </p>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-body p-4">
+        <h6 class="fw-semibold mb-3" style="font-size:.9rem;">
+          <i class="bi bi-question-circle me-2 text-primary"></i>Yo'riqnoma
+        </h6>
+        <div style="font-size:.8rem;line-height:1.6;">
+          <div class="d-flex gap-3 mb-3">
+            <span class="badge rounded-circle" style="background:#6366f1;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.72rem;">1</span>
+            <div>
+              <div class="fw-medium">Domen sotib oling</div>
+              <div class="text-muted small">Masalan: <code>booking.meningklinikam.uz</code> — bu sizning mijozlaringiz brauzerga yozadigan manzil bo'ladi.</div>
+            </div>
+          </div>
+          <div class="d-flex gap-3 mb-3">
+            <span class="badge rounded-circle" style="background:#6366f1;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.72rem;">2</span>
+            <div>
+              <div class="fw-medium">DNS sozlamalarini qo'shing</div>
+              <div class="text-muted small">Domen hosting panelida <strong>TXT record</strong> qo'shing va yuqoridagi qiymatni kiriting. So'ngra <strong>CNAME record</strong> qo'shib domeningizni <code>{{ request.get_host }}</code> ga yo'naltiring.</div>
+            </div>
+          </div>
+          <div class="d-flex gap-3 mb-3">
+            <span class="badge rounded-circle" style="background:#6366f1;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.72rem;">3</span>
+            <div>
+              <div class="fw-medium">Tasdiqlash</div>
+              <div class="text-muted small">DNS tarqalgach, "Tasdiqlash" tugmasini bosing. Biz TXT recordni tekshirib, domen egaligini tasdiqlaymiz.</div>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <span class="badge rounded-circle" style="background:#6366f1;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.72rem;">4</span>
+            <div>
+              <div class="fw-medium">Tayyor!</div>
+              <div class="text-muted small">Endi mijozlaringiz <code>{{ business.custom_domain|default:"domeningiz" }}</code> orqali to'g'ridan-to'g'ri sizning booking sahifangizga kira oladi.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

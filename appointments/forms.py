@@ -10,7 +10,7 @@ class AppointmentForm(forms.ModelForm):
 
     class Meta:
         model = Appointment
-        fields = ('service', 'employee', 'date', 'time', 'status', 'notes')
+        fields = ('service', 'employee', 'date', 'time', 'status', 'notes', 'doctor_notes')
         widgets = {
             'service': forms.Select(attrs={'class': 'form-select'}),
             'employee': forms.Select(attrs={'class': 'form-select'}),
@@ -18,6 +18,7 @@ class AppointmentForm(forms.ModelForm):
             'time': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'doctor_notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Tashxis, tavsiyalar, qaydlar...'}),
         }
 
     def __init__(self, *args, business=None, **kwargs):

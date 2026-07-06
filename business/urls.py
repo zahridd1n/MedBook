@@ -15,4 +15,5 @@ urlpatterns = [
     path('telegram/', views.telegram_settings, name='telegram'),
     path('upgrade/', views.upgrade_view, name='upgrade'),
     path('payment/', views.payment_view, name='payment'),
+    path('custom-domain/', views.custom_domain_settings, name='custom_domain'),
 ]

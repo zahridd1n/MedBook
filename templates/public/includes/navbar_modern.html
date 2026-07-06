@@ -1,6 +1,23 @@
 <style>
 :root { --brand: {{ business.primary_color|default:'#6366f1' }}; --brand-dark: color-mix(in srgb, var(--brand) 80%, #000); --brand-light: color-mix(in srgb, var(--brand) 12%, #fff); }
-/* ── Modern Creative — Framer/Awwwards ── */
+
+/* ── Dark variant (over dark hero) ── */
+.nav-mod.nav-dark:not(.scrolled) .nav-mod-inner {
+  background: rgba(10, 15, 30, 0.38);
+  backdrop-filter: blur(32px) saturate(140%);
+  -webkit-backdrop-filter: blur(32px) saturate(140%);
+  border-color: rgba(255,255,255,0.1);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+.nav-mod.nav-dark:not(.scrolled) .nav-mod-brand-name { color: rgba(255,255,255,0.92); }
+.nav-mod.nav-dark:not(.scrolled) .nav-mod-link { color: rgba(255,255,255,0.6); }
+.nav-mod.nav-dark:not(.scrolled) .nav-mod-link:hover { color: #fff; }
+.nav-mod.nav-dark:not(.scrolled) .nav-mod-link-bg { background: rgba(255,255,255,0.08); }
+.nav-mod.nav-dark:not(.scrolled) .nav-mod-hamburger span,
+.nav-mod.nav-dark:not(.scrolled) .nav-mod-hamburger span::before,
+.nav-mod.nav-dark:not(.scrolled) .nav-mod-hamburger span::after { background: rgba(255,255,255,0.75); }
+
+/* ── Modern Creative ── */
 @keyframes blobFloat {
   0%, 100% { transform: translate(0, 0) scale(1); }
   25% { transform: translate(20px, -30px) scale(1.05); }
@@ -13,7 +30,7 @@
   top: 0; left: 0; right: 0;
   z-index: 9999;
   pointer-events: none;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nav-mod.hidden { transform: translateY(-100%); }
 .nav-mod-inner {
@@ -23,9 +40,9 @@
   align-items: center;
   justify-content: space-between;
   height: 68px;
-  padding: 0 20px;
+  padding: 0 24px;
   max-width: 1200px;
-  margin: 12px auto 0;
+  margin: 16px auto 0;
   background: rgba(255,255,255,0.88);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
@@ -33,12 +50,15 @@
   border: 1px solid rgba(226,232,240,0.5);
   box-shadow: 0 4px 24px rgba(0,0,0,0.04);
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nav-mod.scrolled .nav-mod-inner {
-  height: 58px;
+  height: 56px;
+  padding: 0 16px;
   margin-top: 8px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
 }
 
 /* Blobs */
@@ -86,25 +106,24 @@
   z-index: 2;
 }
 .nav-mod-brand:hover { background: rgba(0,0,0,0.03); }
-.nav-mod-brand-icon {
-  width: 32px; height: 32px;
+.nav-mod-brand-logo {
+  height: 34px;
+  width: auto;
   border-radius: 100px;
-  background: linear-gradient(135deg, var(--brand), #8b5cf6, #ec4899);
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 13px; font-weight: 800;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--brand) 30%, transparent);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.nav-mod-brand:hover .nav-mod-brand-icon {
-  transform: scale(1.08) rotate(-3deg);
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--brand) 40%, transparent);
+.nav-mod.scrolled .nav-mod-brand-logo {
+  height: 28px;
 }
 .nav-mod-brand-name {
   font-size: 15px;
   font-weight: 700;
   color: #0f172a;
   letter-spacing: -0.03em;
-  transition: color 0.3s;
+  transition: font-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-mod.scrolled .nav-mod-brand-name {
+  font-size: 13px;
 }
 
 /* Links as floating pills */
@@ -313,11 +332,12 @@
 }
 
 @media (max-width: 768px) {
-  .nav-mod-inner { height: 58px; margin: 8px 12px 0; border-radius: 18px; padding: 0 12px; }
+  .nav-mod-inner { height: 56px; margin: 8px 12px 0; border-radius: 18px; padding: 0 12px; }
+  .nav-mod.scrolled .nav-mod-inner { height: 52px; padding: 0 10px; }
   .nav-mod-links { display: none; }
   .nav-mod-cta { display: none; }
   .nav-mod-hamburger { display: flex; }
-  .nav-mod-brand-name { font-size: 13px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
+
 }
 @media (min-width: 769px) {
   .nav-mod-hamburger { display: none; }
@@ -333,11 +353,10 @@
 
     <a class="nav-mod-brand" href="{% url 'public-home' business.slug %}">
       {% if business.logo %}
-        <img src="{{ business.logo.url }}" alt="" style="width:32px;height:32px;border-radius:100px;object-fit:cover;">
+        <img src="{{ business.logo.url }}" alt="{{ business.name }}" class="nav-mod-brand-logo">
       {% else %}
-        <span class="nav-mod-brand-icon">{{ business.name|first|upper }}</span>
+        <span class="nav-mod-brand-name">{{ business.name }}</span>
       {% endif %}
-      <span class="nav-mod-brand-name">{{ business.name }}</span>
     </a>
 
     <ul class="nav-mod-links">
@@ -395,21 +414,38 @@
   var inner = document.querySelector('.nav-mod-inner');
   var hamburger = document.getElementById('navModHamburger');
   var overlay = document.getElementById('navModOverlay');
-  var lastScroll = 0;
   var ticking = false;
+  var scrollStopTimer;
+
+  function updateDarkMode() {
+    var darkHero = document.querySelector('.bk-hero, .emp-header, .blog-hero, .blog-detail-header');
+    var sy = window.scrollY;
+    var navH = nav ? (nav.offsetHeight || 68) : 84;
+    if (darkHero && sy < darkHero.offsetHeight - navH) {
+      nav.classList.add('nav-dark');
+    } else {
+      nav.classList.remove('nav-dark');
+    }
+  }
 
   function updateScroll() {
     var sy = window.scrollY;
-    if (sy > 40) { nav.classList.add('scrolled'); }
-    else { nav.classList.remove('scrolled'); }
-    if (sy > lastScroll && sy > 250) {
+    if (sy > 80) {
+      nav.classList.add('scrolled');
       nav.classList.add('hidden');
+      clearTimeout(scrollStopTimer);
+      scrollStopTimer = setTimeout(function() {
+        if (window.scrollY > 80) { nav.classList.remove('hidden'); }
+      }, 250);
     } else {
-      nav.classList.remove('hidden');
+      nav.classList.remove('scrolled', 'hidden');
+      clearTimeout(scrollStopTimer);
     }
-    lastScroll = sy;
+    updateDarkMode();
     ticking = false;
   }
+
+  updateDarkMode();
 
   window.addEventListener('scroll', function() {
     if (!ticking) { requestAnimationFrame(updateScroll); ticking = true; }

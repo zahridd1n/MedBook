@@ -81,7 +81,7 @@ def get_webhook_info() -> dict:
     try:
         resp = requests.get(url, timeout=10)
         return resp.json().get('result', {})
-    except Exception:
+    except (requests.RequestException, ValueError):
         return {}
 
 
@@ -95,7 +95,7 @@ def get_bot_info() -> dict:
         resp = requests.get(url, timeout=10)
         data = resp.json()
         return data.get('result', {})
-    except Exception:
+    except (requests.RequestException, ValueError):
         return {}
 
 

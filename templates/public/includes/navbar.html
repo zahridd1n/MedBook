@@ -1,5 +1,20 @@
 <style>
   body { margin-top: 0 !important; padding-top: 0 !important; }
+  .bk-hero:not(.has-banner) {
+    padding-top: max(5rem, calc(var(--nav-height, 0px) + 24px)) !important;
+  }
+  .bk-hero__banner-content {
+    padding-top: max(4rem, calc(var(--nav-height, 0px) + 24px)) !important;
+  }
+  .blog-hero {
+    padding-top: max(5rem, calc(var(--nav-height, 0px) + 24px)) !important;
+  }
+  .blog-detail-header {
+    padding-top: max(4rem, calc(var(--nav-height, 0px) + 24px)) !important;
+  }
+  .emp-header {
+    padding-top: max(4rem, calc(var(--nav-height, 0px) + 24px)) !important;
+  }
 </style>
 {% if business.navbar_style == 'glass' %}
   {% include 'public/includes/navbar_glass.html' %}
@@ -10,3 +25,19 @@
 {% else %}
   {% include 'public/includes/navbar_glass.html' %}
 {% endif %}
+
+<script>
+(function(){
+  function setNavHeight() {
+    var nav = document.querySelector('.nav-glass-inner, .nav-min-inner, .nav-mod-inner');
+    if (nav) {
+      var rect = nav.getBoundingClientRect();
+      document.documentElement.style.setProperty('--nav-height', (rect.top + rect.height) + 'px');
+    }
+  }
+  setNavHeight();
+  window.addEventListener('resize', setNavHeight);
+  window.addEventListener('load', setNavHeight);
+  setTimeout(setNavHeight, 300);
+})();
+</script>

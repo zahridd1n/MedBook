@@ -19,6 +19,7 @@
             <div class="col-md-6"><label class="form-label fw-medium">Vaqt</label>{{ form.time }}</div>
             <div class="col-md-6"><label class="form-label fw-medium">Holat</label>{{ form.status }}</div>
             <div class="col-12"><label class="form-label fw-medium">Eslatmalar</label>{{ form.notes }}</div>
+            {% if action == 'Edit' %}<div class="col-12"><label class="form-label fw-medium">Shifokor qaydlari</label>{{ form.doctor_notes }}<div class="text-muted small mt-1">Tashxis, tavsiyalar va boshqa qaydlar</div></div>{% endif %}
           </div>
           <div class="d-flex gap-2 mt-4">
             <button type="submit" class="btn btn-primary px-4">Saqlash</button>

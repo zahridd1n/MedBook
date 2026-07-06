@@ -4,249 +4,275 @@
 
 {% block extra_css %}
 {% include 'public/includes/brand_colors.html' %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  body { background: var(--surface-alt, #f8fafc); color: var(--ink, #0f172a); }
+:root {
+  --ink: #0a0f1e; --ink-soft: #1e293b; --ink-muted: #475569; --ink-subtle: #94a3b8;
+  --surface: #ffffff; --surface-alt: #f8fafc; --border: rgba(226,232,240,0.7);
+  --shadow-sm: 0 2px 8px rgba(10,15,30,0.06); --shadow: 0 4px 24px rgba(10,15,30,0.08);
+  --shadow-lg: 0 16px 48px rgba(10,15,30,0.14);
+}
+body { background: var(--surface-alt); color: var(--ink); font-family: 'Inter', sans-serif; }
 
-  .emp-header {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    padding: 4rem 0 5rem;
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-  }
-  .emp-header::before {
-    content: '';
-    position: absolute;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, color-mix(in srgb, var(--brand) 20%, transparent), transparent 70%);
-    top: -200px; right: -150px;
-    border-radius: 50%;
-    pointer-events: none;
-  }
-  .emp-header::after {
-    content: '';
-    position: absolute;
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, color-mix(in srgb, var(--brand) 12%, transparent), transparent 70%);
-    bottom: -150px; left: -100px;
-    border-radius: 50%;
-    pointer-events: none;
-  }
-  .emp-avatar-lg {
-    width: 130px; height: 130px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid rgba(255,255,255,0.12);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-  }
-  .emp-avatar-initial {
-    width: 130px; height: 130px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
-    color: #fff;
-    font-size: 3rem;
-    font-weight: 800;
-    font-family: 'Playfair Display', serif;
-    display: flex; align-items: center; justify-content: center;
-    border: 4px solid rgba(255,255,255,0.12);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-  }
+/* ── Employee Header ── */
+.emp-header {
+  background: var(--ink);
+  padding: 5rem 0 6rem;
+  position: relative; overflow: hidden; isolation: isolate;
+}
+.emp-header::before {
+  content: ''; position: absolute;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--brand) 18%, transparent), transparent 65%);
+  top: -280px; right: -180px; border-radius: 50%; pointer-events: none;
+}
+.emp-header::after {
+  content: ''; position: absolute;
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(16,185,129,0.1), transparent 65%);
+  bottom: -150px; left: -80px; border-radius: 50%; pointer-events: none;
+}
+.emp-header__back {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.4);
+  text-decoration: none; margin-bottom: 1.75rem; transition: color 0.2s;
+  position: relative; z-index: 2;
+}
+.emp-header__back:hover { color: rgba(255,255,255,0.75); }
 
-  /* ── Stats Grid ── */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-top: -2.5rem;
-    position: relative;
-    z-index: 2;
-  }
-  @media (max-width: 576px) { .stats-grid { grid-template-columns: 1fr; } }
+.emp-avatar-wrap { position: relative; display: inline-block; }
+.emp-avatar-ring {
+  position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--brand) 40%, transparent);
+  animation: ring-pulse 3s ease-in-out infinite;
+}
+@keyframes ring-pulse {
+  0%,100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.06); opacity: 0.3; }
+}
+.emp-avatar-lg {
+  width: 130px; height: 130px; border-radius: 50%; object-fit: cover;
+  border: 3px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 6px color-mix(in srgb, var(--brand) 20%, transparent);
+}
+.emp-avatar-initial {
+  width: 130px; height: 130px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 65%, #7c3aed));
+  color: #fff; font-family: 'Playfair Display', serif;
+  font-size: 3rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  border: 3px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 6px color-mix(in srgb, var(--brand) 20%, transparent);
+}
+.emp-header__label {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--brand) 70%, #a5b4fc); margin-bottom: 0.4rem;
+}
+.emp-header__name {
+  font-family: 'Playfair Display', serif; font-weight: 800;
+  color: #fff; font-size: clamp(1.85rem, 3.5vw, 2.75rem);
+  line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 0.25rem;
+}
+.emp-header__role { color: rgba(255,255,255,0.5); font-size: 1rem; margin-bottom: 0.75rem; }
+.emp-header__bio-preview { color: rgba(255,255,255,0.35); font-size: 0.85rem; max-width: 480px; line-height: 1.65; }
+.btn-emp-book {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  background: var(--brand); color: #fff;
+  padding: 0.85rem 1.65rem; border-radius: 0.875rem;
+  font-weight: 700; font-size: 0.9rem; text-decoration: none;
+  border: none; transition: all 0.25s;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--brand) 35%, transparent);
+}
+.btn-emp-book:hover {
+  background: color-mix(in srgb, var(--brand) 80%, #000);
+  color: #fff; transform: translateY(-2px);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--brand) 40%, transparent);
+}
 
-  .stat-card {
-    background: #fff;
-    border-radius: 1.25rem;
-    padding: 1.5rem;
-    text-align: center;
-    box-shadow: 0 4px 24px rgba(15,23,42,0.07);
-    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-    position: relative;
-    overflow: hidden;
-  }
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--brand), color-mix(in srgb, var(--brand) 60%, #10b981));
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(15,23,42,0.12); }
-  .stat-card:hover::before { opacity: 1; }
+/* ── Stats Grid ── */
+.emp-stats-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+  margin-top: -2.75rem; position: relative; z-index: 2; margin-bottom: 2.5rem;
+}
+@media (max-width: 576px) { .emp-stats-row { grid-template-columns: 1fr; } }
 
-  /* SVG donut */
-  .donut-wrap {
-    position: relative;
-    width: 90px; height: 90px;
-    margin: 0 auto 0.75rem;
-  }
-  .donut-wrap svg { width: 90px; height: 90px; transform: rotate(-90deg); }
-  .donut-bg { fill: none; stroke: #f1f5f9; stroke-width: 6; }
-  .donut-fill { fill: none; stroke-width: 6; stroke-linecap: round; }
-  .donut-label {
-    position: absolute;
-    inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-  }
-  .donut-num { font-size: 1.5rem; font-weight: 800; line-height: 1; color: #0f172a; }
-  .donut-sub { font-size: 0.6rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.emp-stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 1.25rem; padding: 1.5rem; text-align: center;
+  box-shadow: var(--shadow); transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  position: relative; overflow: hidden;
+}
+.emp-stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--brand), color-mix(in srgb, var(--brand) 60%, #10b981));
+  opacity: 0; transition: opacity 0.3s;
+}
+.emp-stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.emp-stat-card:hover::before { opacity: 1; }
 
-  .bio-card {
-    background: #fff;
-    border: 1px solid rgba(226,232,240,0.8);
-    border-radius: 1.25rem;
-    padding: 2rem;
-    line-height: 1.8;
-    color: #334155;
-    font-size: 0.95rem;
-    box-shadow: 0 4px 24px rgba(15,23,42,0.04);
-  }
-  .service-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.45rem 0.9rem;
-    background: var(--brand-light);
-    color: var(--brand);
-    font-size: 0.8rem;
-    font-weight: 600;
-    border-radius: 0.6rem;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-  .service-tag:hover { background: var(--brand); color: #fff; }
+.donut-wrap { position: relative; width: 90px; height: 90px; margin: 0 auto 0.75rem; }
+.donut-wrap svg { width: 90px; height: 90px; transform: rotate(-90deg); }
+.donut-bg { fill: none; stroke: #f1f5f9; stroke-width: 6; }
+.donut-fill { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dasharray 1s ease; }
+.donut-label {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.donut-num { font-size: 1.5rem; font-weight: 800; line-height: 1; color: var(--ink); }
+.donut-sub { font-size: 0.58rem; color: var(--ink-subtle); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.emp-stat-desc { font-size: 0.75rem; color: var(--ink-subtle); font-weight: 500; }
 
-  .bk-footer {
-    background: #0f172a;
-    color: rgba(255,255,255,0.45);
-    padding: 2.5rem 0;
-    margin-top: 5rem;
-    font-size: 0.85rem;
-  }
-  .bk-footer strong { color: rgba(255,255,255,0.85); }
+/* ── Bio & Services ── */
+.emp-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 1.25rem; padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+.emp-card-heading {
+  font-weight: 700; color: var(--ink); margin-bottom: 1.25rem;
+  font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.emp-card-heading i { color: var(--brand); }
+.emp-bio { font-size: 0.95rem; color: var(--ink-muted); line-height: 1.8; }
+
+.service-tag {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 1rem; border-radius: 0.625rem;
+  background: color-mix(in srgb, var(--brand) 8%, transparent);
+  color: var(--brand); font-size: 0.82rem; font-weight: 600;
+  text-decoration: none; border: 1px solid color-mix(in srgb, var(--brand) 15%, transparent);
+  transition: all 0.2s;
+}
+.service-tag:hover {
+  background: var(--brand); color: #fff;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--brand) 25%, transparent);
+}
+
+.btn-book-full {
+  display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+  background: linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 75%, #7c3aed));
+  color: #fff; padding: 0.875rem 1.5rem; border-radius: 0.875rem;
+  font-weight: 700; font-size: 0.9rem; text-decoration: none; border: none;
+  transition: all 0.25s; width: 100%; margin-top: 1rem;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--brand) 30%, transparent);
+}
+.btn-book-full:hover {
+  transform: translateY(-2px); color: #fff;
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--brand) 40%, transparent);
+}
+
+/* Footer */
+.bk-footer { background: var(--ink); color: rgba(255,255,255,0.38); padding: 2.5rem 0; margin-top: 5rem; font-size: 0.82rem; }
+.bk-footer strong { color: rgba(255,255,255,0.8); }
+.bk-footer a { color: rgba(255,255,255,0.55) !important; text-decoration: none; }
 </style>
 {% endblock %}
 
 {% block body %}
 {% include 'public/includes/navbar.html' %}
 
-<!-- Header -->
+<!-- HEADER -->
 <div class="emp-header">
   <div class="container">
-    <div class="row align-items-center g-4">
+    <a href="{% url 'public-home' business.slug %}" class="emp-header__back">
+      <i class="bi bi-arrow-left"></i> {{ business.name }}
+    </a>
+    <div class="row align-items-center g-4" style="position:relative;z-index:2;">
       <div class="col-md-auto text-center">
-        {% if employee.photo %}
-          <img src="{{ employee.photo.url }}" alt="{{ employee.name }}" class="emp-avatar-lg">
-        {% else %}
-          <div class="emp-avatar-initial mx-auto">{{ employee.name|slice:":2"|upper }}</div>
-        {% endif %}
+        <div class="emp-avatar-wrap mx-auto">
+          <div class="emp-avatar-ring"></div>
+          {% if employee.photo %}
+            <img src="{{ employee.photo.url }}" alt="{{ employee.name }}" class="emp-avatar-lg">
+          {% else %}
+            <div class="emp-avatar-initial mx-auto">{{ employee.name|slice:":2"|upper }}</div>
+          {% endif %}
+        </div>
       </div>
       <div class="col-md">
-        <div style="color:rgba(255,255,255,0.4);font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.35rem;">Mutaxassis</div>
-        <h1 style="font-family:'Playfair Display',serif;font-weight:800;color:#fff;font-size:clamp(1.8rem,3vw,2.5rem);margin-bottom:0.15rem;">{{ employee.name }}</h1>
-        <p style="color:rgba(255,255,255,0.55);font-size:1rem;margin-bottom:0.5rem;">
-          {{ employee.position|default:"Mutaxassis" }}
-        </p>
+        <div class="emp-header__label">Mutaxassis</div>
+        <h1 class="emp-header__name">{{ employee.name }}</h1>
+        <p class="emp-header__role">{{ employee.position|default:"Mutaxassis" }}</p>
         {% if employee.bio %}
-        <p style="color:rgba(255,255,255,0.4);font-size:0.85rem;max-width:500px;margin-bottom:0;">{{ employee.bio|truncatewords:25 }}</p>
+        <p class="emp-header__bio-preview">{{ employee.bio|truncatewords:20 }}</p>
         {% endif %}
       </div>
       <div class="col-md-auto">
-        <a href="{% url 'public-booking-step2' business.slug 0 employee.id %}" class="btn btn-primary btn-lg rounded-pill px-4" style="border:none;box-shadow:0 8px 24px rgba(0,0,0,0.3);font-weight:600;">
-          <i class="bi bi-calendar-check me-2"></i>Band Qilish
+        <a href="{% url 'public-booking-step2' business.slug 0 employee.id %}" class="btn-emp-book">
+          <i class="bi bi-calendar-check-fill"></i> Band Qilish
         </a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Stats with donut charts -->
+<!-- STATS -->
 <div class="container">
-  <div class="stats-grid">
-    <div class="stat-card">
+  <div class="emp-stats-row">
+    <div class="emp-stat-card">
       <div class="donut-wrap">
         <svg viewBox="0 0 36 36">
           <circle class="donut-bg" cx="18" cy="18" r="15.9"/>
           <circle class="donut-fill" cx="18" cy="18" r="15.9"
-            stroke="var(--brand)"
-            stroke-dasharray="100, 100"
-            stroke-dashoffset="0"/>
+            stroke="var(--brand)" stroke-dasharray="100, 100" stroke-dashoffset="0"/>
         </svg>
         <div class="donut-label">
           <span class="donut-num">{{ total_bookings }}</span>
           <span class="donut-sub">Jami</span>
         </div>
       </div>
-      <div style="font-size:0.75rem;color:#64748b;font-weight:500;">Barcha qabullar</div>
+      <div class="emp-stat-desc">Barcha qabullar</div>
     </div>
-
-    <div class="stat-card">
+    <div class="emp-stat-card">
       <div class="donut-wrap">
         <svg viewBox="0 0 36 36">
           <circle class="donut-bg" cx="18" cy="18" r="15.9"/>
           <circle class="donut-fill" cx="18" cy="18" r="15.9"
-            stroke="#10b981"
-            stroke-dasharray="100, 100"
-            stroke-dashoffset="{{ completion_offset }}"/>
+            stroke="#10b981" stroke-dasharray="100, 100" stroke-dashoffset="{{ completion_offset }}"/>
         </svg>
         <div class="donut-label">
           <span class="donut-num">{{ completed_bookings }}</span>
-          <span class="donut-sub">Bajarilgan</span>
+          <span class="donut-sub">Bajarildi</span>
         </div>
       </div>
-      <div style="font-size:0.75rem;color:#64748b;font-weight:500;">Muvaffaqiyatli qabullar</div>
+      <div class="emp-stat-desc">Muvaffaqiyatli qabullar</div>
     </div>
-
-    <div class="stat-card">
+    <div class="emp-stat-card">
       <div class="donut-wrap">
         <svg viewBox="0 0 36 36">
           <circle class="donut-bg" cx="18" cy="18" r="15.9"/>
           <circle class="donut-fill" cx="18" cy="18" r="15.9"
-            stroke="#f59e0b"
-            stroke-dasharray="100, 100"
-            stroke-dashoffset="0"/>
+            stroke="#f59e0b" stroke-dasharray="100, 100" stroke-dashoffset="0"/>
         </svg>
         <div class="donut-label">
           <span class="donut-num">{{ services|length }}</span>
           <span class="donut-sub">Xizmat</span>
         </div>
       </div>
-      <div style="font-size:0.75rem;color:#64748b;font-weight:500;">Mutaxassisliklar</div>
+      <div class="emp-stat-desc">Mutaxassisliklar</div>
     </div>
   </div>
 </div>
 
-<!-- Bio & Services -->
-<div class="container py-5">
-  <div class="row g-5">
+<!-- BIO & SERVICES -->
+<div class="container py-4">
+  <div class="row g-4">
     <div class="col-lg-8">
       {% if employee.bio %}
-      <div class="bio-card">
-        <h5 class="fw-bold mb-3" style="color:#0f172a;">
-          <i class="bi bi-person-vcard me-2" style="color:var(--brand);"></i>Batafsil
-        </h5>
-        {{ employee.bio|linebreaks }}
+      <div class="emp-card">
+        <div class="emp-card-heading"><i class="bi bi-person-vcard"></i> Batafsil ma'lumot</div>
+        <div class="emp-bio">{{ employee.bio|linebreaks }}</div>
+      </div>
+      {% else %}
+      <div class="emp-card" style="text-align:center;padding:3rem;">
+        <i class="bi bi-person-circle" style="font-size:3rem;color:var(--brand);opacity:.2;display:block;margin-bottom:1rem;"></i>
+        <p style="color:var(--ink-muted);margin:0;">Mutaxassis haqida batafsil ma'lumot hali qo'shilmagan.</p>
       </div>
       {% endif %}
     </div>
     <div class="col-lg-4">
       {% if services %}
-      <div class="bio-card">
-        <h5 class="fw-bold mb-3" style="color:#0f172a;">
-          <i class="bi bi-scissors me-2" style="color:var(--brand);"></i>Xizmatlar
-        </h5>
+      <div class="emp-card mb-3">
+        <div class="emp-card-heading"><i class="bi bi-scissors"></i> Xizmatlar</div>
         <div class="d-flex flex-wrap gap-2">
           {% for service in services %}
             <a href="{% url 'public-booking-step1' business.slug %}?service={{ service.id }}" class="service-tag">
@@ -257,15 +283,13 @@
       </div>
       {% endif %}
 
-      <div class="bio-card mt-3">
-        <h5 class="fw-bold mb-3" style="color:#0f172a;">
-          <i class="bi bi-lightning me-2" style="color:var(--brand);"></i>Tez band qilish
-        </h5>
-        <p style="font-size:0.85rem;color:#64748b;margin-bottom:1rem;">
-          {{ employee.name }} bilan uchrashuvni band qiling.
+      <div class="emp-card">
+        <div class="emp-card-heading"><i class="bi bi-lightning-fill"></i> Tez band qilish</div>
+        <p style="font-size:.875rem;color:var(--ink-muted);margin-bottom:0.5rem;line-height:1.65;">
+          {{ employee.name }} bilan uchrashuvni hoziroq band qiling.
         </p>
-        <a href="{% url 'public-booking-step2' business.slug 0 employee.id %}" class="btn btn-primary w-100 rounded-pill" style="border:none;">
-          <i class="bi bi-calendar-check me-2"></i>Band Qilish
+        <a href="{% url 'public-booking-step2' business.slug 0 employee.id %}" class="btn-book-full">
+          <i class="bi bi-calendar-check-fill"></i> Band Qilish
         </a>
       </div>
     </div>
@@ -276,7 +300,7 @@
   <div class="container">
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
       <div><strong>{{ business.name }}</strong> &nbsp;·&nbsp; Barcha huquqlar himoyalangan.</div>
-      <div>Tomonidan quvvatlanadi <strong style="color:rgba(255,255,255,0.7);">BookSaaS</strong></div>
+      <div>Tomonidan quvvatlanadi <a href="{% url 'marketing:home' %}"><strong>BookFlow</strong></a></div>
     </div>
   </div>
 </footer>

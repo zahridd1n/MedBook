@@ -4,40 +4,37 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import BlogPost, BlogComment
 from .forms import BlogPostForm, BlogCommentForm
+from business.models import Business
 
-
-# ─── Dashboard Views ──────────────────────────────────────────────────────
 
 @login_required
 @require_http_methods(["GET"])
 def blog_list(request):
-    """Biznes uchun blog postlarni ko'rsatish"""
     try:
         business = request.user.business
-    except:
+    except Business.DoesNotExist:
         return redirect('dashboard:home')
-    
+
     posts = business.blog_posts.all()
     paginator = Paginator(posts, 10)
     page = request.GET.get('page')
     posts = paginator.get_page(page)
-    
-    context = {
+
+    return render(request, 'dashboard/blog/list.html', {
+        'business': business,
         'posts': posts,
         'active_tab': 'blog',
-    }
-    return render(request, 'dashboard/blog/list.html', context)
+    })
 
 
 @login_required
 @require_http_methods(["GET", "POST"])
 def blog_create(request):
-    """Yangi blog post yaratish"""
     try:
         business = request.user.business
-    except:
+    except Business.DoesNotExist:
         return redirect('dashboard:home')
-    
+
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -47,26 +44,25 @@ def blog_create(request):
             return redirect('blog:list')
     else:
         form = BlogPostForm()
-    
-    context = {
+
+    return render(request, 'dashboard/blog/form.html', {
         'form': form,
+        'business': business,
         'active_tab': 'blog',
-        'title': 'Yangi Blog Qo\'shish'
-    }
-    return render(request, 'dashboard/blog/form.html', context)
+        'title': 'Yangi Blog Qo\'shish',
+    })
 
 
 @login_required
 @require_http_methods(["GET", "POST"])
 def blog_edit(request, pk):
-    """Blog post'ni tahrirlash"""
     try:
         business = request.user.business
-    except:
+    except Business.DoesNotExist:
         return redirect('dashboard:home')
-    
+
     post = get_object_or_404(BlogPost, pk=pk, business=business)
-    
+
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
@@ -74,64 +70,54 @@ def blog_edit(request, pk):
             return redirect('blog:list')
     else:
         form = BlogPostForm(instance=post)
-    
-    context = {
+
+    return render(request, 'dashboard/blog/form.html', {
         'form': form,
         'post': post,
+        'business': business,
         'active_tab': 'blog',
-        'title': 'Blogni Tahrirlash'
-    }
-    return render(request, 'dashboard/blog/form.html', context)
+        'title': 'Blogni Tahrirlash',
+    })
 
 
 @login_required
 @require_http_methods(["POST"])
 def blog_delete(request, pk):
-    """Blog post'ni o'chirish"""
     try:
         business = request.user.business
-    except:
+    except Business.DoesNotExist:
         return redirect('dashboard:home')
-    
+
     post = get_object_or_404(BlogPost, pk=pk, business=business)
     post.delete()
     return redirect('blog:list')
 
 
-# ─── Public Views (Foydalanuvchilar uchun) ────────────────────────────────
-
 @require_http_methods(["GET"])
 def blog_public_list(request, slug):
-    """Biznesning blog postlarini foydalanuvchilarga ko'rsatish"""
-    from business.models import Business
     business = get_object_or_404(Business, slug=slug, is_active=True)
     posts = business.blog_posts.filter(is_published=True)
-    
+
     paginator = Paginator(posts, 6)
     page = request.GET.get('page')
     posts = paginator.get_page(page)
-    
-    context = {
+
+    return render(request, 'public/blog_list.html', {
         'business': business,
         'posts': posts,
-    }
-    return render(request, 'public/blog_list.html', context)
+    })
 
 
 @require_http_methods(["GET", "POST"])
 def blog_public_detail(request, slug, post_slug):
-    """Blog post'ni to'liq ko'rish va izohlar qo'shish"""
-    from business.models import Business
     business = get_object_or_404(Business, slug=slug, is_active=True)
     post = get_object_or_404(BlogPost, slug=post_slug, business=business, is_published=True)
-    
-    # Views count'ni oshirish
+
     post.views_count += 1
     post.save(update_fields=['views_count'])
-    
-    # Izohlarni olish
+
     comments = post.comments.filter(is_approved=True)
-    
+
     if request.method == 'POST':
         form = BlogCommentForm(request.POST)
         if form.is_valid():
@@ -141,11 +127,54 @@ def blog_public_detail(request, slug, post_slug):
             return redirect('public-blog-detail', slug=slug, post_slug=post_slug)
     else:
         form = BlogCommentForm()
-    
-    context = {
+
+    return render(request, 'public/blog_detail.html', {
         'business': business,
         'post': post,
         'comments': comments,
         'form': form,
-    }
-    return render(request, 'public/blog_detail.html', context)
+    })
+
+
+@login_required
+@require_http_methods(["GET"])
+def comment_list(request):
+    try:
+        business = request.user.business
+    except Business.DoesNotExist:
+        return redirect('dashboard:home')
+
+    comments = BlogComment.objects.filter(post__business=business).order_by('-created_at')
+    return render(request, 'dashboard/blog/comment_list.html', {
+        'business': business,
+        'comments': comments,
+        'active_tab': 'blog',
+    })
+
+
+@login_required
+@require_http_methods(["POST"])
+def comment_approve(request, pk):
+    try:
+        business = request.user.business
+    except Business.DoesNotExist:
+        return redirect('dashboard:home')
+
+    comment = get_object_or_404(BlogComment, pk=pk, post__business=business)
+    comment.is_approved = True
+    comment.save(update_fields=['is_approved'])
+    return redirect('blog:comment-list')
+
+
+@login_required
+@require_http_methods(["POST"])
+def comment_delete(request, pk):
+    try:
+        business = request.user.business
+    except Business.DoesNotExist:
+        return redirect('dashboard:home')
+
+    comment = get_object_or_404(BlogComment, pk=pk, post__business=business)
+    comment.delete()
+    return redirect('blog:comment-list')
+

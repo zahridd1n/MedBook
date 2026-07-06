@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
@@ -13,7 +13,18 @@ from notifications.tasks import send_telegram_notification_task
 
 
 def public_home(request, slug):
-    business = get_object_or_404(Business, slug=slug, is_active=True)
+    business = get_object_or_404(
+        Business.objects.prefetch_related(
+            'working_hours',
+            'faqs',
+        ).only(
+            'id', 'name', 'slug', 'about', 'category', 'logo', 'phone', 'email',
+            'address', 'city', 'telegram', 'instagram', 'website',
+            'primary_color', 'banner_image', 'button_style', 'card_shadow',
+            'navbar_style', 'custom_css', 'is_active',
+        ),
+        slug=slug, is_active=True,
+    )
     return render(request, 'public/home.html', {
         'business': business,
         'services': business.services.filter(is_active=True).order_by('order'),
@@ -44,31 +55,36 @@ def booking_step1_service(request, slug):
     })
 
 
-def _get_available_slots(business, employee, duration, date):
+def _get_available_slots(business, employee, duration, date, working_hours_map=None, employee_schedules_map=None):
     """Return list of available time slots (datetime.time) for the given date."""
     day_of_week = date.weekday()
-    try:
-        wh = business.working_hours.get(day=day_of_week)
-        if not wh.is_open or not wh.open_time or not wh.close_time:
-            return []
-    except Exception:
+    if working_hours_map is None:
+        wh = business.working_hours.filter(day=day_of_week).first()
+    else:
+        wh = working_hours_map.get(day_of_week)
+    if not wh or not wh.is_open or not wh.open_time or not wh.close_time:
         return []
 
     if employee:
-        try:
-            sch = employee.schedules.get(day=day_of_week)
-            if not sch.is_working:
-                return []
+        if employee_schedules_map is None:
+            sch = employee.schedules.filter(day=day_of_week).first()
+        else:
+            sch = employee_schedules_map.get(day_of_week)
+        if sch and sch.is_working:
             open_t = sch.start_time or wh.open_time
             close_t = sch.end_time or wh.close_time
-        except Exception:
+        elif sch and not sch.is_working:
+            return []
+        else:
             open_t, close_t = wh.open_time, wh.close_time
     else:
         open_t, close_t = wh.open_time, wh.close_time
 
+    import datetime as dt
+
     slots = []
-    current = datetime.combine(date, open_t)
-    end = datetime.combine(date, close_t)
+    current = dt.datetime.combine(date, open_t)
+    end = dt.datetime.combine(date, close_t)
     step = timedelta(minutes=30)
     duration_delta = timedelta(minutes=duration)
 
@@ -78,7 +94,10 @@ def _get_available_slots(business, employee, duration, date):
         appt_filter['employee'] = employee
     existing = list(Appointment.objects.filter(**appt_filter).values_list('time', 'end_time'))
 
-    now = datetime.now()
+    now = timezone.now()
+    if timezone.is_naive(current):
+        current = timezone.make_aware(current)
+        end = timezone.make_aware(end)
 
     while current + duration_delta <= end:
         slot_time = current.time()
@@ -117,22 +136,37 @@ def booking_step3_datetime(request, slug, service_id=0, employee_id=0):
 
     employee = None
     if employee_id:
-        employee = get_object_or_404(Employee, pk=employee_id, business=business)
+        employee = get_object_or_404(Employee.objects.prefetch_related('schedules'), pk=employee_id, business=business)
+
+    # Pre-fetch working hours and employee schedules to avoid N+1 queries
+    working_hours_map = {wh.day: wh for wh in business.working_hours.all()}
+    employee_schedules_map = None
+    if employee:
+        employee_schedules_map = {s.day: s for s in employee.schedules.all()}
 
     today = timezone.localdate()
     days = []
     for i in range(14):
         d = today + timedelta(days=i)
-        slots = _get_available_slots(business, employee, duration, d)
+        slots = _get_available_slots(
+            business, employee, duration, d,
+            working_hours_map=working_hours_map,
+            employee_schedules_map=employee_schedules_map,
+        )
         if slots:
             days.append({'date': d, 'slots': slots})
 
+    import datetime as dt
     selected_date = request.GET.get('date', '')
     selected_slots = []
     if selected_date:
         try:
-            d = datetime.strptime(selected_date, '%Y-%m-%d').date()
-            selected_slots = _get_available_slots(business, employee, duration, d)
+            d = dt.datetime.strptime(selected_date, '%Y-%m-%d').date()
+            selected_slots = _get_available_slots(
+                business, employee, duration, d,
+                working_hours_map=working_hours_map,
+                employee_schedules_map=employee_schedules_map,
+            )
         except ValueError:
             pass
 
@@ -150,12 +184,13 @@ def booking_step4_confirm(request, slug):
     date_str = request.GET.get('date') or request.POST.get('date')
     time_str = request.GET.get('time') or request.POST.get('time')
 
+    import datetime as dt
     try:
         service = Service.objects.filter(pk=service_id, business=business).first() if service_id else None
-        appt_date = datetime.strptime(date_str, '%Y-%m-%d').date()
-        appt_time = datetime.strptime(time_str, '%H:%M').time()
+        appt_date = dt.datetime.strptime(date_str, '%Y-%m-%d').date()
+        appt_time = dt.datetime.strptime(time_str, '%H:%M').time()
         employee = Employee.objects.filter(pk=employee_id, business=business).first() if employee_id else None
-    except Exception:
+    except (ValueError, TypeError):
         return redirect('public-booking-step1', slug=slug)
 
     if request.method == 'POST':
@@ -183,11 +218,12 @@ def booking_step4_confirm(request, slug):
             )
 
             # ── Dashboard notification ────────────────────────────────────
-            service_name = service.name if service else 'No service'
+            service_name = service.name if service else '—'
+            emp_name = employee.name if employee else ''
             create_notification(
                 business=business,
-                title='New Booking',
-                message=f'{name} booked {service_name} on {appt_date} at {appt_time.strftime("%H:%M")}',
+                title='Yangi qabul',
+                message=f'{name} — {service_name}{" (" + emp_name + ")" if emp_name else ""}, {appt_date} {appt_time.strftime("%H:%M")}',
                 appointment_id=appt.pk,
             )
 

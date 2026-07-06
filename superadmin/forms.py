@@ -6,7 +6,7 @@ class SiteSettingsForm(forms.ModelForm):
     class Meta:
         model = SiteSettings
         fields = [
-            'hero_title', 'hero_subtitle',
+            'hero_title', 'hero_subtitle', 'marketing_content',
             'starter_price',
             'growth_price_monthly', 'growth_price_yearly',
             'enterprise_price_monthly', 'enterprise_price_yearly',
@@ -20,6 +20,11 @@ class SiteSettingsForm(forms.ModelForm):
             }),
             'hero_subtitle': forms.Textarea(attrs={
                 'class': 'form-control', 'rows': 3, 'placeholder': 'Taglavha',
+            }),
+            'marketing_content': forms.Textarea(attrs={
+                'class': 'form-control font-monospace',
+                'rows': 8,
+                'placeholder': '{"uz": {"home": {"title": "..."}}}',
             }),
             'starter_price': forms.NumberInput(attrs={
                 'class': 'form-control', 'placeholder': '0',
@@ -52,10 +57,10 @@ class SiteSettingsForm(forms.ModelForm):
                 'class': 'form-control', 'placeholder': '+998 90 123 45 67',
             }),
             'contact_email': forms.EmailInput(attrs={
-                'class': 'form-control', 'placeholder': 'support@booksaas.com',
+                'class': 'form-control', 'placeholder': 'support@BookFlow.com',
             }),
             'contact_telegram': forms.TextInput(attrs={
-                'class': 'form-control', 'placeholder': 'https://t.me/BookSaaSBot',
+                'class': 'form-control', 'placeholder': 'https://t.me/BookFlowBot',
             }),
             'payment_card_number': forms.TextInput(attrs={
                 'class': 'form-control', 'placeholder': '9860 0101 2345 6789',
@@ -67,6 +72,7 @@ class SiteSettingsForm(forms.ModelForm):
         labels = {
             'hero_title': 'Bosh Sarlavha',
             'hero_subtitle': 'Taglavha',
+            'marketing_content': 'Marketing matnlari (JSON: uz/ru/en)',
             'starter_price': 'Start narxi (UZS/oy)',
             'growth_price_monthly': 'Pro oylik (UZS)',
             'growth_price_yearly': 'Pro yillik (UZS/oy)',

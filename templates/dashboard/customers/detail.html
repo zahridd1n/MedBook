@@ -1,44 +1,203 @@
 {% extends 'base_dashboard.html' %}
 {% block page_title %}{{ customer.full_name }}{% endblock %}
 {% block dashboard_content %}
-<div class="d-flex align-items-center gap-2 mb-4">
-  <a href="{% url 'customers:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
-  <h4 class="fw-bold mb-0">{{ customer.full_name }}</h4>
+<style>
+.customer-header{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 24px;margin-bottom:20px}
+.customer-header-avatar{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;flex-shrink:0}
+.stat-mini{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:14px;height:100%}
+.stat-mini-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.info-section{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
+.info-section-header{background:#fafafa;padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:.78rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}
+.info-row{display:flex;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #f3f4f6;font-size:.82rem}
+.info-row:last-child{border-bottom:none}
+.info-row .label{color:#6b7280}
+.info-row .value{font-weight:500;color:#111827;text-align:right}
+.visit-section{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
+.visit-item{padding:14px 16px;border-bottom:1px solid #f3f4f6;transition:background .1s}
+.visit-item:last-child{border-bottom:none}
+.visit-item:hover{background:#fafafa}
+.visit-date{background:#f3f4f6;border-radius:8px;padding:6px 10px;text-align:center;min-width:52px;flex-shrink:0}
+.visit-date .day{font-size:.6rem;color:#6b7280;font-weight:600;line-height:1;text-transform:uppercase}
+.visit-date .num{font-size:.85rem;font-weight:700;color:#111827;line-height:1.3;margin-top:1px}
+.notes-box{background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;padding:10px 12px;margin-top:8px}
+.status-mini{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:5px;font-size:.7rem;font-weight:600}
+.status-mini::before{content:'';width:5px;height:5px;border-radius:50%}
+.status-mini.new{background:#eef2ff;color:#4f46e5}.status-mini.new::before{background:#6366f1}
+.status-mini.confirmed{background:#f0fdf4;color:#15803d}.status-mini.confirmed::before{background:#22c55e}
+.status-mini.completed{background:#f8fafc;color:#475569}.status-mini.completed::before{background:#94a3b8}
+.status-mini.cancelled{background:#fef2f2;color:#b91c1c}.status-mini.cancelled::before{background:#ef4444}
+.form-appt .form-control-sm,.form-appt .form-select-sm{font-size:.78rem}
+.empty-box{text-align:center;padding:48px 24px}
+.empty-box-icon{width:48px;height:48px;border-radius:12px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 12px;color:#9ca3af}
+</style>
+
+<div class="d-flex align-items-center gap-3 mb-3">
+  <a href="{% url 'customers:list' %}" class="btn btn-sm btn-outline-secondary" style="border-radius:8px;width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center;"><i class="bi bi-arrow-left"></i></a>
+  <div>
+    <h4 class="fw-bold mb-0" style="font-size:1rem;">{{ customer.full_name }}</h4>
+    <p class="text-muted small mb-0">Mijoz profili va tashriflar tarixi</p>
+  </div>
 </div>
-<div class="row g-3">
-  <div class="col-lg-4">
-    <div class="card table-card p-4 text-center">
-      <div class="rounded-circle bg-primary bg-opacity-10 text-primary mx-auto d-flex align-items-center justify-content-center fw-bold" style="width:72px;height:72px;font-size:2rem;">{{ customer.full_name|first|upper }}</div>
-      <h5 class="fw-bold mt-3 mb-0">{{ customer.full_name }}</h5>
-      <ul class="list-group list-group-flush mt-3 text-start">
-        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Telefon</span><span class="fw-medium">{{ customer.phone }}</span></li>
-        {% if customer.email %}<li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Email</span><span class="fw-medium">{{ customer.email }}</span></li>{% endif %}
-        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Qabullar</span><span class="badge bg-primary">{{ customer.appointment_count }}</span></li>
-        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Oxirgi tashrif</span><span>{{ customer.last_visit|default:"—" }}</span></li>
-        <li class="list-group-item d-flex justify-content-between px-0"><span class="text-muted">Qachondan</span><span>{{ customer.created_at|date:"M d, Y" }}</span></li>
-      </ul>
+
+<div class="customer-header d-flex align-items-center gap-3 flex-wrap">
+  <div class="customer-header-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;">{{ customer.full_name|first|upper }}</div>
+  <div class="flex-fill min-w-0">
+    <h5 class="fw-bold mb-0" style="font-size:1rem;">{{ customer.full_name }}</h5>
+    <div class="d-flex align-items-center gap-3 mt-1 flex-wrap">
+      <span class="small text-muted"><i class="bi bi-telephone me-1"></i>{{ customer.phone }}</span>
+      {% if customer.email %}<span class="small text-muted"><i class="bi bi-envelope me-1"></i>{{ customer.email }}</span>{% endif %}
+      <span class="small text-muted"><i class="bi bi-calendar me-1"></i>{{ customer.created_at|date:"d.m.Y" }}</span>
     </div>
   </div>
-  <div class="col-lg-8">
-    <div class="card table-card">
-      <div class="card-header bg-white py-3 px-4"><h6 class="mb-0 fw-semibold">Qabullar tarixi</h6></div>
-      <div class="card-body p-0">
-        {% if appointments %}
-        <table class="table table-hover mb-0">
-          <thead><tr><th class="ps-4">Xizmat</th><th>Xodim</th><th>Sana</th><th>Holat</th></tr></thead>
-          <tbody>
-            {% for a in appointments %}
-            <tr>
-              <td class="ps-4">{{ a.service.name|default:"—" }}</td>
-              <td>{{ a.employee.name|default:"—" }}</td>
-              <td>{{ a.date }} {{ a.time|time:"H:i" }}</td>
-              <td><span class="badge bg-{{ a.status_color }}">{{ a.get_status_display }}</span></td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% else %}<div class="text-center py-4 text-muted">Hali qabullar yo'q.</div>{% endif %}
+  <div class="d-flex gap-2">
+    <span class="badge fw-semibold" style="background:#eef2ff;color:#6366f1;font-size:.75rem;padding:5px 12px;border-radius:6px;"><i class="bi bi-clock-history me-1"></i>{{ appointments|length }} tashrif</span>
+    <span class="badge fw-semibold" style="background:#f0fdf4;color:#16a34a;font-size:.75rem;padding:5px 12px;border-radius:6px;"><i class="bi bi-check-circle me-1"></i>{{ completed_count }} yakunlangan</span>
+  </div>
+</div>
+
+<div class="row g-3">
+  <!-- Left column -->
+  <div class="col-lg-4 d-flex flex-column gap-3">
+    <!-- Stats mini -->
+    <div class="row g-2">
+      <div class="col-6">
+        <div class="stat-mini">
+          <div class="stat-mini-icon" style="background:#eef2ff;color:#6366f1;"><i class="bi bi-calendar-check"></i></div>
+          <div>
+            <div class="fw-bold" style="font-size:1.1rem;">{{ appointments|length }}</div>
+            <div class="text-muted" style="font-size:.68rem;">Tashriflar</div>
+          </div>
+        </div>
       </div>
+      <div class="col-6">
+        <div class="stat-mini">
+          <div class="stat-mini-icon" style="background:#f0fdf4;color:#16a34a;"><i class="bi bi-check2-circle"></i></div>
+          <div>
+            <div class="fw-bold" style="font-size:1.1rem;">{{ completed_count }}</div>
+            <div class="text-muted" style="font-size:.68rem;">Yakunlangan</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="stat-mini">
+          <div class="stat-mini-icon" style="background:#fef2f2;color:#dc2626;"><i class="bi bi-currency-sum"></i></div>
+          <div>
+            <div class="fw-bold" style="font-size:1.1rem;">{% if total_spent %}{{ total_spent|floatformat:0 }}{% else %}0{% endif %}</div>
+            <div class="text-muted" style="font-size:.68rem;">Sarflangan</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="stat-mini">
+          <div class="stat-mini-icon" style="background:#fefce8;color:#a16207;"><i class="bi bi-person-badge"></i></div>
+          <div>
+            <div class="fw-bold" style="font-size:1.1rem;">{{ appointments.0.date|default:"—" }}</div>
+            <div class="text-muted" style="font-size:.68rem;">Oxirgi tashrif</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shaxsiy eslatmalar -->
+    <div class="info-section">
+      <div class="info-section-header d-flex align-items-center justify-content-between">
+        <span><i class="bi bi-sticky me-1"></i>Shaxsiy eslatmalar</span>
+        <button class="btn btn-sm p-0 border-0 text-primary fw-semibold" style="font-size:.72rem;" data-bs-toggle="collapse" data-bs-target="#addNoteForm">
+          <i class="bi bi-plus-circle me-1"></i>Qo'shish
+        </button>
+      </div>
+      <div class="p-3">
+        <form method="post" class="collapse mb-2" id="addNoteForm">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add_note">
+          <textarea name="customer_notes" class="form-control form-control-sm mb-2" rows="2" placeholder="Eslatma yozish..."></textarea>
+          <button type="submit" class="btn btn-sm btn-primary w-100">Saqlash</button>
+        </form>
+        {% if customer.notes %}
+        <div class="small" style="color:#374151;white-space:pre-wrap;max-height:180px;overflow-y:auto;font-size:.78rem;line-height:1.5;">{{ customer.notes }}</div>
+        {% else %}
+        <div class="small text-muted fst-italic" style="font-size:.78rem;">Hali eslatmalar yo'q</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Tez qabul qo'shish -->
+    <div class="info-section">
+      <div class="info-section-header"><i class="bi bi-plus-circle me-1"></i>Tez qabul qo'shish</div>
+      <div class="p-3 form-appt">
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add_appointment">
+          <div class="mb-2">
+            <label class="form-label small text-muted fw-semibold" style="font-size:.72rem;">Xizmat</label>
+            {{ appointment_form.service }}
+          </div>
+          <div class="mb-2">
+            <label class="form-label small text-muted fw-semibold" style="font-size:.72rem;">Xodim</label>
+            {{ appointment_form.employee }}
+          </div>
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label class="form-label small text-muted fw-semibold" style="font-size:.72rem;">Sana</label>
+              {{ appointment_form.date }}
+            </div>
+            <div class="col-6">
+              <label class="form-label small text-muted fw-semibold" style="font-size:.72rem;">Vaqt</label>
+              {{ appointment_form.time }}
+            </div>
+          </div>
+          <button type="submit" class="btn btn-sm btn-primary w-100">Qo'shish</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column: Tashriflar tarixi -->
+  <div class="col-lg-8">
+    <div class="visit-section">
+      <div class="info-section-header"><i class="bi bi-clock-history me-1"></i>Tashriflar tarixi</div>
+      {% if appointments %}
+        {% for a in appointments %}
+        <div class="visit-item">
+          <div class="d-flex align-items-start gap-3">
+            <div class="visit-date">
+              <div class="day">{{ a.date|date:"M" }}</div>
+              <div class="num">{{ a.date|date:"d" }}</div>
+            </div>
+            <div class="flex-fill min-w-0">
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="fw-semibold" style="font-size:.82rem;">{{ a.service.name|default:"Xizmat" }}</span>
+                <span class="text-muted" style="font-size:.72rem;"><i class="bi bi-person-badge me-1"></i>{{ a.employee.name|default:"Har qanday" }}</span>
+                <span class="text-muted" style="font-size:.72rem;"><i class="bi bi-clock me-1"></i>{{ a.time|time:"H:i" }}</span>
+                <span class="status-mini {{ a.status }} ms-auto">{{ a.get_status_display }}</span>
+              </div>
+              {% if a.notes %}
+              <div class="small text-muted mt-1" style="font-size:.75rem;"><span class="fw-medium">Mijoz:</span> {{ a.notes }}</div>
+              {% endif %}
+              {% if a.doctor_notes %}
+              <div class="notes-box mt-1">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                  <span class="small fw-semibold" style="font-size:.72rem;color:#d97706;"><i class="bi bi-file-text me-1"></i>Shifokor qaydlari</span>
+                  <a href="{% url 'appointments:edit' a.pk %}" class="small" style="font-size:.7rem;color:#6366f1;">Tahrirlash</a>
+                </div>
+                <div class="small" style="font-size:.75rem;color:#374151;white-space:pre-wrap;">{{ a.doctor_notes }}</div>
+              </div>
+              {% else %}
+              <div class="mt-1">
+                <a href="{% url 'appointments:edit' a.pk %}" class="small" style="font-size:.72rem;color:#9ca3af;"><i class="bi bi-plus-circle me-1"></i>Qayd qo'shish</a>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+      <div class="empty-box">
+        <div class="empty-box-icon"><i class="bi bi-calendar-x"></i></div>
+        <h6 class="fw-semibold mb-1" style="font-size:.85rem;">Tashriflar yo'q</h6>
+        <p class="text-muted small mb-0">Bu mijoz uchun hali qabullar qayd etilmagan</p>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>

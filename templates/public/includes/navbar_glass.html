@@ -1,27 +1,67 @@
 <style>
 :root { --brand: {{ business.primary_color|default:'#6366f1' }}; --brand-dark: color-mix(in srgb, var(--brand) 80%, #000); }
-/* ── Glass Ultra — Apple Vision Pro ── */
+
+/* ── Default: Dark Glass (over dark hero) ── */
+.nav-glass-inner {
+  background: rgba(10, 15, 30, 0.45) !important;
+  backdrop-filter: blur(32px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(140%) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 8px 32px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.06) !important;
+}
+.nav-glass-brand-name { color: rgba(255,255,255,0.92) !important; }
+.nav-glass-link { color: rgba(255,255,255,0.65) !important; }
+.nav-glass-link:hover { color: #fff !important; }
+.nav-glass-link::before { background: rgba(255,255,255,0.07) !important; }
+.nav-glass-hamburger span,
+.nav-glass-hamburger span::before,
+.nav-glass-hamburger span::after { background: rgba(255,255,255,0.8) !important; }
+
+/* ── Light mode: active when over light sections ── */
+.nav-glass.nav-light .nav-glass-inner {
+  background: rgba(255,255,255,0.82) !important;
+  backdrop-filter: blur(32px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+  border: 1px solid rgba(255,255,255,0.5) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.6),
+    0 8px 32px rgba(0,0,0,0.06),
+    0 2px 8px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.6) !important;
+}
+.nav-glass.nav-light .nav-glass-brand-name { color: #0f172a !important; }
+.nav-glass.nav-light .nav-glass-link { color: #475569 !important; }
+.nav-glass.nav-light .nav-glass-link:hover { color: #0f172a !important; }
+.nav-glass.nav-light .nav-glass-link::before { background: rgba(99,102,241,0.08) !important; }
+.nav-glass.nav-light .nav-glass-hamburger span,
+.nav-glass.nav-light .nav-glass-hamburger span::before,
+.nav-glass.nav-light .nav-glass-hamburger span::after { background: #0f172a !important; }
+
+/* ── Glass Ultra ── */
 .nav-glass {
   position: fixed;
-  top: 16px;
+  top: 24px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
   width: calc(100% - 32px);
   max-width: 1200px;
-  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
 }
 .nav-glass.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
-.nav-glass.hidden { opacity: 0; transform: translateX(-50%) translateY(-24px); pointer-events: none; }
-.nav-glass.scrolled { top: 10px; }
+.nav-glass.hidden { opacity: 0; transform: translateX(-50%) translateY(-16px); pointer-events: none; }
+.nav-glass.scrolled { top: 12px; }
 .nav-glass-inner {
   pointer-events: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 8px;
-  height: 60px;
+  padding: 0 20px;
+  height: 64px;
   background: rgba(255,255,255,0.72);
   backdrop-filter: blur(32px) saturate(180%);
   -webkit-backdrop-filter: blur(32px) saturate(180%);
@@ -34,12 +74,15 @@
     inset 0 1px 0 rgba(255,255,255,0.6);
   position: relative;
   overflow: hidden;
-  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nav-glass.scrolled .nav-glass-inner {
-  height: 52px;
+  padding: 0 12px;
+  height: 54px;
   border-radius: 14px;
-  background: rgba(255,255,255,0.82);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(48px) saturate(200%);
+  -webkit-backdrop-filter: blur(48px) saturate(200%);
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.5),
     0 12px 48px rgba(0,0,0,0.1),
@@ -81,22 +124,26 @@
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nav-glass-brand:hover { background: rgba(0,0,0,0.04); }
-.nav-glass-brand-icon {
-  width: 28px; height: 28px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 13px; font-weight: 800;
-  flex-shrink: 0;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.nav-glass-brand:hover .nav-glass-brand-icon { transform: scale(1.08) rotate(-2deg); }
 .nav-glass-brand-name {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #0f172a;
   letter-spacing: -0.02em;
   white-space: nowrap;
+  transition: font-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-glass.scrolled .nav-glass-brand-name {
+  font-size: 13px;
+}
+.nav-glass-brand-logo {
+  height: 32px;
+  width: auto;
+  border-radius: 8px;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-glass.scrolled .nav-glass-brand-logo {
+  height: 28px;
+  border-radius: 6px;
 }
 
 /* Links */
@@ -301,14 +348,14 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .nav-glass { top: 12px; width: calc(100% - 24px); }
+  .nav-glass { top: 12px; width: calc(100% - 20px); }
   .nav-glass-links { display: none; }
   .nav-glass-cta { display: none; }
   .nav-glass-hamburger { display: flex; }
-  .nav-glass.scrolled .nav-glass-inner { height: 56px; }
-  .nav-glass-inner { height: 56px; border-radius: 14px; padding: 0 4px; }
+  .nav-glass-inner { height: 56px; border-radius: 14px; padding: 0 12px; }
+  .nav-glass.scrolled .nav-glass-inner { height: 52px; padding: 0 8px; }
   .nav-glass-brand { padding: 0 8px; }
-  .nav-glass-brand-name { font-size: 13px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
+  
 }
 @media (min-width: 769px) {
   .nav-glass-hamburger { display: none; }
@@ -323,11 +370,10 @@
 
     <a class="nav-glass-brand" href="{% url 'public-home' business.slug %}">
       {% if business.logo %}
-        <img src="{{ business.logo.url }}" alt="" style="width:28px;height:28px;border-radius:7px;object-fit:cover;">
+        <img src="{{ business.logo.url }}" alt="{{ business.name }}" class="nav-glass-brand-logo">
       {% else %}
-        <span class="nav-glass-brand-icon">{{ business.name|first|upper }}</span>
+        <span class="nav-glass-brand-name">{{ business.name }}</span>
       {% endif %}
-      <span class="nav-glass-brand-name">{{ business.name }}</span>
     </a>
 
     <ul class="nav-glass-links">
@@ -373,32 +419,53 @@
   var cta = document.getElementById('navGlassCta');
   var hamburger = document.getElementById('navGlassHamburger');
   var overlay = document.getElementById('navGlassOverlay');
-  var lastScroll = 0;
   var ticking = false;
+  var scrollStopTimer;
+
+  // Detect if page has a dark hero and switch navbar mode
+  function updateDarkMode() {
+    var darkHero = document.querySelector('.bk-hero, .emp-header, .blog-hero, .blog-detail-header');
+    var navHeight = nav ? (nav.offsetHeight + 24) : 88;
+    var sy = window.scrollY;
+    if (darkHero && sy < darkHero.offsetHeight - navHeight) {
+      nav.classList.remove('nav-light');
+    } else {
+      nav.classList.add('nav-light');
+    }
+  }
 
   function updateScroll() {
     var sy = window.scrollY;
     if (sy > 80) {
       nav.classList.add('scrolled');
-      if (sy > lastScroll && sy > 200) {
-        nav.classList.remove('visible');
-        nav.classList.add('hidden');
-      } else {
-        nav.classList.remove('hidden');
-        nav.classList.add('visible');
-      }
+      nav.classList.remove('visible');
+      nav.classList.add('hidden');
+      clearTimeout(scrollStopTimer);
+      scrollStopTimer = setTimeout(function() {
+        if (window.scrollY > 80) {
+          nav.classList.remove('hidden');
+          nav.classList.add('visible');
+        }
+      }, 250);
     } else {
       nav.classList.remove('scrolled', 'hidden');
       nav.classList.add('visible');
+      clearTimeout(scrollStopTimer);
     }
-    lastScroll = sy;
+    updateDarkMode();
     ticking = false;
   }
+
+  updateDarkMode();
 
   window.addEventListener('scroll', function() {
     if (!ticking) { requestAnimationFrame(updateScroll); ticking = true; }
   }, { passive: true });
   updateScroll();
+  // Also run on full load (images may shift layout)
+  window.addEventListener('load', updateDarkMode);
+  // bfcache restore
+  window.addEventListener('pageshow', updateDarkMode);
 
   // Mouse light reflection
   if (glow) {

@@ -3,9 +3,17 @@
 {% block page_title %}Blog{% endblock %}
 
 {% block dashboard_content %}
-<div class="mb-4 d-flex justify-content-between align-items-center">
-  <h3 class="mb-0">Blog Postlari</h3>
-  <a href="{% url 'blog:create' %}" class="btn btn-primary btn-sm">
+<!-- Tab navigation -->
+<div class="mb-4 d-flex justify-content-between align-items-center border-bottom pb-2">
+  <div class="d-flex gap-3">
+    <a href="{% url 'blog:list' %}" class="text-decoration-none text-primary fw-bold pb-2 border-bottom border-primary border-2">
+      <i class="bi bi-journal-text me-1"></i> Postlar
+    </a>
+    <a href="{% url 'blog:comment-list' %}" class="text-decoration-none text-muted fw-semibold pb-2">
+      <i class="bi bi-chat-left-text me-1"></i> Izohlar
+    </a>
+  </div>
+  <a href="{% url 'blog:create' %}" class="btn btn-primary btn-sm mb-2">
     <i class="bi bi-plus-lg"></i> Yangi Post
   </a>
 </div>

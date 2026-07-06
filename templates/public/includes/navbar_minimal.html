@@ -1,6 +1,18 @@
 <style>
 :root { --brand: {{ business.primary_color|default:'#6366f1' }}; --brand-dark: color-mix(in srgb, var(--brand) 80%, #000); }
-/* ── Minimal Luxury — Linear ── */
+
+/* ── Dark variant (over dark hero) ── */
+.nav-min.nav-dark .nav-min-inner { border-bottom-color: transparent !important; }
+.nav-min.nav-dark:not(.scrolled) .nav-min-brand-name { color: rgba(255,255,255,0.92); }
+.nav-min.nav-dark:not(.scrolled) .nav-min-link { color: rgba(255,255,255,0.6); }
+.nav-min.nav-dark:not(.scrolled) .nav-min-link:hover { color: #fff; }
+.nav-min.nav-dark:not(.scrolled) .nav-min-cta { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.18); }
+.nav-min.nav-dark:not(.scrolled) .nav-min-cta:hover { background: var(--brand); border-color: var(--brand); color: #fff; }
+.nav-min.nav-dark:not(.scrolled) .nav-min-hamburger span,
+.nav-min.nav-dark:not(.scrolled) .nav-min-hamburger span::before,
+.nav-min.nav-dark:not(.scrolled) .nav-min-hamburger span::after { background: rgba(255,255,255,0.75); }
+
+/* ── Minimal Luxury ── */
 .nav-min {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -13,18 +25,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
-  padding: 0 24px;
+  height: 68px;
+  padding: 0 32px;
   max-width: 1200px;
   margin: 0 auto;
   border-bottom: 1px solid transparent;
-  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nav-min.scrolled .nav-min-inner {
+  height: 60px;
+  padding: 0 20px;
   border-bottom-color: rgba(226,232,240,0.6);
   background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
 }
 .nav-min.hidden {
   transform: translateY(-100%);
@@ -43,20 +57,24 @@
   transition: all 0.3s;
 }
 .nav-min-brand:hover { background: rgba(0,0,0,0.03); }
-.nav-min-brand-mark {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--brand);
-  letter-spacing: -0.04em;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+.nav-min-brand-logo {
+  height: 28px;
+  width: auto;
+  border-radius: 4px;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.nav-min-brand:hover .nav-min-brand-mark { transform: scale(1.05); }
+.nav-min.scrolled .nav-min-brand-logo {
+  height: 24px;
+}
 .nav-min-brand-name {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 650;
   color: #0f172a;
   letter-spacing: -0.02em;
-  transition: color 0.3s;
+  transition: font-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-min.scrolled .nav-min-brand-name {
+  font-size: 13px;
 }
 
 /* Links */
@@ -235,6 +253,7 @@
   .nav-min-cta { display: none; }
   .nav-min-hamburger { display: flex; }
   .nav-min-inner { height: 56px; padding: 0 16px; }
+  .nav-min.scrolled .nav-min-inner { height: 52px; padding: 0 12px; }
 }
 @media (min-width: 769px) {
   .nav-min-hamburger { display: none; }
@@ -246,11 +265,10 @@
   <div class="nav-min-inner">
     <a class="nav-min-brand" href="{% url 'public-home' business.slug %}">
       {% if business.logo %}
-        <img src="{{ business.logo.url }}" alt="" style="height:22px;width:auto;border-radius:4px;">
+        <img src="{{ business.logo.url }}" alt="{{ business.name }}" class="nav-min-brand-logo">
       {% else %}
-        <span class="nav-min-brand-mark">{{ business.name|slice:":2"|upper }}</span>
+        <span class="nav-min-brand-name">{{ business.name }}</span>
       {% endif %}
-      <span class="nav-min-brand-name">{{ business.name }}</span>
     </a>
 
     <ul class="nav-min-links">
@@ -292,23 +310,38 @@
   var nav = document.getElementById('navMin');
   var hamburger = document.getElementById('navMinHamburger');
   var overlay = document.getElementById('navMinOverlay');
-  var lastScroll = 0;
   var ticking = false;
+  var scrollStopTimer;
+
+  function updateDarkMode() {
+    var darkHero = document.querySelector('.bk-hero, .emp-header, .blog-hero, .blog-detail-header');
+    var sy = window.scrollY;
+    var navH = nav ? (nav.offsetHeight || 68) : 68;
+    if (darkHero && sy < darkHero.offsetHeight - navH) {
+      nav.classList.add('nav-dark');
+    } else {
+      nav.classList.remove('nav-dark');
+    }
+  }
 
   function updateScroll() {
     var sy = window.scrollY;
-    if (sy > 40) { nav.classList.add('scrolled'); }
-    else { nav.classList.remove('scrolled'); }
-
-    if (sy > lastScroll && sy > 300) {
+    if (sy > 60) {
+      nav.classList.add('scrolled');
       nav.classList.add('hidden');
+      clearTimeout(scrollStopTimer);
+      scrollStopTimer = setTimeout(function() {
+        if (window.scrollY > 60) { nav.classList.remove('hidden'); }
+      }, 250);
     } else {
-      nav.classList.remove('hidden');
+      nav.classList.remove('scrolled', 'hidden');
+      clearTimeout(scrollStopTimer);
     }
-    lastScroll = sy;
+    updateDarkMode();
     ticking = false;
   }
 
+  updateDarkMode();
   window.addEventListener('scroll', function() {
     if (!ticking) { requestAnimationFrame(updateScroll); ticking = true; }
   }, { passive: true });

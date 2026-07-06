@@ -215,6 +215,50 @@
   border: 2px solid #fff;
   display: none;
 }
+.tb-dropdown{position:relative}
+.tb-dropdown-menu{
+  position:absolute;top:calc(100% + 6px);right:0;
+  width:360px;background:#fff;border-radius:12px;
+  border:1.5px solid #e5e7eb;box-shadow:0 10px 40px rgba(0,0,0,.1);
+  z-index:9999;opacity:0;visibility:hidden;
+  transform:translateY(-4px);transition:all .15s;
+}
+.tb-dropdown-menu.show{opacity:1;visibility:visible;transform:translateY(0)}
+.tb-dropdown-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-bottom:1px solid #f3f4f6;
+  font-size:.82rem;
+}
+.tb-dropdown-body{max-height:340px;overflow-y:auto}
+.tb-dropdown-footer{
+  display:flex;align-items:center;justify-content:center;
+  padding:10px 16px;border-top:1px solid #f3f4f6;
+  text-decoration:none;color:#6366f1;font-size:.78rem;font-weight:600;
+  transition:background .12s;
+}
+.tb-dropdown-footer:hover{background:#f9fafb;color:#4f46e5}
+.tb-notif-loading{text-align:center;padding:24px;color:#9ca3af;font-size:.78rem}
+.tb-notif-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 16px;text-decoration:none;color:inherit;
+  transition:background .1s;border-bottom:1px solid #f3f4f6;
+}
+.tb-notif-item:last-child{border-bottom:none}
+.tb-notif-item:hover{background:#f9fafb}
+.tb-notif-item.unread{background:#f0f4ff}
+.tb-notif-item.unread:hover{background:#e8edfc}
+.tb-notif-icon{
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.tb-notif-info{flex:1;min-width:0}
+.tb-notif-title{font-size:.78rem;font-weight:600;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-notif-msg{font-size:.72rem;color:#6b7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-notif-time{font-size:.65rem;color:#9ca3af;margin-top:1px}
+.tb-notif-empty{text-align:center;padding:32px 24px;font-size:.78rem;color:#9ca3af}
+.tb-notif-empty-icon{font-size:24px;margin-bottom:6px}
+.tb-mark-all-form button:hover{text-decoration:underline}
+@media(max-width:576px){.tb-dropdown-menu{width:calc(100vw - 20px);right:-8px}}
 
 /* ════════════════════════════════════════════════════
    PAGE WRAPPER
@@ -383,8 +427,12 @@
 
   <!-- Brand -->
   <a class="sb-brand" href="{% url 'dashboard:home' %}">
-    <div class="sb-brand-logo">📅</div>
-    <span class="sb-brand-name">BookSaaS</span>
+    {% if site_settings.logo %}
+    <img src="{{ site_settings.logo.url }}" alt="BookFlow" style="height:28px;width:auto;border-radius:6px;">
+    {% else %}
+    <div class="sb-brand-logo"><i class="bi bi-calendar2-check"></i></div>
+    {% endif %}
+    <span class="sb-brand-name">BookFlow</span>
   </a>
 
   <!-- Plan pill -->
@@ -458,6 +506,18 @@
         {% endif %}
       {% endif %}
     </a>
+    <a href="{% url 'business:custom_domain' %}" class="sb-item {% if 'custom-domain' in request.path %}active{% endif %}">
+      <i class="bi bi-globe2"></i> Maxsus domen
+      {% if user.is_authenticated %}
+        {% if user.business.domain_verified %}
+          <span class="sb-badge ms-auto" style="background:rgba(34,197,94,.15);color:#16a34a;">FAOL</span>
+        {% elif user.business.custom_domain %}
+          <span class="sb-badge ms-auto" style="background:rgba(245,158,11,.15);color:#d97706;">TASDIQLANMAGAN</span>
+        {% else %}
+          <span class="sb-badge ms-auto" style="background:rgba(107,114,128,.15);color:#6b7280;">START</span>
+        {% endif %}
+      {% endif %}
+    </a>
     <a href="{% url 'notifications:list' %}" class="sb-item {% if 'notifications' in request.path %}active{% endif %}">
       <i class="bi bi-bell"></i> Bildirishnomalar
       <span class="sb-badge ms-auto" id="sb-notif-count" style="background:rgba(239,68,68,.15);color:#dc2626;display:none;"></span>
@@ -520,11 +580,29 @@
         <i class="bi bi-plus-lg"></i> Yangi qabul
       </a>
 
-      <!-- Notifications -->
-      <a href="{% url 'notifications:list' %}" class="tb-btn" title="Bildirishnomalar">
-        <i class="bi bi-bell" style="font-size:15px;"></i>
-        <span class="notif-dot" id="notif-dot"></span>
-      </a>
+      <!-- Notifications dropdown -->
+      <div class="tb-dropdown" id="notifDropdown">
+        <button class="tb-btn" id="notifToggle" title="Bildirishnomalar" style="border:none;background:none;">
+          <i class="bi bi-bell" style="font-size:15px;"></i>
+          <span class="notif-dot" id="notif-dot"></span>
+        </button>
+        <div class="tb-dropdown-menu" id="notifMenu">
+          <div class="tb-dropdown-header">
+            <span class="fw-semibold">Bildirishnomalar</span>
+            <form method="post" action="{% url 'notifications:mark_all_read' %}" id="markAllForm" style="display:inline" class="tb-mark-all-form">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm p-0 border-0 text-primary fw-semibold" style="font-size:.72rem;">Barchasini o'qish</button>
+            </form>
+          </div>
+          <div class="tb-dropdown-body" id="notifBody">
+            <div class="tb-notif-loading">Yuklanmoqda...</div>
+          </div>
+          <a href="{% url 'notifications:list' %}" class="tb-dropdown-footer">
+            Barcha bildirishnomalarni ko'rish
+            <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
 
       <!-- Public page -->
       {% if user.is_authenticated %}
@@ -567,7 +645,9 @@ function closeSidebar() {
   document.getElementById('sb-backdrop').classList.add('d-none');
 }
 
-// ── Notification badge ────────────────────────────
+// ── Notification dropdown ──────────────────────────
+const NOTIF_POLL_SECONDS = 15;
+
 async function pollNotifications() {
   try {
     const r = await fetch('{% url "notifications:unread_count" %}');
@@ -576,15 +656,99 @@ async function pollNotifications() {
     const cnt  = document.getElementById('sb-notif-count');
     if (d.count > 0) {
       dot.style.display  = 'block';
-      cnt.textContent    = d.count;
-      cnt.style.display  = 'inline';
+      if (cnt) { cnt.textContent = d.count; cnt.style.display = 'inline'; }
     } else {
       dot.style.display  = 'none';
-      cnt.style.display  = 'none';
+      if (cnt) { cnt.style.display = 'none'; }
     }
   } catch(e) {}
 }
 pollNotifications();
-setInterval(pollNotifications, 30000);
+setInterval(pollNotifications, NOTIF_POLL_SECONDS * 1000);
+
+// Toggle dropdown
+const notifToggle = document.getElementById('notifToggle');
+const notifMenu  = document.getElementById('notifMenu');
+const notifBody  = document.getElementById('notifBody');
+
+notifToggle.addEventListener('click', function(e) {
+  e.stopPropagation();
+  if (notifMenu.classList.contains('show')) {
+    notifMenu.classList.remove('show');
+  } else {
+    notifMenu.classList.add('show');
+    loadNotifications();
+  }
+});
+
+// Close on outside click
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('notifDropdown').contains(e.target)) {
+    notifMenu.classList.remove('show');
+  }
+});
+
+async function loadNotifications() {
+  try {
+    notifBody.innerHTML = '<div class="tb-notif-loading">Yuklanmoqda...</div>';
+    const r = await fetch('{% url "notifications:popup" %}');
+    const d = await r.json();
+
+    if (d.notifications.length === 0) {
+      notifBody.innerHTML = '<div class="tb-notif-empty"><div class="tb-notif-empty-icon"><i class="bi bi-bell-slash"></i></div>Bildirishnomalar yo\'q</div>';
+      return;
+    }
+
+    let html = '';
+    for (const n of d.notifications) {
+      const timeAgo = timeSince(new Date(n.time_ago));
+      const unreadClass = n.is_read ? '' : ' unread';
+      const urlAttr = n.url ? `href="${n.url}"` : '';
+      const tagName = n.url ? 'a' : 'div';
+      html += `<${tagName} ${urlAttr} class="tb-notif-item${unreadClass}">`;
+      html += `<div class="tb-notif-icon" style="background:${n.color}15;color:${n.color};"><i class="bi bi-${n.icon}"></i></div>`;
+      html += `<div class="tb-notif-info">`;
+      html += `<div class="tb-notif-title">${escHtml(n.title)}</div>`;
+      html += `<div class="tb-notif-msg">${escHtml(n.message)}</div>`;
+      html += `<div class="tb-notif-time">${timeAgo}</div>`;
+      html += `</div></${tagName}>`;
+    }
+    notifBody.innerHTML = html;
+  } catch(e) {
+    notifBody.innerHTML = '<div class="tb-notif-empty">Xatolik yuz berdi</div>';
+  }
+}
+
+function escHtml(s) {
+  const div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+function timeSince(date) {
+  const seconds = Math.floor((new Date() - date) / 1000);
+  if (seconds < 60) return 'Hozir';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return minutes + ' daqiqa oldin';
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return hours + ' soat oldin';
+  const days = Math.floor(hours / 24);
+  if (days < 7) return days + ' kun oldin';
+  return date.toLocaleDateString('uz-UZ', {day:'2-digit',month:'2-digit',year:'numeric'});
+}
+
+// Handle mark-all-read form submission via AJAX
+document.addEventListener('submit', function(e) {
+  if (e.target.id === 'markAllForm') {
+    e.preventDefault();
+    fetch(e.target.action, {method:'POST', body:new FormData(e.target)})
+      .then(r => r.json()).then(d => {
+        if (d.ok) {
+          pollNotifications();
+          loadNotifications();
+        }
+      }).catch(() => {});
+  }
+});
 </script>
 {% endblock %}

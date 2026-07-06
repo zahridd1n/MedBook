@@ -13,10 +13,10 @@ class Appointment(models.Model):
     STATUS_CANCELLED = 'cancelled'
 
     STATUS_CHOICES = [
-        (STATUS_NEW, 'New'),
-        (STATUS_CONFIRMED, 'Confirmed'),
-        (STATUS_COMPLETED, 'Completed'),
-        (STATUS_CANCELLED, 'Cancelled'),
+        (STATUS_NEW, 'Yangi'),
+        (STATUS_CONFIRMED, 'Tasdiqlangan'),
+        (STATUS_COMPLETED, 'Yakunlangan'),
+        (STATUS_CANCELLED, 'Bekor qilingan'),
     ]
     STATUS_COLORS = {
         STATUS_NEW: 'primary',
@@ -32,7 +32,8 @@ class Appointment(models.Model):
     date = models.DateField()
     time = models.TimeField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_NEW)
-    notes = models.TextField(blank=True)
+    notes = models.TextField(blank=True, help_text='Mijoz eslatmasi')
+    doctor_notes = models.TextField(blank=True, help_text='Shifokor/xodim qaydlari, tashxis, tavsiyalar')
     end_time = models.TimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

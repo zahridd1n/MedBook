@@ -25,6 +25,14 @@
           <div class="form-text text-muted">{{ form.hero_subtitle.help_text }}</div>
           {% if form.hero_subtitle.errors %}<div class="text-danger small mt-1">{{ form.hero_subtitle.errors }}</div>{% endif %}
         </div>
+        <div class="mt-3">
+          <label class="form-label fw-semibold">{{ form.marketing_content.label }}</label>
+          {{ form.marketing_content }}
+          <div class="form-text text-muted">
+            Ixtiyoriy JSON override. Masalan: {"ru":{"home":{"title":"..."}}}
+          </div>
+          {% if form.marketing_content.errors %}<div class="text-danger small mt-1">{{ form.marketing_content.errors }}</div>{% endif %}
+        </div>
       </div>
     </div>
 

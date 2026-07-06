@@ -6,6 +6,7 @@ from .models import Appointment
 from .forms import AppointmentForm
 from business.models import Business
 from customers.models import Customer
+from employees.models import Employee
 
 
 @login_required
@@ -17,6 +18,7 @@ def appointment_list(request):
     search = request.GET.get('q', '')
     date_from = request.GET.get('date_from', '')
     date_to = request.GET.get('date_to', '')
+    employee_id = request.GET.get('employee', '')
 
     if status:
         qs = qs.filter(status=status)
@@ -29,11 +31,18 @@ def appointment_list(request):
         qs = qs.filter(date__gte=date_from)
     if date_to:
         qs = qs.filter(date__lte=date_to)
+    if employee_id == '0':
+        qs = qs.filter(employee__isnull=True)
+    elif employee_id:
+        qs = qs.filter(employee_id=employee_id)
+
+    employees = business.employees.filter(is_active=True)
 
     return render(request, 'dashboard/appointments/list.html', {
         'business': business, 'appointments': qs,
         'status_choices': Appointment.STATUS_CHOICES, 'selected_status': status,
         'search': search, 'date_from': date_from, 'date_to': date_to,
+        'employees': employees, 'selected_employee': employee_id,
     })
 
 
