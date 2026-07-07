@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 PRIMARY_DOMAIN_PATTERN = re.compile(
-    r'^(.+\.)?' + re.escape(settings.PRIMARY_DOMAIN.replace('.', r'\.')) + r'(:\d+)?$'
+    r'^(.+\.)?' + re.escape(settings.PRIMARY_DOMAIN) + r'(:\d+)?$'
 )
 
 
