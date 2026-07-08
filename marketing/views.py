@@ -1,6 +1,29 @@
 from django.shortcuts import render
+from django.db.models import Count
 
 from superadmin.models import SiteSettings
+from business.models import Business
+
+
+CATEGORY_LABELS = {
+    'uz': {
+        'clinic': 'Klinika', 'dental': 'Stomatologiya', 'beauty': 'Go\'zallik saloni',
+        'barber': 'Sartaroshxona', 'education': 'O\'quv markaz', 'auto': 'Avto xizmat', 'other': 'Boshqa',
+    },
+    'ru': {
+        'clinic': 'Клиника', 'dental': 'Стоматология', 'beauty': 'Салон красоты',
+        'barber': 'Парикмахерская', 'education': 'Учебный центр', 'auto': 'Автосервис', 'other': 'Другое',
+    },
+    'en': {
+        'clinic': 'Clinic', 'dental': 'Dental Clinic', 'beauty': 'Beauty Salon',
+        'barber': 'Barber Shop', 'education': 'Educational Center', 'auto': 'Auto Service', 'other': 'Other',
+    },
+}
+
+CATEGORY_ICONS = {
+    'clinic': 'hospital', 'dental': 'bandaid', 'beauty': 'stars',
+    'barber': 'scissors', 'education': 'mortarboard', 'auto': 'car-front', 'other': 'grid',
+}
 
 
 SUPPORTED_LANGUAGES = ('uz', 'ru', 'en')
@@ -151,3 +174,47 @@ def faq(request):
 
 def contact(request):
     return render(request, 'marketing/contact.html', _context(request))
+
+
+def businesses_directory(request):
+    """Public directory of businesses that opted in to show_in_directory."""
+    lang = _language(request)
+    site = SiteSettings.load()
+    copy = site.marketing_copy(lang)
+
+    category_filter = request.GET.get('category', '')
+    qs = Business.objects.filter(show_in_directory=True, is_active=True).order_by('name')
+    if category_filter:
+        qs = qs.filter(category=category_filter)
+
+    category_counts = (
+        Business.objects
+        .filter(show_in_directory=True, is_active=True)
+        .values('category')
+        .annotate(cnt=Count('id'))
+        .order_by('category')
+    )
+    cat_labels = CATEGORY_LABELS[lang]
+    categories = [
+        {
+            'value': row['category'],
+            'label': cat_labels.get(row['category'], row['category']),
+            'icon': CATEGORY_ICONS.get(row['category'], 'grid'),
+            'count': row['cnt'],
+        }
+        for row in category_counts
+    ]
+
+    context = {
+        'site': site,
+        'm': copy,
+        'current_lang': lang,
+        'languages': [('uz', 'UZ'), ('ru', 'RU'), ('en', 'EN')],
+        'businesses': qs,
+        'categories': categories,
+        'selected_category': category_filter,
+        'cat_labels': cat_labels,
+        'cat_icons': CATEGORY_ICONS,
+        'total_count': Business.objects.filter(show_in_directory=True, is_active=True).count(),
+    }
+    return render(request, 'marketing/businesses.html', context)

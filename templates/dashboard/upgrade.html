@@ -117,6 +117,7 @@
         <ul class="list-unstyled mb-4" style="font-size:13px;line-height:1;">
            <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:var(--p);font-size:13px;"></i>5 tagacha xodim</li>
           <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:var(--p);font-size:13px;"></i>Cheksiz qabullar / oyiga</li>
+          <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:var(--p);font-size:13px;"></i>Cheksiz qabullar / oyiga</li>
           <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:var(--p);font-size:13px;"></i>Shaxsiy band qilish sahifasi</li>
           <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:var(--p);font-size:13px;"></i>Avtomatlashgan email xabarnomalar</li>
           <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:var(--p);font-size:13px;"></i>Telegram xabarnomalar va botlar</li>
@@ -126,9 +127,8 @@
         {% if business.subscription_plan == 'growth' %}
         <button class="btn btn-primary w-100" disabled>✓ Joriy tarif</button>
         {% else %}
-        {# view 'pro' ID kutadi #}
         <a href="{% url 'business:payment' %}?plan=pro" class="btn btn-primary w-100" style="font-weight:600;">
-          <i class="bi bi-credit-card me-2"></i>To'lov — 99 000 UZS/oy
+          <i class="bi bi-credit-card me-2"></i>To'lov — {% for plan in plans %}{% if plan.id == 'pro' %}{{ plan.price_monthly|floatformat:0 }}{% endif %}{% endfor %} UZS/oy
         </a>
         {% endif %}
       </div>
@@ -154,26 +154,6 @@
 
         <ul class="list-unstyled mb-4" style="font-size:13px;line-height:1;color:rgba(255,255,255,.75);">
            <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:#a855f7;font-size:13px;"></i>Cheksiz xodim</li>
-          <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:#a855f7;font-size:13px;"></i>Barchasi cheksiz</li>
-          <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:#a855f7;font-size:13px;"></i>Ajratilgan band qilish domenlari</li>
-          <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:#a855f7;font-size:13px;"></i>Maxsus dizayn / Logotip va CSS</li>
-          <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:#a855f7;font-size:13px;"></i>REST API ga kirish</li>
-          <li class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill mt-1 flex-shrink-0" style="color:#a855f7;font-size:13px;"></i>Shaxsiy qo'llab-quvvatlash menejeri</li>
-        </ul>
-
-        {% if business.subscription_plan == 'enterprise' %}
-        <button class="btn w-100" style="background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.3);color:#c4b5fd;" disabled>✓ Joriy tarif</button>
-        {% else %}
-        {# view 'max' ID kutadi #}
-        <a href="{% url 'business:payment' %}?plan=max" class="btn w-100" style="background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.4);color:#c4b5fd;font-weight:600;">
-          <i class="bi bi-gem me-2"></i>To'lov — 249 000 UZS/oy
-        </a>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-</div>
 
 <!-- Payment history -->
 {% if payments %}

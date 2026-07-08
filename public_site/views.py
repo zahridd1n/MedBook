@@ -19,7 +19,8 @@ def public_home(request, slug):
             'faqs',
         ).only(
             'id', 'name', 'slug', 'about', 'category', 'logo', 'phone', 'email',
-            'address', 'city', 'telegram', 'instagram', 'website',
+            'address', 'city', 'latitude', 'longitude',
+            'telegram', 'instagram', 'website',
             'primary_color', 'banner_image', 'button_style', 'card_shadow',
             'navbar_style', 'custom_css', 'is_active',
         ),

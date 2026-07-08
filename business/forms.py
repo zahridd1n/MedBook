@@ -8,7 +8,9 @@ class BusinessSetupForm(forms.ModelForm):
         fields = (
             'name', 'category', 'about', 'logo',
             'phone', 'email', 'address', 'city',
+            'latitude', 'longitude',
             'telegram', 'instagram', 'website',
+            'show_in_directory',
         )
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -19,9 +21,12 @@ class BusinessSetupForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'address': forms.TextInput(attrs={'class': 'form-control'}),
             'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'latitude': forms.HiddenInput(),
+            'longitude': forms.HiddenInput(),
             'telegram': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '@username'}),
             'instagram': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '@username'}),
             'website': forms.URLInput(attrs={'class': 'form-control'}),
+            'show_in_directory': forms.CheckboxInput(attrs={'class': 'ios-toggle', 'id': 'id_show_in_directory'}),
         }
 
 

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load l10n %}
 
 {% block title %}{{ business.name }} — Online Band Qilish{% endblock %}
 
@@ -538,15 +539,75 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════
-   FOOTER
+   MAP SECTION
 ═══════════════════════════════════════════════════ */
-.bk-footer {
-  background: var(--ink); color: rgba(255,255,255,0.38);
-  padding: 2.5rem 0; margin-top: 5rem; font-size: 0.82rem;
+.bk-map-section {
+  background: var(--surface);
+  padding: 5rem 0 6rem; /* added bottom padding to un-merge from footer */
+  position: relative;
 }
-.bk-footer strong { color: rgba(255,255,255,0.8); }
-.bk-footer a { color: rgba(255,255,255,0.55) !important; text-decoration: none; }
-.bk-footer a:hover { color: rgba(255,255,255,0.85) !important; }
+.bk-map-section__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.bk-map-section__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--indigo);
+  margin-bottom: 0.6rem;
+}
+.bk-map-section__label::before {
+  content: '';
+  width: 16px;
+  height: 2px;
+  background: var(--indigo);
+  border-radius: 1px;
+  display: block;
+}
+.bk-map-section__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+}
+.bk-map-wrap {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(10,15,30,.08);
+  min-height: 400px;
+  border: 1px solid var(--border);
+}
+@media (max-width: 991px) {
+  .bk-map-wrap { grid-template-columns: 1fr; }
+}
+#bk-public-map {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+}
+.bk-map-info {
+  background: var(--surface);
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  border-left: 1px solid var(--border);
+}
+
+/* ═══════════════════════════════════════════════════
+   PREMIUM CONTACT INFO & FOOTER DELEGATED TO footer.html
+═══════════════════════════════════════════════════ */
 
 /* ═══════════════════════════════════════════════════
    RESPONSIVE
@@ -905,16 +966,90 @@ body {
 </main>
 
 
+{% if business.latitude and business.longitude %}
 <!-- ══════════════════════════════════════
-     FOOTER
+     MAP + CONTACT SECTION
 ══════════════════════════════════════ -->
-<footer class="bk-footer">
-  <div class="container">
-    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
-      <div><strong>{{ business.name }}</strong> &nbsp;·&nbsp; Barcha huquqlar himoyalangan.</div>
-      <div>Tomonidan quvvatlanadi <a href="{% url 'marketing:home' %}"><strong>BookFlow</strong></a></div>
+<section class="bk-map-section">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <div class="bk-map-section__container">
+    <div class="bk-map-section__label">Bizning joylashuv</div>
+    <div class="bk-map-section__title">Bizni toping</div>
+    <div class="bk-map-wrap">
+      <div id="bk-public-map"></div>
+      <div class="bk-map-info">
+        {% if business.address %}
+        <a class="bk-contact-row" href="https://www.google.com/maps/search/?api=1&query={{ business.latitude }},{{ business.longitude }}" target="_blank" rel="noopener">
+          <span class="bk-contact-icon"><i class="bi bi-geo-alt"></i></span>
+          <div class="bk-contact-text">
+            <span class="bk-contact-label">Manzil</span>
+            <span class="bk-contact-val">{{ business.address }}{% if business.city %}, {{ business.city }}{% endif %}</span>
+          </div>
+        </a>
+        {% endif %}
+        
+        {% if business.phone %}
+        <a class="bk-contact-row" href="tel:{{ business.phone }}">
+          <span class="bk-contact-icon"><i class="bi bi-telephone"></i></span>
+          <div class="bk-contact-text">
+            <span class="bk-contact-label">Telefon</span>
+            <span class="bk-contact-val">{{ business.phone }}</span>
+          </div>
+        </a>
+        {% endif %}
+        
+        {% if business.telegram %}
+        <a class="bk-contact-row" href="https://t.me/{{ business.telegram|cut:'@' }}" target="_blank" rel="noopener">
+          <span class="bk-contact-icon"><i class="bi bi-telegram"></i></span>
+          <div class="bk-contact-text">
+            <span class="bk-contact-label">Telegram</span>
+            <span class="bk-contact-val">@{{ business.telegram|cut:'@' }}</span>
+          </div>
+        </a>
+        {% endif %}
+        
+        {% if business.instagram %}
+        <a class="bk-contact-row" href="https://instagram.com/{{ business.instagram|cut:'@' }}" target="_blank" rel="noopener">
+          <span class="bk-contact-icon"><i class="bi bi-instagram"></i></span>
+          <div class="bk-contact-text">
+            <span class="bk-contact-label">Instagram</span>
+            <span class="bk-contact-val">@{{ business.instagram|cut:'@' }}</span>
+          </div>
+        </a>
+        {% endif %}
+        
+        <a class="bk-gmaps-btn" href="https://www.google.com/maps/search/?api=1&query={{ business.latitude }},{{ business.longitude }}" target="_blank" rel="noopener">
+          <i class="bi bi-map"></i> Google Maps orqali topish
+        </a>
+      </div>
     </div>
   </div>
-</footer>
+</section>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  setTimeout(function() {
+    var lat={{ business.latitude|unlocalize }}, lng={{ business.longitude|unlocalize }};
+    var mapContainer = document.getElementById('bk-public-map');
+    if (!mapContainer) return;
+    var m = L.map('bk-public-map', {zoomControl: true, scrollWheelZoom: false}).setView([lat, lng], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '\u00a9 OpenStreetMap'
+    }).addTo(m);
+    var pinHtml = '<div style="width:20px;height:20px;background:' + 
+      getComputedStyle(document.documentElement).getPropertyValue('--brand-primary') + ';' + 
+      'border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.4);"></div>';
+    var icon = L.divIcon({className:'', html: pinHtml, iconSize:[20,20], iconAnchor:[10,10]});
+    L.marker([lat, lng], {icon: icon}).addTo(m);
+    
+    // Xaritani qayta chizish uchun (kulrang fon qolmasligi uchun)
+    m.invalidateSize();
+  }, 100);
+});
+</script>
+{% endif %}
+
+
+{% include 'public/includes/footer.html' %}
 
 {% endblock %}

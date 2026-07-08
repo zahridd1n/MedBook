@@ -44,16 +44,20 @@
             <span></span><span></span><span></span>
           </div>
         </div>
-        <div class="mkt-float-card mkt-float-a">
+        {% if site.contact_phone %}
+        <a href="tel:{{ site.contact_phone }}" class="mkt-float-card mkt-float-a">
           <i class="bi bi-telephone"></i>
           <strong>{{ site.contact_phone }}</strong>
           <span>{{ m.nav.contact }}</span>
-        </div>
-        <div class="mkt-float-card mkt-float-b">
+        </a>
+        {% endif %}
+        {% if site.contact_telegram %}
+        <a href="https://t.me/{{ site.contact_telegram|cut:'@' }}" target="_blank" class="mkt-float-card mkt-float-b">
           <i class="bi bi-telegram"></i>
           <strong>Telegram</strong>
           <span>{{ site.contact_telegram }}</span>
-        </div>
+        </a>
+        {% endif %}
       </div>
     </div>
   </div>

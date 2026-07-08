@@ -242,10 +242,7 @@ body { background: var(--surface-alt); color: var(--ink); font-family: 'Inter', 
   box-shadow: 0 10px 24px color-mix(in srgb, var(--brand) 35%, transparent);
 }
 
-/* Footer */
-.bk-footer { background: var(--ink); color: rgba(255,255,255,0.38); padding: 2.5rem 0; font-size: 0.82rem; }
-.bk-footer strong { color: rgba(255,255,255,0.8); }
-.bk-footer a { color: rgba(255,255,255,0.55) !important; text-decoration: none; }
+/* Footer handled via include */
 
 @media (max-width: 768px) {
   .blog-content-card { padding: 1.5rem; }
@@ -412,14 +409,7 @@ body { background: var(--surface-alt); color: var(--ink); font-family: 'Inter', 
   </div>
 </div>
 
-<footer class="bk-footer" style="margin-top:5rem;">
-  <div class="container">
-    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
-      <div><strong>{{ business.name }}</strong> &nbsp;·&nbsp; Barcha huquqlar himoyalangan.</div>
-      <div>Tomonidan quvvatlanadi <a href="{% url 'marketing:home' %}"><strong>BookFlow</strong></a></div>
-    </div>
-  </div>
-</footer>
+{% include 'public/includes/footer.html' %}
 
 <script>
 (function() {

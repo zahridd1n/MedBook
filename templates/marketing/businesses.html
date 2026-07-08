@@ -1,0 +1,345 @@
+{% extends 'base_marketing.html' %}
+
+{% block title %}Bizneslar katalogi - BookFlow{% endblock %}
+
+{% block marketing_extra_css %}
+<style>
+/* ── Directory page styles ──────────────────────────────────────── */
+.dir-hero {
+  padding: 4.5rem 0 3rem;
+  text-align: center;
+}
+.dir-hero h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: .75rem;
+}
+.dir-hero p {
+  color: #64748b;
+  font-size: 1.05rem;
+  max-width: 520px;
+  margin: 0 auto 1.5rem;
+}
+.dir-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: rgba(99,102,241,.08);
+  border: 1px solid rgba(99,102,241,.2);
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 600;
+  color: #6366f1;
+}
+
+/* ── Filter Bar ────────────────────────────────────────────────── */
+.dir-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+.dir-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 600;
+  border: 1.5px solid #e2e8f0;
+  background: white;
+  color: #475569;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .2s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.dir-filter-btn:hover {
+  border-color: #6366f1;
+  color: #6366f1;
+  background: rgba(99,102,241,.04);
+  transform: translateY(-1px);
+}
+.dir-filter-btn.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(99,102,241,.35);
+}
+.dir-filter-btn .badge-cnt {
+  background: rgba(255,255,255,.25);
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: .75rem;
+}
+.dir-filter-btn:not(.active) .badge-cnt {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+/* ── Business Cards Grid ───────────────────────────────────────── */
+.dir-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+.dir-card {
+  background: white;
+  border: 1px solid #f1f5f9;
+  border-radius: 20px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all .28s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 2px 12px rgba(0,0,0,.05);
+  position: relative;
+  overflow: hidden;
+}
+.dir-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4);
+  opacity: 0;
+  transition: opacity .25s;
+}
+.dir-card:hover {
+  border-color: #e0e7ff;
+  box-shadow: 0 12px 40px rgba(99,102,241,.15);
+  transform: translateY(-4px);
+  color: inherit;
+}
+.dir-card:hover::before {
+  opacity: 1;
+}
+.dir-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.dir-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 1.5px solid #f1f5f9;
+  flex-shrink: 0;
+}
+.dir-logo-placeholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.dir-card-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.3;
+}
+.dir-cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  background: rgba(99,102,241,.08);
+  color: #6366f1;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.dir-about {
+  font-size: .875rem;
+  color: #64748b;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.dir-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: .78rem;
+  color: #94a3b8;
+}
+.dir-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.dir-meta i { color: #6366f1; }
+.dir-card-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dir-open-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border-radius: 10px;
+  font-size: .82rem;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(99,102,241,.3);
+  transition: opacity .2s;
+}
+.dir-open-btn:hover { opacity: .88; }
+.dir-location-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: .78rem;
+  color: #64748b;
+}
+.dir-location-chip i { color: #f43f5e; }
+
+/* ── Empty State ───────────────────────────────────────────────── */
+.dir-empty {
+  text-align: center;
+  padding: 5rem 1rem;
+  color: #94a3b8;
+}
+.dir-empty i {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+  opacity: .4;
+}
+.dir-empty h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: .5rem;
+}
+</style>
+{% endblock %}
+
+{% block marketing_content %}
+<section class="mkt-page-hero dir-hero">
+  <div class="mkt-container">
+    <div class="mkt-eyebrow reveal"><span></span> Bizneslar katalogi</div>
+    <h1 class="reveal">Eng yaxshi bizneslar</h1>
+    <p class="reveal">Yaqingingizdagi klinikalar, salonlar, sartaroshxonalar va boshqa xizmatlarni toping</p>
+    <span class="dir-count-badge reveal">
+      <i class="bi bi-buildings"></i>
+      {{ total_count }} faol biznes
+    </span>
+  </div>
+</section>
+
+<section class="mkt-section" style="padding-top:0">
+  <div class="mkt-container">
+
+    {# ── Category filters ── #}
+    {% if categories %}
+    <div class="dir-filter-bar reveal">
+      <a href="{% url 'marketing:businesses' %}"
+         class="dir-filter-btn {% if not selected_category %}active{% endif %}">
+        <i class="bi bi-grid"></i> Hammasi
+        <span class="badge-cnt">{{ total_count }}</span>
+      </a>
+      {% for cat in categories %}
+      <a href="{% url 'marketing:businesses' %}?category={{ cat.value }}"
+         class="dir-filter-btn {% if selected_category == cat.value %}active{% endif %}">
+        <i class="bi bi-{{ cat.icon }}"></i> {{ cat.label }}
+        <span class="badge-cnt">{{ cat.count }}</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {# ── Cards grid ── #}
+    {% if businesses %}
+    <div class="dir-grid">
+      {% for biz in businesses %}
+      <a href="/{{ biz.slug }}/" class="dir-card reveal">
+        <div class="dir-card-header">
+          {% if biz.logo %}
+            <img src="{{ biz.logo.url }}" alt="{{ biz.name }}" class="dir-logo">
+          {% else %}
+            <div class="dir-logo-placeholder">
+              <i class="bi bi-shop"></i>
+            </div>
+          {% endif %}
+          <div>
+            <p class="dir-card-name">{{ biz.name }}</p>
+            <span class="dir-cat-chip">
+              <i class="bi bi-tag"></i>
+              {{ biz.get_category_display }}
+            </span>
+          </div>
+        </div>
+
+        {% if biz.about %}
+        <p class="dir-about">{{ biz.about }}</p>
+        {% endif %}
+
+        <div class="dir-meta">
+          {% if biz.city or biz.address %}
+          <span><i class="bi bi-geo-alt-fill"></i> {{ biz.city }}{% if biz.city and biz.address %}, {% endif %}{{ biz.address|truncatechars:30 }}</span>
+          {% endif %}
+          {% if biz.phone %}
+          <span><i class="bi bi-telephone-fill"></i> {{ biz.phone }}</span>
+          {% endif %}
+        </div>
+
+        <div class="dir-card-footer">
+          <div class="dir-location-chip">
+            {% if biz.latitude and biz.longitude %}
+            <i class="bi bi-geo-alt-fill"></i> Xaritada
+            {% endif %}
+          </div>
+          <span class="dir-open-btn">
+            Ochish <i class="bi bi-arrow-right"></i>
+          </span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="dir-empty">
+      <i class="bi bi-buildings"></i>
+      <h3>Hozircha bizneslar yo'q</h3>
+      <p>
+        {% if selected_category %}
+          Bu kategoriyada hech qanday biznes topilmadi.
+          <a href="{% url 'marketing:businesses' %}">Barcha bizneslarni ko'rish</a>
+        {% else %}
+          Bizneslar katalogda ko'rinishi uchun sozlamalarini yoqishlari kerak.
+        {% endif %}
+      </p>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

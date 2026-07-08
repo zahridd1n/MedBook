@@ -582,33 +582,44 @@ body:has(.marketing-shell) {
 .mkt-float-card {
   position: absolute;
   display: grid;
-  gap: 2px;
-  min-width: 156px;
-  padding: 16px;
+  gap: 0px;
+  min-width: 140px;
+  padding: 12px 16px;
   border: 1px solid var(--mkt-border);
-  border-radius: 20px;
+  border-radius: 16px;
   background: rgba(7, 8, 18, 0.74);
   backdrop-filter: blur(18px);
-  box-shadow: 0 22px 60px rgba(0,0,0,0.35);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+  text-decoration: none !important;
+  color: inherit;
+  transition: transform 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.mkt-float-card:hover {
+  transform: translateY(-4px);
+  background: rgba(12, 14, 28, 0.85);
+  border-color: rgba(255,255,255,0.15);
 }
 
 .mkt-float-card i {
   color: var(--mkt-amber);
+  font-size: 1.1rem;
+  margin-bottom: 2px;
 }
 
 .mkt-float-card strong {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   word-break: break-word;
 }
 
 .mkt-float-a {
-  top: 16%;
-  left: -42px;
+  top: 14%;
+  left: -32px;
 }
 
 .mkt-float-b {
-  right: -26px;
-  bottom: 15%;
+  right: -20px;
+  bottom: 12%;
 }
 
 .mkt-hero-summary {

@@ -25,9 +25,23 @@ class Business(models.Model):
     email = models.EmailField(blank=True)
     address = models.CharField(max_length=300, blank=True)
     city = models.CharField(max_length=100, blank=True)
+    latitude = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True,
+        help_text='Joylashuv kengligi (xarita orqali kiritiladi)',
+    )
+    longitude = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True,
+        help_text='Joylashuv uzunligi (xarita orqali kiritiladi)',
+    )
     telegram = models.CharField(max_length=100, blank=True, help_text='Telegram username for public display')
     instagram = models.CharField(max_length=100, blank=True)
     website = models.URLField(blank=True)
+
+    # ─── Marketing Directory ───────────────────────────────────────────────────
+    show_in_directory = models.BooleanField(
+        default=False,
+        help_text='Marketing sahifasidagi bizneslar ro\'yxatida ko\'rsatish',
+    )
 
     # ─── Branding / Customization ────────────────────────────────────────────
     BUTTON_STYLE_CHOICES = [

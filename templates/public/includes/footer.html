@@ -1,0 +1,178 @@
+<style>
+/* ═══════════════════════════════════════════════════
+   PREMIUM CONTACT INFO & FOOTER (UNIFIED)
+═══════════════════════════════════════════════════ */
+.bk-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none !important;
+  color: inherit;
+  transition: transform 0.25s ease;
+}
+.bk-contact-row:hover {
+  transform: translateX(4px);
+}
+.bk-contact-row:hover .bk-contact-icon {
+  background: var(--indigo, #6366f1);
+  border-color: var(--indigo, #6366f1);
+  color: #fff !important;
+}
+.bk-contact-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: transparent;
+  color: var(--ink-muted, #475569);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+.bk-contact-text {
+  display: flex;
+  flex-direction: column;
+}
+.bk-contact-label {
+  font-size: 0.7rem;
+  color: var(--ink-subtle, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 0.1rem;
+}
+.bk-contact-val {
+  font-size: 0.95rem;
+  color: var(--ink, #0a0f1e);
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.bk-contact-row:hover .bk-contact-val {
+  color: var(--indigo, #6366f1);
+}
+
+/* ═══════════════════════════════════════════════════
+   FOOTER (DARK BACKGROUND)
+═══════════════════════════════════════════════════ */
+.bk-footer {
+  background: #060a12;
+  color: rgba(255,255,255,0.35);
+  padding: 4rem 0 2rem;
+  font-size: 0.82rem;
+}
+.bk-footer strong { color: rgba(255,255,255,0.8); }
+.bk-footer a { color: rgba(255,255,255,0.5) !important; text-decoration: none; }
+.bk-footer a:hover { color: rgba(255,255,255,0.85) !important; }
+.bk-footer-top {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  align-items: center;
+}
+@media (max-width: 991px) {
+  .bk-footer-top { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+.bk-footer-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: .4rem;
+  letter-spacing: -0.01em;
+}
+.bk-footer-tagline {
+  font-size: .85rem;
+  color: rgba(255,255,255,.4);
+}
+.bk-footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+/* Override .bk-contact-row elements for dark background in footer */
+.bk-footer .bk-contact-icon {
+  border-color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.6);
+}
+.bk-footer .bk-contact-row:hover .bk-contact-icon {
+  background: var(--indigo, #6366f1);
+  border-color: var(--indigo, #6366f1);
+  color: #fff !important;
+}
+.bk-footer .bk-contact-label {
+  color: rgba(255,255,255,0.4);
+}
+.bk-footer .bk-contact-val {
+  color: rgba(255,255,255,0.85);
+}
+.bk-footer .bk-contact-row:hover .bk-contact-val {
+  color: #fff;
+}
+
+.bk-footer-bottom {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: .76rem;
+}
+</style>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer class="bk-footer">
+  <div class="container">
+    <div class="bk-footer-top">
+      <div>
+        <div class="bk-footer-name">{{ business.name }}</div>
+        {% if business.about %}
+        <div class="bk-footer-tagline">{{ business.about|truncatewords:14 }}</div>
+        {% elif business.city %}
+        <div class="bk-footer-tagline"><i class="bi bi-geo-alt me-1"></i>{{ business.city }}</div>
+        {% endif %}
+      </div>
+      <div class="bk-footer-socials">
+        {% if business.phone %}
+        <a href="tel:{{ business.phone }}" class="bk-contact-row">
+          <span class="bk-contact-icon"><i class="bi bi-telephone"></i></span>
+          <div class="bk-contact-text">
+            <span class="bk-contact-label">Telefon</span>
+            <span class="bk-contact-val">{{ business.phone }}</span>
+          </div>
+        </a>
+        {% endif %}
+        {% if business.telegram %}
+        <a href="https://t.me/{{ business.telegram|cut:'@' }}" target="_blank" rel="noopener" class="bk-contact-row">
+          <span class="bk-contact-icon"><i class="bi bi-telegram"></i></span>
+          <div class="bk-contact-text">
+            <span class="bk-contact-label">Telegram</span>
+            <span class="bk-contact-val">@{{ business.telegram|cut:'@' }}</span>
+          </div>
+        </a>
+        {% endif %}
+        {% if business.instagram %}
+        <a href="https://instagram.com/{{ business.instagram|cut:'@' }}" target="_blank" rel="noopener" class="bk-contact-row">
+          <span class="bk-contact-icon"><i class="bi bi-instagram"></i></span>
+          <div class="bk-contact-text">
+            <span class="bk-contact-label">Instagram</span>
+            <span class="bk-contact-val">@{{ business.instagram|cut:'@' }}</span>
+          </div>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="bk-footer-bottom">
+      <span>© {{ business.name }} · Barcha huquqlar himoyalangan.</span>
+      <span>Tomonidan quvvatlanadi <a href="{% url 'marketing:home' %}"><strong style="color:rgba(255,255,255,.55);">BookFlow</strong></a></span>
+    </div>
+  </div>
+</footer>
