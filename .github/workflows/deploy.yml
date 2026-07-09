@@ -1,0 +1,89 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to Production Server
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+
+            PROJECT_PATH="/var/www/MedBook"
+
+            echo "===================================="
+            echo "🚀 Starting deployment..."
+            echo "===================================="
+
+            echo "📂 Opening project..."
+            cd "$PROJECT_PATH"
+
+            echo "📥 Fetching latest code..."
+            git fetch origin
+
+            echo "🔄 Resetting to latest commit..."
+            git reset --hard origin/main
+
+            echo "🐍 Detecting virtual environment..."
+
+            if [ -d "venv" ]; then
+              source venv/bin/activate
+            elif [ -d ".venv" ]; then
+              source .venv/bin/activate
+            elif [ -d "env" ]; then
+              source env/bin/activate
+            else
+              echo "❌ Virtual environment not found!"
+              exit 1
+            fi
+
+            echo "📦 Installing dependencies..."
+            pip install -r requirements.txt
+
+            echo "🧹 Running Django system checks..."
+            python manage.py check
+
+            echo "🗄 Applying migrations..."
+            python manage.py migrate --noinput
+
+            echo "📁 Collecting static files..."
+            python manage.py collectstatic --noinput
+
+            echo "🔄 Restarting Gunicorn..."
+            sudo systemctl restart book
+
+            if systemctl list-unit-files | grep -q '^book-celery.service'; then
+              echo "🔄 Restarting Celery..."
+              sudo systemctl restart book-celery
+            fi
+
+            if systemctl list-unit-files | grep -q '^book-celerybeat.service'; then
+              echo "🔄 Restarting Celery Beat..."
+              sudo systemctl restart book-celerybeat
+            fi
+
+            echo "🩺 Checking service status..."
+            sudo systemctl is-active --quiet book
+
+            echo "✅ Deployment completed successfully!"
+            echo "------------------------------------"
+            echo "Current commit:"
+            git rev-parse --short HEAD
+            echo "------------------------------------"

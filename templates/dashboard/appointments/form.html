@@ -1,33 +1,93 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Qabul {{ action }}{% endblock %}
+{% block page_title %}{% if action == 'Edit' %}Qabulni tahrirlash{% else %}Yangi qabul{% endif %}{% endblock %}
 {% block dashboard_content %}
-<div class="d-flex align-items-center gap-2 mb-4">
-  <a href="{% url 'appointments:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
-  <h4 class="fw-bold mb-0">Qabul {{ action }}</h4>
+
+<div class="page-hd">
+  <div class="page-hd-left" style="display:flex;align-items:center;gap:12px;">
+    <a href="{% url 'appointments:list' %}" class="btn btn-secondary btn-icon-sm" title="Orqaga">
+      <i class="bi bi-arrow-left" style="font-size:13px;"></i>
+    </a>
+    <div>
+      <div class="page-hd-title">{% if action == 'Edit' %}Qabulni tahrirlash{% else %}Yangi qabul qo'shish{% endif %}</div>
+      <div class="page-hd-sub">Mijoz va qabul ma'lumotlarini kiriting</div>
+    </div>
+  </div>
 </div>
+
 <div class="row justify-content-center">
   <div class="col-lg-7">
-    <div class="card table-card">
-      <div class="card-body p-4">
-        <form method="post">{% csrf_token %}
+    <div class="card">
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
           <div class="row g-3">
-            <div class="col-md-6"><label class="form-label fw-medium">Mijoz Ismi</label>{{ form.customer_name }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Telefon</label>{{ form.customer_phone }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Xizmat</label>{{ form.service }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Xodim</label>{{ form.employee }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Sana</label>{{ form.date }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Vaqt</label>{{ form.time }}</div>
-            <div class="col-md-6"><label class="form-label fw-medium">Holat</label>{{ form.status }}</div>
-            <div class="col-12"><label class="form-label fw-medium">Eslatmalar</label>{{ form.notes }}</div>
-            {% if action == 'Edit' %}<div class="col-12"><label class="form-label fw-medium">Shifokor qaydlari</label>{{ form.doctor_notes }}<div class="text-muted small mt-1">Tashxis, tavsiyalar va boshqa qaydlar</div></div>{% endif %}
+            <div class="col-md-6">
+              <label class="form-label">Mijoz ismi <span style="color:#ef4444;">*</span></label>
+              {{ form.customer_name }}
+              {% if form.customer_name.errors %}
+              <div class="form-error">{{ form.customer_name.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Telefon raqami <span style="color:#ef4444;">*</span></label>
+              {{ form.customer_phone }}
+              {% if form.customer_phone.errors %}
+              <div class="form-error">{{ form.customer_phone.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Xizmat turi <span style="color:#ef4444;">*</span></label>
+              {{ form.service }}
+              {% if form.service.errors %}
+              <div class="form-error">{{ form.service.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Xodim</label>
+              {{ form.employee }}
+              <div class="form-hint">Bo'sh qoldirsangiz, har qanday xodim qabul qiladi</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Sana <span style="color:#ef4444;">*</span></label>
+              {{ form.date }}
+              {% if form.date.errors %}
+              <div class="form-error">{{ form.date.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Vaqt <span style="color:#ef4444;">*</span></label>
+              {{ form.time }}
+              {% if form.time.errors %}
+              <div class="form-error">{{ form.time.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Holat</label>
+              {{ form.status }}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Izohlar</label>
+              {{ form.notes }}
+              <div class="form-hint">Qo'shimcha ma'lumot yoki eslatmalar</div>
+            </div>
+            {% if action == 'Edit' %}
+            <div class="col-12">
+              <label class="form-label">Mutaxassis izohi</label>
+              {{ form.doctor_notes }}
+              <div class="form-hint">Tashxis, tavsiyalar va boshqa qaydlar</div>
+            </div>
+            {% endif %}
           </div>
-          <div class="d-flex gap-2 mt-4">
-            <button type="submit" class="btn btn-primary px-4">Saqlash</button>
-            <a href="{% url 'appointments:list' %}" class="btn btn-outline-secondary">Bekor qilish</a>
+          <div style="display:flex;gap:10px;margin-top:22px;">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-lg"></i> Saqlash
+            </button>
+            <a href="{% url 'appointments:list' %}" class="btn btn-secondary">Bekor qilish</a>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
+
 {% endblock %}

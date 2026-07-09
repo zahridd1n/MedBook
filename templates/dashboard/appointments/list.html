@@ -1,140 +1,182 @@
 {% extends 'base_dashboard.html' %}
 {% block page_title %}Qabullar{% endblock %}
 {% block dashboard_content %}
-<style>
-.status-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:6px;font-size:.73rem;font-weight:600;white-space:nowrap}
-.status-badge::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.status-new{background:#eef2ff;color:#4f46e5}.status-new::before{background:#6366f1}
-.status-confirmed{background:#f0fdf4;color:#15803d}.status-confirmed::before{background:#22c55e}
-.status-completed{background:#f8fafc;color:#475569}.status-completed::before{background:#94a3b8}
-.status-cancelled{background:#fef2f2;color:#b91c1c}.status-cancelled::before{background:#ef4444}
-.customer-cell{display:flex;align-items:center;gap:10px}
-.customer-avatar{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0}
-.filter-section{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin-bottom:20px}
-.table-appts{font-size:.82rem}
-.table-appts thead th{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;padding:10px 14px;border-bottom:1.5px solid #e5e7eb;background:#fafafa;white-space:nowrap}
-.table-appts td{padding:12px 14px;vertical-align:middle;border-bottom:1px solid #f3f4f6}
-.table-appts tbody tr{transition:background .1s}
-.table-appts tbody tr:hover td{background:#f9fafb}
-.action-btn{width:30px;height:30px;padding:0;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;border:1.5px solid #e5e7eb;background:#fff;color:#6b7280;transition:all .12s;text-decoration:none}
-.action-btn:hover{background:#f3f4f6;border-color:#d1d5db;color:#111827}
-.action-btn.danger:hover{background:#fef2f2;border-color:#fecaca;color:#dc2626}
-.empty-box{text-align:center;padding:60px 24px}
-.empty-box-icon{width:56px;height:56px;border-radius:14px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px;color:#9ca3af}
-@media(max-width:768px){.table-appts{font-size:.75rem}.table-appts td,.table-appts th{padding:8px 8px}}
-</style>
 
-<div class="page-header">
-  <div>
-    <h4 class="page-header-title mb-0">Qabullar</h4>
-    <p class="page-header-sub">Barcha qabullar monitoringi</p>
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title">Qabullar</div>
+    <div class="page-hd-sub">Barcha qabullar ro'yxati va boshqaruvi</div>
   </div>
-  <a href="{% url 'appointments:create' %}" class="btn btn-primary d-flex align-items-center gap-2">
-    <i class="bi bi-plus-lg"></i>Yangi qabul
-  </a>
+  <div class="page-hd-actions">
+    <a href="{% url 'appointments:create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Yangi qabul
+    </a>
+  </div>
 </div>
 
-<div class="filter-section">
-  <form method="get" class="row g-2">
-    <div class="col-lg-3 col-md-6">
-      <input type="text" name="q" value="{{ search }}" class="form-control form-control-sm" placeholder="Ism, telefon, xizmat...">
-    </div>
-    <div class="col-lg-2 col-md-3">
-      <select name="status" class="form-select form-select-sm">
-        <option value="">Barcha holatlar</option>
-        {% for val,label in status_choices %}<option value="{{ val }}" {% if selected_status == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
-      </select>
-    </div>
-    <div class="col-lg-2 col-md-3">
-      <select name="employee" class="form-select form-select-sm">
-        <option value="">Barcha xodimlar</option>
-        <option value="0" {% if selected_employee == '0' %}selected{% endif %}>Xodimsiz</option>
-        {% for emp in employees %}<option value="{{ emp.pk }}" {% if selected_employee == emp.pk|stringformat:'s' %}selected{% endif %}>{{ emp.name }}</option>{% endfor %}
-      </select>
-    </div>
-    <div class="col-lg-2 col-md-4">
-      <input type="date" name="date_from" value="{{ date_from }}" class="form-control form-control-sm">
-    </div>
-    <div class="col-lg-2 col-md-4">
-      <input type="date" name="date_to" value="{{ date_to }}" class="form-control form-control-sm">
-    </div>
-    <div class="col-lg-1 col-md-4 d-flex gap-1">
-      <button type="submit" class="btn btn-sm btn-primary flex-fill">Filtrlash</button>
-      <a href="{% url 'appointments:list' %}" class="btn btn-sm btn-outline-secondary">X</a>
+<!-- Filter bar -->
+<div class="ds-filter">
+  <form method="get">
+    <div class="row g-2 align-items-end">
+      <div class="col-lg-3 col-md-6">
+        <label class="form-label">Qidirish</label>
+        <input type="text" name="q" value="{{ search }}" class="form-control" placeholder="Ism, telefon, xizmat...">
+      </div>
+      <div class="col-lg-2 col-md-6">
+        <label class="form-label">Holat</label>
+        <select name="status" class="form-select">
+          <option value="">Barcha holatlar</option>
+          {% for val,label in status_choices %}
+          <option value="{{ val }}" {% if selected_status == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-lg-2 col-md-6">
+        <label class="form-label">Xodim</label>
+        <select name="employee" class="form-select">
+          <option value="">Barcha xodimlar</option>
+          <option value="0" {% if selected_employee == '0' %}selected{% endif %}>Xodimsiz</option>
+          {% for emp in employees %}
+          <option value="{{ emp.pk }}" {% if selected_employee == emp.pk|stringformat:'s' %}selected{% endif %}>{{ emp.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-lg-2 col-md-6">
+        <label class="form-label">Boshlanish sanasi</label>
+        <input type="date" name="date_from" value="{{ date_from }}" class="form-control">
+      </div>
+      <div class="col-lg-2 col-md-6">
+        <label class="form-label">Tugash sanasi</label>
+        <input type="date" name="date_to" value="{{ date_to }}" class="form-control">
+      </div>
+      <div class="col-lg-1 col-md-12">
+        <div style="display:flex;gap:6px;align-items:flex-end;padding-top:4px;">
+          <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center;">
+            <i class="bi bi-search"></i>
+          </button>
+          {% if search or selected_status or selected_employee or date_from or date_to %}
+          <a href="{% url 'appointments:list' %}" class="btn btn-secondary" title="Tozalash">
+            <i class="bi bi-x-lg"></i>
+          </a>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </form>
 </div>
 
 {% if appointments %}
 <div class="card">
-  <div class="table-responsive">
-    <table class="table table-appts mb-0">
-      <thead>
-        <tr>
-          <th>Mijoz</th>
-          <th>Xizmat</th>
-          <th>Xodim</th>
-          <th>Sana</th>
-          <th>Vaqt</th>
-          <th>Holat</th>
-          <th class="text-end pe-3" style="width:80px">Harakat</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for a in appointments %}
-        <tr>
-          <td>
-            <a href="{% url 'customers:detail' a.customer.pk %}" class="customer-cell text-decoration-none" style="color:inherit;">
-              <div class="customer-avatar" style="background:rgba(99,102,241,.1);color:#6366f1;">{{ a.customer.full_name|first|upper }}</div>
-              <div>
-                <div class="fw-medium" style="font-size:.82rem;">{{ a.customer.full_name }}</div>
-                <div class="text-muted" style="font-size:.7rem;">{{ a.customer.phone }}</div>
+  <div class="card-body-flush">
+    <div class="table-responsive">
+      <table class="ds-table">
+        <thead>
+          <tr>
+            <th style="padding-left:18px;">Mijoz</th>
+            <th>Xizmat</th>
+            <th>Xodim</th>
+            <th>Sana</th>
+            <th>Vaqt</th>
+            <th>Holat</th>
+            <th style="text-align:right;padding-right:18px;width:80px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in appointments %}
+          <tr>
+            <td style="padding-left:18px;">
+              <a href="{% url 'customers:detail' a.customer.pk %}" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+                <div class="av av-sm" style="background:rgba(99,102,241,.1);color:#6366f1;">{{ a.customer.full_name|first|upper }}</div>
+                <div>
+                  <div style="font-weight:600;color:var(--text);">{{ a.customer.full_name }}</div>
+                  <div style="font-size:11.5px;color:var(--text-4);">{{ a.customer.phone }}</div>
+                </div>
+              </a>
+            </td>
+            <td><span style="font-weight:500;">{{ a.service.name|default:"—" }}</span></td>
+            <td style="color:var(--text-3);">{{ a.employee.name|default:"<span style='font-style:italic;color:var(--text-4);'>Har qanday</span>" }}</td>
+            <td style="font-weight:500;">{{ a.date|date:"d.m.Y" }}</td>
+            <td style="font-weight:500;color:var(--text-2);">{{ a.time|time:"H:i" }}</td>
+            <td>
+              <div class="dropdown">
+                <button class="status status-{{ a.status }}" style="cursor:pointer;border:none;background:none;" data-bs-toggle="dropdown">
+                  {{ a.get_status_display }} <i class="bi bi-chevron-down" style="font-size:9px;opacity:.6;"></i>
+                </button>
+                <ul class="dropdown-menu" style="min-width:160px;">
+                  {% for val,label in status_choices %}
+                  <li>
+                    <form method="post" action="{% url 'appointments:status' a.pk %}">{% csrf_token %}
+                      <input type="hidden" name="status" value="{{ val }}">
+                      <button class="dropdown-item">{{ label }}</button>
+                    </form>
+                  </li>
+                  {% endfor %}
+                </ul>
               </div>
-            </a>
-          </td>
-          <td><span class="fw-medium">{{ a.service.name|default:"—" }}</span></td>
-          <td><span class="text-muted">{{ a.employee.name|default:"<span class='fst-italic'>Har qanday</span>" }}</span></td>
-          <td><span class="fw-medium">{{ a.date|date:"d.m.Y" }}</span></td>
-          <td><span class="fw-medium">{{ a.time|time:"H:i" }}</span></td>
-          <td>
-            <div class="dropdown">
-              <button class="status-badge status-{{ a.status }} border-0 dropdown-toggle" data-bs-toggle="dropdown">
-                {{ a.get_status_display }}
-              </button>
-              <ul class="dropdown-menu shadow-sm border-0" style="border-radius:10px;min-width:150px;">
-                {% for val,label in status_choices %}
-                <li>
-                  <form method="post" action="{% url 'appointments:status' a.pk %}">{% csrf_token %}
-                    <input type="hidden" name="status" value="{{ val }}">
-                    <button class="dropdown-item py-1.5" style="font-size:.82rem;">{{ label }}</button>
-                  </form>
-                </li>
-                {% endfor %}
-              </ul>
-            </div>
-          </td>
-          <td class="text-end pe-3">
-            <div class="d-flex gap-1 justify-content-end">
-              <a href="{% url 'appointments:edit' a.pk %}" class="action-btn" title="Tahrirlash"><i class="bi bi-pencil" style="font-size:.7rem;"></i></a>
-              <form method="post" action="{% url 'appointments:delete' a.pk %}" class="d-inline" onsubmit="return confirm('O\'chirasizmi?')">{% csrf_token %}
-                <button class="action-btn danger" title="O'chirish"><i class="bi bi-trash" style="font-size:.7rem;"></i></button>
-              </form>
-            </div>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+            </td>
+            <td style="text-align:right;padding-right:18px;">
+              <div style="display:flex;gap:4px;justify-content:flex-end;">
+                <a href="{% url 'appointments:edit' a.pk %}" class="btn btn-secondary btn-icon-sm" title="Tahrirlash">
+                  <i class="bi bi-pencil" style="font-size:11px;"></i>
+                </a>
+                <form method="post" action="{% url 'appointments:delete' a.pk %}" style="display:inline;" onsubmit="return confirm('Qabulni o\'chirasizmi?')">
+                  {% csrf_token %}
+                  <button class="btn btn-danger btn-icon-sm" title="O'chirish">
+                    <i class="bi bi-trash" style="font-size:11px;"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
+  {% if appointments.has_other_pages %}
+  <div class="ds-pager">
+    <span>Jami {{ appointments.paginator.count }} ta qabul</span>
+    <div class="ds-pager-pages">
+      <a href="?page={{ appointments.previous_page_number|default:1 }}&q={{ search }}&status={{ selected_status }}&employee={{ selected_employee }}&date_from={{ date_from }}&date_to={{ date_to }}"
+         class="ds-page-btn {% if not appointments.has_previous %}disabled{% endif %}">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+      {% for num in appointments.paginator.page_range %}
+        {% if num == appointments.number %}
+          <span class="ds-page-btn active">{{ num }}</span>
+        {% elif num >= appointments.number|add:'-2' and num <= appointments.number|add:'2' %}
+          <a href="?page={{ num }}&q={{ search }}&status={{ selected_status }}&employee={{ selected_employee }}&date_from={{ date_from }}&date_to={{ date_to }}" class="ds-page-btn">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+      <a href="?page={{ appointments.next_page_number|default:appointments.paginator.num_pages }}&q={{ search }}&status={{ selected_status }}&employee={{ selected_employee }}&date_from={{ date_from }}&date_to={{ date_to }}"
+         class="ds-page-btn {% if not appointments.has_next %}disabled{% endif %}">
+        <i class="bi bi-chevron-right"></i>
+      </a>
+    </div>
+  </div>
+  {% endif %}
 </div>
 {% else %}
 <div class="card">
-  <div class="empty-box">
-    <div class="empty-box-icon"><i class="bi bi-calendar-x"></i></div>
-    <h6 class="fw-semibold mb-1">Qabullar yo'q</h6>
-    <p class="text-muted small mb-3">Hozircha qabullar mavjud emas</p>
-    <a href="{% url 'appointments:create' %}" class="btn btn-primary btn-sm">Birinchisini yaratish</a>
+  <div class="ds-empty">
+    <div class="ds-empty-icon"><i class="bi bi-calendar-x"></i></div>
+    <div class="ds-empty-title">Qabullar topilmadi</div>
+    <div class="ds-empty-desc">
+      {% if search or selected_status or selected_employee or date_from or date_to %}
+        Filtrlash shartlariga mos qabullar yo'q. Filtrlarni o'zgartiring.
+      {% else %}
+        Hozircha qabullar mavjud emas. Birinchi qabulni qo'shing.
+      {% endif %}
+    </div>
+    {% if search or selected_status or selected_employee or date_from or date_to %}
+    <a href="{% url 'appointments:list' %}" class="btn btn-secondary">Filtrlarni tozalash</a>
+    {% else %}
+    <a href="{% url 'appointments:create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Qabul qo'shish
+    </a>
+    {% endif %}
   </div>
 </div>
 {% endif %}
+
 {% endblock %}

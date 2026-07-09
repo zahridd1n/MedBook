@@ -1,27 +1,36 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Sahifa Dizayni{% endblock %}
+{% block page_title %}Sahifa dizayni{% endblock %}
 {% block dashboard_content %}
 
-<div class="d-flex align-items-center gap-2 mb-4">
-  <a href="{% url 'dashboard:home' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
-  <h4 class="fw-bold mb-0"><i class="bi bi-palette text-primary me-2"></i>Sahifa Dizayni</h4>
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title"><i class="bi bi-palette" style="margin-right:8px;color:var(--p);"></i>Sahifa dizayni</div>
+    <div class="page-hd-sub">Ommaviy sahifangizning ko'rinishini moslashtiring</div>
+  </div>
+  {% if business %}
+  <div class="page-hd-actions">
+    <a href="/{{ business.slug }}/" target="_blank" class="btn btn-secondary">
+      <i class="bi bi-box-arrow-up-right"></i> Ko'rish
+    </a>
+  </div>
+  {% endif %}
 </div>
 
 {% if not is_paid %}
-<div class="alert alert-warning rounded-3 d-flex align-items-center gap-3 mb-4">
-  <i class="bi bi-lock-fill fs-3 text-warning"></i>
+<div class="ds-alert warning" style="margin-bottom:20px;">
+  <i class="bi bi-lock-fill"></i>
   <div>
     <strong>Bu funksiya faqat pullik tariflarda mavjud.</strong><br>
-    <span>Ommaviy sahifangiz dizaynini o'zgartirish uchun <strong>"Pro"</strong> yoki <strong>"Max"</strong> tarifiga o'ting.</span>
-    <a href="{% url 'marketing:pricing' %}" class="btn btn-sm btn-warning mt-2"><i class="bi bi-star me-1"></i>Tarifni oshirish</a>
+    <span>Sahifa dizaynini o'zgartirish uchun <strong>Pro</strong> yoki <strong>Max</strong> tarifiga o'ting.</span>
+    <a href="{% url 'marketing:pricing' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> Tarifni oshirish</a>
   </div>
 </div>
 {% endif %}
 
 <div class="row g-4">
   <div class="col-lg-7">
-    <div class="card table-card">
-      <div class="card-body p-4">
+    <div class="card">
+      <div class="card-body">
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="mb-3">
@@ -91,9 +100,9 @@
     </div>
   </div>
   <div class="col-lg-5">
-    <div class="card table-card">
-      <div class="card-body p-4">
-        <h6 class="fw-semibold mb-3"><i class="bi bi-eye me-1 text-primary"></i>Qanday ko'rinadi</h6>
+    <div class="card">
+      <div class="card-body">
+        <div class="card-head-title" style="margin-bottom:12px;"><i class="bi bi-eye" style="margin-right:6px;color:var(--p);"></i>Qanday ko'rinadi</div>
         <div class="rounded-3 border overflow-hidden" style="background:#f8fafc">
           {% if business.banner_image %}
           <img src="{{ business.banner_image.url }}?v={{ business.updated_at|date:'U' }}" style="width:100%;height:140px;object-fit:cover;display:block;">

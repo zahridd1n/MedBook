@@ -1,31 +1,88 @@
 {% extends 'base_dashboard.html' %}
 {% block page_title %}Xizmatlar{% endblock %}
 {% block dashboard_content %}
-<div class="d-flex align-items-center justify-content-between mb-4">
-  <h4 class="fw-bold mb-0">Xizmatlar</h4>
-  <a href="{% url 'services:create' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Xizmat qo'shish</a>
+
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title">Xizmatlar</div>
+    <div class="page-hd-sub">Taklif qilinayotgan xizmat turlari ro'yxati</div>
+  </div>
+  <div class="page-hd-actions">
+    <a href="{% url 'services:create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Xizmat qo'shish
+    </a>
+  </div>
 </div>
-<div class="card table-card">
-  <div class="card-body p-0">
-    {% if services %}
-    <table class="table table-hover mb-0">
-      <thead><tr><th class="ps-4">Nomi</th><th>Davomiyligi</th><th>Narxi</th><th>Holati</th><th class="text-end pe-4">Harakatlar</th></tr></thead>
+
+{% if services %}
+<div class="card">
+  <div class="card-body-flush">
+    <table class="ds-table">
+      <thead>
+        <tr>
+          <th style="padding-left:18px;">Xizmat nomi</th>
+          <th>Davomiyligi</th>
+          <th>Narxi</th>
+          <th>Holati</th>
+          <th style="text-align:right;padding-right:18px;width:90px;"></th>
+        </tr>
+      </thead>
       <tbody>
         {% for s in services %}
         <tr>
-          <td class="ps-4"><div class="fw-medium">{{ s.name }}</div>{% if s.description %}<div class="text-muted small">{{ s.description|truncatechars:60 }}</div>{% endif %}</td>
-          <td>{{ s.duration_display }}</td>
-          <td>${{ s.price }}</td>
-          <td>{% if s.is_active %}<span class="badge bg-success">Faol</span>{% else %}<span class="badge bg-secondary">O'chiq</span>{% endif %}</td>
-          <td class="text-end pe-4">
-            <a href="{% url 'services:edit' s.pk %}" class="btn btn-sm btn-outline-secondary me-1"><i class="bi bi-pencil"></i></a>
-            <form method="post" action="{% url 'services:delete' s.pk %}" class="d-inline" onsubmit="return confirm('O\'chirasizmi?')">{% csrf_token %}<button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form>
+          <td style="padding-left:18px;">
+            <div style="font-weight:600;color:var(--text);">{{ s.name }}</div>
+            {% if s.description %}
+            <div style="font-size:12px;color:var(--text-3);margin-top:2px;">{{ s.description|truncatechars:60 }}</div>
+            {% endif %}
+          </td>
+          <td>
+            <span style="color:var(--text-2);font-weight:500;">{{ s.duration_display }}</span>
+          </td>
+          <td>
+            {% if s.price %}
+            <span style="font-weight:600;color:var(--text);">{{ s.price|floatformat:0 }} so'm</span>
+            {% else %}
+            <span style="color:var(--text-4);font-style:italic;">Bepul</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if s.is_active %}
+            <span class="status status-green">Faol</span>
+            {% else %}
+            <span class="status status-gray">O'chirilgan</span>
+            {% endif %}
+          </td>
+          <td style="text-align:right;padding-right:18px;">
+            <div style="display:flex;gap:4px;justify-content:flex-end;">
+              <a href="{% url 'services:edit' s.pk %}" class="btn btn-secondary btn-icon-sm" title="Tahrirlash">
+                <i class="bi bi-pencil" style="font-size:11px;"></i>
+              </a>
+              <form method="post" action="{% url 'services:delete' s.pk %}" style="display:inline;" onsubmit="return confirm('{{ s.name }}ni o\'chirasizmi?')">
+                {% csrf_token %}
+                <button class="btn btn-danger btn-icon-sm" title="O'chirish">
+                  <i class="bi bi-trash" style="font-size:11px;"></i>
+                </button>
+              </form>
+            </div>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    {% else %}<div class="text-center py-5 text-muted"><i class="bi bi-briefcase fs-2 d-block mb-2"></i>Xizmatlar yo'q.<div class="mt-3"><a href="{% url 'services:create' %}" class="btn btn-primary btn-sm">Birinchisini qo'shish</a></div></div>{% endif %}
   </div>
 </div>
+{% else %}
+<div class="card">
+  <div class="ds-empty">
+    <div class="ds-empty-icon"><i class="bi bi-grid-3x3-gap"></i></div>
+    <div class="ds-empty-title">Xizmatlar yo'q</div>
+    <div class="ds-empty-desc">Birinchi xizmat turini qo'shing. Mijozlar aynan shu xizmatlardan birini tanlaydi.</div>
+    <a href="{% url 'services:create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Birinchi xizmatni qo'shish
+    </a>
+  </div>
+</div>
+{% endif %}
+
 {% endblock %}

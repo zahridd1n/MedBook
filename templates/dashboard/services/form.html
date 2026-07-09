@@ -1,23 +1,74 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Xizmatni {{ action }}{% endblock %}
+{% block page_title %}{% if action == 'Edit' %}Xizmatni tahrirlash{% else %}Yangi xizmat{% endif %}{% endblock %}
 {% block dashboard_content %}
-<div class="d-flex align-items-center gap-2 mb-4">
-  <a href="{% url 'services:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
-  <h4 class="fw-bold mb-0">Xizmatni {{ action }}</h4>
+
+<div class="page-hd">
+  <div class="page-hd-left" style="display:flex;align-items:center;gap:12px;">
+    <a href="{% url 'services:list' %}" class="btn btn-secondary btn-icon-sm">
+      <i class="bi bi-arrow-left" style="font-size:13px;"></i>
+    </a>
+    <div>
+      <div class="page-hd-title">{% if action == 'Edit' %}Xizmatni tahrirlash{% else %}Yangi xizmat qo'shish{% endif %}</div>
+      <div class="page-hd-sub">Xizmat turi ma'lumotlarini kiriting</div>
+    </div>
+  </div>
 </div>
-<div class="row justify-content-center"><div class="col-lg-6">
-  <div class="card table-card"><div class="card-body p-4">
-    <form method="post">{% csrf_token %}
-      <div class="row g-3">
-        <div class="col-12"><label class="form-label fw-medium">Nomi</label>{{ form.name }}</div>
-        <div class="col-12"><label class="form-label fw-medium">Tavsifi</label>{{ form.description }}</div>
-        <div class="col-md-6"><label class="form-label fw-medium">Davomiyligi (daq)</label>{{ form.duration }}</div>
-        <div class="col-md-6"><label class="form-label fw-medium">Narxi</label>{{ form.price }}</div>
-        <div class="col-md-6"><label class="form-label fw-medium">Tartibi</label>{{ form.order }}</div>
-        <div class="col-md-6 d-flex align-items-end"><div class="form-check">{{ form.is_active }}<label class="form-check-label fw-medium ms-2">Faol</label></div></div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div>
+              <label class="form-label">Xizmat nomi <span style="color:#ef4444;">*</span></label>
+              {{ form.name }}
+            </div>
+            <div>
+              <label class="form-label">Tavsifi</label>
+              {{ form.description }}
+              <div class="form-hint">Mijozlarga ko'rsatiladigan qisqa tavsif</div>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Davomiyligi (daqiqa) <span style="color:#ef4444;">*</span></label>
+                {{ form.duration }}
+                <div class="form-hint">Masalan: 30, 60, 90</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Narxi (so'm)</label>
+                {{ form.price }}
+                <div class="form-hint">Bo'sh qoldiring — bepul</div>
+              </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Tartib raqami</label>
+                {{ form.order }}
+                <div class="form-hint">Kichik raqam — birinchi ko'rinadi</div>
+              </div>
+              <div class="col-md-6" style="display:flex;align-items:flex-end;">
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);width:100%;">
+                  {{ form.is_active }}
+                  <div>
+                    <div style="font-size:13px;font-weight:600;color:var(--text);">Faol xizmat</div>
+                    <div style="font-size:11.5px;color:var(--text-3);">Mijozlarga ko'rsatiladi</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:22px;">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-lg"></i> Saqlash
+            </button>
+            <a href="{% url 'services:list' %}" class="btn btn-secondary">Bekor qilish</a>
+          </div>
+        </form>
       </div>
-      <div class="d-flex gap-2 mt-4"><button type="submit" class="btn btn-primary px-4">Saqlash</button><a href="{% url 'services:list' %}" class="btn btn-outline-secondary">Bekor qilish</a></div>
-    </form>
-  </div></div>
-</div></div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

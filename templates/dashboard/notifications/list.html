@@ -1,28 +1,17 @@
 {% extends 'base_dashboard.html' %}
 {% block page_title %}Bildirishnomalar{% endblock %}
 {% block dashboard_content %}
-<style>
-.notif-item{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-bottom:1px solid #f3f4f6;transition:background .12s;text-decoration:none;color:inherit}
-.notif-item:hover{background:#f9fafb}
-.notif-item:last-child{border-bottom:none}
-.notif-item.unread{background:#f0f4ff}
-.notif-item.unread:hover{background:#e8edfc}
-.notif-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.notif-dot-read{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
-.empty-box{text-align:center;padding:60px 24px}
-.empty-box-icon{width:56px;height:56px;border-radius:14px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px;color:#9ca3af}
-</style>
 
-<div class="page-header">
-  <div>
-    <h4 class="page-header-title mb-0">Bildirishnomalar</h4>
-    <p class="page-header-sub">Barcha bildirishnomalar</p>
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title">Bildirishnomalar</div>
+    <div class="page-hd-sub">Barcha qabul va tizim xabarlari</div>
   </div>
-  <div class="d-flex gap-2">
-    <form method="post" action="{% url 'notifications:mark_all_read' %}" id="markAllFormPage" style="display:inline">
+  <div class="page-hd-actions">
+    <form method="post" action="{% url 'notifications:mark_all_read' %}" id="markAllFormPage">
       {% csrf_token %}
-      <button type="submit" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
-        <i class="bi bi-check-all"></i>Barchasini o'qilgan deb belgilash
+      <button type="submit" class="btn btn-secondary">
+        <i class="bi bi-check-all"></i> Barchasini o'qilgan deb belgilash
       </button>
     </form>
   </div>
@@ -30,29 +19,25 @@
 
 <div class="card">
   {% if notifications %}
-  <div>
+  <div class="card-body-flush">
     {% for n in notifications %}
     {% if n.related_appointment_id %}
-    <a href="{% url 'appointments:edit' n.related_appointment_id %}" class="notif-item {% if not n.is_read %}unread{% endif %}">
+    <a href="{% url 'appointments:edit' n.related_appointment_id %}"
     {% else %}
-    <div class="notif-item {% if not n.is_read %}unread{% endif %}">
+    <div
     {% endif %}
-      {% if not n.is_read %}
-      <div class="notif-dot-read" style="background:#6366f1;"></div>
-      {% else %}
-      <div class="notif-dot-read" style="background:transparent;"></div>
-      {% endif %}
-
-      <div class="notif-icon" style="background:{% if n.notification_type == 'booking' %}rgba(99,102,241,.1){% else %}rgba(107,114,128,.1){% endif %};color:{% if n.notification_type == 'booking' %}#6366f1{% else %}#6b7280{% endif %};">
+    class="notif-item {% if not n.is_read %}unread{% endif %}"
+    style="display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;transition:background .1s;{% if not n.is_read %}background:#f5f7ff;{% endif %}">
+      <div style="width:7px;height:7px;border-radius:50%;background:{% if not n.is_read %}var(--p){% else %}transparent{% endif %};flex-shrink:0;margin-top:7px;"></div>
+      <div style="width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:{% if n.notification_type == 'booking' %}rgba(99,102,241,.1){% else %}rgba(107,114,128,.1){% endif %};color:{% if n.notification_type == 'booking' %}#6366f1{% else %}#6b7280{% endif %};">
         <i class="bi {% if n.notification_type == 'booking' %}bi-calendar-plus{% else %}bi-info-circle{% endif %}"></i>
       </div>
-
-      <div class="flex-fill min-w-0">
-        <div class="d-flex align-items-center gap-2 flex-wrap">
-          <span class="fw-semibold" style="font-size:.85rem;">{{ n.title }}</span>
-          <span class="text-muted" style="font-size:.7rem;margin-left:auto;white-space:nowrap;">{{ n.created_at|timesince }} oldin</span>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px;">
+          <span style="font-weight:600;font-size:13.5px;color:var(--text);">{{ n.title }}</span>
+          <span style="font-size:11px;color:var(--text-4);margin-left:auto;white-space:nowrap;">{{ n.created_at|timesince }} oldin</span>
         </div>
-        <div class="text-muted" style="font-size:.8rem;margin-top:1px;line-height:1.4;">{{ n.message }}</div>
+        <div style="font-size:13px;color:var(--text-3);line-height:1.5;">{{ n.message }}</div>
       </div>
     {% if n.related_appointment_id %}
     </a>
@@ -62,11 +47,24 @@
     {% endfor %}
   </div>
   {% else %}
-  <div class="empty-box">
-    <div class="empty-box-icon"><i class="bi bi-bell-slash"></i></div>
-    <h6 class="fw-semibold mb-1">Bildirishnomalar yo'q</h6>
-    <p class="text-muted small mb-0">Yangi qabul yozilganda bildirishnomalar shu yerda ko'rinadi</p>
+  <div class="ds-empty">
+    <div class="ds-empty-icon"><i class="bi bi-bell-slash"></i></div>
+    <div class="ds-empty-title">Bildirishnomalar yo'q</div>
+    <div class="ds-empty-desc">Yangi qabul yozilganda bildirishnomalar shu yerda ko'rinadi</div>
   </div>
   {% endif %}
 </div>
+
+<script>
+// AJAX mark all read on this page too
+document.addEventListener('submit', function(e) {
+  if (e.target.id === 'markAllFormPage') {
+    e.preventDefault();
+    fetch(e.target.action, {method:'POST', body:new FormData(e.target)})
+      .then(r => r.json())
+      .then(d => { if (d.ok) window.location.reload(); });
+  }
+});
+</script>
+
 {% endblock %}

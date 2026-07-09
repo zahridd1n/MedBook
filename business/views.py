@@ -398,6 +398,7 @@ def upgrade_view(request):
     context = {
         'business': business,
         'plans': plans,
+        'site': site,
     }
     return render(request, 'dashboard/upgrade.html', context)
 

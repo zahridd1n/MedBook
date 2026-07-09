@@ -1,84 +1,87 @@
 {% extends 'base_dashboard.html' %}
-
 {% block page_title %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-<div class="mb-4">
-  <h3 class="mb-0">{{ title }}</h3>
+<div class="page-hd">
+  <div class="page-hd-left" style="display:flex;align-items:center;gap:12px;">
+    <a href="{% url 'blog:list' %}" class="btn btn-secondary btn-icon-sm">
+      <i class="bi bi-arrow-left" style="font-size:13px;"></i>
+    </a>
+    <div>
+      <div class="page-hd-title">{{ title }}</div>
+      <div class="page-hd-sub">Maqola yozing yoki tahrirlang</div>
+    </div>
+  </div>
 </div>
 
-<form method="post" enctype="multipart/form-data" class="needs-validation">
+<form method="post" enctype="multipart/form-data">
   {% csrf_token %}
-
   <div class="row">
     <div class="col-lg-8">
-      <div class="card card-body border-0 shadow-sm mb-3">
-        <div class="mb-3">
-          <label for="{{ form.title.id_for_label }}" class="form-label">
-            Blog Sarlavhasi <span class="text-danger">*</span>
-          </label>
-          {{ form.title }}
-          {% if form.title.errors %}
-          <small class="text-danger d-block mt-1">{{ form.title.errors|first }}</small>
-          {% endif %}
-        </div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div>
+              <label class="form-label">Blog sarlavhasi <span style="color:#ef4444;">*</span></label>
+              {{ form.title }}
+              {% if form.title.errors %}
+              <div class="form-error">{{ form.title.errors.0 }}</div>
+              {% endif %}
+            </div>
 
-        <div class="mb-3">
-          <label for="{{ form.excerpt.id_for_label }}" class="form-label">
-            Qisqa Mazmuni <span class="text-muted">(ixtiyoriy)</span>
-          </label>
-          {{ form.excerpt }}
-          <small class="text-muted d-block mt-1">Blog ro'yxatida ko'rsatiladigan qisqa matn</small>
-          {% if form.excerpt.errors %}
-          <small class="text-danger d-block mt-1">{{ form.excerpt.errors|first }}</small>
-          {% endif %}
-        </div>
+            <div>
+              <label class="form-label">Qisqa mazmuni <span style="color:var(--text-4);">(ixtiyoriy)</span></label>
+              {{ form.excerpt }}
+              <div class="form-hint">Blog ro'yxatida ko'rsatiladigan qisqa matn</div>
+              {% if form.excerpt.errors %}
+              <div class="form-error">{{ form.excerpt.errors.0 }}</div>
+              {% endif %}
+            </div>
 
-        <div class="mb-3">
-          <label for="{{ form.content.id_for_label }}" class="form-label">
-            Mazmuni <span class="text-danger">*</span>
-          </label>
-          {{ form.content }}
-          {% if form.content.errors %}
-          <small class="text-danger d-block mt-1">{{ form.content.errors|first }}</small>
-          {% endif %}
-        </div>
-
-        <div class="mb-3">
-          <label for="{{ form.featured_image.id_for_label }}" class="form-label">
-            Sarlavhali Rasm <span class="text-muted">(ixtiyoriy)</span>
-          </label>
-          {{ form.featured_image }}
-          <small class="text-muted d-block mt-1">Blog ro'yxatida va tafsilotida ko'rsatiladigan rasm</small>
-          {% if form.featured_image.errors %}
-          <small class="text-danger d-block mt-1">{{ form.featured_image.errors|first }}</small>
-          {% endif %}
+            <div>
+              <label class="form-label">Mazmuni <span style="color:#ef4444;">*</span></label>
+              {{ form.content }}
+              {% if form.content.errors %}
+              <div class="form-error">{{ form.content.errors.0 }}</div>
+              {% endif %}
+            </div>
+            
+            <div>
+              <label class="form-label">Sarlavhali rasm <span style="color:var(--text-4);">(ixtiyoriy)</span></label>
+              {{ form.featured_image }}
+              <div class="form-hint">Blog ro'yxatida va maqola ichida ko'rsatiladigan rasm</div>
+              {% if form.featured_image.errors %}
+              <div class="form-error">{{ form.featured_image.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="col-lg-4">
-      <div class="card card-body border-0 shadow-sm mb-3">
-        <h6 class="card-title">Nashr Parametrlari</h6>
-        <div class="form-check form-switch">
-          {{ form.is_published }}
-          <label for="{{ form.is_published.id_for_label }}" class="form-check-label">
-            Foydalanuvchilarga ko'rsatish
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head"><span class="card-head-title">Nashr parametrlari</span></div>
+        <div class="card-body" style="padding:16px;">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+            {{ form.is_published }}
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);">Foydalanuvchilarga ko'rsatish</div>
+              <div style="font-size:11.5px;color:var(--text-3);">O'chirilgan bo'lsa qoralama sifatida saqlanadi</div>
+            </div>
           </label>
         </div>
-        <small class="text-muted d-block mt-2">
-          Agar bu toggle o'chirilgan bo'lsa, blog foydalanuvchilarga ko'rinmaydi.
-        </small>
       </div>
 
-      <div class="card card-body border-0 shadow-sm mb-3">
-        <h6 class="card-title">Harakatlar</h6>
-        <button type="submit" class="btn btn-primary w-100 mb-2">
-          <i class="bi bi-check-lg me-1"></i> Saqlash
-        </button>
-        <a href="{% url 'blog:list' %}" class="btn btn-outline-secondary w-100">
-          Bekor qilish
-        </a>
+      <div class="card">
+        <div class="card-body" style="padding:16px;display:flex;flex-direction:column;gap:8px;">
+          <button type="submit" class="btn btn-primary" style="justify-content:center;width:100%;">
+            <i class="bi bi-check-lg"></i> Saqlash
+          </button>
+          <a href="{% url 'blog:list' %}" class="btn btn-secondary" style="justify-content:center;width:100%;">
+            Bekor qilish
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -88,15 +91,25 @@
 #{{ form.title.id_for_label }},
 #{{ form.excerpt.id_for_label }},
 #{{ form.content.id_for_label }} {
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  font-size: 13px;
+  width: 100%;
 }
 
 #{{ form.title.id_for_label }}:focus,
 #{{ form.excerpt.id_for_label }}:focus,
 #{{ form.content.id_for_label }}:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.15);
+  border-color: var(--p);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+input[type=checkbox]#{{ form.is_published.id_for_label }} {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--p);
 }
 </style>
 {% endblock %}

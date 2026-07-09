@@ -1,28 +1,57 @@
 {% extends 'base_dashboard.html' %}
 {% block page_title %}{{ employee.name }} — Ish grafigi{% endblock %}
 {% block dashboard_content %}
-<div class="d-flex align-items-center gap-2 mb-4">
-  <a href="{% url 'employees:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
-  <h4 class="fw-bold mb-0">{{ employee.name }} — Ish grafigi</h4>
+
+<div class="page-hd">
+  <div class="page-hd-left" style="display:flex;align-items:center;gap:12px;">
+    <a href="{% url 'employees:list' %}" class="btn btn-secondary btn-icon-sm">
+      <i class="bi bi-arrow-left" style="font-size:13px;"></i>
+    </a>
+    <div>
+      <div class="page-hd-title">{{ employee.name }} — Ish grafigi</div>
+      <div class="page-hd-sub">Har bir kun uchun ish vaqtlarini belgilang</div>
+    </div>
+  </div>
 </div>
-<div class="row justify-content-center"><div class="col-lg-6">
-  <div class="card table-card"><div class="card-body p-4">
-    <form method="post">{% csrf_token %}
-      <table class="table align-middle">
-        <thead><tr><th>Kun</th><th>Ishlaydimi</th><th>Boshlanishi</th><th>Tugashi</th></tr></thead>
-        <tbody>
-          {% for s in schedules %}
-          <tr>
-            <td class="fw-medium">{{ s.get_day_display }}</td>
-            <td><div class="form-check form-switch"><input class="form-check-input" type="checkbox" name="is_working_{{ s.day }}" {% if s.is_working %}checked{% endif %}></div></td>
-            <td><input type="time" name="start_{{ s.day }}" class="form-control form-control-sm" value="{{ s.start_time|time:'H:i'|default:'' }}"></td>
-            <td><input type="time" name="end_{{ s.day }}" class="form-control form-control-sm" value="{{ s.end_time|time:'H:i'|default:'' }}"></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <button type="submit" class="btn btn-primary">Jadvalni saqlash</button>
-    </form>
-  </div></div>
-</div></div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title"><i class="bi bi-clock" style="margin-right:6px;"></i>Haftalik jadval</span>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            {% for s in schedules %}
+            <div style="display:grid;grid-template-columns:100px 60px 1fr 1fr;gap:10px;align-items:center;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:{% if s.is_working %}#f9fafb{% else %}#fff{% endif %};">
+              <span style="font-weight:600;font-size:13px;color:var(--text);">{{ s.get_day_display }}</span>
+              <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;">
+                <input type="checkbox" name="is_working_{{ s.day }}" {% if s.is_working %}checked{% endif %}
+                  style="width:16px;height:16px;accent-color:var(--p);">
+              </label>
+              <div>
+                <label style="font-size:10.5px;color:var(--text-4);margin-bottom:3px;display:block;">Boshlanish</label>
+                <input type="time" name="start_{{ s.day }}" class="form-control" value="{{ s.start_time|time:'H:i'|default:'' }}" style="font-size:13px;padding:5px 8px;">
+              </div>
+              <div>
+                <label style="font-size:10.5px;color:var(--text-4);margin-bottom:3px;display:block;">Tugash</label>
+                <input type="time" name="end_{{ s.day }}" class="form-control" value="{{ s.end_time|time:'H:i'|default:'' }}" style="font-size:13px;padding:5px 8px;">
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <div style="margin-top:20px;display:flex;gap:10px;">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-lg"></i> Jadvalni saqlash
+            </button>
+            <a href="{% url 'employees:list' %}" class="btn btn-secondary">Orqaga</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

@@ -1,122 +1,119 @@
 {% extends 'base_dashboard.html' %}
-
 {% block page_title %}Blog{% endblock %}
-
 {% block dashboard_content %}
-<!-- Tab navigation -->
-<div class="mb-4 d-flex justify-content-between align-items-center border-bottom pb-2">
-  <div class="d-flex gap-3">
-    <a href="{% url 'blog:list' %}" class="text-decoration-none text-primary fw-bold pb-2 border-bottom border-primary border-2">
-      <i class="bi bi-journal-text me-1"></i> Postlar
-    </a>
-    <a href="{% url 'blog:comment-list' %}" class="text-decoration-none text-muted fw-semibold pb-2">
-      <i class="bi bi-chat-left-text me-1"></i> Izohlar
+
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title">Blog</div>
+    <div class="page-hd-sub">Maqola va postlarni boshqaring</div>
+  </div>
+  <div class="page-hd-actions">
+    <a href="{% url 'blog:create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Yangi post
     </a>
   </div>
-  <a href="{% url 'blog:create' %}" class="btn btn-primary btn-sm mb-2">
-    <i class="bi bi-plus-lg"></i> Yangi Post
+</div>
+
+<!-- Tab nav -->
+<div style="display:flex;align-items:center;gap:4px;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:0;">
+  <a href="{% url 'blog:list' %}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--p);border-bottom:2px solid var(--p);text-decoration:none;margin-bottom:-1px;">
+    <i class="bi bi-journal-text"></i> Postlar
+  </a>
+  <a href="{% url 'blog:comment-list' %}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:500;color:var(--text-3);border-bottom:2px solid transparent;text-decoration:none;margin-bottom:-1px;">
+    <i class="bi bi-chat-left-text"></i> Izohlar
   </a>
 </div>
 
 {% if posts %}
-<div class="table-responsive">
-  <table class="table table-hover table-card mb-0">
-    <thead class="table-light">
-      <tr>
-        <th>Sarlavha</th>
-        <th>Nashr holati</th>
-        <th>Ko'rish soni</th>
-        <th>Yaratilgan</th>
-        <th>Harakatlar</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for post in posts %}
-      <tr>
-        <td>
-          <strong>{{ post.title }}</strong>
-          {% if post.featured_image %}
-          <br><small class="text-muted">Rasmi mavjud</small>
-          {% endif %}
-        </td>
-        <td>
-          {% if post.is_published %}
-          <span class="badge bg-success">Nashr qilingan</span>
-          {% else %}
-          <span class="badge bg-warning text-dark">Qoralama</span>
-          {% endif %}
-        </td>
-        <td><span class="badge bg-light text-dark">{{ post.views_count }}</span></td>
-        <td>
-          <small class="text-muted">{{ post.created_at|date:"d.m.Y" }}</small>
-        </td>
-        <td>
-          <div class="btn-group btn-group-sm" role="group">
-            <a href="{% url 'blog:edit' post.pk %}" class="btn btn-outline-primary" title="Tahrirlash">
-              <i class="bi bi-pencil"></i>
-            </a>
-            <form method="post" action="{% url 'blog:delete' post.pk %}" style="display:inline;" onsubmit="return confirm('O\'chirishni tasdiqlaysizmi?');">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-outline-danger" title="O'chirish">
-                <i class="bi bi-trash"></i>
-              </button>
-            </form>
-            {% if post.is_published %}
-            <a href="/{{ request.user.business.slug }}/blog/{{ post.slug }}/" class="btn btn-outline-secondary" target="_blank" title="Ko'rish">
-              <i class="bi bi-eye"></i>
-            </a>
+<div class="card">
+  <div class="card-body-flush">
+    <table class="ds-table">
+      <thead>
+        <tr>
+          <th style="padding-left:18px;">Sarlavha</th>
+          <th>Holat</th>
+          <th>Ko'rish</th>
+          <th>Sana</th>
+          <th style="text-align:right;padding-right:18px;width:100px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for post in posts %}
+        <tr>
+          <td style="padding-left:18px;">
+            <div style="font-weight:600;color:var(--text);">{{ post.title }}</div>
+            {% if post.featured_image %}
+            <div style="font-size:11px;color:var(--text-4);margin-top:2px;"><i class="bi bi-image" style="margin-right:3px;"></i>Rasm mavjud</div>
             {% endif %}
-          </div>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+          </td>
+          <td>
+            {% if post.is_published %}
+            <span class="status status-green">Nashr qilingan</span>
+            {% else %}
+            <span class="status status-amber">Qoralama</span>
+            {% endif %}
+          </td>
+          <td>
+            <span style="font-size:13px;color:var(--text-2);font-weight:500;">{{ post.views_count }}</span>
+          </td>
+          <td style="color:var(--text-3);font-size:12.5px;">{{ post.created_at|date:"d.m.Y" }}</td>
+          <td style="text-align:right;padding-right:18px;">
+            <div style="display:flex;gap:4px;justify-content:flex-end;">
+              <a href="{% url 'blog:edit' post.pk %}" class="btn btn-secondary btn-icon-sm" title="Tahrirlash">
+                <i class="bi bi-pencil" style="font-size:11px;"></i>
+              </a>
+              {% if post.is_published %}
+              <a href="/{{ request.user.business.slug }}/blog/{{ post.slug }}/" class="btn btn-secondary btn-icon-sm" target="_blank" title="Ko'rish">
+                <i class="bi bi-eye" style="font-size:11px;"></i>
+              </a>
+              {% endif %}
+              <form method="post" action="{% url 'blog:delete' post.pk %}" style="display:inline;" onsubmit="return confirm('Postni o\'chirasizmi?')">
+                {% csrf_token %}
+                <button class="btn btn-danger btn-icon-sm" title="O'chirish">
+                  <i class="bi bi-trash" style="font-size:11px;"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if posts.has_other_pages %}
+  <div class="ds-pager">
+    <span>Jami {{ posts.paginator.count }} ta post</span>
+    <div class="ds-pager-pages">
+      {% if posts.has_previous %}
+      <a href="?page=1" class="ds-page-btn"><i class="bi bi-chevron-double-left"></i></a>
+      <a href="?page={{ posts.previous_page_number }}" class="ds-page-btn"><i class="bi bi-chevron-left"></i></a>
+      {% else %}
+      <span class="ds-page-btn disabled"><i class="bi bi-chevron-left"></i></span>
+      {% endif %}
+      <span class="ds-page-btn active">{{ posts.number }}/{{ posts.paginator.num_pages }}</span>
+      {% if posts.has_next %}
+      <a href="?page={{ posts.next_page_number }}" class="ds-page-btn"><i class="bi bi-chevron-right"></i></a>
+      <a href="?page={{ posts.paginator.num_pages }}" class="ds-page-btn"><i class="bi bi-chevron-double-right"></i></a>
+      {% else %}
+      <span class="ds-page-btn disabled"><i class="bi bi-chevron-right"></i></span>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
 </div>
 
-<!-- Pagination -->
-{% if posts.has_other_pages %}
-<nav class="mt-3" aria-label="Page navigation">
-  <ul class="pagination justify-content-center mb-0">
-    {% if posts.has_previous %}
-    <li class="page-item">
-      <a class="page-link" href="?page=1">Birinchi</a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="?page={{ posts.previous_page_number }}">Oldingi</a>
-    </li>
-    {% else %}
-    <li class="page-item disabled">
-      <span class="page-link">Oldingi</span>
-    </li>
-    {% endif %}
-
-    <li class="page-item active">
-      <span class="page-link">{{ posts.number }} / {{ posts.paginator.num_pages }}</span>
-    </li>
-
-    {% if posts.has_next %}
-    <li class="page-item">
-      <a class="page-link" href="?page={{ posts.next_page_number }}">Keyingi</a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="?page={{ posts.paginator.num_pages }}">Oxirgi</a>
-    </li>
-    {% else %}
-    <li class="page-item disabled">
-      <span class="page-link">Keyingi</span>
-    </li>
-    {% endif %}
-  </ul>
-</nav>
-{% endif %}
-
 {% else %}
-<div class="alert alert-info alert-lg" role="alert">
-  <div class="alert-message">
-    <h6 class="mb-1"><i class="bi bi-info-circle me-2"></i>Blog postlari topilmadi</h6>
-    <p class="mb-0 small">Yangi blog post yaratish uchun yuqorida "Yangi Post" tugmasini bosing.</p>
+<div class="card">
+  <div class="ds-empty">
+    <div class="ds-empty-icon"><i class="bi bi-newspaper"></i></div>
+    <div class="ds-empty-title">Blogda postlar yo'q</div>
+    <div class="ds-empty-desc">Birinchi maqolani yozing. Blog mijozlaringizga ko'proq ishonch bildiradi.</div>
+    <a href="{% url 'blog:create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Birinchi postni yozish
+    </a>
   </div>
 </div>
 {% endif %}
+
 {% endblock %}

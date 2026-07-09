@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'public_site',
     'marketing',
     'superadmin',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

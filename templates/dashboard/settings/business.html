@@ -1,6 +1,6 @@
 {% extends 'base_dashboard.html' %}
 {% load l10n %}
-{% block page_title %}Business Settings{% endblock %}
+{% block page_title %}Biznes ma'lumotlari{% endblock %}
 
 {% block extra_css %}
 {{ block.super }}
@@ -92,16 +92,30 @@
 {% endblock %}
 
 {% block dashboard_content %}
-<h4 class="fw-bold mb-4">Business Settings</h4>
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title">Biznes ma'lumotlari</div>
+    <div class="page-hd-sub">Kompaniya haqida asosiy ma'lumotlar va aloqa</div>
+  </div>
+  {% if business %}
+  <div class="page-hd-actions">
+    <a href="/{{ business.slug }}/" target="_blank" class="btn btn-secondary">
+      <i class="bi bi-box-arrow-up-right"></i> Ommaviy sahifani ko'rish
+    </a>
+  </div>
+  {% endif %}
+</div>
 <div class="row">
   <div class="col-lg-8">
-    <div class="card table-card"><div class="card-body p-4">
+    <div class="card"><div class="card-body">
       <form method="post" enctype="multipart/form-data" id="business-form">{% csrf_token %}
         {{ form.latitude }}
         {{ form.longitude }}
 
-        {# ── Asosiy ma'lumotlar ───────────────────── #}
-        <h6 class="fw-semibold text-uppercase text-muted small mb-3">Asosiy ma'lumotlar</h6>
+        {# ── Asosiy ma'lumotlar ─── #}
+        <div class="form-section">
+          <div class="form-section-title">Asosiy ma'lumotlar</div>
+          <div class="form-section-desc">Biznes nomi, kategoriya va haqida ma'lumot</div>
         <div class="row g-3 mb-4">
           <div class="col-md-6"><label class="form-label fw-medium">Biznes nomi *</label>{{ form.name }}</div>
           <div class="col-md-6"><label class="form-label fw-medium">Kategoriya</label>{{ form.category }}</div>
@@ -112,8 +126,10 @@
           </div>
         </div>
 
-        {# ── Aloqa ────────────────────────────────── #}
-        <h6 class="fw-semibold text-uppercase text-muted small mb-3">Aloqa ma'lumotlari</h6>
+        {# ── Aloqa ─── #}
+        <div class="form-section">
+          <div class="form-section-title">Aloqa ma'lumotlari</div>
+          <div class="form-section-desc">Telefon, email, manzil va shahar</div>
         <div class="row g-3 mb-4">
           <div class="col-md-6"><label class="form-label fw-medium">Telefon</label>{{ form.phone }}</div>
           <div class="col-md-6"><label class="form-label fw-medium">Email</label>{{ form.email }}</div>
@@ -121,10 +137,12 @@
           <div class="col-md-4"><label class="form-label fw-medium">Shahar</label>{{ form.city }}</div>
         </div>
 
-        {# ── Xarita orqali joylashuv ───────────────── #}
-        <h6 class="fw-semibold text-uppercase text-muted small mb-3">
-          <i class="bi bi-geo-alt-fill me-1 text-danger"></i>Joylashuv (Xarita)
-        </h6>
+        </div>
+
+        {# ── Xarita ─── #}
+        <div class="form-section">
+          <div class="form-section-title"><i class="bi bi-geo-alt-fill" style="color:#ef4444;margin-right:6px;"></i>Joylashuv (Xarita)</div>
+          <div class="form-section-desc">Xaritada klinikaningiz yoki ofis joylashuvini belgilang</div>
         <div class="mb-4">
           <div class="map-address-chip" id="map-chip">
             <i class="bi bi-geo-alt"></i>
@@ -149,8 +167,12 @@
           {% endif %}
         </div>
 
-        {# ── Ijtimoiy tarmoqlar ────────────────────── #}
-        <h6 class="fw-semibold text-uppercase text-muted small mb-3">Ijtimoiy tarmoqlar</h6>
+        </div>
+
+        {# ── Ijtimoiy tarmoqlar ─── #}
+        <div class="form-section">
+          <div class="form-section-title">Ijtimoiy tarmoqlar va veb-sayt</div>
+          <div class="form-section-desc">Foydalanuvchilar bog'lanishi uchun havolalar</div>
         <div class="row g-3 mb-4">
           <div class="col-md-6">
             <label class="form-label fw-medium"><i class="bi bi-telegram text-info me-1"></i>Telegram</label>
@@ -187,12 +209,14 @@
           </div>
         </div>
 
-        {# ── Marketing katalog toggle ──────────────── #}
-        <h6 class="fw-semibold text-uppercase text-muted small mb-3">
-          <i class="bi bi-shop me-1 text-primary"></i>Marketing Katalogi
-        </h6>
-        <div class="card border-0 rounded-3 mb-4" style="background:#f8fafc;">
-          <div class="card-body p-3">
+        </div>
+
+        {# ── Marketing katalog ─── #}
+        <div class="form-section">
+          <div class="form-section-title"><i class="bi bi-shop" style="color:var(--p);margin-right:6px;"></i>Marketing katalogi</div>
+          <div class="form-section-desc">Biznesingizni umumiy yo'naltiruvchi sahifada ko'rsatish</div>
+          <div class="card" style="background:#f9fafb;border-color:var(--border);">
+            <div class="card-body" style="padding:14px;">
             <div class="ios-toggle-wrapper">
               <label class="ios-toggle-switch">
                 <input type="checkbox" name="show_in_directory" id="id_show_in_directory"
@@ -204,12 +228,15 @@
                 <small>Yoqilsa, biznesingiz marketing sahifasidagi ro'yxatda ko'rinadi</small>
               </div>
             </div>
+            </div>
           </div>
         </div>
 
-        <div class="d-flex gap-2">
-          <button type="submit" class="btn btn-primary px-4">Saqlash</button>
-          {% if business %}<a href="/{{ business.slug }}/" target="_blank" class="btn btn-outline-secondary"><i class="bi bi-box-arrow-up-right me-1"></i>Ko'rish</a>{% endif %}
+        <div style="display:flex;gap:10px;">
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg"></i> Saqlash
+          </button>
+          {% if business %}<a href="/{{ business.slug }}/" target="_blank" class="btn btn-secondary"><i class="bi bi-box-arrow-up-right"></i> Ko'rish</a>{% endif %}
         </div>
       </form>
     </div></div>
@@ -217,25 +244,25 @@
 
   {% if business %}
   <div class="col-lg-4">
-    <div class="card table-card mb-3"><div class="card-body p-4">
-      <h6 class="fw-semibold mb-2">Ommaviy sahifa</h6>
-      <code class="d-block bg-light rounded p-2 mb-3 small text-break">{{ request.META.HTTP_HOST }}/{{ business.slug }}/</code>
-      <a href="/{{ business.slug }}/" target="_blank" class="btn btn-primary w-100"><i class="bi bi-globe me-2"></i>Ochish</a>
+    <div class="card" style="margin-bottom:16px;"><div class="card-body" style="padding:16px;">
+      <div class="card-head-title" style="margin-bottom:10px;">Ommaviy sahifa</div>
+      <code style="display:block;background:#f3f4f6;border-radius:6px;padding:8px 12px;font-size:12px;word-break:break-all;margin-bottom:12px;color:var(--text-2);">{{ request.META.HTTP_HOST }}/{{ business.slug }}/</code>
+      <a href="/{{ business.slug }}/" target="_blank" class="btn btn-primary" style="width:100%;justify-content:center;">
+        <i class="bi bi-globe"></i> Ochish
+      </a>
     </div></div>
-    <div class="card table-card mb-3"><div class="card-body p-4">
-      <h6 class="fw-semibold mb-3">Tezkor havolalar</h6>
-      <div class="d-grid gap-2">
-        <a href="{% url 'business:working_hours' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-clock me-2"></i>Ish vaqtlari</a>
-        <a href="{% url 'business:faq_list' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-question-circle me-2"></i>FAQ</a>
-        <a href="{% url 'business:telegram' %}" class="btn btn-outline-info btn-sm"><i class="bi bi-telegram me-2"></i>Telegram xabarnomalar</a>
+    <div class="card" style="margin-bottom:16px;"><div class="card-body" style="padding:16px;">
+      <div class="card-head-title" style="margin-bottom:12px;">Tezkor havolalar</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <a href="{% url 'business:working_hours' %}" class="btn btn-secondary btn-sm"><i class="bi bi-clock"></i> Ish vaqtlari</a>
+        <a href="{% url 'business:faq_list' %}" class="btn btn-secondary btn-sm"><i class="bi bi-question-circle"></i> Ko'p so'raladigan savollar</a>
+        <a href="{% url 'business:telegram' %}" class="btn btn-secondary btn-sm"><i class="bi bi-telegram"></i> Telegram xabarnomalar</a>
       </div>
     </div></div>
     {% if business.latitude and business.longitude %}
-    <div class="card table-card"><div class="card-body p-3">
-      <h6 class="fw-semibold mb-2 small text-muted text-uppercase">
-        <i class="bi bi-geo-alt-fill text-danger me-1"></i>Saqlangan joylashuv
-      </h6>
-      <div id="preview-map" style="height:160px;border-radius:10px;"></div>
+    <div class="card"><div class="card-body" style="padding:12px;">
+      <div class="card-head-title" style="margin-bottom:10px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-4);"><i class="bi bi-geo-alt-fill" style="color:#ef4444;margin-right:4px;"></i>Saqlangan joylashuv</div>
+      <div id="preview-map" style="height:160px;border-radius:var(--radius-sm);"></div>
     </div></div>
     {% endif %}
   </div>

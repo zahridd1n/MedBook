@@ -1,103 +1,105 @@
 {% extends 'base_dashboard.html' %}
 {% block page_title %}Mijozlar{% endblock %}
 {% block dashboard_content %}
-<style>
-.stat-mini{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px}
-.stat-mini-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.customer-avatar{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;flex-shrink:0}
-.customer-row{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
-.customer-row:hover .customer-name{color:#6366f1}
-.table-customers{font-size:.82rem}
-.table-customers thead th{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;padding:10px 14px;border-bottom:1.5px solid #e5e7eb;background:#fafafa;white-space:nowrap}
-.table-customers td{padding:12px 14px;vertical-align:middle;border-bottom:1px solid #f3f4f6}
-.table-customers tbody tr{transition:background .1s}
-.table-customers tbody tr:hover td{background:#f9fafb}
-.empty-box{text-align:center;padding:60px 24px}
-.empty-box-icon{width:56px;height:56px;border-radius:14px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px;color:#9ca3af}
-</style>
 
-<div class="page-header">
-  <div>
-    <h4 class="page-header-title mb-0">Mijozlar</h4>
-    <p class="page-header-sub">Mijozlar bazasi va tarixi</p>
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title">Mijozlar</div>
+    <div class="page-hd-sub">Mijozlar bazasi va tashrif tarixi</div>
   </div>
 </div>
 
-<div class="row g-2 mb-3">
+<!-- Stat mini cards -->
+<div class="row g-3 mb-4">
   <div class="col-md-4">
-    <div class="stat-mini">
-      <div class="stat-mini-icon" style="background:#eef2ff;color:#6366f1;"><i class="bi bi-people"></i></div>
-      <div>
-        <div class="fw-bold" style="font-size:1.15rem;">{{ total_customers }}</div>
-        <div class="text-muted" style="font-size:.72rem;">Jami mijozlar</div>
+    <div class="stat-card">
+      <div class="stat-card-top">
+        <div class="stat-icon-wrap" style="background:#eef2ff;color:#6366f1;"><i class="bi bi-people"></i></div>
+        <span class="stat-badge" style="background:#f1f5f9;color:#64748b;">Jami</span>
       </div>
+      <div class="stat-value">{{ total_customers }}</div>
+      <div class="stat-label">Jami mijozlar</div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="stat-mini">
-      <div class="stat-mini-icon" style="background:#f0fdf4;color:#16a34a;"><i class="bi bi-calendar-check"></i></div>
-      <div>
-        <div class="fw-bold" style="font-size:1.15rem;">{{ total_appts_all }}</div>
-        <div class="text-muted" style="font-size:.72rem;">Jami qabullar</div>
+    <div class="stat-card">
+      <div class="stat-card-top">
+        <div class="stat-icon-wrap" style="background:#f0fdf4;color:#16a34a;"><i class="bi bi-calendar-check"></i></div>
+        <span class="stat-badge" style="background:#f0fdf4;color:#16a34a;">Qabullar</span>
       </div>
+      <div class="stat-value">{{ total_appts_all }}</div>
+      <div class="stat-label">Jami qabullar soni</div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="stat-mini">
-      <div class="stat-mini-icon" style="background:#fef2f2;color:#dc2626;"><i class="bi bi-person-plus"></i></div>
-      <div>
-        <div class="fw-bold" style="font-size:1.15rem;">{{ customers_data|length }}</div>
-        <div class="text-muted" style="font-size:.72rem;">Joriy natija</div>
+    <div class="stat-card">
+      <div class="stat-card-top">
+        <div class="stat-icon-wrap" style="background:#eff6ff;color:#2563eb;"><i class="bi bi-funnel"></i></div>
+        <span class="stat-badge" style="background:#eff6ff;color:#2563eb;">Natija</span>
       </div>
+      <div class="stat-value">{{ customers_data|length }}</div>
+      <div class="stat-label">Qidiruv natijasi</div>
     </div>
   </div>
 </div>
 
-<div class="card mb-3">
-  <div class="card-body py-2">
-    <form method="get" class="row g-2 align-items-center">
+<!-- Search -->
+<div class="ds-filter">
+  <form method="get">
+    <div class="row g-2 align-items-end">
       <div class="col-md-8">
-        <input type="text" name="q" value="{{ search }}" class="form-control form-control-sm" placeholder="Ism yoki telefon bo'yicha qidirish...">
+        <label class="form-label">Ism yoki telefon bo'yicha qidirish</label>
+        <input type="text" name="q" value="{{ search }}" class="form-control" placeholder="Masalan: Jasur yoki +998...">
       </div>
-      <div class="col-md-4 d-flex gap-2">
-        <button type="submit" class="btn btn-sm btn-primary flex-fill">Qidirish</button>
-        {% if search %}<a href="{% url 'customers:list' %}" class="btn btn-sm btn-outline-secondary">Tozalash</a>{% endif %}
+      <div class="col-md-4">
+        <div style="display:flex;gap:8px;">
+          <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center;">
+            <i class="bi bi-search"></i> Qidirish
+          </button>
+          {% if search %}
+          <a href="{% url 'customers:list' %}" class="btn btn-secondary" title="Tozalash">
+            <i class="bi bi-x-lg"></i>
+          </a>
+          {% endif %}
+        </div>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>
 
 <div class="card">
   {% if customers_data %}
   <div class="table-responsive">
-    <table class="table table-customers mb-0">
+    <table class="ds-table">
       <thead>
         <tr>
-          <th>Mijoz</th>
+          <th style="padding-left:18px;">Mijoz</th>
           <th>Telefon</th>
           <th>Qabullar</th>
           <th>Oxirgi tashrif</th>
-          <th class="text-end pe-3" style="width:60px">Harakat</th>
+          <th style="text-align:right;padding-right:18px;width:60px;"></th>
         </tr>
       </thead>
       <tbody>
         {% for c in customers_data %}
         <tr>
-          <td>
-            <a href="{% url 'customers:detail' c.pk %}" class="customer-row">
-              <div class="customer-avatar" style="background:{% cycle 'rgba(99,102,241,.1)' 'rgba(139,92,246,.1)' 'rgba(16,185,129,.1)' 'rgba(245,158,11,.1)' %};color:{% cycle '#6366f1' '#8b5cf6' '#10b981' '#d97706' %};">{{ c.full_name|first|upper }}</div>
+          <td style="padding-left:18px;">
+            <a href="{% url 'customers:detail' c.pk %}" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+              <div class="av av-sm" style="background:rgba(99,102,241,.1);color:#6366f1;">{{ c.full_name|first|upper }}</div>
               <div>
-                <div class="fw-medium customer-name" style="font-size:.82rem;">{{ c.full_name }}</div>
-                {% if c.email %}<div class="text-muted" style="font-size:.68rem;">{{ c.email }}</div>{% endif %}
+                <div style="font-weight:600;color:var(--text);">{{ c.full_name }}</div>
+                {% if c.email %}<div style="font-size:11.5px;color:var(--text-4);">{{ c.email }}</div>{% endif %}
               </div>
             </a>
           </td>
-          <td><span class="fw-medium" style="font-size:.82rem;">{{ c.phone }}</span></td>
-          <td><span class="badge fw-semibold" style="background:#eef2ff;color:#6366f1;font-size:.72rem;padding:3px 10px;border-radius:5px;">{{ c.appt_count }}</span></td>
-          <td style="font-size:.82rem;">{{ c.last_visit_date|default:"<span class='text-muted fst-italic'>—</span>" }}</td>
-          <td class="text-end pe-3">
-            <a href="{% url 'customers:detail' c.pk %}" class="btn btn-sm btn-outline-secondary" style="border-radius:7px;padding:3px 10px;font-size:.75rem;">
-              <i class="bi bi-arrow-right"></i>
+          <td style="font-weight:500;">{{ c.phone }}</td>
+          <td>
+            <span class="status status-indigo">{{ c.appt_count }} ta</span>
+          </td>
+          <td style="color:var(--text-3);">{{ c.last_visit_date|default:"<span style='font-style:italic;color:var(--text-4);'>—</span>" }}</td>
+          <td style="text-align:right;padding-right:18px;">
+            <a href="{% url 'customers:detail' c.pk %}" class="btn btn-secondary btn-icon-sm" title="Ko'rish">
+              <i class="bi bi-arrow-right" style="font-size:11px;"></i>
             </a>
           </td>
         </tr>
@@ -106,11 +108,25 @@
     </table>
   </div>
   {% else %}
-  <div class="empty-box">
-    <div class="empty-box-icon"><i class="bi bi-people"></i></div>
-    <h6 class="fw-semibold mb-1">Mijozlar yo'q</h6>
-    <p class="text-muted small mb-0">Hali mijozlar mavjud emas. Birinchi qabul yaratishingiz bilan mijoz avtomatik qo'shiladi.</p>
+  <div class="ds-empty">
+    <div class="ds-empty-icon"><i class="bi bi-people"></i></div>
+    <div class="ds-empty-title">Mijozlar topilmadi</div>
+    <div class="ds-empty-desc">
+      {% if search %}
+        "{{ search }}" bo'yicha mijoz topilmadi. Boshqa nom yoki telefon raqamini kiriting.
+      {% else %}
+        Hali mijozlar mavjud emas. Birinchi qabul yaratilinganda mijoz avtomatik qo'shiladi.
+      {% endif %}
+    </div>
+    {% if search %}
+    <a href="{% url 'customers:list' %}" class="btn btn-secondary">Filtrni tozalash</a>
+    {% else %}
+    <a href="{% url 'appointments:create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Yangi qabul qo'shish
+    </a>
+    {% endif %}
   </div>
   {% endif %}
 </div>
+
 {% endblock %}

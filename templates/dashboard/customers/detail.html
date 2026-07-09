@@ -1,204 +1,182 @@
 {% extends 'base_dashboard.html' %}
 {% block page_title %}{{ customer.full_name }}{% endblock %}
 {% block dashboard_content %}
-<style>
-.customer-header{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 24px;margin-bottom:20px}
-.customer-header-avatar{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;flex-shrink:0}
-.stat-mini{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:14px;height:100%}
-.stat-mini-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.info-section{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
-.info-section-header{background:#fafafa;padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:.78rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}
-.info-row{display:flex;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #f3f4f6;font-size:.82rem}
-.info-row:last-child{border-bottom:none}
-.info-row .label{color:#6b7280}
-.info-row .value{font-weight:500;color:#111827;text-align:right}
-.visit-section{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
-.visit-item{padding:14px 16px;border-bottom:1px solid #f3f4f6;transition:background .1s}
-.visit-item:last-child{border-bottom:none}
-.visit-item:hover{background:#fafafa}
-.visit-date{background:#f3f4f6;border-radius:8px;padding:6px 10px;text-align:center;min-width:52px;flex-shrink:0}
-.visit-date .day{font-size:.6rem;color:#6b7280;font-weight:600;line-height:1;text-transform:uppercase}
-.visit-date .num{font-size:.85rem;font-weight:700;color:#111827;line-height:1.3;margin-top:1px}
-.notes-box{background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;padding:10px 12px;margin-top:8px}
-.status-mini{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:5px;font-size:.7rem;font-weight:600}
-.status-mini::before{content:'';width:5px;height:5px;border-radius:50%}
-.status-mini.new{background:#eef2ff;color:#4f46e5}.status-mini.new::before{background:#6366f1}
-.status-mini.confirmed{background:#f0fdf4;color:#15803d}.status-mini.confirmed::before{background:#22c55e}
-.status-mini.completed{background:#f8fafc;color:#475569}.status-mini.completed::before{background:#94a3b8}
-.status-mini.cancelled{background:#fef2f2;color:#b91c1c}.status-mini.cancelled::before{background:#ef4444}
-.form-appt .form-control-sm,.form-appt .form-select-sm{font-size:.78rem}
-.empty-box{text-align:center;padding:48px 24px}
-.empty-box-icon{width:48px;height:48px;border-radius:12px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 12px;color:#9ca3af}
-</style>
 
-<div class="d-flex align-items-center gap-3 mb-3">
-  <a href="{% url 'customers:list' %}" class="btn btn-sm btn-outline-secondary" style="border-radius:8px;width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center;"><i class="bi bi-arrow-left"></i></a>
-  <div>
-    <h4 class="fw-bold mb-0" style="font-size:1rem;">{{ customer.full_name }}</h4>
-    <p class="text-muted small mb-0">Mijoz profili va tashriflar tarixi</p>
+<!-- Header -->
+<div class="page-hd">
+  <div class="page-hd-left" style="display:flex;align-items:center;gap:12px;">
+    <a href="{% url 'customers:list' %}" class="btn btn-secondary btn-icon-sm">
+      <i class="bi bi-arrow-left" style="font-size:13px;"></i>
+    </a>
+    <div>
+      <div class="page-hd-title">{{ customer.full_name }}</div>
+      <div class="page-hd-sub">Mijoz profili va tashriflar tarixi</div>
+    </div>
   </div>
 </div>
 
-<div class="customer-header d-flex align-items-center gap-3 flex-wrap">
-  <div class="customer-header-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;">{{ customer.full_name|first|upper }}</div>
-  <div class="flex-fill min-w-0">
-    <h5 class="fw-bold mb-0" style="font-size:1rem;">{{ customer.full_name }}</h5>
-    <div class="d-flex align-items-center gap-3 mt-1 flex-wrap">
-      <span class="small text-muted"><i class="bi bi-telephone me-1"></i>{{ customer.phone }}</span>
-      {% if customer.email %}<span class="small text-muted"><i class="bi bi-envelope me-1"></i>{{ customer.email }}</span>{% endif %}
-      <span class="small text-muted"><i class="bi bi-calendar me-1"></i>{{ customer.created_at|date:"d.m.Y" }}</span>
+<!-- Customer hero card -->
+<div class="card" style="margin-bottom:20px;">
+  <div class="card-body" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+    <div class="av av-lg" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:1.3rem;">
+      {{ customer.full_name|first|upper }}
     </div>
-  </div>
-  <div class="d-flex gap-2">
-    <span class="badge fw-semibold" style="background:#eef2ff;color:#6366f1;font-size:.75rem;padding:5px 12px;border-radius:6px;"><i class="bi bi-clock-history me-1"></i>{{ appointments|length }} tashrif</span>
-    <span class="badge fw-semibold" style="background:#f0fdf4;color:#16a34a;font-size:.75rem;padding:5px 12px;border-radius:6px;"><i class="bi bi-check-circle me-1"></i>{{ completed_count }} yakunlangan</span>
-  </div>
-</div>
-
-<div class="row g-3">
-  <!-- Left column -->
-  <div class="col-lg-4 d-flex flex-column gap-3">
-    <!-- Stats mini -->
-    <div class="row g-2">
-      <div class="col-6">
-        <div class="stat-mini">
-          <div class="stat-mini-icon" style="background:#eef2ff;color:#6366f1;"><i class="bi bi-calendar-check"></i></div>
-          <div>
-            <div class="fw-bold" style="font-size:1.1rem;">{{ appointments|length }}</div>
-            <div class="text-muted" style="font-size:.68rem;">Tashriflar</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="stat-mini">
-          <div class="stat-mini-icon" style="background:#f0fdf4;color:#16a34a;"><i class="bi bi-check2-circle"></i></div>
-          <div>
-            <div class="fw-bold" style="font-size:1.1rem;">{{ completed_count }}</div>
-            <div class="text-muted" style="font-size:.68rem;">Yakunlangan</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="stat-mini">
-          <div class="stat-mini-icon" style="background:#fef2f2;color:#dc2626;"><i class="bi bi-currency-sum"></i></div>
-          <div>
-            <div class="fw-bold" style="font-size:1.1rem;">{% if total_spent %}{{ total_spent|floatformat:0 }}{% else %}0{% endif %}</div>
-            <div class="text-muted" style="font-size:.68rem;">Sarflangan</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="stat-mini">
-          <div class="stat-mini-icon" style="background:#fefce8;color:#a16207;"><i class="bi bi-person-badge"></i></div>
-          <div>
-            <div class="fw-bold" style="font-size:1.1rem;">{{ appointments.0.date|default:"—" }}</div>
-            <div class="text-muted" style="font-size:.68rem;">Oxirgi tashrif</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Shaxsiy eslatmalar -->
-    <div class="info-section">
-      <div class="info-section-header d-flex align-items-center justify-content-between">
-        <span><i class="bi bi-sticky me-1"></i>Shaxsiy eslatmalar</span>
-        <button class="btn btn-sm p-0 border-0 text-primary fw-semibold" style="font-size:.72rem;" data-bs-toggle="collapse" data-bs-target="#addNoteForm">
-          <i class="bi bi-plus-circle me-1"></i>Qo'shish
-        </button>
-      </div>
-      <div class="p-3">
-        <form method="post" class="collapse mb-2" id="addNoteForm">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="add_note">
-          <textarea name="customer_notes" class="form-control form-control-sm mb-2" rows="2" placeholder="Eslatma yozish..."></textarea>
-          <button type="submit" class="btn btn-sm btn-primary w-100">Saqlash</button>
-        </form>
-        {% if customer.notes %}
-        <div class="small" style="color:#374151;white-space:pre-wrap;max-height:180px;overflow-y:auto;font-size:.78rem;line-height:1.5;">{{ customer.notes }}</div>
-        {% else %}
-        <div class="small text-muted fst-italic" style="font-size:.78rem;">Hali eslatmalar yo'q</div>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;">{{ customer.full_name }}</div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <span style="font-size:12.5px;color:var(--text-3);"><i class="bi bi-telephone" style="margin-right:4px;"></i>{{ customer.phone }}</span>
+        {% if customer.email %}
+        <span style="font-size:12.5px;color:var(--text-3);"><i class="bi bi-envelope" style="margin-right:4px;"></i>{{ customer.email }}</span>
         {% endif %}
+        <span style="font-size:12.5px;color:var(--text-4);"><i class="bi bi-calendar" style="margin-right:4px;"></i>{{ customer.created_at|date:"d.m.Y" }} dan beri</span>
       </div>
     </div>
+    <div style="display:flex;gap:8px;">
+      <span class="status status-indigo"><i class="bi bi-clock-history" style="font-size:10px;"></i> {{ appointments|length }} tashrif</span>
+      <span class="status status-green"><i class="bi bi-check-circle" style="font-size:10px;"></i> {{ completed_count }} yakunlangan</span>
+    </div>
+  </div>
+</div>
 
-    <!-- Tez qabul qo'shish -->
-    <div class="info-section">
-      <div class="info-section-header"><i class="bi bi-plus-circle me-1"></i>Tez qabul qo'shish</div>
-      <div class="p-3 form-appt">
-        <form method="post">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="add_appointment">
-          <div class="mb-2">
-            <label class="form-label small text-muted fw-semibold" style="font-size:.72rem;">Xizmat</label>
-            {{ appointment_form.service }}
+<div class="row g-4">
+
+  <!-- Left column -->
+  <div class="col-lg-4">
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Stats mini -->
+      <div class="row g-2">
+        <div class="col-6">
+          <div class="stat-card" style="padding:14px;">
+            <div class="stat-icon-wrap" style="background:#eef2ff;color:#6366f1;width:34px;height:34px;margin-bottom:10px;"><i class="bi bi-calendar-check" style="font-size:14px;"></i></div>
+            <div class="stat-value" style="font-size:20px;">{{ appointments|length }}</div>
+            <div class="stat-label">Tashriflar</div>
           </div>
-          <div class="mb-2">
-            <label class="form-label small text-muted fw-semibold" style="font-size:.72rem;">Xodim</label>
-            {{ appointment_form.employee }}
+        </div>
+        <div class="col-6">
+          <div class="stat-card" style="padding:14px;">
+            <div class="stat-icon-wrap" style="background:#f0fdf4;color:#16a34a;width:34px;height:34px;margin-bottom:10px;"><i class="bi bi-check2-circle" style="font-size:14px;"></i></div>
+            <div class="stat-value" style="font-size:20px;">{{ completed_count }}</div>
+            <div class="stat-label">Yakunlangan</div>
           </div>
-          <div class="row g-2 mb-2">
-            <div class="col-6">
-              <label class="form-label small text-muted fw-semibold" style="font-size:.72rem;">Sana</label>
-              {{ appointment_form.date }}
-            </div>
-            <div class="col-6">
-              <label class="form-label small text-muted fw-semibold" style="font-size:.72rem;">Vaqt</label>
-              {{ appointment_form.time }}
-            </div>
-          </div>
-          <button type="submit" class="btn btn-sm btn-primary w-100">Qo'shish</button>
-        </form>
+        </div>
       </div>
+
+      <!-- Notes -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-head-title"><i class="bi bi-sticky" style="margin-right:6px;"></i>Eslatmalar</span>
+          <button class="btn btn-ghost btn-sm" data-bs-toggle="collapse" data-bs-target="#addNoteForm">
+            <i class="bi bi-plus-lg" style="font-size:11px;"></i> Qo'shish
+          </button>
+        </div>
+        <div class="card-body">
+          <form method="post" class="collapse mb-3" id="addNoteForm">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_note">
+            <textarea name="customer_notes" class="form-control" rows="3" placeholder="Eslatma yozish..." style="font-size:13px;"></textarea>
+            <button type="submit" class="btn btn-primary btn-sm" style="margin-top:8px;width:100%;justify-content:center;">
+              <i class="bi bi-check-lg"></i> Saqlash
+            </button>
+          </form>
+          {% if customer.notes %}
+          <div style="font-size:12.5px;color:var(--text-2);white-space:pre-wrap;line-height:1.6;max-height:200px;overflow-y:auto;">{{ customer.notes }}</div>
+          {% else %}
+          <div style="font-size:12.5px;color:var(--text-4);font-style:italic;">Hali eslatmalar yo'q</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Quick appointment -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-head-title"><i class="bi bi-plus-circle" style="margin-right:6px;"></i>Tez qabul qo'shish</span>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_appointment">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div>
+                <label class="form-label">Xizmat</label>
+                {{ appointment_form.service }}
+              </div>
+              <div>
+                <label class="form-label">Xodim</label>
+                {{ appointment_form.employee }}
+              </div>
+              <div class="row g-2">
+                <div class="col-6">
+                  <label class="form-label">Sana</label>
+                  {{ appointment_form.date }}
+                </div>
+                <div class="col-6">
+                  <label class="form-label">Vaqt</label>
+                  {{ appointment_form.time }}
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="justify-content:center;">
+                <i class="bi bi-plus-lg"></i> Qabul qo'shish
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Right column: Tashriflar tarixi -->
+  <!-- Right: Visit history -->
   <div class="col-lg-8">
-    <div class="visit-section">
-      <div class="info-section-header"><i class="bi bi-clock-history me-1"></i>Tashriflar tarixi</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title"><i class="bi bi-clock-history" style="margin-right:6px;"></i>Tashriflar tarixi</span>
+      </div>
       {% if appointments %}
-        {% for a in appointments %}
-        <div class="visit-item">
-          <div class="d-flex align-items-start gap-3">
-            <div class="visit-date">
-              <div class="day">{{ a.date|date:"M" }}</div>
-              <div class="num">{{ a.date|date:"d" }}</div>
+      {% for a in appointments %}
+      <div style="padding:14px 18px;border-bottom:1px solid var(--border);transition:background .1s;" onmouseenter="this.style.background='#fafbfc'" onmouseleave="this.style.background=''">
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+          <div style="background:#f3f4f6;border-radius:8px;padding:6px 10px;text-align:center;min-width:48px;flex-shrink:0;">
+            <div style="font-size:9.5px;color:var(--text-4);font-weight:600;text-transform:uppercase;line-height:1;">{{ a.date|date:"M" }}</div>
+            <div style="font-size:15px;font-weight:700;color:var(--text);line-height:1.3;margin-top:2px;">{{ a.date|date:"d" }}</div>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+              <span style="font-weight:600;font-size:13px;color:var(--text);">{{ a.service.name|default:"Xizmat" }}</span>
+              <span style="font-size:12px;color:var(--text-3);"><i class="bi bi-person-badge" style="margin-right:3px;"></i>{{ a.employee.name|default:"Har qanday" }}</span>
+              <span style="font-size:12px;color:var(--text-3);"><i class="bi bi-clock" style="margin-right:3px;"></i>{{ a.time|time:"H:i" }}</span>
+              <span class="status status-{{ a.status }}" style="margin-left:auto;">{{ a.get_status_display }}</span>
             </div>
-            <div class="flex-fill min-w-0">
-              <div class="d-flex align-items-center gap-2 flex-wrap">
-                <span class="fw-semibold" style="font-size:.82rem;">{{ a.service.name|default:"Xizmat" }}</span>
-                <span class="text-muted" style="font-size:.72rem;"><i class="bi bi-person-badge me-1"></i>{{ a.employee.name|default:"Har qanday" }}</span>
-                <span class="text-muted" style="font-size:.72rem;"><i class="bi bi-clock me-1"></i>{{ a.time|time:"H:i" }}</span>
-                <span class="status-mini {{ a.status }} ms-auto">{{ a.get_status_display }}</span>
+            {% if a.notes %}
+            <div style="font-size:12px;color:var(--text-3);margin-bottom:4px;">{{ a.notes }}</div>
+            {% endif %}
+            {% if a.doctor_notes %}
+            <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;margin-top:8px;">
+              <div style="font-size:10.5px;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
+                <i class="bi bi-file-text" style="margin-right:4px;"></i>Mutaxassis izohi
               </div>
-              {% if a.notes %}
-              <div class="small text-muted mt-1" style="font-size:.75rem;"><span class="fw-medium">Mijoz:</span> {{ a.notes }}</div>
-              {% endif %}
-              {% if a.doctor_notes %}
-              <div class="notes-box mt-1">
-                <div class="d-flex align-items-center justify-content-between mb-1">
-                  <span class="small fw-semibold" style="font-size:.72rem;color:#d97706;"><i class="bi bi-file-text me-1"></i>Shifokor qaydlari</span>
-                  <a href="{% url 'appointments:edit' a.pk %}" class="small" style="font-size:.7rem;color:#6366f1;">Tahrirlash</a>
-                </div>
-                <div class="small" style="font-size:.75rem;color:#374151;white-space:pre-wrap;">{{ a.doctor_notes }}</div>
-              </div>
-              {% else %}
-              <div class="mt-1">
-                <a href="{% url 'appointments:edit' a.pk %}" class="small" style="font-size:.72rem;color:#9ca3af;"><i class="bi bi-plus-circle me-1"></i>Qayd qo'shish</a>
-              </div>
-              {% endif %}
+              <div style="font-size:12.5px;color:var(--text-2);white-space:pre-wrap;">{{ a.doctor_notes }}</div>
+            </div>
+            {% endif %}
+            <div style="margin-top:6px;">
+              <a href="{% url 'appointments:edit' a.pk %}" style="font-size:12px;color:var(--p);text-decoration:none;">
+                <i class="bi bi-pencil" style="font-size:10px;"></i> Tahrirlash
+              </a>
             </div>
           </div>
         </div>
-        {% endfor %}
+      </div>
+      {% endfor %}
       {% else %}
-      <div class="empty-box">
-        <div class="empty-box-icon"><i class="bi bi-calendar-x"></i></div>
-        <h6 class="fw-semibold mb-1" style="font-size:.85rem;">Tashriflar yo'q</h6>
-        <p class="text-muted small mb-0">Bu mijoz uchun hali qabullar qayd etilmagan</p>
+      <div class="ds-empty">
+        <div class="ds-empty-icon"><i class="bi bi-calendar-x"></i></div>
+        <div class="ds-empty-title">Tashriflar yo'q</div>
+        <div class="ds-empty-desc">Bu mijoz uchun hali qabullar qayd etilmagan</div>
       </div>
       {% endif %}
     </div>
   </div>
+
 </div>
+
 {% endblock %}
