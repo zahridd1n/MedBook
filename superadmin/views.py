@@ -340,3 +340,61 @@ def payment_detail(request, pk):
         'payment': payment,
     }
     return render(request, 'superadmin/payment_detail.html', context)
+
+
+# ─── Pricing Plans Management ──────────────────────────────────────────────────
+
+from .models import PricingPlan
+from .forms import PricingPlanForm, PricingPlanFeatureFormSet
+
+@superuser_required
+def pricing_plan_list(request):
+    plans = PricingPlan.objects.all().order_by('order')
+    return render(request, 'superadmin/pricing_plans/list.html', {'plans': plans})
+
+@superuser_required
+def pricing_plan_create(request):
+    if request.method == 'POST':
+        form = PricingPlanForm(request.POST)
+        formset = PricingPlanFeatureFormSet(request.POST)
+        if form.is_valid() and formset.is_valid():
+            plan = form.save()
+            formset.instance = plan
+            formset.save()
+            messages.success(request, 'Yangi tarif muvaffaqiyatli qo\'shildi.')
+            return redirect('superadmin:pricing_plan_list')
+    else:
+        form = PricingPlanForm()
+        formset = PricingPlanFeatureFormSet()
+    
+    return render(request, 'superadmin/pricing_plans/form.html', {
+        'form': form, 'formset': formset, 'action': 'Qo\'shish'
+    })
+
+@superuser_required
+def pricing_plan_edit(request, pk):
+    plan = get_object_or_404(PricingPlan, pk=pk)
+    if request.method == 'POST':
+        form = PricingPlanForm(request.POST, instance=plan)
+        formset = PricingPlanFeatureFormSet(request.POST, instance=plan)
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save()
+            messages.success(request, 'Tarif muvaffaqiyatli yangilandi.')
+            return redirect('superadmin:pricing_plan_list')
+    else:
+        form = PricingPlanForm(instance=plan)
+        formset = PricingPlanFeatureFormSet(instance=plan)
+    
+    return render(request, 'superadmin/pricing_plans/form.html', {
+        'form': form, 'formset': formset, 'action': 'Tahrirlash'
+    })
+
+@superuser_required
+def pricing_plan_delete(request, pk):
+    plan = get_object_or_404(PricingPlan, pk=pk)
+    if request.method == 'POST':
+        plan.delete()
+        messages.success(request, 'Tarif o\'chirildi.')
+        return redirect('superadmin:pricing_plan_list')
+    return render(request, 'superadmin/pricing_plans/delete.html', {'plan': plan})

@@ -1,0 +1,175 @@
+{% extends 'superadmin/base_superadmin.html' %}
+{% block page_title %}{{ action }} Tarif{% endblock %}
+
+{% block sa_content %}
+<div class="mb-4 d-flex align-items-center gap-3">
+    <a href="{% url 'superadmin:pricing_plan_list' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Orqaga
+    </a>
+    <h5 class="mb-0 fw-bold">{{ action }} Tarif</h5>
+</div>
+
+<form method="post" class="needs-validation" novalidate>
+    {% csrf_token %}
+    <div class="row">
+        <!-- Main Form -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-4">Tarif Ma'lumotlari</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">Nomi</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">Slug (tizim uchun)</label>
+                            {{ form.slug }}
+                            <div class="form-text">free, pro, max kabi (bo'sh joylarsiz kichik harfda)</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-medium">Ta'rif (Description)</label>
+                            {{ form.description }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">Oylik Narx (UZS)</label>
+                            {{ form.price_monthly }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">Yillik Narx (UZS)</label>
+                            {{ form.price_yearly }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-medium">Xodimlar limiti</label>
+                            {{ form.max_employees }}
+                            <div class="form-text">0 = cheksiz</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-medium">Bandlov limiti</label>
+                            {{ form.max_appointments_monthly }}
+                            <div class="form-text">0 = cheksiz</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-medium">Tartib (Order)</label>
+                            {{ form.order }}
+                            <div class="form-text">Kichik raqam oldin chiqadi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-4">Tarif Imkoniyatlari (Features - ro'yxat)</h6>
+                    {{ formset.management_form }}
+                    <table class="table table-bordered table-sm" id="features-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Matn</th>
+                                <th style="width: 100px;">Kiritilgan?</th>
+                                <th style="width: 80px;">Tartib</th>
+                                <th style="width: 80px;">O'chirish</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for inline_form in formset %}
+                            <tr class="feature-form-row">
+                                {% for hidden in inline_form.hidden_fields %}{{ hidden }}{% endfor %}
+                                <td>{{ inline_form.text }}</td>
+                                <td class="text-center">{{ inline_form.is_included }}</td>
+                                <td>{{ inline_form.order }}</td>
+                                <td class="text-center">
+                                    {% if inline_form.instance.pk %}{{ inline_form.DELETE }}{% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="add-feature-btn">
+                        <i class="bi bi-plus"></i> Imkoniyat qo'shish
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar options -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-3">Holat & Belgilar</h6>
+                    <div class="form-check form-switch mb-3">
+                        {{ form.is_active }}
+                        <label class="form-check-label fw-medium">Tarif faol</label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        {{ form.is_popular }}
+                        <label class="form-check-label fw-medium">Mashhur (Ommabop) belgisini qo'yish</label>
+                    </div>
+                    
+                    <hr>
+                    <h6 class="fw-bold mb-3">Texnik Ruxsatlar</h6>
+                    <div class="form-check mb-2">
+                        {{ form.allow_telegram }}
+                        <label class="form-check-label">Telegram xabarnomalar</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        {{ form.allow_email }}
+                        <label class="form-check-label">Email xabarnomalar</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        {{ form.allow_custom_domain }}
+                        <label class="form-check-label">Shaxsiy domen ulash</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        {{ form.allow_branding }}
+                        <label class="form-check-label">Brending</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        {{ form.allow_custom_css }}
+                        <label class="form-check-label">Maxsus dizayn (Custom CSS)</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        {{ form.allow_api }}
+                        <label class="form-check-label">API integratsiya</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+                <i class="bi bi-save me-1"></i> Saqlash
+            </button>
+        </div>
+    </div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addButton = document.getElementById('add-feature-btn');
+    const tableBody = document.querySelector('#features-table tbody');
+    const totalFormsInput = document.querySelector('#id_features-TOTAL_FORMS');
+    
+    addButton.addEventListener('click', function() {
+        const formCount = parseInt(totalFormsInput.value);
+        const rows = tableBody.querySelectorAll('.feature-form-row');
+        if (rows.length === 0) return;
+        
+        const emptyRow = rows[rows.length - 1].cloneNode(true);
+        
+        // Update input names and ids
+        const regex = new RegExp(`features-(\\d+)-`, 'g');
+        emptyRow.innerHTML = emptyRow.innerHTML.replace(regex, `features-${formCount}-`);
+        
+        // Clear inputs
+        emptyRow.querySelectorAll('input:not([type=checkbox])').forEach(input => input.value = '');
+        emptyRow.querySelectorAll('input[type=checkbox]').forEach(input => input.checked = true);
+        
+        // Set order incrementally
+        const orderInput = emptyRow.querySelector(`input[name="features-${formCount}-order"]`);
+        if(orderInput) orderInput.value = formCount + 1;
+
+        tableBody.appendChild(emptyRow);
+        totalFormsInput.value = formCount + 1;
+    });
+});
+</script>
+{% endblock %}

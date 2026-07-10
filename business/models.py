@@ -161,48 +161,41 @@ class Business(models.Model):
 
     # ─── Plan / Subscription helpers ────────────────────────────────────────
     # Har bir tarif uchun cheklovlar va narxlar
-    PLAN_LIMITS = {
-        'free': {
-            'max_employees':           1,
-            'max_appointments_monthly': 50,
-            'telegram':                True,   # oddiy Telegram xabarnoma
-            'email':                   True,
-            'custom_domain':           False,
-            'branding':                False,
-            'custom_css':              False,
-            'api':                     False,
-            'price_monthly':           0,
-            'price_label':             "0 UZS",
-        },
-        'growth': {
-            'max_employees':           5,
-            'max_appointments_monthly': None,  # cheksiz
-            'telegram':                True,
-            'email':                   True,
-            'custom_domain':           True,
-            'branding':                True,
-            'custom_css':              False,
-            'api':                     False,
-            'price_monthly':           99000,
-            'price_label':             "99 000 UZS",
-        },
-        'enterprise': {
-            'max_employees':           None,   # cheksiz
-            'max_appointments_monthly': None,
-            'telegram':                True,
-            'email':                   True,
-            'custom_domain':           True,
-            'branding':                True,
-            'custom_css':              True,
-            'api':                     True,
-            'price_monthly':           249000,
-            'price_label':             "249 000 UZS",
-        },
-    }
-
     @property
     def plan_data(self):
-        return self.PLAN_LIMITS.get(self.subscription_plan, self.PLAN_LIMITS['free'])
+        from superadmin.models import PricingPlan
+        plan = PricingPlan.objects.filter(slug=self.subscription_plan).first()
+        if not plan:
+            # Fallback to free plan if not found
+            plan = PricingPlan.objects.filter(slug='free').first()
+        
+        if plan:
+            return {
+                'max_employees': plan.max_employees,
+                'max_appointments_monthly': plan.max_appointments_monthly,
+                'telegram': plan.allow_telegram,
+                'email': plan.allow_email,
+                'custom_domain': plan.allow_custom_domain,
+                'branding': plan.allow_branding,
+                'custom_css': plan.allow_custom_css,
+                'api': plan.allow_api,
+                'price_monthly': plan.price_monthly,
+                'price_label': plan.price_label,
+            }
+        
+        # Absolute fallback if db is empty
+        return {
+            'max_employees': 1,
+            'max_appointments_monthly': 50,
+            'telegram': False,
+            'email': True,
+            'custom_domain': False,
+            'branding': False,
+            'custom_css': False,
+            'api': False,
+            'price_monthly': 0,
+            'price_label': "0 UZS",
+        }
 
     @property
     def max_employees(self):
@@ -230,7 +223,7 @@ class Business(models.Model):
         return count < mx
 
     def can_use_telegram(self):
-        return True  # Barcha tariflarda Telegram bor
+        return self.plan_data.get('telegram', False)
 
     def can_use_custom_domain(self):
         return self.plan_data.get('custom_domain', False)
@@ -246,6 +239,10 @@ class Business(models.Model):
 
     @property
     def plan_display(self):
+        from superadmin.models import PricingPlan
+        plan = PricingPlan.objects.filter(slug=self.subscription_plan).first()
+        if plan:
+            return plan.name
         return dict(self.PLAN_CHOICES).get(self.subscription_plan, 'Start')
 
     @property

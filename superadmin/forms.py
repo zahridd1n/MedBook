@@ -88,3 +88,48 @@ class SiteSettingsForm(forms.ModelForm):
             'payment_card_number': 'Karta raqami',
             'payment_card_holder': 'Karta egasi (ism familya)',
         }
+
+
+from .models import PricingPlan, PricingPlanFeature
+from django.forms import inlineformset_factory
+
+class PricingPlanForm(forms.ModelForm):
+    class Meta:
+        model = PricingPlan
+        fields = '__all__'
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'price_monthly': forms.NumberInput(attrs={'class': 'form-control'}),
+            'price_yearly': forms.NumberInput(attrs={'class': 'form-control'}),
+            'max_employees': forms.NumberInput(attrs={'class': 'form-control'}),
+            'max_appointments_monthly': forms.NumberInput(attrs={'class': 'form-control'}),
+            'order': forms.NumberInput(attrs={'class': 'form-control'}),
+            'allow_telegram': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'allow_email': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'allow_custom_domain': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'allow_branding': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'allow_custom_css': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'allow_api': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_popular': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+
+class PricingPlanFeatureForm(forms.ModelForm):
+    class Meta:
+        model = PricingPlanFeature
+        fields = ['text', 'is_included', 'order']
+        widgets = {
+            'text': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
+            'order': forms.NumberInput(attrs={'class': 'form-control form-control-sm'}),
+            'is_included': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+PricingPlanFeatureFormSet = inlineformset_factory(
+    PricingPlan, PricingPlanFeature,
+    form=PricingPlanFeatureForm,
+    extra=1,
+    can_delete=True
+)

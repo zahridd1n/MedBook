@@ -306,6 +306,9 @@
     <a href="{% url 'superadmin:site_settings' %}" class="nav-link {% if 'site-settings' in request.path %}active{% endif %}">
       <i class="bi bi-sliders"></i> Sayt Sozlamalari
     </a>
+    <a href="{% url 'superadmin:pricing_plan_list' %}" class="nav-link {% if 'pricing-plans' in request.path %}active{% endif %}">
+      <i class="bi bi-tags-fill"></i> Tariflar (Pricing)
+    </a>
     <a href="{% url 'marketing:home' %}" class="nav-link" target="_blank">
       <i class="bi bi-box-arrow-up-right"></i> Marketing Sahifasi
     </a>

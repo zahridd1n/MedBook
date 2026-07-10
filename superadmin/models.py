@@ -300,3 +300,54 @@ class SiteSettings(models.Model):
     def load(cls):
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
+
+
+class PricingPlan(models.Model):
+    name = models.CharField(max_length=50, help_text="Tarif nomi (masalan: Start, Pro, Max)")
+    slug = models.SlugField(max_length=20, unique=True, help_text="Sistemadagi ID (masalan: free, growth, enterprise)")
+    description = models.CharField(max_length=200, blank=True, help_text="Qisqacha ta'rif")
+    
+    price_monthly = models.PositiveIntegerField(default=0, help_text="Oylik to'lov summasi (UZS)")
+    price_yearly = models.PositiveIntegerField(default=0, help_text="Yillik to'lovda bir oy uchun summa (UZS)")
+    
+    # Biznes mantiq cheklovlari
+    max_employees = models.IntegerField(null=True, blank=True, help_text="Maksimal xodimlar soni (Bo'sh bo'lsa cheksiz)")
+    max_appointments_monthly = models.IntegerField(null=True, blank=True, help_text="Oylik maksimal bandlovlar (Bo'sh bo'lsa cheksiz)")
+    
+    allow_telegram = models.BooleanField(default=False, help_text="Telegram xabarnomalar va bot")
+    allow_email = models.BooleanField(default=True, help_text="Email xabarnomalar")
+    allow_custom_domain = models.BooleanField(default=False, help_text="Shaxsiy domen ulash imkoniyati")
+    allow_branding = models.BooleanField(default=False, help_text="Shaxsiy brending (Logotip va hk)")
+    allow_custom_css = models.BooleanField(default=False, help_text="Custom CSS imkoniyati")
+    allow_api = models.BooleanField(default=False, help_text="API va Webhooklar")
+    
+    is_active = models.BooleanField(default=True, help_text="Aktiv tarif (Saytda ko'rinadi)")
+    is_popular = models.BooleanField(default=False, help_text="Tavsiya etiladigan tarif belgisi (Mashhur)")
+    order = models.PositiveIntegerField(default=0, help_text="Tartib raqami (kichigi oldin chiqadi)")
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = "Pricing Plan"
+        verbose_name_plural = "Pricing Plans"
+
+    def __str__(self):
+        return f"{self.name} ({self.price_monthly} UZS)"
+
+    @property
+    def price_label(self):
+        if self.price_monthly == 0:
+            return "0 UZS"
+        return f"{self.price_monthly:,} UZS".replace(",", " ")
+
+
+class PricingPlanFeature(models.Model):
+    plan = models.ForeignKey(PricingPlan, related_name='features', on_delete=models.CASCADE)
+    text = models.CharField(max_length=200, help_text="Funksiya matni (Masalan: 'Cheksiz qabullar')")
+    is_included = models.BooleanField(default=True, help_text="Ushbu tarifda bor yoki yo'q (chizib ko'rsatish uchun)")
+    order = models.PositiveIntegerField(default=0, help_text="Ro'yxatdagi tartib raqami")
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"{self.plan.name} - {self.text}"

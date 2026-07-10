@@ -387,18 +387,13 @@ def upgrade_view(request):
     if not business:
         return redirect('business:setup')
 
-    site = SiteSettings.load()
-    plans = [
-        {'id': 'pro',  'name': 'Pro',  'price_monthly': site.growth_price_monthly,
-         'price_yearly': site.growth_price_yearly},
-        {'id': 'max',  'name': 'Max',  'price_monthly': site.enterprise_price_monthly,
-         'price_yearly': site.enterprise_price_yearly},
-    ]
+    from superadmin.models import PricingPlan
+    plans = PricingPlan.objects.filter(is_active=True).order_by('order').prefetch_related('features')
 
     context = {
         'business': business,
         'plans': plans,
-        'site': site,
+        'site': SiteSettings.load(),
     }
     return render(request, 'dashboard/upgrade.html', context)
 
@@ -410,13 +405,16 @@ def payment_view(request):
         return redirect('business:setup')
 
     plan_id = request.GET.get('plan') or request.POST.get('plan')
-    if plan_id not in ('pro', 'max'):
+    
+    from superadmin.models import PricingPlan
+    plan = PricingPlan.objects.filter(slug=plan_id).first()
+    if not plan or plan.slug == 'free':
         messages.error(request, 'Noto\'g\'ri tarif tanlandi.')
         return redirect('business:upgrade')
 
     site = SiteSettings.load()
-    plan_name = 'Pro' if plan_id == 'pro' else 'Max'
-    amount = site.growth_price_monthly if plan_id == 'pro' else site.enterprise_price_monthly
+    plan_name = plan.name
+    amount = plan.price_monthly
 
     if request.method == 'POST':
         receipt = request.FILES.get('receipt')

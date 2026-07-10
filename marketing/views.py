@@ -111,37 +111,21 @@ def _money(amount):
 
 
 def _plans(site, copy, lang):
-    features = PLAN_FEATURES[lang]
-    return [
-        {
-            'id': 'start',
-            'name': 'Start',
-            'price': _money(site.starter_price),
-            'period': copy['pricing']['monthly'],
-            'featured': False,
-            'features': features['start'],
-        },
-        {
-            'id': 'pro',
-            'name': 'Pro',
-            'price': _money(site.growth_price_monthly),
-            'yearly_price': _money(site.growth_price_yearly),
+    from superadmin.models import PricingPlan
+    plans = PricingPlan.objects.filter(is_active=True).prefetch_related('features')
+    result = []
+    for p in plans:
+        result.append({
+            'id': p.slug,
+            'name': p.name,
+            'price': _money(p.price_monthly),
+            'yearly_price': _money(p.price_yearly) if p.price_yearly else None,
             'period': copy['pricing']['monthly'],
             'yearly_label': copy['pricing']['yearly'],
-            'featured': True,
-            'features': features['pro'],
-        },
-        {
-            'id': 'max',
-            'name': 'Max',
-            'price': _money(site.enterprise_price_monthly),
-            'yearly_price': _money(site.enterprise_price_yearly),
-            'period': copy['pricing']['monthly'],
-            'yearly_label': copy['pricing']['yearly'],
-            'featured': False,
-            'features': features['max'],
-        },
-    ]
+            'featured': p.is_popular,
+            'features': [f.text for f in p.features.filter(is_included=True).order_by('order')],
+        })
+    return result
 
 
 def _context(request):

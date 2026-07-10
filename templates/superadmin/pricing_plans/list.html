@@ -1,0 +1,68 @@
+{% extends 'superadmin/base_superadmin.html' %}
+{% load humanize %}
+{% block page_title %}Tariflar (Pricing Plans){% endblock %}
+
+{% block sa_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0 fw-bold">Tariflar Ro'yxati</h5>
+    <a href="{% url 'superadmin:pricing_plan_create' %}" class="btn btn-primary fw-semibold">
+        <i class="bi bi-plus-lg me-1"></i> Yangi Tarif
+    </a>
+</div>
+
+<div class="card sa-table-card">
+    <div class="table-responsive">
+        <table class="table sa-table mb-0">
+            <thead>
+                <tr>
+                    <th>Tartib</th>
+                    <th>Nomi</th>
+                    <th>Slug</th>
+                    <th>Narxi (oy)</th>
+                    <th>Mashhur</th>
+                    <th>Faol</th>
+                    <th class="text-end">Amallar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plan in plans %}
+                <tr>
+                    <td>{{ plan.order }}</td>
+                    <td class="fw-bold">{{ plan.name }}</td>
+                    <td><code>{{ plan.slug }}</code></td>
+                    <td>{{ plan.price_monthly|intcomma }} UZS</td>
+                    <td>
+                        {% if plan.is_popular %}
+                        <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i></span>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if plan.is_active %}
+                        <span class="badge badge-active">Faol</span>
+                        {% else %}
+                        <span class="badge badge-expired">Nofaol</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'superadmin:pricing_plan_edit' plan.pk %}" class="btn btn-sm btn-outline-primary py-0 px-2" title="Tahrirlash">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        {% if plan.slug != 'free' %}
+                        <a href="{% url 'superadmin:pricing_plan_delete' plan.pk %}" class="btn btn-sm btn-outline-danger py-0 px-2" title="O'chirish">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">Hozircha tariflar kiritilmagan.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

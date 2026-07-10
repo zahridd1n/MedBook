@@ -14,4 +14,8 @@ urlpatterns = [
     path('statistics/', views.statistics, name='statistics'),
     path('payments/', views.payment_list, name='payment_list'),
     path('payments/<int:pk>/', views.payment_detail, name='payment_detail'),
+    path('pricing-plans/', views.pricing_plan_list, name='pricing_plan_list'),
+    path('pricing-plans/create/', views.pricing_plan_create, name='pricing_plan_create'),
+    path('pricing-plans/<int:pk>/edit/', views.pricing_plan_edit, name='pricing_plan_edit'),
+    path('pricing-plans/<int:pk>/delete/', views.pricing_plan_delete, name='pricing_plan_delete'),
 ]
