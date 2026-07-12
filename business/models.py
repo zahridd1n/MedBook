@@ -97,6 +97,18 @@ class Business(models.Model):
     )
     # ─────────────────────────────────────────────────────────────────────────
 
+    # ─── Google Calendar Integration ──────────────────────────────────────────
+    google_credentials = models.JSONField(
+        null=True, blank=True,
+        help_text='Google OAuth credentials (token, refresh_token, etc)',
+    )
+    google_calendar_id = models.CharField(
+        max_length=200, blank=True, default='primary',
+        help_text='Google Calendar ID (default: primary)',
+    )
+    google_calendar_sync_enabled = models.BooleanField(default=False)
+    # ─────────────────────────────────────────────────────────────────────────
+
     # ─── Telegram Bot Integration ────────────────────────────────────────────
     telegram_chat_id = models.CharField(
         max_length=50, blank=True,
@@ -110,6 +122,16 @@ class Business(models.Model):
         max_length=64, blank=True,
         help_text='One-time token used in the bot /start deep link'
     )
+    # ─────────────────────────────────────────────────────────────────────────
+
+    # ─── White Label ───────────────────────────────────────────────────────────
+    white_label_enabled = models.BooleanField(default=False, help_text='White Label (BookFlow brendi yashirish)')
+    # ─────────────────────────────────────────────────────────────────────────
+
+    # ─── API & Webhook ─────────────────────────────────────────────────────────
+    api_key = models.CharField(max_length=64, blank=True, default='', help_text='API kaliti (avtomatik generatsiya)')
+    api_key_created = models.DateTimeField(null=True, blank=True, help_text='API kaliti yaratilgan vaqt')
+    webhook_url = models.URLField(blank=True, default='', help_text='Webhook URL manzili')
     # ─────────────────────────────────────────────────────────────────────────
 
     is_active = models.BooleanField(default=True)
@@ -178,7 +200,9 @@ class Business(models.Model):
                 'custom_domain': plan.allow_custom_domain,
                 'branding': plan.allow_branding,
                 'custom_css': plan.allow_custom_css,
+                'google_calendar': plan.allow_google_calendar,
                 'api': plan.allow_api,
+                'white_label': plan.allow_white_label,
                 'price_monthly': plan.price_monthly,
                 'price_label': plan.price_label,
             }
@@ -192,7 +216,9 @@ class Business(models.Model):
             'custom_domain': False,
             'branding': False,
             'custom_css': False,
+            'google_calendar': False,
             'api': False,
+            'white_label': False,
             'price_monthly': 0,
             'price_label': "0 UZS",
         }
@@ -234,8 +260,17 @@ class Business(models.Model):
     def can_use_api(self):
         return self.plan_data.get('api', False)
 
+    def can_use_google_calendar(self):
+        return self.plan_data.get('google_calendar', False)
+
     def can_use_branding(self):
         return self.plan_data.get('branding', False)
+
+    def can_use_white_label(self):
+        return self.plan_data.get('white_label', False)
+
+    def can_use_analytics(self):
+        return self.subscription_plan != 'free'
 
     @property
     def plan_display(self):

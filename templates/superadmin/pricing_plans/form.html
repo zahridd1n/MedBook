@@ -129,8 +129,16 @@
                         <label class="form-check-label">Maxsus dizayn (Custom CSS)</label>
                     </div>
                     <div class="form-check mb-2">
+                        {{ form.allow_google_calendar }}
+                        <label class="form-check-label">Google Calendar sinxronizatsiya</label>
+                    </div>
+                    <div class="form-check mb-2">
                         {{ form.allow_api }}
                         <label class="form-check-label">API integratsiya</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        {{ form.allow_white_label }}
+                        <label class="form-check-label">White Label (BookFlow brendini olib tashlash)</label>
                     </div>
                 </div>
             </div>

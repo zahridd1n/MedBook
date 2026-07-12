@@ -53,3 +53,10 @@ class BrandingForm(forms.ModelForm):
             'navbar_style': forms.Select(attrs={'class': 'form-select'}),
             'custom_css': forms.Textarea(attrs={'class': 'form-control', 'rows': 6, 'placeholder': '/* Maxsus CSS kodlari (ixtiyoriy) */'}),
         }
+
+    def clean_custom_css(self):
+        css = self.cleaned_data.get('custom_css', '')
+        if css and self.instance and not self.instance.can_use_custom_css():
+            if self.instance.custom_css != css:
+                raise forms.ValidationError('Maxsus CSS faqat Max tarifida mavjud.')
+        return css

@@ -1,12 +1,18 @@
+import logging
+import secrets
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from django.conf import settings
+from django.http import JsonResponse
 
 from .models import Business, WorkingHours, FAQ, Payment
 from .forms import BusinessSetupForm, FAQForm, BrandingForm
 from superadmin.models import SiteSettings
+
+logger = logging.getLogger(__name__)
 
 
 def _get_business(request):
@@ -170,11 +176,11 @@ def faq_delete(request, pk):
 @login_required
 def branding_settings(request):
     business = get_object_or_404(Business, owner=request.user)
-    is_paid = business.subscription_plan != 'free'
+    can_use = business.can_use_branding()
 
     if request.method == 'POST':
-        if not is_paid:
-            messages.error(request, 'Sahifa dizaynini sozlash faqat pullik tariflarda mavjud.')
+        if not can_use:
+            messages.error(request, 'Sahifa dizaynini sozlash faqat Pro va Max tariflarida mavjud.')
             return redirect('business:branding')
 
         # Handle remove banner separately (before form saves old value back)
@@ -201,7 +207,7 @@ def branding_settings(request):
     return render(request, 'dashboard/settings/branding.html', {
         'business': business,
         'form': form,
-        'is_paid': is_paid,
+        'is_paid': can_use,
     })
 
 
@@ -223,7 +229,13 @@ def telegram_settings(request):
     bot_token_set = bool(settings.TELEGRAM_BOT_TOKEN)
     bot_username = settings.TELEGRAM_BOT_USERNAME
 
+    can_use_tg = business.can_use_telegram()
+
     if request.method == 'POST':
+        if not can_use_tg:
+            messages.error(request, 'Telegram xabarnomalari faqat Pro va Max tariflarida mavjud.')
+            return redirect('business:telegram')
+
         action = request.POST.get('action')
 
         if action == 'generate_link':
@@ -301,6 +313,7 @@ def telegram_settings(request):
         'bot_token_set': bot_token_set,
         'bot_username': bot_username,
         'webhook_info': webhook_info,
+        'can_use_tg': can_use_tg,
     })
 
 
@@ -514,3 +527,631 @@ def _verify_domain_txt(domain, token):
     except Exception:
         pass
     return False
+
+
+# ─── Google Calendar ──────────────────────────────────────────────────────────
+
+@login_required
+def google_calendar_settings(request):
+    business = get_object_or_404(Business, owner=request.user)
+    can_use = business.can_use_google_calendar()
+    has_creds = bool(business.google_credentials)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'disconnect':
+            business.google_credentials = None
+            business.google_calendar_sync_enabled = False
+            business.save(update_fields=['google_credentials', 'google_calendar_sync_enabled'])
+            messages.success(request, 'Google Calendar uzildi.')
+            return redirect('business:google_calendar')
+
+        elif action == 'toggle_sync':
+            if not has_creds:
+                messages.error(request, 'Avval Google Calendar ga ulaning.')
+            else:
+                business.google_calendar_sync_enabled = not business.google_calendar_sync_enabled
+                business.save(update_fields=['google_calendar_sync_enabled'])
+                state = 'yoqildi' if business.google_calendar_sync_enabled else 'o\'chirildi'
+                messages.success(request, f'Google Calendar sinxronizatsiya {state}.')
+
+        return redirect('business:google_calendar')
+
+    connect_url = None
+    if can_use and settings.GOOGLE_OAUTH_CLIENT_CONFIG:
+        from .google_calendar import get_flow
+        try:
+            flow = get_flow(request, business)
+            connect_url, _state = flow.authorization_url(
+                access_type='offline',
+                include_granted_scopes='true',
+                prompt='consent',
+            )
+        except Exception as e:
+            logger.error(f'Google Calendar auth URL error: {e}')
+
+    return render(request, 'dashboard/settings/google_calendar.html', {
+        'business': business,
+        'can_use': can_use,
+        'has_creds': has_creds,
+        'connect_url': connect_url,
+    })
+
+
+@login_required
+def google_calendar_callback(request):
+    business = get_object_or_404(Business, owner=request.user)
+    error = request.GET.get('error')
+    if error:
+        messages.error(request, f'Google Calendar ulanish bekor qilindi yoki xatolik: {error}')
+        return redirect('business:google_calendar')
+
+    code = request.GET.get('code')
+    if not code:
+        messages.error(request, 'Google Calendar ulanish uchun kod topilmadi.')
+        return redirect('business:google_calendar')
+
+    if not settings.GOOGLE_OAUTH_CLIENT_CONFIG:
+        messages.error(request, 'Google OAuth sozlanmagan.')
+        return redirect('business:google_calendar')
+
+    from .google_calendar import get_flow
+    try:
+        flow = get_flow(request, business)
+        flow.fetch_token(code=code)
+        business.google_credentials = flow.credentials.to_json()
+        business.google_calendar_sync_enabled = True
+        business.save(update_fields=['google_credentials', 'google_calendar_sync_enabled'])
+        messages.success(request, 'Google Calendar muvaffaqiyatli ulandi! ✅')
+    except Exception as e:
+        logger.error(f'Google Calendar callback error: {e}')
+        messages.error(request, f'Google Calendar ulanishda xatolik: {e}')
+
+    return redirect('business:google_calendar')
+
+
+# ─── Analytics ────────────────────────────────────────────────────────────────
+
+@login_required
+def analytics(request):
+    business = get_object_or_404(Business, owner=request.user)
+    is_paid = business.can_use_analytics()
+
+    from django.db.models import Count, Q, Sum
+    from django.db.models.functions import TruncMonth
+    from appointments.models import Appointment
+    from customers.models import Customer
+    from services.models import Service
+    from employees.models import Employee
+    import calendar
+
+    now = timezone.now()
+    this_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    # ── Monthly appointments (last 12 months) ──
+    months_data = []
+    for i in range(11, -1, -1):
+        m = now.month - i
+        y = now.year
+        while m < 1:
+            m += 12
+            y -= 1
+        total = Appointment.objects.filter(
+            business=business, date__year=y, date__month=m,
+        ).exclude(status='cancelled').count()
+        months_data.append({
+            'label': f'{y}-{m:02d}',
+            'total': total,
+            'month_name': f'{calendar.month_abbr[m]} {y}',
+        })
+
+    # ── Monthly revenue (last 12 months) ──
+    revenue_data = []
+    for i in range(11, -1, -1):
+        m = now.month - i
+        y = now.year
+        while m < 1:
+            m += 12
+            y -= 1
+        apps = Appointment.objects.filter(
+            business=business, date__year=y, date__month=m,
+            service__isnull=False,
+        ).exclude(status='cancelled').select_related('service')
+        total_rev = sum(a.service.price for a in apps if a.service)
+        revenue_data.append({
+            'label': f'{y}-{m:02d}',
+            'total': total_rev,
+            'month_name': f'{calendar.month_abbr[m]} {y}',
+        })
+
+    # ── Top services (by count + revenue) ──
+    top_services = (
+        Service.objects.filter(business=business)
+        .annotate(count=Count('appointments', filter=~Q(appointments__status='cancelled')))
+        .order_by('-count')[:5]
+    )
+    for s in top_services:
+        s.revenue = sum(
+            a.service.price for a in Appointment.objects.filter(
+                business=business, service=s
+            ).exclude(status='cancelled') if a.service
+        )
+
+    # ── Customer growth (monthly for 12 months) ──
+    customer_growth = []
+    for i in range(11, -1, -1):
+        m = now.month - i
+        y = now.year
+        while m < 1:
+            m += 12
+            y -= 1
+        cnt = Customer.objects.filter(
+            business=business,
+            created_at__year=y, created_at__month=m,
+        ).count()
+        customer_growth.append({
+            'label': f'{y}-{m:02d}',
+            'total': cnt,
+            'month_name': f'{calendar.month_abbr[m]} {y}',
+        })
+
+    # ── Day-of-week distribution ──
+    weekday_names = ['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba']
+    weekday_data = [0] * 7
+    for appt in Appointment.objects.filter(business=business).exclude(status='cancelled').values_list('date', flat=True):
+        weekday_data[appt.weekday()] += 1
+
+    # ── Customer stats ──
+    total_customers = Customer.objects.filter(business=business).count()
+    new_customers_this_month = Customer.objects.filter(
+        business=business, created_at__gte=this_month_start
+    ).count()
+
+    # ── Employee performance ──
+    top_employees = (
+        Employee.objects.filter(business=business)
+        .annotate(count=Count('appointments', filter=~Q(appointments__status='cancelled')))
+        .order_by('-count')[:5]
+    )
+
+    # ── Status breakdown ──
+    status_counts = {}
+    for status_key, status_label in Appointment.STATUS_CHOICES:
+        cnt = Appointment.objects.filter(business=business, status=status_key).count()
+        if cnt:
+            status_counts[status_label] = cnt
+
+    total_appointments = Appointment.objects.filter(business=business).exclude(status='cancelled').count()
+    this_month_appointments = Appointment.objects.filter(
+        business=business, date__gte=this_month_start.date(),
+    ).exclude(status='cancelled').count()
+
+    cancelled_count = Appointment.objects.filter(business=business, status='cancelled').count()
+    total_all = total_appointments + cancelled_count
+    cancellation_rate = round((cancelled_count / total_all * 100) if total_all else 0, 1)
+
+    avg_per_day = round(total_appointments / 30, 1) if total_appointments else 0
+
+    # ── Conversion: completed vs cancelled ──
+    completed_count = Appointment.objects.filter(business=business, status='completed').count()
+
+    context = {
+        'business': business,
+        'is_paid': is_paid,
+        'months_data': months_data,
+        'revenue_data': revenue_data,
+        'top_services': top_services,
+        'total_customers': total_customers,
+        'new_customers_this_month': new_customers_this_month,
+        'customer_growth': customer_growth,
+        'weekday_data': weekday_data,
+        'weekday_names': weekday_names,
+        'top_employees': top_employees,
+        'status_counts': status_counts,
+        'total_appointments': total_appointments,
+        'this_month_appointments': this_month_appointments,
+        'cancelled_count': cancelled_count,
+        'cancellation_rate': cancellation_rate,
+        'completed_count': completed_count,
+        'avg_per_day': avg_per_day,
+    }
+    return render(request, 'dashboard/analytics.html', context)
+
+
+# ─── White Label ──────────────────────────────────────────────────────────────
+
+@login_required
+def white_label_settings(request):
+    business = get_object_or_404(Business, owner=request.user)
+    can_use = business.can_use_white_label()
+
+    if request.method == 'POST':
+        if not can_use:
+            messages.error(request, 'White Label faqat Max tarifida mavjud.')
+            return redirect('business:white_label')
+        enabled = request.POST.get('white_label_enabled') == 'on'
+        business.white_label_enabled = enabled
+        business.save(update_fields=['white_label_enabled'])
+        if enabled:
+            messages.success(request, 'White Label yoqildi — BookFlow brendi yashirildi.')
+        else:
+            messages.success(request, 'White Label o\'chirildi.')
+        return redirect('business:white_label')
+
+    return render(request, 'dashboard/settings/white_label.html', {
+        'business': business,
+        'can_use': can_use,
+    })
+
+
+# ─── API & Webhook ──────────────────────────────────────────────────────────
+
+@login_required
+def api_settings(request):
+    business = get_object_or_404(Business, owner=request.user)
+    can_use = business.can_use_api()
+
+    if request.method == 'POST':
+        if not can_use:
+            messages.error(request, 'API va Webhook faqat Max tarifida mavjud.')
+            return redirect('business:api')
+
+        action = request.POST.get('action')
+
+        if action == 'regenerate_key':
+            business.api_key = secrets.token_hex(32)
+            business.api_key_created = timezone.now()
+            business.save(update_fields=['api_key', 'api_key_created'])
+            messages.success(request, 'API kaliti muvaffaqiyatli yangilandi.')
+
+        elif action == 'save_webhook':
+            webhook_url = request.POST.get('webhook_url', '').strip()
+            business.webhook_url = webhook_url
+            business.save(update_fields=['webhook_url'])
+            if webhook_url:
+                messages.success(request, 'Webhook URL saqlandi. Yangi qabullar avtomatik yuboriladi.')
+            else:
+                messages.success(request, 'Webhook URL o\'chirildi.')
+
+        elif action == 'test_webhook':
+            import json
+            from urllib.request import Request, urlopen
+            from urllib.error import URLError
+            payload = {'event': 'test', 'message': 'This is a test webhook from BookFlow'}
+            try:
+                req = Request(
+                    business.webhook_url,
+                    data=json.dumps(payload).encode('utf-8'),
+                    headers={'Content-Type': 'application/json', 'X-API-Key': business.api_key},
+                    method='POST',
+                )
+                urlopen(req, timeout=5)
+                messages.success(request, 'Test webhook muvaffaqiyatli yuborildi ✅')
+            except URLError as e:
+                messages.error(request, f'Webhook test xatosi: {e.reason}')
+            except Exception as e:
+                messages.error(request, f'Webhook test xatosi: {e}')
+
+        return redirect('business:api')
+
+    if not business.api_key:
+        business.api_key = secrets.token_hex(32)
+        business.api_key_created = timezone.now()
+        business.save(update_fields=['api_key', 'api_key_created'])
+
+    # API activity count (simple stats)
+    try:
+        from django.core.cache import cache
+        api_calls_today = cache.get(f'api_calls_{business.id}', 0)
+    except Exception:
+        api_calls_today = 0
+
+    return render(request, 'dashboard/settings/api.html', {
+        'business': business,
+        'can_use': can_use,
+        'api_calls_today': api_calls_today,
+    })
+
+
+@login_required
+def api_docs(request):
+    business = get_object_or_404(Business, owner=request.user)
+    can_use = business.can_use_api()
+
+    base_url = request.build_absolute_uri('/dashboard/api/')
+    api_key = business.api_key if can_use else 'YOUR_API_KEY'
+
+    return render(request, 'dashboard/settings/api_docs.html', {
+        'business': business,
+        'can_use': can_use,
+        'base_url': base_url,
+        'api_key': api_key,
+    })
+
+
+# ─── API Endpoints ──────────────────────────────────────────────────────────
+
+def _api_auth(request, business):
+    """Verify API access and key. Returns JsonResponse on failure, None on success."""
+    if not business.can_use_api():
+        return JsonResponse({'error': 'API ruxsati yo\'q. Max tarifini talab qiladi.'}, status=403)
+    api_key = request.GET.get('api_key') or request.headers.get('X-API-Key') or request.POST.get('api_key')
+    if not api_key or api_key != business.api_key:
+        return JsonResponse({'error': 'Noto\'g\'ri API kaliti. X-API-Key header yoki ?api_key= parametrini tekshiring.'}, status=401)
+    # Track API call count (cache may be unavailable)
+    try:
+        from django.core.cache import cache
+        today_key = f'api_calls_{business.id}'
+        cache.set(today_key, cache.get(today_key, 0) + 1, 86400)
+    except Exception:
+        pass
+    return None
+
+
+@login_required
+def api_appointments(request):
+    business = get_object_or_404(Business, owner=request.user)
+    err = _api_auth(request, business)
+    if err: return err
+
+    from appointments.models import Appointment
+    from django.utils import timezone
+
+    if request.method == 'GET':
+        # Optional filters
+        status_filter = request.GET.get('status', '')
+        date_from = request.GET.get('date_from', '')
+        date_to = request.GET.get('date_to', '')
+        limit = int(request.GET.get('limit', '100'))
+
+        qs = Appointment.objects.filter(business=business).select_related('customer', 'service', 'employee')
+        if status_filter:
+            qs = qs.filter(status=status_filter)
+        if date_from:
+            qs = qs.filter(date__gte=date_from)
+        if date_to:
+            qs = qs.filter(date__lte=date_to)
+        if limit > 500:
+            limit = 500
+
+        data = []
+        for a in qs.order_by('-date', '-time')[:limit]:
+            data.append({
+                'id': a.id,
+                'date': str(a.date),
+                'time': str(a.time),
+                'status': a.status,
+                'customer_name': a.customer.full_name if a.customer else '',
+                'customer_phone': a.customer.phone if a.customer else '',
+                'service_name': a.service.name if a.service else '',
+                'service_id': a.service.id if a.service else None,
+                'employee_name': a.employee.name if a.employee else '',
+                'employee_id': a.employee.id if a.employee else None,
+                'price': a.service.price if a.service else 0,
+                'duration': a.service.duration if a.service else None,
+                'notes': a.notes or '',
+                'created_at': a.created_at.isoformat() if a.created_at else '',
+            })
+        return JsonResponse({'ok': True, 'appointments': data, 'total': len(data)})
+
+    elif request.method == 'POST':
+        import json
+        try:
+            body = json.loads(request.body) if request.body else request.POST.dict()
+        except json.JSONDecodeError:
+            return JsonResponse({'ok': False, 'error': 'JSON formatida yuboring'}, status=400)
+
+        from customers.models import Customer
+        from services.models import Service
+        from employees.models import Employee
+
+        customer_name = body.get('customer_name', '').strip()
+        customer_phone = body.get('customer_phone', '').strip()
+        service_id = body.get('service_id')
+        employee_id = body.get('employee_id')
+        date_str = body.get('date', '')
+        time_str = body.get('time', '')
+
+        if not all([customer_name, customer_phone, service_id, date_str, time_str]):
+            return JsonResponse({'ok': False, 'error': 'Majburiy maydonlar: customer_name, customer_phone, service_id, date, time'}, status=400)
+
+        try:
+            service = Service.objects.get(id=service_id, business=business)
+        except Service.DoesNotExist:
+            return JsonResponse({'ok': False, 'error': 'Xizmat topilmadi'}, status=404)
+
+        employee = None
+        if employee_id:
+            try:
+                employee = Employee.objects.get(id=employee_id, business=business)
+            except Employee.DoesNotExist:
+                return JsonResponse({'ok': False, 'error': 'Xodim topilmadi'}, status=404)
+
+        customer, _ = Customer.objects.get_or_create(
+            business=business, phone=customer_phone,
+            defaults={'full_name': customer_name},
+        )
+
+        appointment = Appointment.objects.create(
+            business=business,
+            customer=customer,
+            service=service,
+            employee=employee,
+            date=date_str,
+            time=time_str,
+            notes=body.get('notes', ''),
+            status=body.get('status', 'pending'),
+        )
+
+        return JsonResponse({'ok': True, 'appointment': {'id': appointment.id, 'status': appointment.status}}, status=201)
+
+
+@login_required
+def api_appointment_detail(request, pk):
+    business = get_object_or_404(Business, owner=request.user)
+    err = _api_auth(request, business)
+    if err: return err
+
+    from appointments.models import Appointment
+    try:
+        a = Appointment.objects.get(id=pk, business=business)
+    except Appointment.DoesNotExist:
+        return JsonResponse({'ok': False, 'error': 'Qabul topilmadi'}, status=404)
+
+    if request.method == 'DELETE':
+        if a.status == 'cancelled':
+            return JsonResponse({'ok': False, 'error': 'Qabul allaqachon bekor qilingan'}, status=400)
+        a.status = 'cancelled'
+        a.save(update_fields=['status'])
+        return JsonResponse({'ok': True, 'message': 'Qabul bekor qilindi'})
+
+    data = {
+        'id': a.id,
+        'date': str(a.date),
+        'time': str(a.time),
+        'status': a.status,
+        'customer_name': a.customer.full_name if a.customer else '',
+        'customer_phone': a.customer.phone if a.customer else '',
+        'service_name': a.service.name if a.service else '',
+        'service_id': a.service.id if a.service else None,
+        'employee_name': a.employee.name if a.employee else '',
+        'employee_id': a.employee.id if a.employee else None,
+        'price': a.service.price if a.service else 0,
+        'duration': a.service.duration if a.service else None,
+        'notes': a.notes or '',
+        'created_at': a.created_at.isoformat() if a.created_at else '',
+    }
+    return JsonResponse({'ok': True, 'appointment': data})
+
+
+@login_required
+def api_appointments_today(request):
+    business = get_object_or_404(Business, owner=request.user)
+    err = _api_auth(request, business)
+    if err: return err
+
+    from appointments.models import Appointment
+    from django.utils import timezone
+    today = timezone.localdate()
+
+    qs = Appointment.objects.filter(
+        business=business, date=today
+    ).select_related('customer', 'service', 'employee').order_by('time')
+
+    data = []
+    for a in qs:
+        data.append({
+            'id': a.id,
+            'time': str(a.time),
+            'status': a.status,
+            'customer_name': a.customer.full_name if a.customer else '',
+            'customer_phone': a.customer.phone if a.customer else '',
+            'service_name': a.service.name if a.service else '',
+            'employee_name': a.employee.name if a.employee else '',
+            'price': a.service.price if a.service else 0,
+        })
+    return JsonResponse({'ok': True, 'date': str(today), 'appointments': data, 'total': len(data)})
+
+
+@login_required
+def api_customers(request):
+    business = get_object_or_404(Business, owner=request.user)
+    err = _api_auth(request, business)
+    if err: return err
+
+    from customers.models import Customer
+    search = request.GET.get('search', '')
+    limit = int(request.GET.get('limit', '100'))
+
+    qs = Customer.objects.filter(business=business)
+    if search:
+        qs = qs.filter(full_name__icontains=search) | qs.filter(phone__icontains=search)
+    if limit > 500:
+        limit = 500
+
+    data = []
+    for c in qs.order_by('-created_at')[:limit]:
+        data.append({
+            'id': c.id,
+            'full_name': c.full_name,
+            'phone': c.phone,
+            'email': c.email or '',
+            'total_appointments': c.appointments.count(),
+            'created_at': c.created_at.isoformat() if c.created_at else '',
+        })
+    return JsonResponse({'ok': True, 'customers': data, 'total': len(data)})
+
+
+@login_required
+def api_stats(request):
+    business = get_object_or_404(Business, owner=request.user)
+    err = _api_auth(request, business)
+    if err: return err
+
+    from appointments.models import Appointment
+    from customers.models import Customer
+    from services.models import Service
+    from employees.models import Employee
+    from django.utils import timezone
+    from django.db.models import Count, Sum, Q
+
+    now = timezone.now()
+    this_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    total_appointments = Appointment.objects.filter(business=business).count()
+    this_month_apps = Appointment.objects.filter(business=business, date__gte=this_month).count()
+    completed = Appointment.objects.filter(business=business, status='completed').count()
+    cancelled = Appointment.objects.filter(business=business, status='cancelled').count()
+    total_customers = Customer.objects.filter(business=business).count()
+    total_services = Service.objects.filter(business=business, is_active=True).count()
+    total_employees = Employee.objects.filter(business=business, is_active=True).count()
+
+    # Revenue this month
+    monthly_apps = Appointment.objects.filter(
+        business=business, date__gte=this_month, status='completed'
+    ).select_related('service')
+    monthly_revenue = sum(a.service.price for a in monthly_apps if a.service) if monthly_apps else 0
+
+    # Today's appointments
+    today = timezone.localdate()
+    today_count = Appointment.objects.filter(business=business, date=today).count()
+
+    return JsonResponse({
+        'ok': True,
+        'stats': {
+            'total_appointments': total_appointments,
+            'this_month_appointments': this_month_apps,
+            'completed_appointments': completed,
+            'cancelled_appointments': cancelled,
+            'total_customers': total_customers,
+            'total_services': total_services,
+            'total_employees': total_employees,
+            'monthly_revenue': monthly_revenue,
+            'today_appointments': today_count,
+        }
+    })
+
+
+@login_required
+def api_services(request):
+    business = get_object_or_404(Business, owner=request.user)
+    err = _api_auth(request, business)
+    if err: return err
+
+    from services.models import Service
+    services = Service.objects.filter(business=business, is_active=True)
+    data = [{'id': s.id, 'name': s.name, 'price': s.price, 'duration': s.duration, 'description': s.description} for s in services]
+    return JsonResponse({'ok': True, 'services': data, 'total': len(data)})
+
+
+@login_required
+def api_employees(request):
+    business = get_object_or_404(Business, owner=request.user)
+    err = _api_auth(request, business)
+    if err: return err
+
+    from employees.models import Employee
+    employees = Employee.objects.filter(business=business, is_active=True)
+    data = [{'id': e.id, 'name': e.name, 'position': e.position, 'phone': '', 'email': ''} for e in employees]
+    return JsonResponse({'ok': True, 'employees': data, 'total': len(data)})

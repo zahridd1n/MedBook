@@ -51,7 +51,7 @@
               <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="toggle">
-                <button type="submit" class="btn btn-sm {% if business.telegram_notifications_enabled %}btn-secondary{% else %}btn-secondary{% endif %}" style="{% if business.telegram_notifications_enabled %}background:#f0fdf4;border-color:#bbf7d0;color:#16a34a;{% endif %}">
+                <button type="submit" class="btn btn-sm {% if business.telegram_notifications_enabled %}btn-secondary{% else %}btn-secondary{% endif %}" style="{% if business.telegram_notifications_enabled %}background:#f0fdf4;border-color:#bbf7d0;color:#16a34a;{% endif %}" {% if not can_use_tg %}disabled{% endif %}>
                   {% if business.telegram_notifications_enabled %}
                     <i class="bi bi-bell-fill"></i> Yoqilgan
                   {% else %}
@@ -66,14 +66,14 @@
               <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="test">
-                <button type="submit" class="btn btn-secondary">
+                <button type="submit" class="btn btn-secondary" {% if not can_use_tg %}disabled{% endif %}>
                   <i class="bi bi-send"></i> Test xabar yuborish
                 </button>
               </form>
               <form method="post" onsubmit="return confirm('Telegramdan uzasizmi?')">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="disconnect">
-                <button type="submit" class="btn btn-danger">
+                <button type="submit" class="btn btn-danger" {% if not can_use_tg %}disabled{% endif %}>
                   <i class="bi bi-x-circle"></i> Uzish
                 </button>
               </form>
@@ -121,7 +121,7 @@
             <form method="post">
               {% csrf_token %}
               <input type="hidden" name="action" value="generate_link">
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn btn-primary" {% if not can_use_tg %}disabled{% endif %}>
                 <i class="bi bi-link-45deg"></i> Havola yaratish
               </button>
             </form>
@@ -204,7 +204,7 @@
           <form method="post">
             {% csrf_token %}
             <input type="hidden" name="action" value="set_webhook">
-            <button type="submit" class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;">
+            <button type="submit" class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;" {% if not can_use_tg %}disabled{% endif %}>
               <i class="bi bi-arrow-repeat"></i> Webhookni qayta ro'yxatdan o'tkazish
             </button>
           </form>

@@ -62,7 +62,7 @@ def appointment_create(request):
     if not business.can_create_appointment():
         messages.error(
             request,
-            f"Oylik qabullar limiti tugadi ({business.plan_display} — oyiga 50 ta)."
+            f"Oylik qabullar limiti tugadi ({business.plan_display} — oyiga {business.max_appointments_monthly or 'cheksiz'} ta)."
             f" Yangilash uchun tarifni oshiring."
         )
         return redirect('appointments:list')

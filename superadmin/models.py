@@ -319,7 +319,9 @@ class PricingPlan(models.Model):
     allow_custom_domain = models.BooleanField(default=False, help_text="Shaxsiy domen ulash imkoniyati")
     allow_branding = models.BooleanField(default=False, help_text="Shaxsiy brending (Logotip va hk)")
     allow_custom_css = models.BooleanField(default=False, help_text="Custom CSS imkoniyati")
+    allow_google_calendar = models.BooleanField(default=False, help_text="Google Calendar sinxronizatsiyasi")
     allow_api = models.BooleanField(default=False, help_text="API va Webhooklar")
+    allow_white_label = models.BooleanField(default=False, help_text="White Label (BookFlow brendini yashirish)")
     
     is_active = models.BooleanField(default=True, help_text="Aktiv tarif (Saytda ko'rinadi)")
     is_popular = models.BooleanField(default=False, help_text="Tavsiya etiladigan tarif belgisi (Mashhur)")

@@ -1,0 +1,379 @@
+{% extends 'base_dashboard.html' %}
+{% load humanize %}
+{% block page_title %}Analitika{% endblock %}
+{% block dashboard_content %}
+
+<style>
+.stat-micro{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8fafc;border:1px solid var(--border);border-radius:var(--radius-sm)}
+.stat-micro-val{font-size:18px;font-weight:700;color:var(--text);line-height:1}
+.stat-micro-label{font-size:11px;color:var(--text-4)}
+.chart-container{position:relative;width:100%}
+</style>
+
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title"><i class="bi bi-graph-up-arrow" style="margin-right:8px;color:var(--p);"></i>Analitika</div>
+    <div class="page-hd-sub">Biznes ko'rsatkichlari va diagnostika</div>
+  </div>
+  <div class="page-hd-actions">
+    <button class="btn btn-sm btn-outline-secondary" onclick="window.location.reload()">
+      <i class="bi bi-arrow-clockwise"></i> Yangilash
+    </button>
+  </div>
+</div>
+
+{% if not is_paid %}
+<div class="ds-alert warning" style="margin-bottom:20px;">
+  <i class="bi bi-lock-fill"></i>
+  <div>
+    <strong>Analitika faqat Pro va Max tariflarida mavjud.</strong><br>
+    <span>29 dan ortiq statistika, interaktiv chartlar va biznes diagnostikasi.</span>
+    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> Tarifni oshirish</a>
+  </div>
+</div>
+{% endif %}
+
+<!-- Hero stats -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-card-top">
+        <div class="stat-icon-wrap" style="background:linear-gradient(135deg,#eef2ff,#e0e7ff);color:#6366f1"><i class="bi bi-calendar-check"></i></div>
+      </div>
+      <div class="stat-value">{{ total_appointments|default:0 }}</div>
+      <div class="stat-label">Jami qabullar</div>
+      <div class="mt-2 d-flex gap-1 flex-wrap">
+        <span class="status status-green">{{ this_month_appointments }} oyda</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-card-top">
+        <div class="stat-icon-wrap" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);color:#16a34a"><i class="bi bi-check-circle"></i></div>
+      </div>
+      <div class="stat-value">{{ completed_count|default:0 }}</div>
+      <div class="stat-label">Yakunlangan</div>
+      {% if total_appointments %}
+      <div class="mt-2 d-flex gap-1 flex-wrap">
+        <span class="status status-gray">{{ completed_count|add:cancelled_count }} jami</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-card-top">
+        <div class="stat-icon-wrap" style="background:linear-gradient(135deg,#fdf4ff,#fae8ff);color:#9333ea"><i class="bi bi-people"></i></div>
+      </div>
+      <div class="stat-value">{{ total_customers|default:0 }}</div>
+      <div class="stat-label">Jami mijozlar</div>
+      <div class="mt-2 d-flex gap-1 flex-wrap">
+        <span class="status status-indigo">+{{ new_customers_this_month }} oyda</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-card-top">
+        <div class="stat-icon-wrap" style="background:linear-gradient(135deg,#fff7ed,#ffedd5);color:#ea580c"><i class="bi bi-graph-down"></i></div>
+      </div>
+      <div class="stat-value">{{ cancellation_rate }}%</div>
+      <div class="stat-label">Bekor qilish darajasi</div>
+      <div class="mt-2 d-flex gap-1 flex-wrap">
+        <span class="status status-gray">{{ avg_per_day }} / kun</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts row 1 -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title"><i class="bi bi-bar-chart-line me-1" style="color:var(--p);"></i>Qabullar dinamikasi (12 oy)</span>
+        <div class="d-flex gap-2">
+          <span class="status status-green" style="font-size:10px;">Qabullar</span>
+          <span class="status status-indigo" style="font-size:10px;">Daromad</span>
+        </div>
+      </div>
+      <div class="card-body chart-container" style="height:260px;">
+        <canvas id="mainChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title"><i class="bi bi-pie-chart me-1" style="color:var(--p);"></i>Qabul holatlari</span>
+      </div>
+      <div class="card-body chart-container" style="height:260px;">
+        <canvas id="statusChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts row 2 -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title"><i class="bi bi-calendar-week me-1" style="color:var(--p);"></i>Hafta kunlari bo'yicha</span>
+      </div>
+      <div class="card-body chart-container" style="height:220px;">
+        <canvas id="weekdayChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title"><i class="bi bi-person-plus me-1" style="color:var(--p);"></i>Mijozlar o'sishi (12 oy)</span>
+      </div>
+      <div class="card-body chart-container" style="height:220px;">
+        <canvas id="customerChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tables row -->
+<div class="row g-4 mt-1">
+  <div class="col-lg-4">
+    <div class="card" style="height:100%;">
+      <div class="card-head"><span class="card-head-title"><i class="bi bi-grid-3x3-gap me-1" style="color:var(--p);"></i>Eng ko'p tanlangan xizmatlar</span></div>
+      <div class="card-body p-0">
+        {% if top_services %}
+        <table class="ds-table">
+          <thead><tr><th style="padding-left:16px;">#</th><th>Xizmat</th><th>Qabul</th><th>Daromad</th></tr></thead>
+          <tbody>
+            {% for s in top_services %}
+            <tr>
+              <td style="padding-left:16px;width:28px;"><span class="badge bg-light text-dark" style="font-size:10px;">{{ forloop.counter }}</span></td>
+              <td style="font-weight:500;color:var(--text);">{{ s.name }}</td>
+              <td><span class="badge" style="background:#eef2ff;color:#6366f1;">{{ s.count }}</span></td>
+              <td style="font-weight:600;color:var(--text);">{{ s.revenue|default:0|intcomma }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="ds-empty" style="padding:32px;">
+          <div class="ds-empty-icon" style="width:40px;height:40px;font-size:16px;"><i class="bi bi-grid-3x3-gap"></i></div>
+          <div class="ds-empty-title" style="font-size:13px;">Ma'lumot yo'q</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card" style="height:100%;">
+      <div class="card-head"><span class="card-head-title"><i class="bi bi-person-badge me-1" style="color:var(--p);"></i>Eng faol xodimlar</span></div>
+      <div class="card-body p-0">
+        {% if top_employees %}
+        <table class="ds-table">
+          <thead><tr><th style="padding-left:16px;">#</th><th>Xodim</th><th>Qabul</th></tr></thead>
+          <tbody>
+            {% for e in top_employees %}
+            <tr>
+              <td style="padding-left:16px;width:28px;"><span class="badge bg-light text-dark" style="font-size:10px;">{{ forloop.counter }}</span></td>
+              <td style="font-weight:500;color:var(--text);">{{ e.name }}</td>
+              <td><span class="badge" style="background:#f0fdf4;color:#16a34a;">{{ e.count }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="ds-empty" style="padding:32px;">
+          <div class="ds-empty-icon" style="width:40px;height:40px;font-size:16px;"><i class="bi bi-person-badge"></i></div>
+          <div class="ds-empty-title" style="font-size:13px;">Ma'lumot yo'q</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card" style="height:100%;">
+      <div class="card-head"><span class="card-head-title"><i class="bi bi-speedometer2 me-1" style="color:var(--p);"></i>Qisqa ko'rsatkichlar</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:6px;padding:14px;">
+        <div class="stat-micro">
+          <span class="stat-micro-val">{{ total_appointments|default:0 }}</span>
+          <div><div class="stat-micro-label">Jami qabullar</div></div>
+        </div>
+        <div class="stat-micro">
+          <span class="stat-micro-val">{{ completed_count|default:0 }}</span>
+          <div><div class="stat-micro-label">Yakunlangan</div></div>
+        </div>
+        <div class="stat-micro">
+          <span class="stat-micro-val">{{ cancelled_count|default:0 }}</span>
+          <div><div class="stat-micro-label">Bekor qilingan</div></div>
+        </div>
+        <div class="stat-micro">
+          <span class="stat-micro-val">{{ total_customers|default:0 }}</span>
+          <div><div class="stat-micro-label">Jami mijozlar</div></div>
+        </div>
+        <div class="stat-micro">
+          <span class="stat-micro-val">{{ new_customers_this_month|default:0 }}</span>
+          <div><div class="stat-micro-label">Yangi mijozlar (oy)</div></div>
+        </div>
+        <div class="stat-micro">
+          <span class="stat-micro-val">{{ cancellation_rate }}%</span>
+          <div><div class="stat-micro-label">Bekor qilish darajasi</div></div>
+        </div>
+        <div class="stat-micro">
+          <span class="stat-micro-val">{{ avg_per_day }}</span>
+          <div><div class="stat-micro-label">O'rtacha qabul / kun</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const blue = '#6366f1';
+  const green = '#22c55e';
+  const orange = '#f59e0b';
+  const red = '#ef4444';
+  const purple = '#9333ea';
+
+  // ── Main chart: appointments + revenue ──
+  var ctx1 = document.getElementById('mainChart');
+  if (ctx1) {
+    new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: [{% for m in months_data %}'{{ m.month_name }}',{% endfor %}],
+        datasets: [
+          {
+            label: 'Qabullar',
+            data: [{% for m in months_data %}{{ m.total }},{% endfor %}],
+            backgroundColor: 'rgba(99,102,241,.6)',
+            borderColor: blue,
+            borderWidth: 1,
+            borderRadius: 3,
+            order: 2,
+            yAxisID: 'y',
+          },
+          {
+            label: 'Daromad (UZS)',
+            data: [{% for r in revenue_data %}{{ r.total }},{% endfor %}],
+            type: 'line',
+            borderColor: green,
+            backgroundColor: 'rgba(34,197,94,.1)',
+            fill: true,
+            tension: .35,
+            pointRadius: 3,
+            pointBackgroundColor: green,
+            borderWidth: 2,
+            order: 1,
+            yAxisID: 'y1',
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1, font: {size:10} }, grid: {color:'rgba(0,0,0,.04)'} },
+          y1: { beginAtZero: true, position: 'right', grid: { display: false }, ticks: { font: {size:10}, callback: function(v){return v>=1000?(v/1000)+'k':v} } },
+          x: { grid: { display: false }, ticks: { font: {size:9} } }
+        }
+      }
+    });
+  }
+
+  // ── Status doughnut ──
+  var ctx2 = document.getElementById('statusChart');
+  if (ctx2) {
+    new Chart(ctx2, {
+      type: 'doughnut',
+      data: {
+        labels: [{% for label, cnt in status_counts.items %}'{{ label }} ({{ cnt }})',{% endfor %}],
+        datasets: [{
+          data: [{% for label, cnt in status_counts.items %}{{ cnt }},{% endfor %}],
+          backgroundColor: [blue, green, '#64748b', red, orange],
+          borderWidth: 0,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '65%',
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: {size:10} } }
+        }
+      }
+    });
+  }
+
+  // ── Weekday bar ──
+  var ctx3 = document.getElementById('weekdayChart');
+  if (ctx3) {
+    new Chart(ctx3, {
+      type: 'bar',
+      data: {
+        labels: [{% for name in weekday_names %}'{{ name }}',{% endfor %}],
+        datasets: [{
+          label: 'Qabullar',
+          data: [{% for d in weekday_data %}{{ d }},{% endfor %}],
+          backgroundColor: [
+            'rgba(99,102,241,.5)','rgba(99,102,241,.5)','rgba(99,102,241,.5)',
+            'rgba(99,102,241,.5)','rgba(99,102,241,.5)',
+            'rgba(245,158,11,.6)','rgba(239,68,68,.4)'
+          ],
+          borderRadius: 3,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1, font: {size:10} }, grid: {color:'rgba(0,0,0,.04)'} },
+          x: { grid: { display: false }, ticks: { font: {size:9} } }
+        }
+      }
+    });
+  }
+
+  // ── Customer growth line ──
+  var ctx4 = document.getElementById('customerChart');
+  if (ctx4) {
+    new Chart(ctx4, {
+      type: 'line',
+      data: {
+        labels: [{% for c in customer_growth %}'{{ c.month_name }}',{% endfor %}],
+        datasets: [{
+          label: 'Yangi mijozlar',
+          data: [{% for c in customer_growth %}{{ c.total }},{% endfor %}],
+          borderColor: purple,
+          backgroundColor: 'rgba(147,51,234,.1)',
+          fill: true,
+          tension: .35,
+          pointRadius: 3,
+          pointBackgroundColor: purple,
+          borderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1, font: {size:10} }, grid: {color:'rgba(0,0,0,.04)'} },
+          x: { grid: { display: false }, ticks: { font: {size:9} } }
+        }
+      }
+    });
+  }
+});
+</script>
+{% endblock %}
+{% endblock %}

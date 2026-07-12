@@ -83,6 +83,12 @@
               {% if not business.can_use_custom_css %}<span class="badge bg-secondary ms-1"><i class="bi bi-lock"></i> Max</span>{% endif %}
             </label>
             {{ form.custom_css }}
+            {% if not business.can_use_custom_css %}
+            <div class="text-muted small mt-1">
+              <i class="bi bi-info-circle me-1"></i>Maxsus CSS faqat <strong>Max</strong> tarifida mavjud.
+              <a href="{% url 'business:upgrade' %}" style="font-weight:600;">Tarifni oshirish →</a>
+            </div>
+            {% endif %}
             <div class="d-flex align-items-center justify-content-between mt-2">
               <div class="text-muted small">
                 <i class="bi bi-info-circle me-1"></i> CSS biladiganlar uchun.
@@ -92,6 +98,9 @@
               </a>
             </div>
           </div>
+          {% if not business.can_use_custom_css %}
+          <script>document.getElementById('id_custom_css').disabled = true;</script>
+          {% endif %}
           <button type="submit" class="btn btn-primary px-4" {% if not is_paid %}disabled{% endif %}>
             <i class="bi bi-check-lg me-1"></i>Saqlash
           </button>

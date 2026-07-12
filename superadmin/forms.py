@@ -111,7 +111,9 @@ class PricingPlanForm(forms.ModelForm):
             'allow_custom_domain': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'allow_branding': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'allow_custom_css': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'allow_google_calendar': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'allow_api': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'allow_white_label': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_popular': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }

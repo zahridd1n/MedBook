@@ -166,6 +166,10 @@ TELEGRAM_BOT_USERNAME = env('TELEGRAM_BOT_USERNAME', default='')  # e.g. 'MyBook
 
 SITE_URL = env('SITE_URL', default='http://localhost:8000')
 
+# Google OAuth (for Google Calendar sync)
+# JSON config from Google Cloud Console → Credentials → OAuth 2.0 Client ID → Download JSON
+GOOGLE_OAUTH_CLIENT_CONFIG = env.json('GOOGLE_OAUTH_CLIENT_CONFIG', default={})
+
 # DRF
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.SessionAuthentication'],

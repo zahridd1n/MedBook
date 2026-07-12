@@ -35,6 +35,7 @@ class Appointment(models.Model):
     notes = models.TextField(blank=True, help_text='Mijoz eslatmasi')
     doctor_notes = models.TextField(blank=True, help_text='Shifokor/xodim qaydlari, tashxis, tavsiyalar')
     end_time = models.TimeField(null=True, blank=True)
+    google_event_id = models.CharField(max_length=200, blank=True, help_text='Google Calendar event ID')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -9,6 +9,7 @@
 /* ── Tokens ── */
 :root {
   --sb-w: 240px;
+  --sb-w-collapsed: 60px;
   --sb-bg: #0c0e14;
   --sb-border: rgba(255,255,255,.06);
   --sb-item-hover: rgba(255,255,255,.055);
@@ -16,6 +17,8 @@
   --sb-text: rgba(255,255,255,.5);
   --sb-text-active: rgba(255,255,255,.95);
   --sb-text-label: rgba(255,255,255,.22);
+  --sb-premium-bg: rgba(99,102,241,.06);
+  --sb-premium-border: rgba(99,102,241,.15);
 
   --surface: #fff;
   --bg: #f7f8fa;
@@ -77,7 +80,7 @@ body {
   z-index: 200;
   overflow-y: auto;
   overflow-x: hidden;
-  transition: transform .22s cubic-bezier(.4,0,.2,1);
+  transition: width .22s cubic-bezier(.4,0,.2,1), transform .22s cubic-bezier(.4,0,.2,1);
   border-right: 1px solid var(--sb-border);
   scrollbar-width: none;
 }
@@ -166,6 +169,67 @@ body {
   color: var(--sb-text-label);
 }
 
+/* Group toggles */
+.sb-group:not(:first-child) { margin-top: 4px; }
+.sb-group-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px 8px;
+  margin: 0 4px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background .15s;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+}
+.sb-group-head::after {
+  content: '';
+  position: absolute;
+  left: 12px; right: 12px; bottom: 0;
+  height: 1px;
+  background: var(--sb-border);
+  opacity: .5;
+}
+.sb-group-head:hover::after { opacity: 0; }
+.sb-group-head:hover { background: rgba(255,255,255,.055); }
+.sb-group-head-label {
+  flex: 1;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--sb-text-label);
+  transition: color .15s;
+}
+.sb-group-head:hover .sb-group-head-label { color: rgba(255,255,255,.6); }
+.sb-group-head-arrow {
+  font-size: 8px;
+  color: rgba(255,255,255,.2);
+  transition: transform .2s, color .15s;
+}
+.sb-group-head:hover .sb-group-head-arrow { color: rgba(255,255,255,.3); }
+.sb-group-head-arrow.open { transform: rotate(180deg); }
+
+.sb-group-body {
+  overflow: hidden;
+  transition: max-height .25s cubic-bezier(.4,0,.2,1), opacity .2s;
+  max-height: 0;
+  opacity: 0;
+}
+.sb-group-body.open {
+  max-height: 800px;
+  opacity: 1;
+}
+
+/* Group divider inside body */
+.sb-group-divider {
+  height: 1px;
+  background: var(--sb-border);
+  margin: 2px 12px 0;
+}
+
 .sb-link {
   display: flex;
   align-items: center;
@@ -182,12 +246,13 @@ body {
 }
 .sb-link:hover {
   background: var(--sb-item-hover);
-  color: rgba(255,255,255,.82);
+  color: rgba(255,255,255,.92);
 }
 .sb-link.active {
   background: var(--sb-item-active);
   color: var(--sb-text-active);
 }
+.sb-link.active i { color: var(--sb-text-active); opacity: 1; }
 .sb-link.active::before {
   content: '';
   position: absolute;
@@ -200,11 +265,10 @@ body {
   background: var(--p);
 }
 .sb-link i {
-  font-size: 14px;
-  width: 16px;
+  font-size: 15px;
+  width: 18px;
   text-align: center;
   flex-shrink: 0;
-  opacity: .7;
   transition: opacity .12s;
 }
 .sb-link.active i,
@@ -931,6 +995,140 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .upgrade-strip strong { color: #fff; }
 
 /* ════════════════════════════════════════════════════
+   SIDEBAR v2 — Premium SaaS
+═══════════════════════════════════════════════════ */
+
+/* Collapse mode */
+.ds-sidebar.collapsed { width: var(--sb-w-collapsed); }
+.ds-sidebar.collapsed .sb-brand-name,
+.ds-sidebar.collapsed .sb-plan-info,
+.ds-sidebar.collapsed .sb-section span,
+.ds-sidebar.collapsed .sb-link span,
+.ds-sidebar.collapsed .sb-link .sb-link-badge,
+.ds-sidebar.collapsed .sb-link .sb-link-dot,
+.ds-sidebar.collapsed .sb-plan-dot,
+.ds-sidebar.collapsed .sb-user .sb-user-name,
+.ds-sidebar.collapsed .sb-user .sb-user-email,
+.ds-sidebar.collapsed .sb-user i.bi-chevron-expand,
+.ds-sidebar.collapsed .sb-footer .dropdown { display: none; }
+.ds-sidebar.collapsed .sb-brand { justify-content: center; padding: 14px 0; }
+.ds-sidebar.collapsed .sb-plan { justify-content: center; padding: 8px; }
+.ds-sidebar.collapsed .sb-link { justify-content: center; padding: 8px; margin: 1px 4px; }
+.ds-sidebar.collapsed .sb-link i { margin: 0; font-size: 16px; }
+.ds-sidebar.collapsed .sb-link.active::before { left: -4px; }
+.ds-sidebar.collapsed .sb-section,
+.ds-sidebar.collapsed .sb-group-head { text-align: center; padding: 10px 4px 2px; }
+.ds-sidebar.collapsed .sb-section::after,
+.ds-sidebar.collapsed .sb-group-head::after {
+  content: ''; display: block; width: 16px; height: 1.5px;
+  background: rgba(255,255,255,.12); border-radius: 2px;
+  margin: 0 auto;
+}
+.ds-sidebar.collapsed .sb-group-head-label,
+.ds-sidebar.collapsed .sb-group-head-arrow { display: none; }
+.ds-sidebar.collapsed .sb-group-body { display: none !important; }
+.ds-sidebar.collapsed .sb-user { justify-content: center; padding: 7px 0; }
+.ds-sidebar.collapsed .sb-avatar { margin: 0; }
+.ds-sidebar.collapsed .sb-collapse-btn { transform: rotate(180deg); }
+
+/* Premium section styling */
+.premium-wrap {
+  margin: 4px 6px 8px;
+  border-radius: var(--radius);
+  background: var(--sb-premium-bg);
+  border: 1px solid var(--sb-premium-border);
+  overflow: hidden;
+}
+.premium-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 12px; cursor: pointer;
+  transition: background .15s;
+  position: relative;
+}
+.premium-head:hover { background: rgba(255,255,255,.03); }
+.premium-head-star { font-size: 11px; flex-shrink: 0; }
+.premium-head-label {
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: rgba(255,255,255,.55); flex: 1;
+}
+.premium-head-arrow {
+  font-size: 8px; color: rgba(255,255,255,.25);
+  transition: transform .2s;
+}
+.premium-head-arrow.open { transform: rotate(180deg); }
+.premium-section { padding: 0 0 4px; }
+
+/* Premium locked items */
+.sb-link.premium-locked { opacity: .55; }
+.sb-link.premium-locked:hover { opacity: .75; }
+.sb-link .premium-lock {
+  margin-left: auto; font-size: 9px; opacity: .5;
+  flex-shrink: 0; color: rgba(255,255,255,.3);
+}
+.sb-link .premium-cta {
+  display: none;
+  position: absolute;
+  left: calc(100% + 10px); top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff; font-size: 10.5px; font-weight: 600;
+  padding: 5px 10px; border-radius: 6px;
+  z-index: 300;
+  box-shadow: 0 4px 16px rgba(99,102,241,.35);
+  pointer-events: none;
+}
+.sb-link.premium-locked:hover .premium-cta { display: block; }
+.sb-link.premium-locked .premium-cta::before {
+  content: ''; position: absolute;
+  right: 100%; top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-right-color: #6366f1;
+}
+
+/* Collapse toggle button */
+.sb-collapse-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 6px;
+  background: transparent; border: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.25); cursor: pointer;
+  font-size: 10px; transition: all .18s;
+  flex-shrink: 0;
+}
+.sb-collapse-btn:hover {
+  background: rgba(255,255,255,.06); color: rgba(255,255,255,.5);
+}
+.sb-footer-actions {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0 6px 4px;
+}
+.ds-sidebar.collapsed .sb-footer-actions { justify-content: center; }
+.ds-sidebar.collapsed .sb-footer-actions .sb-user { display: none; }
+
+/* Sidebar divider */
+.sb-section-divider {
+  height: 1px; background: var(--sb-border);
+  margin: 4px 10px;
+}
+
+/* Tooltip for collapsed sidebar */
+.ds-sidebar.collapsed .sb-link[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: calc(100% + 8px); top: 50%;
+  transform: translateY(-50%);
+  background: #1a1d27; color: #fff;
+  font-size: 11px; font-weight: 500;
+  padding: 4px 10px; border-radius: 5px;
+  white-space: nowrap;
+  z-index: 300;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3);
+  pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════════
    DROPDOWN MENUS
 ═══════════════════════════════════════════════════ */
 .dropdown-menu {
@@ -1022,104 +1220,241 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   <!-- Navigation -->
   <nav class="sb-nav">
 
-    <div class="sb-section">Asosiy</div>
-    <a href="{% url 'dashboard:home' %}" class="sb-link {% if request.path == '/dashboard/' %}active{% endif %}">
-      <i class="bi bi-squares"></i> Boshqaruv paneli
-    </a>
-    <a href="{% url 'appointments:list' %}" class="sb-link {% if 'appointments' in request.path %}active{% endif %}">
-      <i class="bi bi-calendar3"></i> Qabullar
-    </a>
-    <a href="{% url 'customers:list' %}" class="sb-link {% if 'customers' in request.path %}active{% endif %}">
-      <i class="bi bi-people"></i> Mijozlar
-    </a>
+    <!-- 🏠 ASOSIY -->
+    <div class="sb-group" data-group="asosiy">
+      <div class="sb-group-head" onclick="toggleGroup('asosiy')" data-head>
+        <span class="sb-group-head-label">🏠 Asosiy</span>
+        <span class="sb-group-head-arrow" data-arrow>▾</span>
+      </div>
+      <div class="sb-group-body" data-body>
+        <a href="{% url 'dashboard:home' %}" class="sb-link {% if request.path == '/dashboard/' %}active{% endif %}" title="Boshqaruv paneli">
+          <i class="bi bi-grid-1x2-fill"></i><span>Boshqaruv paneli</span>
+        </a>
+        <a href="{% url 'appointments:list' %}" class="sb-link {% if 'appointments' in request.path %}active{% endif %}" title="Qabullar">
+          <i class="bi bi-calendar3"></i><span>Qabullar</span>
+        </a>
+        <a href="{% url 'customers:list' %}" class="sb-link {% if 'customers' in request.path %}active{% endif %}" title="Mijozlar">
+          <i class="bi bi-people"></i><span>Mijozlar</span>
+        </a>
+        <a href="{% url 'employees:list' %}" class="sb-link {% if 'employees' in request.path %}active{% endif %}" title="Xodimlar">
+          <i class="bi bi-person-badge"></i><span>Xodimlar</span>
+        </a>
+      </div>
+    </div>
 
-    <div class="sb-section">Boshqarish</div>
-    <a href="{% url 'services:list' %}" class="sb-link {% if 'services' in request.path %}active{% endif %}">
-      <i class="bi bi-grid-3x3-gap"></i> Xizmatlar
-    </a>
-    <a href="{% url 'employees:list' %}" class="sb-link {% if 'employees' in request.path %}active{% endif %}">
-      <i class="bi bi-person-badge"></i> Xodimlar
-    </a>
-    <a href="{% url 'blog:list' %}" class="sb-link {% if 'blog' in request.path %}active{% endif %}">
-      <i class="bi bi-newspaper"></i> Blog
-    </a>
-
-    <div class="sb-section">Sozlamalar</div>
-    <a href="{% url 'business:setup' %}" class="sb-link {% if 'setup' in request.path %}active{% endif %}">
-      <i class="bi bi-building"></i> Biznes ma'lumotlari
-    </a>
-    <a href="{% url 'business:working_hours' %}" class="sb-link {% if 'working-hours' in request.path %}active{% endif %}">
-      <i class="bi bi-clock"></i> Ish vaqtlari
-    </a>
-    <a href="{% url 'business:branding' %}" class="sb-link {% if 'branding' in request.path %}active{% endif %}">
-      <i class="bi bi-palette"></i> Sahifa dizayni
-      {% if user.is_authenticated and not user.business.can_use_branding %}
-      <span class="sb-link-badge" style="background:rgba(255,255,255,.07);color:rgba(255,255,255,.3);margin-left:auto;"><i class="bi bi-lock-fill"></i></span>
-      {% endif %}
-    </a>
-    <a href="{% url 'business:faq_list' %}" class="sb-link {% if 'faq' in request.path %}active{% endif %}">
-      <i class="bi bi-question-circle"></i> Ko'p so'raladigan savollar
-    </a>
-    <a href="{% url 'business:telegram' %}" class="sb-link {% if 'telegram' in request.path %}active{% endif %}">
-      <i class="bi bi-telegram"></i> Telegram
-      {% if user.is_authenticated %}
-        {% if user.business.telegram_notifications_enabled %}
-          <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>
-        {% elif user.business.telegram_chat_id %}
-          <span class="sb-link-dot" style="background:#f59e0b;margin-left:auto;"></span>
+    <!-- 🌍 SAYT -->
+    <div class="sb-group" data-group="sayt">
+      <div class="sb-group-head" onclick="toggleGroup('sayt')" data-head>
+        <span class="sb-group-head-label">🌍 Sayt</span>
+        <span class="sb-group-head-arrow" data-arrow>▾</span>
+      </div>
+      <div class="sb-group-body" data-body>
+        {% if user.is_authenticated %}
+        <a href="/{{ user.business.slug }}/" class="sb-link" target="_blank" title="Ommaviy sahifa">
+          <i class="bi bi-box-arrow-up-right"></i><span>Ommaviy sahifa</span>
+          <span class="sb-link-badge" style="background:rgba(99,102,241,.15);color:var(--p);margin-left:auto;font-size:9px;letter-spacing:.05em;">JONLI</span>
+        </a>
         {% endif %}
-      {% endif %}
-    </a>
-    <a href="{% url 'business:custom_domain' %}" class="sb-link {% if 'custom-domain' in request.path %}active{% endif %}">
-      <i class="bi bi-globe2"></i> Maxsus domen
-      {% if user.is_authenticated %}
-        {% if user.business.domain_verified %}
-          <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>
-        {% elif user.business.custom_domain %}
-          <span class="sb-link-dot" style="background:#f59e0b;margin-left:auto;"></span>
-        {% endif %}
-      {% endif %}
-    </a>
-    <a href="{% url 'notifications:list' %}" class="sb-link {% if 'notifications' in request.path %}active{% endif %}">
-      <i class="bi bi-bell"></i> Bildirishnomalar
-      <span id="sb-notif-count" class="sb-link-badge" style="background:rgba(239,68,68,.15);color:#ef4444;margin-left:auto;display:none;"></span>
-    </a>
-    <a href="{% url 'business:upgrade' %}" class="sb-link {% if 'upgrade' in request.path or 'payment' in request.path %}active{% endif %}">
-      <i class="bi bi-credit-card"></i> Tarif va to'lov
-    </a>
+        <a href="{% url 'services:list' %}" class="sb-link {% if 'services' in request.path %}active{% endif %}" title="Xizmatlar">
+          <i class="bi bi-grid-3x3-gap"></i><span>Xizmatlar</span>
+        </a>
+        <a href="{% url 'blog:list' %}" class="sb-link {% if 'blog' in request.path %}active{% endif %}" title="Blog">
+          <i class="bi bi-newspaper"></i><span>Blog</span>
+        </a>
+        <a href="{% url 'business:faq_list' %}" class="sb-link {% if 'faq' in request.path %}active{% endif %}" title="FAQ">
+          <i class="bi bi-question-circle"></i><span>FAQ</span>
+        </a>
+        <a href="{% url 'business:working_hours' %}" class="sb-link {% if 'working-hours' in request.path %}active{% endif %}" title="Ish vaqtlari">
+          <i class="bi bi-clock"></i><span>Ish vaqtlari</span>
+        </a>
+      </div>
+    </div>
 
-    {% if user.is_authenticated %}
-    <div class="sb-section">Ommaviy sahifa</div>
-    <a href="/{{ user.business.slug }}/" class="sb-link" target="_blank">
-      <i class="bi bi-box-arrow-up-right"></i> Ko'rish
-      <span class="sb-link-badge" style="background:rgba(99,102,241,.15);color:var(--p);margin-left:auto;font-size:9px;letter-spacing:.05em;">JONLI</span>
-    </a>
-    {% endif %}
+    <!-- ⚙️ BIZNES -->
+    <div class="sb-group" data-group="biznes">
+      <div class="sb-group-head" onclick="toggleGroup('biznes')" data-head>
+        <span class="sb-group-head-label">⚙️ Biznes</span>
+        <span class="sb-group-head-arrow" data-arrow>▾</span>
+      </div>
+      <div class="sb-group-body" data-body>
+        <a href="{% url 'business:setup' %}" class="sb-link {% if 'setup' in request.path %}active{% endif %}" title="Biznes ma'lumotlari">
+          <i class="bi bi-building"></i><span>Biznes ma'lumotlari</span>
+        </a>
+        <a href="{% url 'notifications:list' %}" class="sb-link {% if 'notifications' in request.path %}active{% endif %}" title="Bildirishnomalar">
+          <i class="bi bi-bell"></i><span>Bildirishnomalar</span>
+          <span id="sb-notif-count" class="sb-link-badge" style="background:rgba(239,68,68,.15);color:#ef4444;margin-left:auto;display:none;"></span>
+        </a>
+        <a href="javascript:void(0)" class="sb-link" title="Integratsiyalar" style="opacity:.4;cursor:default;">
+          <i class="bi bi-puzzle"></i><span>Integratsiyalar</span>
+          <span class="sb-link-badge" style="background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);font-size:8px;letter-spacing:.04em;">TEZ KUN</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ⭐ PREMIUM -->
+    <div class="sb-group" data-group="premium">
+      <div class="sb-group-head" onclick="toggleGroup('premium')" data-head style="border-radius:var(--radius-sm) var(--radius-sm) 0 0;">
+        <span class="sb-group-head-label">⭐ Premium</span>
+        <span class="sb-group-head-arrow" data-arrow>▾</span>
+      </div>
+      <div class="sb-group-body" data-body style="background:var(--sb-premium-bg);border:1px solid var(--sb-premium-border);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);margin:0 6px 6px;">
+        {% if user.is_authenticated %}
+        {% with plan=user.business.subscription_plan %}
+
+        {% url 'business:analytics' as analytics_url %}
+        <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ analytics_url }}{% endif %}"
+           class="sb-link {% if 'analytics' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
+           title="Analitika">
+          <i class="bi bi-graph-up"></i><span>Analitika</span>
+          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>{% endif %}
+          {% if plan == 'free' %}<span class="premium-cta">Pro tarifni faollashtiring →</span>{% endif %}
+        </a>
+
+        {% url 'business:telegram' as telegram_url %}
+        <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ telegram_url }}{% endif %}"
+           class="sb-link {% if 'telegram' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
+           title="Telegram">
+          <i class="bi bi-telegram"></i><span>Telegram</span>
+          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>
+          {% elif user.business.telegram_notifications_enabled %}
+            <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>
+          {% elif user.business.telegram_chat_id %}
+            <span class="sb-link-dot" style="background:#f59e0b;margin-left:auto;"></span>
+          {% endif %}
+          {% if plan == 'free' %}<span class="premium-cta">Pro tarifni faollashtiring →</span>{% endif %}
+        </a>
+
+        {% url 'business:google_calendar' as gcal_url %}
+        <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ gcal_url }}{% endif %}"
+           class="sb-link {% if 'google-calendar' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
+           title="Google Calendar">
+          <i class="bi bi-calendar2-week"></i><span>Google Calendar</span>
+          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>
+          {% elif user.business.google_calendar_sync_enabled %}
+            <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>
+          {% elif user.business.google_credentials %}
+            <span class="sb-link-dot" style="background:#f59e0b;margin-left:auto;"></span>
+          {% endif %}
+          {% if plan == 'free' %}<span class="premium-cta">Pro tarifni faollashtiring →</span>{% endif %}
+        </a>
+
+        {% url 'business:custom_domain' as domain_url %}
+        <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ domain_url }}{% endif %}"
+           class="sb-link {% if 'custom-domain' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
+           title="Maxsus domen">
+          <i class="bi bi-globe2"></i><span>Maxsus domen</span>
+          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>
+          {% elif user.business.domain_verified %}
+            <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>
+          {% elif user.business.custom_domain %}
+            <span class="sb-link-dot" style="background:#f59e0b;margin-left:auto;"></span>
+          {% endif %}
+          {% if plan == 'free' %}<span class="premium-cta">Pro tarifni faollashtiring →</span>{% endif %}
+        </a>
+
+        {% url 'business:branding' as branding_url %}
+        <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ branding_url }}{% endif %}"
+           class="sb-link {% if 'branding' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
+           title="Sahifa dizayni">
+          <i class="bi bi-palette"></i><span>Sahifa dizayni</span>
+          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>{% endif %}
+          {% if plan == 'free' %}<span class="premium-cta">Pro tarifni faollashtiring →</span>{% endif %}
+        </a>
+
+        <!-- Max-only -->
+        {% url 'business:white_label' as wl_url %}
+        <a href="{% if plan != 'enterprise' %}javascript:void(0){% else %}{{ wl_url }}{% endif %}"
+           class="sb-link {% if 'white-label' in request.path and plan == 'enterprise' %}active{% endif %} {% if plan != 'enterprise' %}premium-locked{% endif %}"
+           title="White Label">
+          <i class="bi bi-brush"></i><span>White Label</span>
+          {% if plan != 'enterprise' %}<span class="premium-lock"><i class="bi bi-stars"></i></span>{% elif business.white_label_enabled %}<span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>{% endif %}
+          <span class="premium-cta">Max tarifni faollashtiring →</span>
+        </a>
+        {% url 'business:api' as api_url %}
+        <a href="{% if plan != 'enterprise' %}javascript:void(0){% else %}{{ api_url }}{% endif %}"
+           class="sb-link {% if 'api/' in request.path and plan == 'enterprise' and 'appointments' not in request.path and 'services' not in request.path and 'employees' not in request.path %}active{% endif %} {% if plan != 'enterprise' %}premium-locked{% endif %}"
+           title="API & Webhook">
+          <i class="bi bi-code-slash"></i><span>API & Webhook</span>
+          {% if plan != 'enterprise' %}<span class="premium-lock"><i class="bi bi-stars"></i></span>{% elif business.webhook_url %}<span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>{% endif %}
+          <span class="premium-cta">Max tarifni faollashtiring →</span>
+        </a>
+
+        {% endwith %}
+        {% else %}
+        <a href="javascript:void(0)" class="sb-link premium-locked" title="Analitika">
+          <i class="bi bi-graph-up"></i><span>Analitika</span>
+          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">Pro tarifni faollashtiring →</span>
+        </a>
+        <a href="javascript:void(0)" class="sb-link premium-locked" title="Telegram">
+          <i class="bi bi-telegram"></i><span>Telegram</span>
+          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">Pro tarifni faollashtiring →</span>
+        </a>
+        <a href="javascript:void(0)" class="sb-link premium-locked" title="Google Calendar">
+          <i class="bi bi-calendar2-week"></i><span>Google Calendar</span>
+          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">Pro tarifni faollashtiring →</span>
+        </a>
+        <a href="javascript:void(0)" class="sb-link premium-locked" title="Maxsus domen">
+          <i class="bi bi-globe2"></i><span>Maxsus domen</span>
+          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">Pro tarifni faollashtiring →</span>
+        </a>
+        <a href="javascript:void(0)" class="sb-link premium-locked" title="Sahifa dizayni">
+          <i class="bi bi-palette"></i><span>Sahifa dizayni</span>
+          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">Pro tarifni faollashtiring →</span>
+        </a>
+        <a href="javascript:void(0)" class="sb-link premium-locked" title="White Label">
+          <i class="bi bi-brush"></i><span>White Label</span>
+          <span class="premium-lock"><i class="bi bi-stars"></i></span><span class="premium-cta">Max tarifni faollashtiring →</span>
+        </a>
+        <a href="javascript:void(0)" class="sb-link premium-locked" title="API & Webhook">
+          <i class="bi bi-code-slash"></i><span>API & Webhook</span>
+          <span class="premium-lock"><i class="bi bi-stars"></i></span><span class="premium-cta">Max tarifni faollashtiring →</span>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- 💳 HISOB -->
+    <div class="sb-group" data-group="hisob">
+      <div class="sb-group-head" onclick="toggleGroup('hisob')" data-head>
+        <span class="sb-group-head-label">💳 Hisob</span>
+        <span class="sb-group-head-arrow" data-arrow>▾</span>
+      </div>
+      <div class="sb-group-body" data-body>
+        <a href="{% url 'business:upgrade' %}" class="sb-link {% if 'upgrade' in request.path or 'payment' in request.path %}active{% endif %}" title="Tarif va to'lov">
+          <i class="bi bi-credit-card"></i><span>Tarif va to'lov</span>
+        </a>
+      </div>
+    </div>
 
   </nav>
 
   <!-- User footer -->
   {% if user.is_authenticated %}
   <div class="sb-footer">
-    <div class="dropdown">
-      <div class="sb-user" data-bs-toggle="dropdown">
-        <div class="sb-avatar">{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}</div>
-        <div style="overflow:hidden;flex:1;min-width:0;">
-          <div class="sb-user-name">{{ user.get_full_name }}</div>
-          <div class="sb-user-email">{{ user.email }}</div>
+    <div class="sb-footer-actions">
+      <button class="sb-collapse-btn" onclick="toggleCollapse()" title="Yig'ish" aria-label="Yig'ish">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <div class="dropdown" style="flex:1;min-width:0;">
+        <div class="sb-user" data-bs-toggle="dropdown">
+          <div class="sb-avatar">{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}</div>
+          <div style="overflow:hidden;flex:1;min-width:0;">
+            <div class="sb-user-name">{{ user.get_full_name }}</div>
+            <div class="sb-user-email">{{ user.email }}</div>
+          </div>
+          <i class="bi bi-chevron-expand" style="color:rgba(255,255,255,.2);font-size:10px;flex-shrink:0;"></i>
         </div>
-        <i class="bi bi-chevron-expand" style="color:rgba(255,255,255,.2);font-size:10px;flex-shrink:0;"></i>
+        <ul class="dropdown-menu dropdown-menu-end" style="min-width:190px;margin-bottom:4px;">
+          <li><a class="dropdown-item" href="{% url 'business:setup' %}"><i class="bi bi-gear me-2" style="color:var(--text-4);"></i>Sozlamalar</a></li>
+          <li><a class="dropdown-item" href="{% url 'business:upgrade' %}"><i class="bi bi-credit-card me-2" style="color:var(--text-4);"></i>Tarif va to'lov</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
+              <i class="bi bi-box-arrow-right me-2"></i>Chiqish
+            </a>
+          </li>
+        </ul>
       </div>
-      <ul class="dropdown-menu dropdown-menu-end" style="min-width:190px;margin-bottom:4px;">
-        <li><a class="dropdown-item" href="{% url 'business:setup' %}"><i class="bi bi-gear me-2" style="color:var(--text-4);"></i>Sozlamalar</a></li>
-        <li><a class="dropdown-item" href="{% url 'business:upgrade' %}"><i class="bi bi-credit-card me-2" style="color:var(--text-4);"></i>Tarif va to'lov</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li>
-          <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
-            <i class="bi bi-box-arrow-right me-2"></i>Chiqish
-          </a>
-        </li>
-      </ul>
     </div>
   </div>
   {% endif %}
@@ -1286,6 +1621,50 @@ function timeSince(date) {
   if (day < 7) return day + ' kun oldin';
   return date.toLocaleDateString('uz-UZ', {day:'2-digit',month:'2-digit',year:'numeric'});
 }
+
+// ── Sidebar collapse ──────────────────
+function toggleCollapse() {
+  const sb = document.getElementById('ds-sidebar');
+  const collapsed = sb.classList.toggle('collapsed');
+  localStorage.setItem('sidebarCollapsed', collapsed);
+}
+
+const savedCollapse = localStorage.getItem('sidebarCollapsed');
+if (savedCollapse === 'true') {
+  document.getElementById('ds-sidebar').classList.add('collapsed');
+}
+
+// ── Group toggles ────────────────────
+function toggleGroup(name) {
+  const group = document.querySelector(`.sb-group[data-group="${name}"]`);
+  if (!group) return;
+  const body = group.querySelector('[data-body]');
+  const arrow = group.querySelector('[data-arrow]');
+  const open = body.classList.toggle('open');
+  arrow.classList.toggle('open');
+  localStorage.setItem('group_' + name, open);
+}
+
+function initGroups() {
+  const groups = document.querySelectorAll('.sb-group');
+  groups.forEach(function(group) {
+    const name = group.dataset.group;
+    const body = group.querySelector('[data-body]');
+    const arrow = group.querySelector('[data-arrow]');
+    const saved = localStorage.getItem('group_' + name);
+
+    // Auto-open if any link inside is active
+    const hasActive = !!group.querySelector('.sb-link.active');
+
+    if (saved === 'true' || hasActive) {
+      body.classList.add('open');
+      if (arrow) arrow.classList.add('open');
+    }
+  });
+}
+
+// Auto-open groups on load
+document.addEventListener('DOMContentLoaded', initGroups);
 
 // AJAX mark-all-read
 document.addEventListener('submit', function(e) {

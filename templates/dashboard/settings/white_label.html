@@ -1,0 +1,80 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}White Label{% endblock %}
+{% block dashboard_content %}
+
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title"><i class="bi bi-brush" style="margin-right:8px;color:#8b5cf6;"></i>White Label</div>
+    <div class="page-hd-sub">BookFlow brendini yashirib, to'liq shaxsiy ko'rinishga ega bo'ling</div>
+  </div>
+</div>
+
+{% if not can_use %}
+<div class="ds-alert warning" style="margin-bottom:20px;">
+  <i class="bi bi-lock-fill"></i>
+  <div>
+    <strong>Bu funksiya faqat Max tarifida mavjud.</strong><br>
+    <span>White Label orqali BookFlow logotipi va "Tomonidan quvvatlanadi" matnini olib tashlang.</span>
+    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> Max tarifga o'tish</a>
+  </div>
+</div>
+{% else %}
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-body p-4">
+        <form method="post">
+          {% csrf_token %}
+
+          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;">
+            <div style="width:52px;height:52px;border-radius:50%;background:rgba(139,92,246,.1);display:flex;align-items:center;justify-content:center;font-size:1.5rem;">
+              <i class="bi bi-brush" style="color:#8b5cf6;"></i>
+            </div>
+            <div>
+              <div style="font-size:16px;font-weight:700;color:var(--text);">Branding sozlamalari</div>
+              <div style="font-size:12px;color:var(--text-3);margin-top:2px;">
+                Yoqilganda quyidagilar yashiriladi:
+              </div>
+              <ul style="font-size:12px;color:var(--text-3);margin-top:6px;padding-left:18px;">
+                <li>Ommavy sahifadagi "Tomonidan quvvatlanadi" &mdash; BookFlow matni</li>
+                <li>Booking jarayonidagi BookFlow logotipi</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#f9fafb;border:1px solid var(--border);border-radius:var(--radius-sm);">
+            <label class="switch" style="position:relative;display:inline-block;width:40px;height:22px;">
+              <input type="checkbox" name="white_label_enabled" onchange="this.form.submit()"
+                     style="opacity:0;width:0;height:0;"
+                     {% if business.white_label_enabled %}checked{% endif %}>
+              <span style="position:absolute;cursor:pointer;inset:0;background:{% if business.white_label_enabled %}#8b5cf6{% else %}#ccc{% endif %};border-radius:22px;transition:.2s;">
+                <span style="position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;{% if business.white_label_enabled %}right:2px{% else %}left:2px{% endif %};transition:.2s;"></span>
+              </span>
+            </label>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">White Label rejimi</div>
+              <div style="font-size:11px;color:var(--text-3);">{% if business.white_label_enabled %}BookFlow brendi yashirilgan{% else %}BookFlow brendi ko'rinadi{% endif %}</div>
+            </div>
+          </div>
+
+          <noscript><button type="submit" class="btn btn-primary mt-3">Saqlash</button></noscript>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card" style="background:linear-gradient(135deg,#0c0e14,#1e1b4b);color:#fff;border:none;">
+      <div class="card-body p-4">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.6;margin-bottom:8px;">⭐ Premium Feature</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px;">O'z brendingizni yarating</div>
+        <div style="font-size:12px;opacity:.7;line-height:1.5;">
+          White Label bilan biznesingiz mijozlari BookFlow emas, balki sizning kompaniyangiz orqali xizmat qilayotganini ko'radi. Bu ishonchni oshiradi va professional ko'rinish beradi.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

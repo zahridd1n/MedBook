@@ -1,0 +1,376 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}API Documentation{% endblock %}
+{% block dashboard_content %}
+
+<style>
+.api-doc-section { margin-bottom: 28px; }
+.api-doc-section h5 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+.api-endpoint { margin-bottom: 20px; }
+.api-endpoint-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  background: #f4f5f7; border: 1px solid var(--border);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  font-family: 'SF Mono','Fira Code','Cascadia Code',monospace;
+  font-size: 12.5px;
+}
+.api-endpoint-head .method {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.method.get { background: #dbeafe; color: #1d4ed8; }
+.method.post { background: #d1fae5; color: #059669; }
+.method.delete { background: #fee2e2; color: #dc2626; }
+.api-endpoint-body {
+  background: #0c0e14; color: #e4e4e7;
+  padding: 14px 16px; border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  font-family: 'SF Mono','Fira Code','Cascadia Code',monospace;
+  font-size: 11.5px; line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.api-endpoint-body .comment { color: #6b7280; }
+.api-endpoint-body .key { color: #93c5fd; }
+.api-endpoint-body .str { color: #a7f3d0; }
+.api-endpoint-body .num { color: #fde68a; }
+</style>
+
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title"><i class="bi bi-file-text" style="margin-right:8px;color:#10b981;"></i>API Documentation</div>
+    <div class="page-hd-sub">REST API orqali tizim ma'lumotlarini olish va boshqarish</div>
+  </div>
+  <div class="page-hd-right">
+    <a href="{% url 'business:api' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-gear"></i> Sozlamalar</a>
+  </div>
+</div>
+
+{% if not can_use %}
+<div class="ds-alert warning" style="margin-bottom:20px;">
+  <i class="bi bi-lock-fill"></i>
+  <div>
+    <strong>API faqat Max tarifida mavjud.</strong><br>
+    <span>API dokumentatsiyasini ko'rish uchun Max tarifiga o'ting.</span>
+    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;">Max tarifga o'tish</a>
+  </div>
+</div>
+{% else %}
+
+<div class="card mb-4">
+  <div class="card-body p-4">
+    <div class="row g-4">
+      <div class="col-md-6">
+        <h6 style="font-weight:700;margin-bottom:8px;"><i class="bi bi-shield-check me-2" style="color:#10b981;"></i>Authentication</h6>
+        <p style="font-size:13px;color:var(--text-3);line-height:1.6;">Barcha API so'rovlarida <code>X-API-Key</code> header orqali kalit yuborilishi shart. Kalitni <a href="{% url 'business:api' %}">API sozlamalari</a> sahifasidan olishingiz mumkin.</p>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;">
+          <code style="font-size:11px;">X-API-Key: {{ api_key|truncatechars:40 }}</code>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h6 style="font-weight:700;margin-bottom:8px;"><i class="bi bi-info-circle me-2" style="color:#6366f1;"></i>Base URL</h6>
+        <p style="font-size:13px;color:var(--text-3);line-height:1.6;">Barcha endpointlar quyidagi asosiy URL dan boshlanadi:</p>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;">
+          <code style="font-size:11px;">{{ base_url }}</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="api-doc-section">
+  <h5>📅 Qabullar (Appointments)</h5>
+
+  <div class="api-endpoint">
+    <div class="api-endpoint-head">
+      <span class="method get">GET</span>
+      <span>/api/appointments/</span>
+    </div>
+    <div class="api-endpoint-body">{% filter force_escape %}GET /api/appointments/?api_key=...&status=completed&date_from=2026-01-01&limit=50
+Authorization: X-API-Key your_key_here
+
+Response:
+{
+  "ok": true,
+  "appointments": [
+    {
+      "id": 1,
+      "date": "2026-07-12",
+      "time": "10:00:00",
+      "status": "completed",
+      "customer_name": "Ali Valiyev",
+      "customer_phone": "+998901234567",
+      "service_name": "Konsultatsiya",
+      "service_id": 1,
+      "employee_name": "Dr. Akbar",
+      "employee_id": 2,
+      "price": 50000,
+      "duration": 30,
+      "notes": "",
+      "created_at": "2026-07-10T15:30:00+05:00"
+    }
+  ],
+  "total": 1
+}{% endfilter %}</div>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="api-endpoint-head">
+      <span class="method get">GET</span>
+      <span>/api/appointments/&lt;id&gt;/</span>
+    </div>
+    <div class="api-endpoint-body">{% filter force_escape %}GET /api/appointments/1/?api_key=...
+
+Response:
+{
+  "ok": true,
+  "appointment": {
+    "id": 1,
+    "date": "2026-07-12",
+    "time": "10:00:00",
+    "status": "confirmed",
+    "customer_name": "Ali Valiyev",
+    "customer_phone": "+998901234567",
+    "service_name": "Konsultatsiya",
+    "employee_name": "Dr. Akbar",
+    "price": 50000,
+    "notes": ""
+  }
+}{% endfilter %}</div>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="api-endpoint-head">
+      <span class="method post">POST</span>
+      <span>/api/appointments/</span>
+    </div>
+    <div class="api-endpoint-body">{% filter force_escape %}POST /api/appointments/?api_key=...
+Content-Type: application/json
+
+{
+  "customer_name": "Ali Valiyev",
+  "customer_phone": "+998901234567",
+  "service_id": 1,
+  "employee_id": 2,
+  "date": "2026-07-15",
+  "time": "14:30:00",
+  "price": 50000,
+  "notes": "Izoh"
+}
+
+Response (201):
+{
+  "ok": true,
+  "appointment": {
+    "id": 46,
+    "status": "pending"
+  }
+}{% endfilter %}</div>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="api-endpoint-head">
+      <span class="method delete">DELETE</span>
+      <span>/api/appointments/&lt;id&gt;/</span>
+    </div>
+    <div class="api-endpoint-body">{% filter force_escape %}DELETE /api/appointments/1/?api_key=...
+
+Response:
+{
+  "ok": true,
+  "message": "Qabul bekor qilindi"
+}{% endfilter %}</div>
+  </div>
+
+  <div class="api-endpoint">
+    <div class="api-endpoint-head">
+      <span class="method get">GET</span>
+      <span>/api/appointments/today/</span>
+    </div>
+    <div class="api-endpoint-body">{% filter force_escape %}GET /api/appointments/today/?api_key=...
+
+Response:
+{
+  "ok": true,
+  "date": "2026-07-12",
+  "appointments": [...],
+  "total": 5
+}{% endfilter %}</div>
+  </div>
+</div>
+
+<div class="api-doc-section">
+  <h5>📋 Xizmatlar (Services)</h5>
+
+  <div class="api-endpoint">
+    <div class="api-endpoint-head">
+      <span class="method get">GET</span>
+      <span>/api/services/</span>
+    </div>
+    <div class="api-endpoint-body">{% filter force_escape %}GET /api/services/?api_key=...
+
+Response:
+{
+  "ok": true,
+  "services": [
+    {
+      "id": 1,
+      "name": "Konsultatsiya",
+      "price": 50000,
+      "duration": 30,
+      "description": "Shifokor konsultatsiyasi"
+    }
+  ],
+  "total": 1
+}{% endfilter %}</div>
+  </div>
+</div>
+
+<div class="api-doc-section">
+  <h5>👨‍⚕️ Xodimlar (Employees)</h5>
+
+  <div class="api-endpoint">
+    <div class="api-endpoint-head">
+      <span class="method get">GET</span>
+      <span>/api/employees/</span>
+    </div>
+    <div class="api-endpoint-body">{% filter force_escape %}GET /api/employees/?api_key=...
+
+Response:
+{
+  "ok": true,
+  "employees": [
+    {
+      "id": 1,
+      "full_name": "Dr. Akbar",
+      "position": "Shifokor",
+      "phone": "+998901234567",
+      "email": "akbar@example.com"
+    }
+  ],
+  "total": 1
+}{% endfilter %}</div>
+  </div>
+</div>
+
+<div class="api-doc-section">
+  <h5>👥 Mijozlar (Customers)</h5>
+
+  <div class="api-endpoint">
+    <div class="api-endpoint-head">
+      <span class="method get">GET</span>
+      <span>/api/customers/</span>
+    </div>
+    <div class="api-endpoint-body">{% filter force_escape %}GET /api/customers/?api_key=...&search=Ali&limit=20
+
+Response:
+{
+  "ok": true,
+  "customers": [
+    {
+      "id": 1,
+      "full_name": "Ali Valiyev",
+      "phone": "+998901234567",
+      "email": "ali@example.com",
+      "total_appointments": 5,
+      "created_at": "2026-01-10T12:00:00+05:00"
+    }
+  ],
+  "total": 1
+}{% endfilter %}</div>
+  </div>
+</div>
+
+<div class="api-doc-section">
+  <h5>📊 Statistika (Stats)</h5>
+
+  <div class="api-endpoint">
+    <div class="api-endpoint-head">
+      <span class="method get">GET</span>
+      <span>/api/stats/</span>
+    </div>
+    <div class="api-endpoint-body">{% filter force_escape %}GET /api/stats/?api_key=...
+
+Response:
+{
+  "ok": true,
+  "stats": {
+    "total_appointments": 150,
+    "this_month_appointments": 12,
+    "completed_appointments": 120,
+    "cancelled_appointments": 10,
+    "total_customers": 80,
+    "total_services": 5,
+    "total_employees": 3,
+    "monthly_revenue": 2500000,
+    "today_appointments": 3
+  }
+}{% endfilter %}</div>
+  </div>
+</div>
+
+<div class="api-doc-section">
+  <h5>⚡ Tezkor misollar</h5>
+
+  <div class="api-endpoint">
+    <div class="api-endpoint-head" style="border-radius:var(--radius-sm);">
+      <span style="font-size:11px;color:var(--text-2);">curl</span>
+      <span>So'rov namunalari</span>
+    </div>
+    <div class="api-endpoint-body">{% filter force_escape %}# Barcha qabullarni olish
+curl -H "X-API-Key: your_key_here" {{ base_url }}appointments/
+
+# Bugungi qabullar
+curl -H "X-API-Key: your_key_here" {{ base_url }}appointments/today/
+
+# Xizmatlar ro'yxati
+curl -H "X-API-Key: your_key_here" {{ base_url }}services/
+
+# Xodimlar ro'yxati
+curl -H "X-API-Key: your_key_here" {{ base_url }}employees/
+
+# Mijozlarni qidirish
+curl "{{ base_url }}customers/?api_key=your_key_here&search=Ali"
+
+# Statistika
+curl -H "X-API-Key: your_key_here" {{ base_url }}stats/
+
+# Yangi qabul yaratish
+curl -X POST {{ base_url }}appointments/ \
+  -H "X-API-Key: your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customer_name": "Ali Valiyev",
+    "customer_phone": "+998901234567",
+    "service_id": 1,
+    "date": "2026-07-15",
+    "time": "14:30:00"
+  }'
+
+# Qabulni bekor qilish
+curl -X DELETE -H "X-API-Key: your_key_here" {{ base_url }}appointments/1/
+
+# Python misoli
+import requests
+api_key = "your_key_here"
+headers = {"X-API-Key": api_key}
+r = requests.get("{{ base_url }}appointments/", headers=headers)
+print(r.json()){% endfilter %}</div>
+  </div>
+</div>
+
+<div class="card" style="background:linear-gradient(135deg,#0c0e14,#065f46);color:#fff;border:none;">
+  <div class="card-body p-4">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.6;margin-bottom:8px;">⚡ Webhook</div>
+    <div style="font-size:14px;font-weight:600;margin-bottom:6px;">Avtomatik xabarnomalar</div>
+    <div style="font-size:12px;opacity:.7;line-height:1.6;">
+      Yangi qabul yaratilganda, sizning <strong>Webhook URL</strong> manzilingizga POST so'rov yuboriladi.
+      So'rov <code>Content-Type: application/json</code> formatida keladi va quyidagi ma'lumotlarni o'z ichiga oladi:
+      <code style="display:block;margin-top:6px;font-size:11px;">{ id, date, time, status, customer_name, customer_phone, service_name, employee_name, price }</code>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+{% endblock %}

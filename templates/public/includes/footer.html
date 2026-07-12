@@ -172,7 +172,9 @@
     </div>
     <div class="bk-footer-bottom">
       <span>© {{ business.name }} · Barcha huquqlar himoyalangan.</span>
+      {% if not business.white_label_enabled %}
       <span>Tomonidan quvvatlanadi <a href="{% url 'marketing:home' %}"><strong style="color:rgba(255,255,255,.55);">BookFlow</strong></a></span>
+      {% endif %}
     </div>
   </div>
 </footer>
