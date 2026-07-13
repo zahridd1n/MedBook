@@ -1,6 +1,9 @@
 from copy import deepcopy
 
 from django.db import models
+from django.utils import timezone
+from django.urls import reverse
+from business.models import Business
 
 
 MARKETING_COPY_DEFAULTS = {
@@ -542,3 +545,33 @@ class PricingPlanFeature(models.Model):
 
     def __str__(self):
         return f"{self.plan.name} - {self.text}"
+
+
+class BusinessSubscription(Business):
+    class Meta:
+        proxy = True
+        app_label = 'superadmin'
+        verbose_name = "Obuna"
+        verbose_name_plural = "Obunalar"
+        permissions = [
+            ('manage_subscriptions', "Obunalarni boshqarish"),
+            ('view_subscription_stats', "Obuna statistikasini ko'rish"),
+        ]
+
+    def __str__(self):
+        return f"{self.name} ({self.get_subscription_plan_display()})"
+
+    @property
+    def is_expired(self):
+        return bool(self.subscription_end and self.subscription_end < timezone.now())
+
+    @property
+    def is_trialing(self):
+        return self.subscription_status == 'trial'
+
+    @property
+    def days_until_expiry(self):
+        if not self.subscription_end:
+            return None
+        remaining = (self.subscription_end - timezone.now()).days
+        return max(0, remaining)

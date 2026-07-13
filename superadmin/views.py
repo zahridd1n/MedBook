@@ -1,18 +1,27 @@
-from django.shortcuts import render, redirect, get_object_or_404
+import json
+import logging
+from datetime import timedelta
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
-from django.utils import timezone
 from django.db.models import Count, Q
 from django.db.models.functions import TruncDate
-from datetime import timedelta
-import json
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from .decorators import superuser_required
 from .models import SiteSettings
 from .forms import SiteSettingsForm
+from .telegram_bot import handle_callback, send_message
 from business.models import Business, Payment
 from appointments.models import Appointment
 from accounts.models import User
+
+logger = logging.getLogger(__name__)
 
 
 # ─── Dashboard Home ───────────────────────────────────────────────────────────
@@ -165,6 +174,75 @@ def toggle_block(request, pk):
         state = 'bloklandi' if business.is_blocked else 'blokdan chiqarildi'
         messages.success(request, f'"{business.name}" {state}.')
     return redirect(request.POST.get('next', 'superadmin:businesses'))
+
+
+# ─── Subscriptions List (OBUNALAR) ───────────────────────────────────────────
+
+@superuser_required
+def subscriptions(request):
+    from datetime import timedelta
+    qs = Business.objects.select_related('owner').order_by('-created_at')
+
+    q = request.GET.get('q', '').strip()
+    if q:
+        qs = qs.filter(
+            Q(name__icontains=q) | Q(owner__email__icontains=q) |
+            Q(owner__first_name__icontains=q) | Q(owner__last_name__icontains=q)
+        )
+
+    plan = request.GET.get('plan', '')
+    if plan:
+        qs = qs.filter(subscription_plan=plan)
+
+    sub_status = request.GET.get('sub_status', '')
+    if sub_status:
+        qs = qs.filter(subscription_status=sub_status)
+
+    expiring = request.GET.get('expiring', '')
+    now = timezone.now()
+    if expiring == '7':
+        qs = qs.filter(
+            subscription_end__gte=now, subscription_end__lte=now + timedelta(days=7),
+            subscription_status__in=['trial', 'active'],
+        )
+    elif expiring == '30':
+        qs = qs.filter(
+            subscription_end__gte=now, subscription_end__lte=now + timedelta(days=30),
+            subscription_status__in=['trial', 'active'],
+        )
+
+    all_qs = Business.objects.all()
+    stats = {
+        'total': all_qs.count(),
+        'by_plan': {
+            'free': all_qs.filter(subscription_plan='free').count(),
+            'growth': all_qs.filter(subscription_plan='growth').count(),
+            'enterprise': all_qs.filter(subscription_plan='enterprise').count(),
+        },
+        'by_status': {
+            'trial': all_qs.filter(subscription_status='trial').count(),
+            'active': all_qs.filter(subscription_status='active').count(),
+            'expired': all_qs.filter(subscription_status='expired').count(),
+            'cancelled': all_qs.filter(subscription_status='cancelled').count(),
+        },
+        'blocked': all_qs.filter(is_blocked=True).count(),
+        'expiring_7': all_qs.filter(
+            subscription_end__gte=now, subscription_end__lte=now + timedelta(days=7),
+            subscription_status__in=['trial', 'active'],
+        ).count(),
+    }
+
+    context = {
+        'subscriptions': qs,
+        'stats': stats,
+        'query': q,
+        'selected_plan': plan,
+        'selected_sub_status': sub_status,
+        'selected_expiring': expiring,
+        'total_count': qs.count(),
+        'now': timezone.now(),
+    }
+    return render(request, 'superadmin/subscriptions.html', context)
 
 
 # ─── Update Subscription ─────────────────────────────────────────────────────
@@ -398,3 +476,48 @@ def pricing_plan_delete(request, pk):
         messages.success(request, 'Tarif o\'chirildi.')
         return redirect('superadmin:pricing_plan_list')
     return render(request, 'superadmin/pricing_plans/delete.html', {'plan': plan})
+
+
+# ─── Superadmin Telegram Bot Webhook ──────────────────────────────────────────
+
+@csrf_exempt
+@require_POST
+def superadmin_webhook(request, token):
+    if token != getattr(settings, 'SUPERADMIN_BOT_TOKEN', ''):
+        return HttpResponse(status=403)
+
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'ok': False, 'error': 'Invalid JSON'}, status=400)
+
+    logger.debug('[SuperadminBot] Update: %s', data)
+
+    # Handle inline keyboard callback
+    callback = data.get('callback_query', {})
+    if callback:
+        chat_id = callback.get('message', {}).get('chat', {}).get('id')
+        callback_data = callback.get('data', '')
+        if chat_id and callback_data:
+            handle_callback(chat_id, callback_data)
+        return JsonResponse({'ok': True})
+
+    # Handle text commands
+    message = data.get('message', {})
+    chat = message.get('chat', {})
+    chat_id = chat.get('id')
+    text = (message.get('text') or '').strip()
+
+    if chat_id and text == '/start':
+        send_message(
+            chat_id,
+            '👋 <b>Xush kelibsiz!</b>\n\n'
+            'Bu bot to\'lov cheklarini qabul qilish va tasdiqlash uchun.\n\n'
+            '<b>Qo\'llanma:</b>\n'
+            '1. Botni superadmin sifatida sozlang\n'
+            '2. SUPERADMIN_CHAT_IDS ga shu chat id ni qo\'shing\n'
+            '3. To\'lov kelganda avtomatik xabar olasiz\n\n'
+            'Sizning chat id ingiz: <code>' + str(chat_id) + '</code>'
+        )
+
+    return JsonResponse({'ok': True})

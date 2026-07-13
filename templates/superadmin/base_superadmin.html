@@ -301,6 +301,9 @@
     <a href="{% url 'superadmin:payment_list' %}" class="nav-link {% if 'payments' in request.path %}active{% endif %}">
       <i class="bi bi-credit-card-fill"></i> To'lovlar
     </a>
+    <a href="{% url 'superadmin:subscriptions' %}" class="nav-link {% if 'subscriptions' in request.path %}active{% endif %}">
+      <i class="bi bi-journal-check"></i> Obunalar
+    </a>
 
     <div class="sa-section-label mt-3">Sozlamalar</div>
     <a href="{% url 'superadmin:site_settings' %}" class="nav-link {% if 'site-settings' in request.path %}active{% endif %}">

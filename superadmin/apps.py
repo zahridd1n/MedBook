@@ -5,3 +5,6 @@ class SuperadminConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'superadmin'
     verbose_name = 'Super Admin'
+
+    def ready(self):
+        import superadmin.signals  # noqa

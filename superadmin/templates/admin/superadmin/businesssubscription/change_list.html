@@ -1,0 +1,150 @@
+{% extends "admin/change_list.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .stat-card .num {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .stat-card .label {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+  .stat-card.plan-free { border-left: 3px solid #6b7280; }
+  .stat-card.plan-growth { border-left: 3px solid #6366f1; }
+  .stat-card.plan-enterprise { border-left: 3px solid #f59e0b; }
+  .stat-card.status-active { border-left: 3px solid #10b981; }
+  .stat-card.status-expired { border-left: 3px solid #ef4444; }
+  .stat-card.warning { border-left: 3px solid #f59e0b; }
+  .stat-card.danger { border-left: 3px solid #ef4444; }
+  .stat-card.info { border-left: 3px solid #3b82f6; }
+  .num.color-free { color: #6b7280; }
+  .num.color-growth { color: #6366f1; }
+  .num.color-enterprise { color: #f59e0b; }
+  .num.color-active { color: #10b981; }
+  .num.color-expired { color: #ef4444; }
+  .num.color-warning { color: #f59e0b; }
+  .num.color-danger { color: #ef4444; }
+  .num.color-info { color: #3b82f6; }
+
+  .stats-section {
+    margin-bottom: 20px;
+  }
+  .stats-section h3 {
+    font-size: 13px;
+    color: #374151;
+    margin: 0 0 8px 0;
+    padding: 0;
+    font-weight: 600;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  {% block object-tools %}
+    <ul class="object-tools">
+      {% block object-tools-items %}
+        {% if has_add_permission %}{% change_list_object_tools %}{% endif %}
+      {% endblock %}
+    </ul>
+  {% endblock %}
+
+  {# ─── stats dashboard ─────────────────────────────────────────────── #}
+  <div class="stats-section">
+    <h2 style="margin:0 0 12px 0;font-size:16px;">📊 Obuna statistikasi</h2>
+    <div class="stats-grid">
+      <div class="stat-card info">
+        <div class="num color-info">{{ stats.total }}</div>
+        <div class="label">Jami bizneslar</div>
+      </div>
+      <div class="stat-card plan-free">
+        <div class="num color-free">{{ stats.by_plan.free }}</div>
+        <div class="label">Start</div>
+      </div>
+      <div class="stat-card plan-growth">
+        <div class="num color-growth">{{ stats.by_plan.growth }}</div>
+        <div class="label">Pro</div>
+      </div>
+      <div class="stat-card plan-enterprise">
+        <div class="num color-enterprise">{{ stats.by_plan.enterprise }}</div>
+        <div class="label">Max</div>
+      </div>
+      <div class="stat-card status-active">
+        <div class="num color-active">{{ stats.by_status.active }}</div>
+        <div class="label">Faol obuna</div>
+      </div>
+      <div class="stat-card danger">
+        <div class="num color-expired">{{ stats.by_status.expired }}</div>
+        <div class="label">Muddati o'tgan</div>
+      </div>
+      <div class="stat-card danger">
+        <div class="num color-danger">{{ stats.blocked }}</div>
+        <div class="label">Bloklangan</div>
+      </div>
+      <div class="stat-card warning">
+        <div class="num color-warning">{{ stats.expiring_7 }}</div>
+        <div class="label">7 kun ichida tugaydi</div>
+      </div>
+    </div>
+  </div>
+
+  {# ─── main changelist ─────────────────────────────────────────────── #}
+  <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+    <div class="changelist-form-container">
+      {% block search %}{% search_form cl %}{% endblock %}
+      {% block date_hierarchy %}{% if cl.date_hierarchy %}{% date_hierarchy cl %}{% endif %}{% endblock %}
+
+      <form id="changelist-form" method="post"{% if cl.formset and cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
+      {% if cl.formset %}
+        <div>{{ cl.formset.management_form }}</div>
+      {% endif %}
+
+      {% block result_list %}
+        {% if action_form and actions_on_top and cl.show_admin_actions %}{% admin_actions %}{% endif %}
+        {% result_list cl %}
+        {% if action_form and actions_on_bottom and cl.show_admin_actions %}{% admin_actions %}{% endif %}
+      {% endblock %}
+      {% block pagination %}{% pagination cl %}{% endblock %}
+      </form>
+    </div>
+    {% block filters %}
+      {% if cl.has_filters %}
+        <div id="changelist-filter">
+          <h2>{% translate 'Filter' %}</h2>
+          {% if cl.is_facets_optional or cl.has_active_filters %}<div id="changelist-filter-extra-actions">
+            {% if cl.is_facets_optional %}<h3>
+              {% if cl.add_facets %}<a href="{{ cl.remove_facet_link }}" class="hidelink">{% translate "Hide counts" %}</a>
+              {% else %}<a href="{{ cl.add_facet_link }}" class="viewlink">{% translate "Show counts" %}</a>{% endif %}
+            </h3>{% endif %}
+            {% if cl.has_active_filters %}<h3>
+              <a href="{{ cl.clear_all_filters_qs }}">&#10006; {% translate "Clear all filters" %}</a>
+            </h3>{% endif %}
+          </div>{% endif %}
+          {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+        </div>
+      {% endif %}
+    {% endblock %}
+  </div>
+</div>
+{% endblock %}

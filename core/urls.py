@@ -3,6 +3,7 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from notifications.views import telegram_webhook
+from superadmin.views import superadmin_webhook
 from blog.views import blog_public_list, blog_public_detail
 from public_site.views import (
     public_home, booking_step1_service,
@@ -16,8 +17,11 @@ urlpatterns = [
     # Super Admin Dashboard
     path('superadmin/', include('superadmin.urls')),
 
-    # Telegram Bot webhook (CSRF exempt, no login needed)
+    # Telegram Bot webhook (biznes egalari uchun)
     path('telegram/webhook/<str:token>/', telegram_webhook, name='telegram_webhook'),
+
+    # Superadmin Telegram Bot webhook (to'lov tasdiqlash uchun)
+    path('telegram/superadmin-webhook/<str:token>/', superadmin_webhook, name='superadmin_webhook'),
 
     # Marketing landing pages
     path('', include('marketing.urls')),

@@ -1,0 +1,176 @@
+{% extends "admin/change_form.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .subscription-info {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+  }
+  .subscription-info h3 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #374151;
+  }
+  .subscription-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .sub-info-item {
+    display: flex;
+    flex-direction: column;
+  }
+  .sub-info-item .sub-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #6b7280;
+    letter-spacing: 0.5px;
+  }
+  .sub-info-item .sub-value {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tag-active { background: #d1fae5; color: #065f46; }
+  .tag-expired { background: #fee2e2; color: #991b1b; }
+  .tag-trial { background: #dbeafe; color: #1e40af; }
+  .tag-cancelled { background: #f3f4f6; color: #374151; }
+  .tag-yes { background: #d1fae5; color: #065f46; }
+  .tag-no { background: #fee2e2; color: #991b1b; }
+  .quick-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+  .quick-actions a {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .quick-actions a:hover { opacity: 0.85; }
+  .qa-pro { background: #eef2ff; color: #4338ca; }
+  .qa-max { background: #fef3c7; color: #92400e; }
+  .qa-extend { background: #d1fae5; color: #065f46; }
+  .qa-block { background: #fee2e2; color: #991b1b; }
+  .qa-unblock { background: #d1fae5; color: #065f46; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  {% block object-tools %}
+    {% if change and not is_popup %}
+      <ul class="object-tools">
+        {% block object-tools-items %}
+          <li><a href="{% url 'admin:business_business_change' original.pk %}" class="historylink" target="_blank">Biznes profiliga o'tish</a></li>
+        {% endblock %}
+      </ul>
+    {% endif %}
+  {% endblock %}
+
+  <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form" novalidate>{% csrf_token %}{% block form_top %}{% endblock %}
+
+  {% if original %}
+  <div class="subscription-info">
+    <h3>📋 {{ original.name }} — obuna ma'lumotlari</h3>
+    <div class="subscription-info-grid">
+      <div class="sub-info-item">
+        <span class="sub-label">Tarif</span>
+        <span class="sub-value">
+          {% if original.subscription_plan == 'free' %}<span class="tag tag-trial">Start</span>
+          {% elif original.subscription_plan == 'growth' %}<span class="tag tag-active">Pro</span>
+          {% elif original.subscription_plan == 'enterprise' %}<span class="tag tag-cancelled">Max</span>
+          {% else %}{{ original.subscription_plan }}{% endif %}
+        </span>
+      </div>
+      <div class="sub-info-item">
+        <span class="sub-label">Holat</span>
+        <span class="sub-value">
+          {% if original.subscription_status == 'active' %}<span class="tag tag-active">Faol</span>
+          {% elif original.subscription_status == 'expired' %}<span class="tag tag-expired">Muddati o'tgan</span>
+          {% elif original.subscription_status == 'trial' %}<span class="tag tag-trial">Sinov</span>
+          {% elif original.subscription_status == 'cancelled' %}<span class="tag tag-cancelled">Bekor qilingan</span>
+          {% endif %}
+        </span>
+      </div>
+      <div class="sub-info-item">
+        <span class="sub-label">Aktiv</span>
+        <span class="sub-value">{% if original.is_active %}<span class="tag tag-yes">Ha</span>{% else %}<span class="tag tag-no">Yo'q</span>{% endif %}</span>
+      </div>
+      <div class="sub-info-item">
+        <span class="sub-label">Bloklangan</span>
+        <span class="sub-value">{% if original.is_blocked %}<span class="tag tag-no">Ha</span>{% else %}<span class="tag tag-yes">Yo'q</span>{% endif %}</span>
+      </div>
+    </div>
+  </div>
+
+  {% if not original.is_blocked and not original.is_blocked %}
+  <div class="quick-actions">
+    <a href="{% url 'admin:superadmin_businesssubscription_changelist' %}?q={{ original.name|urlencode }}" class="qa-pro">← Obunalar ro'yxati</a>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  <div>
+    {% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1">{% endif %}
+    {% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}">{% endif %}
+    {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+    {% if errors %}
+      <p class="errornote">
+      {% blocktranslate count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktranslate %}
+      </p>
+      {{ adminform.form.non_field_errors }}
+    {% endif %}
+
+    {% block field_sets %}
+    {% for fieldset in adminform %}
+      {% include "admin/includes/fieldset.html" %}
+    {% endfor %}
+    {% endblock %}
+
+    {% block after_field_sets %}{% endblock %}
+
+    {% block inline_field_sets %}
+    {% for inline_admin_formset in inline_admin_formsets %}
+      {% include inline_admin_formset.opts.template %}
+    {% endfor %}
+    {% endblock %}
+
+    {% block after_related_objects %}{% endblock %}
+
+    {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+
+    {% block admin_change_form_document_ready %}
+        <script id="django-admin-form-change-constants"
+                src="{% static 'admin/js/change_form.js' %}"
+                {% if adminform and add %}
+                    data-model-name="{{ opts.model_name }}"
+                {% endif %}
+                async>
+        </script>
+    {% endblock %}
+
+    {# JavaScript for prepopulated fields #}
+    {% prepopulated_fields_js %}
+
+  </div>
+  </form>
+</div>
+{% endblock %}

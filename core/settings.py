@@ -160,9 +160,13 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='noreply@BookFlow.com')
 
-# Telegram Bot
+# Telegram Bot (biznes egalari uchun — bandlov bildirishnomalari)
 TELEGRAM_BOT_TOKEN = env('TELEGRAM_BOT_TOKEN', default='')
 TELEGRAM_BOT_USERNAME = env('TELEGRAM_BOT_USERNAME', default='')  # e.g. 'MyBookingBot'
+
+# Superadmin Telegram Bot (to'lov cheklari va tasdiqlash uchun)
+SUPERADMIN_BOT_TOKEN = env('SUPERADMIN_BOT_TOKEN', default='')
+SUPERADMIN_CHAT_IDS = env('SUPERADMIN_CHAT_IDS', default='')  # vergul bilan ajratilgan chat_id lar
 
 SITE_URL = env('SITE_URL', default='http://localhost:8000')
 
