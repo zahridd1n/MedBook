@@ -160,6 +160,13 @@ def contact(request):
     return render(request, 'marketing/contact.html', _context(request))
 
 
+def tutorials(request):
+    ctx = _context(request)
+    ctx['tutorial_videos'] = ctx['m']['tutorials']['videos']
+    ctx['tutorial_steps'] = ctx['m']['tutorials']['steps']
+    return render(request, 'marketing/tutorials.html', ctx)
+
+
 def businesses_directory(request):
     """Public directory of businesses that opted in to show_in_directory."""
     lang = _language(request)

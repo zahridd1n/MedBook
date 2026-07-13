@@ -1,0 +1,85 @@
+{% extends 'base_marketing.html' %}
+
+{% block title %}BookFlow - {{ m.tutorials.hero_title }}{% endblock %}
+
+{% block marketing_content %}
+<section class="mkt-page-hero">
+  <div class="mkt-container">
+    <div class="mkt-eyebrow reveal"><span></span> {{ m.tutorials.hero_eyebrow }}</div>
+    <h1 class="reveal reveal-delay-1">{{ m.tutorials.hero_title }}</h1>
+    <p class="mkt-lead reveal reveal-delay-2">{{ m.tutorials.hero_subtitle }}</p>
+  </div>
+</section>
+
+<section class="mkt-section">
+  <div class="mkt-container">
+    <div class="mkt-video-grid">
+      {% for video in tutorial_videos %}
+        <article class="mkt-video-card reveal">
+          <div class="mkt-video-player">
+            {% if video.youtube_id %}
+              <iframe
+                src="https://www.youtube.com/embed/{{ video.youtube_id }}"
+                title="{{ video.title }}"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            {% elif video.file_url %}
+              <video controls preload="metadata" poster="">
+                <source src="{{ video.file_url }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            {% else %}
+              <div class="mkt-video-placeholder">
+                <i class="bi bi-play-circle"></i>
+                <span>{{ video.duration }}</span>
+              </div>
+            {% endif %}
+          </div>
+          <div class="mkt-video-info">
+            <div class="mkt-video-meta">
+              <span class="mkt-video-duration"><i class="bi bi-clock"></i> {{ video.duration }}</span>
+            </div>
+            <h3>{{ video.title }}</h3>
+            <p>{{ video.description }}</p>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="mkt-section mkt-band">
+  <div class="mkt-container">
+    <div class="mkt-section-head reveal">
+      <div class="mkt-eyebrow"><span></span> {{ m.tutorials.hero_eyebrow }}</div>
+      <h2>{{ m.tutorials.steps_title }}</h2>
+    </div>
+    <div class="mkt-tutorial-steps">
+      {% for step in tutorial_steps %}
+        <div class="mkt-tutorial-step reveal">
+          <div class="mkt-tutorial-step-num">0{{ forloop.counter }}</div>
+          <div class="mkt-tutorial-step-content">
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="mkt-section">
+  <div class="mkt-container">
+    <div class="mkt-cta-panel reveal">
+      <div>
+        <div class="mkt-eyebrow"><span></span> {{ m.home.cta_eyebrow }}</div>
+        <h2>{{ m.home.cta_title }}</h2>
+        <p>{{ m.home.cta_subtitle }}</p>
+      </div>
+      <a class="mkt-btn mkt-btn-primary" href="{% url 'accounts:register' %}">{{ m.home.primary_cta }} <i class="bi bi-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+{% endblock %}

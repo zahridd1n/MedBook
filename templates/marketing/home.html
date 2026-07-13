@@ -82,6 +82,59 @@
   </div>
 </section>
 
+<section class="mkt-section mkt-video-preview">
+  <div class="mkt-container">
+    <div class="mkt-section-head reveal">
+      <div class="mkt-eyebrow"><span></span> {{ m.tutorials.home_eyebrow }}</div>
+      <h2>{{ m.tutorials.home_title }}</h2>
+      <p>{{ m.tutorials.home_subtitle }}</p>
+    </div>
+    <div class="mkt-video-preview-card mkt-window reveal">
+      <div class="mkt-window-top">
+        <span></span><span></span><span></span>
+        <div><i class="bi bi-play-fill"></i> {{ m.tutorials.videos.0.title }}</div>
+      </div>
+      <div class="mkt-video-preview-player">
+        {% if m.tutorials.videos.0.youtube_id %}
+          <iframe
+            src="https://www.youtube.com/embed/{{ m.tutorials.videos.0.youtube_id }}"
+            title="{{ m.tutorials.videos.0.title }}"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        {% elif m.tutorials.videos.0.file_url %}
+          <video controls preload="metadata">
+            <source src="{{ m.tutorials.videos.0.file_url }}" type="video/mp4">
+          </video>
+        {% else %}
+          <div class="mkt-video-placeholder mkt-video-placeholder-lg">
+            <i class="bi bi-play-circle"></i>
+            <span>{{ m.tutorials.videos.0.title }}</span>
+            <small>{{ m.tutorials.videos.0.duration }}</small>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="mkt-video-preview-thumbs reveal">
+      {% for video in m.tutorials.videos|slice:":3" %}
+        <div class="mkt-video-thumb">
+          <div class="mkt-video-thumb-icon">
+            <i class="bi bi-play-circle"></i>
+          </div>
+          <div>
+            <strong>{{ video.title }}</strong>
+            <span>{{ video.duration }}</span>
+          </div>
+        </div>
+      {% endfor %}
+      <a class="mkt-btn mkt-btn-secondary mkt-video-more-btn" href="{% url 'marketing:tutorials' %}">
+        {{ m.tutorials.home_cta }} <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
 <section class="mkt-section mkt-band">
   <div class="mkt-container">
     <div class="mkt-split">
