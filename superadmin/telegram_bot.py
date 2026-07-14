@@ -31,12 +31,15 @@ def get_admins():
     return [int(c.strip()) for c in raw.split(',') if c.strip()]
 
 
-def send_message(chat_id, text, parse_mode='HTML'):
-    return _bot_request('sendMessage', {
+def send_message(chat_id, text, parse_mode='HTML', reply_markup=None):
+    params = {
         'chat_id': chat_id,
         'text': text,
         'parse_mode': parse_mode,
-    })
+    }
+    if reply_markup:
+        params['reply_markup'] = json.dumps(reply_markup)
+    return _bot_request('sendMessage', params)
 
 
 def send_photo(chat_id, photo_path, caption='', parse_mode='HTML', reply_markup=None):
