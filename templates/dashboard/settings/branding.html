@@ -1,16 +1,17 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Sahifa dizayni{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Sahifa dizayni" %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title"><i class="bi bi-palette" style="margin-right:8px;color:var(--p);"></i>Sahifa dizayni</div>
-    <div class="page-hd-sub">Ommaviy sahifangizning ko'rinishini moslashtiring</div>
+    <div class="page-hd-title"><i class="bi bi-palette" style="margin-right:8px;color:var(--p);"></i>{% trans "Sahifa dizayni" %}</div>
+    <div class="page-hd-sub">{% trans "Ommaviy sahifangizning ko'rinishini moslashtiring" %}</div>
   </div>
   {% if business %}
   <div class="page-hd-actions">
     <a href="/{{ business.slug }}/" target="_blank" class="btn btn-secondary">
-      <i class="bi bi-box-arrow-up-right"></i> Ko'rish
+      <i class="bi bi-box-arrow-up-right"></i> {% trans "Ko'rish" %}
     </a>
   </div>
   {% endif %}
@@ -20,9 +21,9 @@
 <div class="ds-alert warning" style="margin-bottom:20px;">
   <i class="bi bi-lock-fill"></i>
   <div>
-    <strong>Bu funksiya faqat pullik tariflarda mavjud.</strong><br>
-    <span>Sahifa dizaynini o'zgartirish uchun <strong>Pro</strong> yoki <strong>Max</strong> tarifiga o'ting.</span>
-    <a href="{% url 'marketing:pricing' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> Tarifni oshirish</a>
+    <strong>{% trans "Bu funksiya faqat pullik tariflarda mavjud." %}</strong><br>
+    <span>{% blocktrans %}Sahifa dizaynini o'zgartirish uchun <strong>Pro</strong> yoki <strong>Max</strong> tarifiga o'ting.{% endblocktrans %}</span>
+    <a href="{% url 'marketing:pricing' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> {% trans "Tarifni oshirish" %}</a>
   </div>
 </div>
 {% endif %}
@@ -34,64 +35,64 @@
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="mb-3">
-            <label class="form-label fw-semibold">Asosiy Rang</label>
+            <label class="form-label fw-semibold">{% trans "Asosiy Rang" %}</label>
             <div class="d-flex align-items-center gap-3">
               {{ form.primary_color }}
-              <span class="text-muted small">Sahifangizning asosiy rangini tanlang</span>
+              <span class="text-muted small">{% trans "Sahifangizning asosiy rangini tanlang" %}</span>
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label fw-semibold">Banner Rasm</label>
+            <label class="form-label fw-semibold">{% trans "Banner Rasm" %}</label>
             {{ form.banner_image }}
-            <div class="text-muted small mt-1">Ommaviy sahifangiz tepasida ko'rinadi (tavsiya: 1200x400px)</div>
+            <div class="text-muted small mt-1">{% trans "Ommaviy sahifangiz tepasida ko'rinadi (tavsiya: 1200x400px)" %}</div>
             {% if business.banner_image %}
             <div class="mt-2">
               <img src="{{ business.banner_image.url }}?v={{ business.updated_at|date:'U' }}" class="rounded-3 border" style="max-height:120px;width:100%;object-fit:cover;">
               <label class="d-flex align-items-center gap-1 mt-1 small text-muted">
-                <input type="checkbox" name="remove_banner"> Rasmni o'chirish
+                <input type="checkbox" name="remove_banner"> {% trans "Rasmni o'chirish" %}
               </label>
             </div>
             {% endif %}
           </div>
           <div class="row g-3 mb-3">
             <div class="col-md-6">
-              <label class="form-label fw-semibold">Tugma shakli</label>
+              <label class="form-label fw-semibold">{% trans "Tugma shakli" %}</label>
               {{ form.button_style }}
-              <div class="text-muted small mt-1">Tugmalar qanday ko'rinishda bo'lsin</div>
+              <div class="text-muted small mt-1">{% trans "Tugmalar qanday ko'rinishda bo'lsin" %}</div>
             </div>
             <div class="col-md-6">
-              <label class="form-label fw-semibold">Kartochka soyasi</label>
+              <label class="form-label fw-semibold">{% trans "Kartochka soyasi" %}</label>
               {{ form.card_shadow }}
-              <div class="text-muted small mt-1">Kartochkalar atrofidagi soya</div>
+              <div class="text-muted small mt-1">{% trans "Kartochkalar atrofidagi soya" %}</div>
             </div>
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold">
-              <i class="bi bi-layout-text-sidebar me-1"></i>Menyu uslubi
-              {% if not is_paid %}<span class="badge bg-secondary ms-1"><i class="bi bi-lock"></i> Pro</span>{% endif %}
+              <i class="bi bi-layout-text-sidebar me-1"></i>{% trans "Menyu uslubi" %}
+              {% if not is_paid %}<span class="badge bg-secondary ms-1"><i class="bi bi-lock"></i> {% trans "Pro" %}</span>{% endif %}
             </label>
             {{ form.navbar_style }}
             <div class="d-flex align-items-center gap-3 mt-2">
-              <div class="d-flex align-items-center gap-1 small text-muted"><span style="display:inline-block;width:10px;height:10px;border-radius:4px;background:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.2);backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,0.06);"></span> Glass Ultra</div>
-              <div class="d-flex align-items-center gap-1 small text-muted"><span style="display:inline-block;width:10px;height:10px;border-radius:0;background:#0f172a;"></span> Minimal</div>
-              <div class="d-flex align-items-center gap-1 small text-muted"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);"></span> Modern</div>
+              <div class="d-flex align-items-center gap-1 small text-muted"><span style="display:inline-block;width:10px;height:10px;border-radius:4px;background:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.2);backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,0.06);"></span> {% trans "Glass Ultra" %}</div>
+              <div class="d-flex align-items-center gap-1 small text-muted"><span style="display:inline-block;width:10px;height:10px;border-radius:0;background:#0f172a;"></span> {% trans "Minimal" %}</div>
+              <div class="d-flex align-items-center gap-1 small text-muted"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);"></span> {% trans "Modern" %}</div>
             </div>
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold">
-              Maxsus CSS
-              {% if not business.can_use_custom_css %}<span class="badge bg-secondary ms-1"><i class="bi bi-lock"></i> Max</span>{% endif %}
+              {% trans "Maxsus CSS" %}
+              {% if not business.can_use_custom_css %}<span class="badge bg-secondary ms-1"><i class="bi bi-lock"></i> {% trans "Max" %}</span>{% endif %}
             </label>
             {{ form.custom_css }}
             {% if not business.can_use_custom_css %}
             <div class="text-muted small mt-1">
-              <i class="bi bi-info-circle me-1"></i>Maxsus CSS faqat <strong>Max</strong> tarifida mavjud.
-              <a href="{% url 'business:upgrade' %}" style="font-weight:600;">Tarifni oshirish →</a>
+              <i class="bi bi-info-circle me-1"></i>{% blocktrans %}Maxsus CSS faqat <strong>Max</strong> tarifida mavjud.{% endblocktrans %}
+              <a href="{% url 'business:upgrade' %}" style="font-weight:600;">{% trans "Tarifni oshirish" %} →</a>
             </div>
             {% endif %}
             <div class="d-flex align-items-center justify-content-between mt-2">
               <div class="text-muted small">
-                <i class="bi bi-info-circle me-1"></i> CSS biladiganlar uchun.
+                <i class="bi bi-info-circle me-1"></i> {% trans "CSS biladiganlar uchun." %}
               </div>
               <a href="{% url 'business:css_docs' %}" target="_blank" class="btn btn-sm btn-outline-primary">
                 <i class="bi bi-book me-1"></i>CSS Documentation
@@ -102,7 +103,7 @@
           <script>document.getElementById('id_custom_css').disabled = true;</script>
           {% endif %}
           <button type="submit" class="btn btn-primary px-4" {% if not is_paid %}disabled{% endif %}>
-            <i class="bi bi-check-lg me-1"></i>Saqlash
+            <i class="bi bi-check-lg me-1"></i>{% trans "Saqlash" %}
           </button>
         </form>
       </div>
@@ -111,7 +112,7 @@
   <div class="col-lg-5">
     <div class="card">
       <div class="card-body">
-        <div class="card-head-title" style="margin-bottom:12px;"><i class="bi bi-eye" style="margin-right:6px;color:var(--p);"></i>Qanday ko'rinadi</div>
+        <div class="card-head-title" style="margin-bottom:12px;"><i class="bi bi-eye" style="margin-right:6px;color:var(--p);"></i>{% trans "Qanday ko'rinadi" %}</div>
         <div class="rounded-3 border overflow-hidden" style="background:#f8fafc">
           {% if business.banner_image %}
           <img src="{{ business.banner_image.url }}?v={{ business.updated_at|date:'U' }}" style="width:100%;height:140px;object-fit:cover;display:block;">
@@ -124,14 +125,14 @@
             <div class="small rounded-2 text-white d-inline-block px-3 py-1 fw-bold" style="background:{{ business.primary_color|default:'#6366f1' }}">
               {{ business.name }}
             </div>
-            <p class="text-muted small mt-2 mb-0">Sahifangiz banner va rang bilan</p>
+            <p class="text-muted small mt-2 mb-0">{% trans "Sahifangiz banner va rang bilan" %}</p>
           </div>
         </div>
         <hr>
         <div class="small text-muted">
-          <p class="mb-1"><i class="bi bi-info-circle me-1"></i>O'zgarishlar avtomatik ommaviy sahifangizda qo'llaniladi.</p>
+          <p class="mb-1"><i class="bi bi-info-circle me-1"></i>{% trans "O'zgarishlar avtomatik ommaviy sahifangizda qo'llaniladi." %}</p>
           <a href="/{{ business.slug }}/" target="_blank" class="btn btn-sm btn-outline-secondary w-100 mt-2">
-            <i class="bi bi-box-arrow-up-right me-1"></i>Ommaviy sahifani ko'rish
+            <i class="bi bi-box-arrow-up-right me-1"></i>{% trans "Ommaviy sahifani ko'rish" %}
           </a>
         </div>
       </div>

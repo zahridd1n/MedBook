@@ -1,15 +1,16 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Ko'p so'raladigan savollar{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Ko'p so'raladigan savollar" %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title">Ko'p so'raladigan savollar</div>
-    <div class="page-hd-sub">Mijozlarga yordam beruvchi savollar va javoblar</div>
+    <div class="page-hd-title">{% trans "Ko'p so'raladigan savollar" %}</div>
+    <div class="page-hd-sub">{% trans "Mijozlarga yordam beruvchi savollar va javoblar" %}</div>
   </div>
   <div class="page-hd-actions">
     <a href="{% url 'business:faq_create' %}" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Savol qo'shish
+      <i class="bi bi-plus-lg"></i> {% trans "Savol qo'shish" %}
     </a>
   </div>
 </div>
@@ -23,8 +24,8 @@
           <thead>
             <tr>
               <th style="padding-left:18px;width:40px;">#</th>
-              <th>Savol</th>
-              <th>Holat</th>
+              <th>{% trans "Savol" %}</th>
+              <th>{% trans "Holat" %}</th>
               <th style="text-align:right;padding-right:18px;width:80px;"></th>
             </tr>
           </thead>
@@ -38,19 +39,19 @@
               </td>
               <td>
                 {% if faq.is_active %}
-                <span class="status status-green">Faol</span>
+                <span class="status status-green">{% trans "Faol" %}</span>
                 {% else %}
-                <span class="status status-gray">Yashirin</span>
+                <span class="status status-gray">{% trans "Yashirin" %}</span>
                 {% endif %}
               </td>
               <td style="text-align:right;padding-right:18px;">
                 <div style="display:flex;gap:4px;justify-content:flex-end;">
-                  <a href="{% url 'business:faq_edit' faq.pk %}" class="btn btn-secondary btn-icon-sm" title="Tahrirlash">
+                  <a href="{% url 'business:faq_edit' faq.pk %}" class="btn btn-secondary btn-icon-sm" title="{% trans "Tahrirlash" %}">
                     <i class="bi bi-pencil" style="font-size:11px;"></i>
                   </a>
-                  <form method="post" action="{% url 'business:faq_delete' faq.pk %}" style="display:inline;" onsubmit="return confirm('Ushbu savolni o\'chirasizmi?')">
+                  <form method="post" action="{% url 'business:faq_delete' faq.pk %}" style="display:inline;" onsubmit="return confirm('{% trans "Ushbu savolni o'chirasizmi?" %}')">
                     {% csrf_token %}
-                    <button class="btn btn-danger btn-icon-sm" title="O'chirish">
+                    <button class="btn btn-danger btn-icon-sm" title="{% trans "O'chirish" %}">
                       <i class="bi bi-trash" style="font-size:11px;"></i>
                     </button>
                   </form>
@@ -66,10 +67,10 @@
     <div class="card">
       <div class="ds-empty">
         <div class="ds-empty-icon"><i class="bi bi-question-circle"></i></div>
-        <div class="ds-empty-title">Savollar yo'q</div>
-        <div class="ds-empty-desc">Mijozlaringizga tez-tez so'raladigan savollarga javob bering. Ommaviy sahifada ko'rsatiladi.</div>
+        <div class="ds-empty-title">{% trans "Savollar yo'q" %}</div>
+        <div class="ds-empty-desc">{% trans "Mijozlaringizga tez-tez so'raladigan savollarga javob bering. Ommaviy sahifada ko'rsatiladi." %}</div>
         <a href="{% url 'business:faq_create' %}" class="btn btn-primary">
-          <i class="bi bi-plus-lg"></i> Birinchi savolni qo'shish
+          <i class="bi bi-plus-lg"></i> {% trans "Birinchi savolni qo'shish" %}
         </a>
       </div>
     </div>
@@ -79,21 +80,21 @@
   <div class="col-lg-4">
     <div class="card">
       <div class="card-head">
-        <span class="card-head-title"><i class="bi bi-lightbulb" style="margin-right:6px;color:#f59e0b;"></i>Maslahatlar</span>
+        <span class="card-head-title"><i class="bi bi-lightbulb" style="margin-right:6px;color:#f59e0b;"></i>{% trans "Maslahatlar" %}</span>
       </div>
       <div class="card-body">
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
           <li style="display:flex;gap:8px;font-size:12.5px;color:var(--text-2);">
             <i class="bi bi-check-circle" style="color:#16a34a;flex-shrink:0;margin-top:1px;"></i>
-            Savollar ommaviy qabul sahifasida ko'rsatiladi
+            {% trans "Savollar ommaviy qabul sahifasida ko'rsatiladi" %}
           </li>
           <li style="display:flex;gap:8px;font-size:12.5px;color:var(--text-2);">
             <i class="bi bi-check-circle" style="color:#16a34a;flex-shrink:0;margin-top:1px;"></i>
-            Tartib raqami orqali saralash mumkin
+            {% trans "Tartib raqami orqali saralash mumkin" %}
           </li>
           <li style="display:flex;gap:8px;font-size:12.5px;color:var(--text-2);">
             <i class="bi bi-check-circle" style="color:#16a34a;flex-shrink:0;margin-top:1px;"></i>
-            Yashirin savollar foydalanuvchilarga ko'rinmaydi
+            {% trans "Yashirin savollar foydalanuvchilarga ko'rinmaydi" %}
           </li>
         </ul>
       </div>

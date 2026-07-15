@@ -1,4 +1,5 @@
 {% extends 'base_dashboard.html' %}
+{% load i18n %}
 {% block page_title %}CSS Documentation{% endblock %}
 {% block dashboard_content %}
 
@@ -7,7 +8,7 @@
   <h4 class="fw-bold mb-0"><i class="bi bi-file-code text-primary me-2"></i>CSS Documentation</h4>
 </div>
 
-<p class="text-muted mb-4">Quyidagi kodlardan foydalanib sahifangizni yanada chiroyli qilishingiz mumkin. Kodni <strong>nusxalash</strong> tugmasini bosib oling va <strong>Sahifa Dizayni → Maxsus CSS</strong> maydoniga joylang.</p>
+<p class="text-muted mb-4">{% blocktrans %}Quyidagi kodlardan foydalanib sahifangizni yanada chiroyli qilishingiz mumkin. Kodni <strong>nusxalash</strong> tugmasini bosib oling va <strong>Sahifa Dizayni → Maxsus CSS</strong> maydoniga joylang.{% endblocktrans %}</p>
 
 <div class="row g-4">
   {% for section in sections %}
@@ -26,7 +27,7 @@
         <div class="d-flex align-items-center justify-content-between">
           <small class="text-muted">{{ section.desc }}</small>
           <button class="btn btn-sm btn-outline-secondary copy-btn" data-code="{{ section.code|escape }}">
-            <i class="bi bi-clipboard me-1"></i>Nusxalash
+            <i class="bi bi-clipboard me-1"></i>{% trans "Nusxalash" %}
           </button>
         </div>
       </div>
@@ -37,7 +38,7 @@
 
 <div class="alert alert-info rounded-3 mt-4">
   <i class="bi bi-lightbulb me-2"></i>
-  <strong>Maslahat:</strong> Kodlarni bittadan sinab ko'ring. Agar noto'g'ri kod yozsangiz, sahifangiz buzilishi mumkin. Har doim avval bir dona kodni qo'shib, natijani tekshiring.
+  <strong>{% trans "Maslahat:" %}</strong> {% trans "Kodlarni bittadan sinab ko'ring. Agar noto'g'ri kod yozsangiz, sahifangiz buzilishi mumkin. Har doim avval bir dona kodni qo'shib, natijani tekshiring." %}
 </div>
 
 {% block extra_js %}
@@ -46,9 +47,9 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
   btn.addEventListener('click', function() {
     const code = this.dataset.code;
     navigator.clipboard.writeText(code).then(() => {
-      this.innerHTML = '<i class="bi bi-check2 me-1"></i>Nusxalandi!';
+      this.innerHTML = '<i class="bi bi-check2 me-1"></i>{% trans "Nusxalandi!" %}';
       setTimeout(() => {
-        this.innerHTML = '<i class="bi bi-clipboard me-1"></i>Nusxalash';
+        this.innerHTML = '<i class="bi bi-clipboard me-1"></i>{% trans "Nusxalash" %}';
       }, 2000);
     });
   });

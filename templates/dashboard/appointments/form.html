@@ -1,15 +1,16 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}{% if action == 'Edit' %}Qabulni tahrirlash{% else %}Yangi qabul{% endif %}{% endblock %}
+{% load i18n %}
+{% block page_title %}{% if action == 'Edit' %}{% trans "Qabulni tahrirlash" %}{% else %}{% trans "Yangi qabul" %}{% endif %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left" style="display:flex;align-items:center;gap:12px;">
-    <a href="{% url 'appointments:list' %}" class="btn btn-secondary btn-icon-sm" title="Orqaga">
+    <a href="{% url 'appointments:list' %}" class="btn btn-secondary btn-icon-sm" title="{% trans "Orqaga" %}">
       <i class="bi bi-arrow-left" style="font-size:13px;"></i>
     </a>
     <div>
-      <div class="page-hd-title">{% if action == 'Edit' %}Qabulni tahrirlash{% else %}Yangi qabul qo'shish{% endif %}</div>
-      <div class="page-hd-sub">Mijoz va qabul ma'lumotlarini kiriting</div>
+      <div class="page-hd-title">{% if action == 'Edit' %}{% trans "Qabulni tahrirlash" %}{% else %}{% trans "Yangi qabul qo'shish" %}{% endif %}</div>
+      <div class="page-hd-sub">{% trans "Mijoz va qabul ma'lumotlarini kiriting" %}</div>
     </div>
   </div>
 </div>
@@ -22,67 +23,67 @@
           {% csrf_token %}
           <div class="row g-3">
             <div class="col-md-6">
-              <label class="form-label">Mijoz ismi <span style="color:#ef4444;">*</span></label>
+              <label class="form-label">{% trans "Mijoz ismi" %} <span style="color:#ef4444;">*</span></label>
               {{ form.customer_name }}
               {% if form.customer_name.errors %}
               <div class="form-error">{{ form.customer_name.errors|join:", " }}</div>
               {% endif %}
             </div>
             <div class="col-md-6">
-              <label class="form-label">Telefon raqami <span style="color:#ef4444;">*</span></label>
+              <label class="form-label">{% trans "Telefon raqami" %} <span style="color:#ef4444;">*</span></label>
               {{ form.customer_phone }}
               {% if form.customer_phone.errors %}
               <div class="form-error">{{ form.customer_phone.errors|join:", " }}</div>
               {% endif %}
             </div>
             <div class="col-md-6">
-              <label class="form-label">Xizmat turi <span style="color:#ef4444;">*</span></label>
+              <label class="form-label">{% trans "Xizmat turi" %} <span style="color:#ef4444;">*</span></label>
               {{ form.service }}
               {% if form.service.errors %}
               <div class="form-error">{{ form.service.errors|join:", " }}</div>
               {% endif %}
             </div>
             <div class="col-md-6">
-              <label class="form-label">Xodim</label>
+              <label class="form-label">{% trans "Xodim" %}</label>
               {{ form.employee }}
-              <div class="form-hint">Bo'sh qoldirsangiz, har qanday xodim qabul qiladi</div>
+              <div class="form-hint">{% trans "Bo'sh qoldirsangiz, har qanday xodim qabul qiladi" %}</div>
             </div>
             <div class="col-md-6">
-              <label class="form-label">Sana <span style="color:#ef4444;">*</span></label>
+              <label class="form-label">{% trans "Sana" %} <span style="color:#ef4444;">*</span></label>
               {{ form.date }}
               {% if form.date.errors %}
               <div class="form-error">{{ form.date.errors|join:", " }}</div>
               {% endif %}
             </div>
             <div class="col-md-6">
-              <label class="form-label">Vaqt <span style="color:#ef4444;">*</span></label>
+              <label class="form-label">{% trans "Vaqt" %} <span style="color:#ef4444;">*</span></label>
               {{ form.time }}
               {% if form.time.errors %}
               <div class="form-error">{{ form.time.errors|join:", " }}</div>
               {% endif %}
             </div>
             <div class="col-md-6">
-              <label class="form-label">Holat</label>
+              <label class="form-label">{% trans "Holat" %}</label>
               {{ form.status }}
             </div>
             <div class="col-12">
-              <label class="form-label">Izohlar</label>
+              <label class="form-label">{% trans "Izohlar" %}</label>
               {{ form.notes }}
-              <div class="form-hint">Qo'shimcha ma'lumot yoki eslatmalar</div>
+              <div class="form-hint">{% trans "Qo'shimcha ma'lumot yoki eslatmalar" %}</div>
             </div>
             {% if action == 'Edit' %}
             <div class="col-12">
-              <label class="form-label">Mutaxassis izohi</label>
+              <label class="form-label">{% trans "Mutaxassis izohi" %}</label>
               {{ form.doctor_notes }}
-              <div class="form-hint">Tashxis, tavsiyalar va boshqa qaydlar</div>
+              <div class="form-hint">{% trans "Tashxis, tavsiyalar va boshqa qaydlar" %}</div>
             </div>
             {% endif %}
           </div>
           <div style="display:flex;gap:10px;margin-top:22px;">
             <button type="submit" class="btn btn-primary">
-              <i class="bi bi-check-lg"></i> Saqlash
+              <i class="bi bi-check-lg"></i> {% trans "Saqlash" %}
             </button>
-            <a href="{% url 'appointments:list' %}" class="btn btn-secondary">Bekor qilish</a>
+            <a href="{% url 'appointments:list' %}" class="btn btn-secondary">{% trans "Bekor qilish" %}</a>
           </div>
         </form>
       </div>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils.translation import gettext as _
 from .models import Employee, EmployeeSchedule
 from .forms import EmployeeForm
 from business.models import Business
@@ -21,8 +22,11 @@ def employee_create(request):
     if not business.can_add_employee():
         messages.error(
             request,
-            f"Xodimlar limiti tugadi ({business.plan_display} — {business.max_employees} ta)."
-            f" Yangilash uchun <a href='{''}'>tarifni oshiring</a>."
+            _("Xodimlar limiti tugadi (%(plan)s — %(max)s ta)."
+              " Yangilash uchun <a href='#'>tarifni oshiring</a>.") % {
+                'plan': business.plan_display,
+                'max': business.max_employees,
+            }
         )
         return redirect('employees:list')
     if request.method == 'POST':
@@ -37,7 +41,7 @@ def employee_create(request):
                     employee=emp, day=day,
                     defaults={'is_working': day < 6, 'start_time': '09:00', 'end_time': '18:00'},
                 )
-            messages.success(request, 'Employee added.')
+            messages.success(request, _('Employee added.'))
             return redirect('employees:list')
     else:
         form = EmployeeForm(business=business)
@@ -54,7 +58,7 @@ def employee_edit(request, pk):
         form = EmployeeForm(request.POST, request.FILES, instance=employee, business=business)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Employee updated.')
+            messages.success(request, _('Employee updated.'))
             return redirect('employees:list')
     else:
         form = EmployeeForm(instance=employee, business=business)
@@ -69,7 +73,7 @@ def employee_delete(request, pk):
     employee = get_object_or_404(Employee, pk=pk, business=business)
     if request.method == 'POST':
         employee.delete()
-        messages.success(request, 'Employee deleted.')
+        messages.success(request, _('Employee deleted.'))
     return redirect('employees:list')
 
 
@@ -89,7 +93,7 @@ def employee_schedule(request, pk):
             sch.start_time = request.POST.get(f'start_{sch.day}') or None
             sch.end_time = request.POST.get(f'end_{sch.day}') or None
             sch.save()
-        messages.success(request, 'Schedule saved.')
+        messages.success(request, _('Schedule saved.'))
         return redirect('employees:list')
     return render(request, 'dashboard/employees/schedule.html', {
         'business': business, 'employee': employee, 'schedules': schedules,

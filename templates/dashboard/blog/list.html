@@ -1,15 +1,16 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Blog{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Blog" %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title">Blog</div>
-    <div class="page-hd-sub">Maqola va postlarni boshqaring</div>
+    <div class="page-hd-title">{% trans "Blog" %}</div>
+    <div class="page-hd-sub">{% trans "Maqola va postlarni boshqaring" %}</div>
   </div>
   <div class="page-hd-actions">
     <a href="{% url 'blog:create' %}" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Yangi post
+      <i class="bi bi-plus-lg"></i> {% trans "Yangi post" %}
     </a>
   </div>
 </div>
@@ -17,10 +18,10 @@
 <!-- Tab nav -->
 <div style="display:flex;align-items:center;gap:4px;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:0;">
   <a href="{% url 'blog:list' %}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--p);border-bottom:2px solid var(--p);text-decoration:none;margin-bottom:-1px;">
-    <i class="bi bi-journal-text"></i> Postlar
+    <i class="bi bi-journal-text"></i> {% trans "Postlar" %}
   </a>
   <a href="{% url 'blog:comment-list' %}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:500;color:var(--text-3);border-bottom:2px solid transparent;text-decoration:none;margin-bottom:-1px;">
-    <i class="bi bi-chat-left-text"></i> Izohlar
+    <i class="bi bi-chat-left-text"></i> {% trans "Izohlar" %}
   </a>
 </div>
 
@@ -30,10 +31,10 @@
     <table class="ds-table">
       <thead>
         <tr>
-          <th style="padding-left:18px;">Sarlavha</th>
-          <th>Holat</th>
-          <th>Ko'rish</th>
-          <th>Sana</th>
+          <th style="padding-left:18px;">{% trans "Sarlavha" %}</th>
+          <th>{% trans "Holat" %}</th>
+          <th>{% trans "Ko'rish" %}</th>
+          <th>{% trans "Sana" %}</th>
           <th style="text-align:right;padding-right:18px;width:100px;"></th>
         </tr>
       </thead>
@@ -43,14 +44,14 @@
           <td style="padding-left:18px;">
             <div style="font-weight:600;color:var(--text);">{{ post.title }}</div>
             {% if post.featured_image %}
-            <div style="font-size:11px;color:var(--text-4);margin-top:2px;"><i class="bi bi-image" style="margin-right:3px;"></i>Rasm mavjud</div>
+            <div style="font-size:11px;color:var(--text-4);margin-top:2px;"><i class="bi bi-image" style="margin-right:3px;"></i>{% trans "Rasm mavjud" %}</div>
             {% endif %}
           </td>
           <td>
             {% if post.is_published %}
-            <span class="status status-green">Nashr qilingan</span>
+            <span class="status status-green">{% trans "Nashr qilingan" %}</span>
             {% else %}
-            <span class="status status-amber">Qoralama</span>
+            <span class="status status-amber">{% trans "Qoralama" %}</span>
             {% endif %}
           </td>
           <td>
@@ -59,17 +60,17 @@
           <td style="color:var(--text-3);font-size:12.5px;">{{ post.created_at|date:"d.m.Y" }}</td>
           <td style="text-align:right;padding-right:18px;">
             <div style="display:flex;gap:4px;justify-content:flex-end;">
-              <a href="{% url 'blog:edit' post.pk %}" class="btn btn-secondary btn-icon-sm" title="Tahrirlash">
+              <a href="{% url 'blog:edit' post.pk %}" class="btn btn-secondary btn-icon-sm" title="{% trans "Tahrirlash" %}">
                 <i class="bi bi-pencil" style="font-size:11px;"></i>
               </a>
               {% if post.is_published %}
-              <a href="/{{ request.user.business.slug }}/blog/{{ post.slug }}/" class="btn btn-secondary btn-icon-sm" target="_blank" title="Ko'rish">
+              <a href="/{{ request.user.business.slug }}/blog/{{ post.slug }}/" class="btn btn-secondary btn-icon-sm" target="_blank" title="{% trans "Ko'rish" %}">
                 <i class="bi bi-eye" style="font-size:11px;"></i>
               </a>
               {% endif %}
-              <form method="post" action="{% url 'blog:delete' post.pk %}" style="display:inline;" onsubmit="return confirm('Postni o\'chirasizmi?')">
+              <form method="post" action="{% url 'blog:delete' post.pk %}" style="display:inline;" onsubmit="return confirm('{% trans "Postni o'chirasizmi?" %}')">
                 {% csrf_token %}
-                <button class="btn btn-danger btn-icon-sm" title="O'chirish">
+                <button class="btn btn-danger btn-icon-sm" title="{% trans "O'chirish" %}">
                   <i class="bi bi-trash" style="font-size:11px;"></i>
                 </button>
               </form>
@@ -83,7 +84,7 @@
 
   {% if posts.has_other_pages %}
   <div class="ds-pager">
-    <span>Jami {{ posts.paginator.count }} ta post</span>
+    <span>{% blocktrans count total=posts.paginator.count %}Jami {{ total }} ta post{% plural %}Jami {{ total }} ta post{% endblocktrans %}</span>
     <div class="ds-pager-pages">
       {% if posts.has_previous %}
       <a href="?page=1" class="ds-page-btn"><i class="bi bi-chevron-double-left"></i></a>
@@ -107,10 +108,10 @@
 <div class="card">
   <div class="ds-empty">
     <div class="ds-empty-icon"><i class="bi bi-newspaper"></i></div>
-    <div class="ds-empty-title">Blogda postlar yo'q</div>
-    <div class="ds-empty-desc">Birinchi maqolani yozing. Blog mijozlaringizga ko'proq ishonch bildiradi.</div>
+    <div class="ds-empty-title">{% trans "Blogda postlar yo'q" %}</div>
+    <div class="ds-empty-desc">{% trans "Birinchi maqolani yozing. Blog mijozlaringizga ko'proq ishonch bildiradi." %}</div>
     <a href="{% url 'blog:create' %}" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Birinchi postni yozish
+      <i class="bi bi-plus-lg"></i> {% trans "Birinchi postni yozish" %}
     </a>
   </div>
 </div>

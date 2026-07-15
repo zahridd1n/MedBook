@@ -1,5 +1,6 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}{{ employee.name }} — Ish grafigi{% endblock %}
+{% load i18n %}
+{% block page_title %}{% blocktrans %}{{ employee.name }} — Ish grafigi{% endblocktrans %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
@@ -8,8 +9,8 @@
       <i class="bi bi-arrow-left" style="font-size:13px;"></i>
     </a>
     <div>
-      <div class="page-hd-title">{{ employee.name }} — Ish grafigi</div>
-      <div class="page-hd-sub">Har bir kun uchun ish vaqtlarini belgilang</div>
+      <div class="page-hd-title">{% blocktrans %}{{ employee.name }} — Ish grafigi{% endblocktrans %}</div>
+      <div class="page-hd-sub">{% trans "Har bir kun uchun ish vaqtlarini belgilang" %}</div>
     </div>
   </div>
 </div>
@@ -18,7 +19,7 @@
   <div class="col-lg-6">
     <div class="card">
       <div class="card-head">
-        <span class="card-head-title"><i class="bi bi-clock" style="margin-right:6px;"></i>Haftalik jadval</span>
+        <span class="card-head-title"><i class="bi bi-clock" style="margin-right:6px;"></i>{% trans "Haftalik jadval" %}</span>
       </div>
       <div class="card-body">
         <form method="post">
@@ -32,11 +33,11 @@
                   style="width:16px;height:16px;accent-color:var(--p);">
               </label>
               <div>
-                <label style="font-size:10.5px;color:var(--text-4);margin-bottom:3px;display:block;">Boshlanish</label>
+                <label style="font-size:10.5px;color:var(--text-4);margin-bottom:3px;display:block;">{% trans "Boshlanish" %}</label>
                 <input type="time" name="start_{{ s.day }}" class="form-control" value="{{ s.start_time|time:'H:i'|default:'' }}" style="font-size:13px;padding:5px 8px;">
               </div>
               <div>
-                <label style="font-size:10.5px;color:var(--text-4);margin-bottom:3px;display:block;">Tugash</label>
+                <label style="font-size:10.5px;color:var(--text-4);margin-bottom:3px;display:block;">{% trans "Tugash" %}</label>
                 <input type="time" name="end_{{ s.day }}" class="form-control" value="{{ s.end_time|time:'H:i'|default:'' }}" style="font-size:13px;padding:5px 8px;">
               </div>
             </div>
@@ -44,9 +45,9 @@
           </div>
           <div style="margin-top:20px;display:flex;gap:10px;">
             <button type="submit" class="btn btn-primary">
-              <i class="bi bi-check-lg"></i> Jadvalni saqlash
+              <i class="bi bi-check-lg"></i> {% trans "Jadvalni saqlash" %}
             </button>
-            <a href="{% url 'employees:list' %}" class="btn btn-secondary">Orqaga</a>
+            <a href="{% url 'employees:list' %}" class="btn btn-secondary">{% trans "Orqaga" %}</a>
           </div>
         </form>
       </div>

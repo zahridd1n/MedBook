@@ -12,6 +12,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.utils.translation import gettext as _
 
 from .decorators import superuser_required
 from .models import SiteSettings
@@ -172,7 +173,7 @@ def toggle_block(request, pk):
         business.is_blocked = not business.is_blocked
         business.save(update_fields=['is_blocked'])
         state = 'bloklandi' if business.is_blocked else 'blokdan chiqarildi'
-        messages.success(request, f'"{business.name}" {state}.')
+        messages.success(request, _(f'"{business.name}" {state}.'))
     return redirect(request.POST.get('next', 'superadmin:businesses'))
 
 
@@ -275,7 +276,7 @@ def update_subscription(request, pk):
         business.save(update_fields=[
             'subscription_plan', 'subscription_status', 'subscription_start', 'subscription_end',
         ])
-        messages.success(request, f'"{business.name}" obunasi yangilandi.')
+        messages.success(request, _(f'"{business.name}" obunasi yangilandi.'))
     return redirect('superadmin:business_detail', pk=pk)
 
 
@@ -288,7 +289,7 @@ def site_settings(request):
         form = SiteSettingsForm(request.POST, request.FILES, instance=settings_obj)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Sayt sozlamalari saqlandi.')
+            messages.success(request, _('Sayt sozlamalari saqlandi.'))
             return redirect('superadmin:site_settings')
     else:
         form = SiteSettingsForm(instance=settings_obj)
@@ -361,15 +362,15 @@ def change_owner_password(request, pk):
         new_password = request.POST.get('new_password', '').strip()
         confirm = request.POST.get('confirm_password', '').strip()
         if not new_password:
-            messages.error(request, 'Yangi parol kiritilmadi.')
+            messages.error(request, _('Yangi parol kiritilmadi.'))
         elif len(new_password) < 6:
-            messages.error(request, 'Parol kamida 6 belgidan iborat bo\'lishi kerak.')
+            messages.error(request, _('Parol kamida 6 belgidan iborat bo\'lishi kerak.'))
         elif new_password != confirm:
-            messages.error(request, 'Parollar bir-biriga mos kelmadi.')
+            messages.error(request, _('Parollar bir-biriga mos kelmadi.'))
         else:
             business.owner.password = make_password(new_password)
             business.owner.save(update_fields=['password'])
-            messages.success(request, f'"{business.owner.get_full_name}" paroli muvaffaqiyatli o\'zgartirildi.')
+            messages.success(request, _(f'"{business.owner.get_full_name}" paroli muvaffaqiyatli o\'zgartirildi.'))
     return redirect('superadmin:business_detail', pk=pk)
 
 
@@ -405,12 +406,12 @@ def payment_detail(request, pk):
                 'subscription_plan', 'subscription_status',
                 'subscription_start', 'subscription_end',
             ])
-            messages.success(request, f'"{business.name}" to\'lovi tasdiqlandi — {payment.get_plan_display()} faollashtirildi.')
+            messages.success(request, _(f'"{business.name}" to\'lovi tasdiqlandi — {payment.get_plan_display()} faollashtirildi.'))
         elif action == 'reject':
             reason = request.POST.get('rejected_reason', '').strip()
             payment.status = 'rejected'
             payment.rejected_reason = reason
-            messages.warning(request, f'"{payment.business.name}" to\'lovi rad etildi.')
+            messages.warning(request, _(f'"{payment.business.name}" to\'lovi rad etildi.'))
         payment.save(update_fields=['status', 'rejected_reason'])
         return redirect('superadmin:payment_list')
 
@@ -439,7 +440,7 @@ def pricing_plan_create(request):
             plan = form.save()
             formset.instance = plan
             formset.save()
-            messages.success(request, 'Yangi tarif muvaffaqiyatli qo\'shildi.')
+            messages.success(request, _('Yangi tarif muvaffaqiyatli qo\'shildi.'))
             return redirect('superadmin:pricing_plan_list')
     else:
         form = PricingPlanForm()
@@ -458,7 +459,7 @@ def pricing_plan_edit(request, pk):
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
-            messages.success(request, 'Tarif muvaffaqiyatli yangilandi.')
+            messages.success(request, _('Tarif muvaffaqiyatli yangilandi.'))
             return redirect('superadmin:pricing_plan_list')
     else:
         form = PricingPlanForm(instance=plan)
@@ -473,7 +474,7 @@ def pricing_plan_delete(request, pk):
     plan = get_object_or_404(PricingPlan, pk=pk)
     if request.method == 'POST':
         plan.delete()
-        messages.success(request, 'Tarif o\'chirildi.')
+        messages.success(request, _('Tarif o\'chirildi.'))
         return redirect('superadmin:pricing_plan_list')
     return render(request, 'superadmin/pricing_plans/delete.html', {'plan': plan})
 
@@ -489,7 +490,7 @@ def superadmin_webhook(request, token):
     try:
         data = json.loads(request.body)
     except (json.JSONDecodeError, ValueError):
-        return JsonResponse({'ok': False, 'error': 'Invalid JSON'}, status=400)
+        return JsonResponse({'ok': False, 'error': _('Invalid JSON')}, status=400)
 
     logger.debug('[SuperadminBot] Update: %s', data)
 

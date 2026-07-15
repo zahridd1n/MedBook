@@ -1,13 +1,14 @@
 {% extends 'superadmin/base_superadmin.html' %}
-{% block title %}To'lovlar — Superadmin{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "To'lovlar — Superadmin" %}{% endblock %}
 {% block sa_content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h4 class="fw-bold mb-0"><i class="bi bi-credit-card-fill me-2 text-primary"></i>To'lovlar</h4>
+  <h4 class="fw-bold mb-0"><i class="bi bi-credit-card-fill me-2 text-primary"></i>{% trans "To'lovlar" %}</h4>
   <div class="d-flex gap-2">
-    <a href="?status=pending" class="btn btn-sm {% if status_filter == 'pending' %}btn-warning{% else %}btn-outline-secondary{% endif %}">Kutilayotgan</a>
-    <a href="?status=approved" class="btn btn-sm {% if status_filter == 'approved' %}btn-success{% else %}btn-outline-secondary{% endif %}">Tasdiqlangan</a>
-    <a href="?status=rejected" class="btn btn-sm {% if status_filter == 'rejected' %}btn-danger{% else %}btn-outline-secondary{% endif %}">Rad etilgan</a>
-    <a href="{% url 'superadmin:payment_list' %}" class="btn btn-sm btn-outline-secondary">Barchasi</a>
+    <a href="?status=pending" class="btn btn-sm {% if status_filter == 'pending' %}btn-warning{% else %}btn-outline-secondary{% endif %}">{% trans "Kutilayotgan" %}</a>
+    <a href="?status=approved" class="btn btn-sm {% if status_filter == 'approved' %}btn-success{% else %}btn-outline-secondary{% endif %}">{% trans "Tasdiqlangan" %}</a>
+    <a href="?status=rejected" class="btn btn-sm {% if status_filter == 'rejected' %}btn-danger{% else %}btn-outline-secondary{% endif %}">{% trans "Rad etilgan" %}</a>
+    <a href="{% url 'superadmin:payment_list' %}" class="btn btn-sm btn-outline-secondary">{% trans "Barchasi" %}</a>
   </div>
 </div>
 
@@ -18,14 +19,14 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>Biznes</th>
-            <th>Egasi</th>
-            <th>Tarif</th>
-            <th>Summa</th>
-            <th>Chek</th>
-            <th>Holat</th>
-            <th>Sana</th>
-            <th class="text-end">Amal</th>
+            <th>{% trans "Biznes" %}</th>
+            <th>{% trans "Egasi" %}</th>
+            <th>{% trans "Tarif" %}</th>
+            <th>{% trans "Summa" %}</th>
+            <th>{% trans "Chek" %}</th>
+            <th>{% trans "Holat" %}</th>
+            <th>{% trans "Sana" %}</th>
+            <th class="text-end">{% trans "Amal" %}</th>
           </tr>
         </thead>
         <tbody>
@@ -43,23 +44,23 @@
             </td>
             <td>
               {% if p.status == 'pending' %}
-                <span class="badge-status badge-trial">Kutilmoqda</span>
+                <span class="badge-status badge-trial">{% trans "Kutilmoqda" %}</span>
               {% elif p.status == 'approved' %}
-                <span class="badge-status badge-paid">Tasdiqlangan</span>
+                <span class="badge-status badge-paid">{% trans "Tasdiqlangan" %}</span>
               {% else %}
-                <span class="badge-status badge-blocked">Rad etilgan</span>
+                <span class="badge-status badge-blocked">{% trans "Rad etilgan" %}</span>
               {% endif %}
             </td>
             <td class="text-muted small">{{ p.created_at|date:"d.m.Y H:i" }}</td>
             <td class="text-end">
               <a href="{% url 'superadmin:payment_detail' p.pk %}" class="btn btn-sm btn-primary">
-                <i class="bi bi-eye"></i> Ko'rish
+                <i class="bi bi-eye"></i> {% trans "Ko'rish" %}
               </a>
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="9" class="text-center text-muted py-4">To'lovlar mavjud emas</td>
+            <td colspan="9" class="text-center text-muted py-4">{% trans "To'lovlar mavjud emas" %}</td>
           </tr>
           {% endfor %}
         </tbody>

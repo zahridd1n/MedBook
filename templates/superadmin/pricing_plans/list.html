@@ -1,12 +1,13 @@
 {% extends 'superadmin/base_superadmin.html' %}
 {% load humanize %}
-{% block page_title %}Tariflar (Pricing Plans){% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Tariflar (Pricing Plans)" %}{% endblock %}
 
 {% block sa_content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h5 class="mb-0 fw-bold">Tariflar Ro'yxati</h5>
+    <h5 class="mb-0 fw-bold">{% trans "Tariflar Ro'yxati" %}</h5>
     <a href="{% url 'superadmin:pricing_plan_create' %}" class="btn btn-primary fw-semibold">
-        <i class="bi bi-plus-lg me-1"></i> Yangi Tarif
+        <i class="bi bi-plus-lg me-1"></i> {% trans "Yangi Tarif" %}
     </a>
 </div>
 
@@ -15,13 +16,13 @@
         <table class="table sa-table mb-0">
             <thead>
                 <tr>
-                    <th>Tartib</th>
-                    <th>Nomi</th>
-                    <th>Slug</th>
-                    <th>Narxi (oy)</th>
-                    <th>Mashhur</th>
-                    <th>Faol</th>
-                    <th class="text-end">Amallar</th>
+                    <th>{% trans "Tartib" %}</th>
+                    <th>{% trans "Nomi" %}</th>
+                    <th>{% trans "Slug" %}</th>
+                    <th>{% trans "Narxi (oy)" %}</th>
+                    <th>{% trans "Mashhur" %}</th>
+                    <th>{% trans "Faol" %}</th>
+                    <th class="text-end">{% trans "Amallar" %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,17 +41,17 @@
                     </td>
                     <td>
                         {% if plan.is_active %}
-                        <span class="badge badge-active">Faol</span>
+                        <span class="badge badge-active">{% trans "Faol" %}</span>
                         {% else %}
-                        <span class="badge badge-expired">Nofaol</span>
+                        <span class="badge badge-expired">{% trans "Nofaol" %}</span>
                         {% endif %}
                     </td>
                     <td class="text-end">
-                        <a href="{% url 'superadmin:pricing_plan_edit' plan.pk %}" class="btn btn-sm btn-outline-primary py-0 px-2" title="Tahrirlash">
+                        <a href="{% url 'superadmin:pricing_plan_edit' plan.pk %}" class="btn btn-sm btn-outline-primary py-0 px-2" title="{% trans 'Tahrirlash' %}">
                             <i class="bi bi-pencil"></i>
                         </a>
                         {% if plan.slug != 'free' %}
-                        <a href="{% url 'superadmin:pricing_plan_delete' plan.pk %}" class="btn btn-sm btn-outline-danger py-0 px-2" title="O'chirish">
+                        <a href="{% url 'superadmin:pricing_plan_delete' plan.pk %}" class="btn btn-sm btn-outline-danger py-0 px-2" title="{% trans "O'chirish" %}">
                             <i class="bi bi-trash"></i>
                         </a>
                         {% endif %}
@@ -58,7 +59,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="7" class="text-center text-muted py-4">Hozircha tariflar kiritilmagan.</td>
+                    <td colspan="7" class="text-center text-muted py-4">{% trans "Hozircha tariflar kiritilmagan." %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -1,15 +1,16 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Izohlar{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Izohlar" %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title">Izohlar</div>
-    <div class="page-hd-sub">Tasdiqlash yoki o'chirish kerak bo'lgan izohlar</div>
+    <div class="page-hd-title">{% trans "Izohlar" %}</div>
+    <div class="page-hd-sub">{% trans "Tasdiqlash yoki o'chirish kerak bo'lgan izohlar" %}</div>
   </div>
   <div class="page-hd-actions">
     <a href="{% url 'blog:create' %}" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Yangi post
+      <i class="bi bi-plus-lg"></i> {% trans "Yangi post" %}
     </a>
   </div>
 </div>
@@ -17,10 +18,10 @@
 <!-- Tab nav -->
 <div style="display:flex;align-items:center;gap:4px;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:0;">
   <a href="{% url 'blog:list' %}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:500;color:var(--text-3);border-bottom:2px solid transparent;text-decoration:none;margin-bottom:-1px;">
-    <i class="bi bi-journal-text"></i> Postlar
+    <i class="bi bi-journal-text"></i> {% trans "Postlar" %}
   </a>
   <a href="{% url 'blog:comment-list' %}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--p);border-bottom:2px solid var(--p);text-decoration:none;margin-bottom:-1px;">
-    <i class="bi bi-chat-left-text"></i> Izohlar
+    <i class="bi bi-chat-left-text"></i> {% trans "Izohlar" %}
   </a>
 </div>
 
@@ -35,9 +36,9 @@
             <span style="font-weight:700;font-size:13.5px;color:var(--text);">{{ comment.name }}</span>
             <span style="font-size:12px;color:var(--text-3);">{{ comment.email }}</span>
             {% if comment.is_approved %}
-            <span class="status status-green">Tasdiqlangan</span>
+            <span class="status status-green">{% trans "Tasdiqlangan" %}</span>
             {% else %}
-            <span class="status status-amber">Kutilmoqda</span>
+            <span class="status status-amber">{% trans "Kutilmoqda" %}</span>
             {% endif %}
           </div>
           <div style="font-size:12px;color:var(--text-4);margin-bottom:10px;">
@@ -55,14 +56,14 @@
           <form method="post" action="{% url 'blog:comment-approve' comment.pk %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-secondary btn-sm" style="background:#f0fdf4;border-color:#bbf7d0;color:#16a34a;">
-              <i class="bi bi-check-lg"></i> Tasdiqlash
+              <i class="bi bi-check-lg"></i> {% trans "Tasdiqlash" %}
             </button>
           </form>
           {% endif %}
-          <form method="post" action="{% url 'blog:comment-delete' comment.pk %}" onsubmit="return confirm('Izohni o\'chirasizmi?')">
+          <form method="post" action="{% url 'blog:comment-delete' comment.pk %}" onsubmit="return confirm('{% trans "Izohni o'chirasizmi?" %}')">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger btn-sm">
-              <i class="bi bi-trash"></i> O'chirish
+              <i class="bi bi-trash"></i> {% trans "O'chirish" %}
             </button>
           </form>
         </div>
@@ -75,8 +76,8 @@
 <div class="card">
   <div class="ds-empty">
     <div class="ds-empty-icon"><i class="bi bi-chat-left-text"></i></div>
-    <div class="ds-empty-title">Izohlar yo'q</div>
-    <div class="ds-empty-desc">Foydalanuvchilar blog postlariga yozgan izohlar shu yerda ko'rinadi</div>
+    <div class="ds-empty-title">{% trans "Izohlar yo'q" %}</div>
+    <div class="ds-empty-desc">{% trans "Foydalanuvchilar blog postlariga yozgan izohlar shu yerda ko'rinadi" %}</div>
   </div>
 </div>
 {% endif %}

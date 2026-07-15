@@ -1,11 +1,12 @@
 {% extends 'base_dashboard.html' %}
+{% load i18n %}
 {% block page_title %}Google Calendar{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
     <div class="page-hd-title"><i class="bi bi-calendar2-week" style="margin-right:8px;color:#4285F4;"></i>Google Calendar</div>
-    <div class="page-hd-sub">Qabullarni Google Calendar bilan sinxronlashtiring</div>
+    <div class="page-hd-sub">{% trans "Qabullarni Google Calendar bilan sinxronlashtiring" %}</div>
   </div>
 </div>
 
@@ -13,17 +14,17 @@
 <div class="ds-alert warning" style="margin-bottom:20px;">
   <i class="bi bi-lock-fill"></i>
   <div>
-    <strong>Bu funksiya faqat Pro va Max tariflarida mavjud.</strong><br>
-    <span>Google Calendar sinxronizatsiyasidan foydalanish uchun tarifingizni yangilang.</span>
-    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> Tarifni oshirish</a>
+    <strong>{% trans "Bu funksiya faqat Pro va Max tariflarida mavjud." %}</strong><br>
+    <span>{% trans "Google Calendar sinxronizatsiyasidan foydalanish uchun tarifingizni yangilang." %}</span>
+    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> {% trans "Tarifni oshirish" %}</a>
   </div>
 </div>
 {% elif not connect_url and not has_creds %}
 <div class="ds-alert warning" style="margin-bottom:20px;">
   <i class="bi bi-info-circle-fill"></i>
   <div>
-    <strong>Google OAuth sozlanmagan</strong><br>
-    <span>Google Calendar ulanish uchun administrator .env faylida <code>GOOGLE_OAUTH_CLIENT_CONFIG</code> ni sozlashi kerak.</span>
+    <strong>{% trans "Google OAuth sozlanmagan" %}</strong><br>
+    <span>{% blocktrans %}Google Calendar ulanish uchun administrator .env faylida <code>GOOGLE_OAUTH_CLIENT_CONFIG</code> ni sozlashi kerak.{% endblocktrans %}</span>
   </div>
 </div>
 {% endif %}
@@ -40,36 +41,36 @@
             </div>
             <div>
               <div style="display:flex;align-items:center;gap:8px;">
-                <span style="font-size:16px;font-weight:700;color:var(--text);">Google Calendar ulangan</span>
-                <span class="status status-green">Faol</span>
+                <span style="font-size:16px;font-weight:700;color:var(--text);">{% trans "Google Calendar ulangan" %}</span>
+                <span class="status status-green">{% trans "Faol" %}</span>
               </div>
-              <div style="font-size:12px;color:var(--text-3);">Qabullar avtomatik Google Calendar ga qo'shiladi</div>
+              <div style="font-size:12px;color:var(--text-3);">{% trans "Qabullar avtomatik Google Calendar ga qo'shiladi" %}</div>
             </div>
           </div>
 
           <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f9fafb;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:14px;">
             <div>
-              <div style="font-weight:600;font-size:13px;color:var(--text);">Sinxronizatsiya</div>
-              <div style="font-size:12px;color:var(--text-3);">Yangi qabullar Google Calendar ga avtomatik qo'shiladi</div>
+              <div style="font-weight:600;font-size:13px;color:var(--text);">{% trans "Sinxronizatsiya" %}</div>
+              <div style="font-size:12px;color:var(--text-3);">{% trans "Yangi qabullar Google Calendar ga avtomatik qo'shiladi" %}</div>
             </div>
             <form method="post">
               {% csrf_token %}
               <input type="hidden" name="action" value="toggle_sync">
               <button type="submit" class="btn btn-sm {% if business.google_calendar_sync_enabled %}btn-success{% else %}btn-secondary{% endif %}">
                 {% if business.google_calendar_sync_enabled %}
-                  <i class="bi bi-toggle-on"></i> Yoqilgan
+                  <i class="bi bi-toggle-on"></i> {% trans "Yoqilgan" %}
                 {% else %}
-                  <i class="bi bi-toggle-off"></i> O'chirilgan
+                  <i class="bi bi-toggle-off"></i> {% trans "O'chirilgan" %}
                 {% endif %}
               </button>
             </form>
           </div>
 
-          <form method="post" onsubmit="return confirm('Google Calendar dan uzasizmi? Barcha sinxronizatsiya to\'xtatiladi.')">
+          <form method="post" onsubmit="return confirm(&quot;{% trans "Google Calendar dan uzasizmi? Barcha sinxronizatsiya to'xtatiladi." %}&quot;)">
             {% csrf_token %}
             <input type="hidden" name="action" value="disconnect">
             <button type="submit" class="btn btn-danger">
-              <i class="bi bi-x-circle"></i> Google Calendar dan uzish
+              <i class="bi bi-x-circle"></i> {% trans "Google Calendar dan uzish" %}
             </button>
           </form>
 
@@ -79,8 +80,8 @@
               <i class="bi bi-google" style="color:var(--text-4);"></i>
             </div>
             <div>
-              <span style="font-size:16px;font-weight:700;color:var(--text);">Ulanmagan</span>
-              <div style="font-size:12.5px;color:var(--text-3);">Google Calendar ni ulang va qabullar avtomatik sinxronlanadi</div>
+              <span style="font-size:16px;font-weight:700;color:var(--text);">{% trans "Ulanmagan" %}</span>
+              <div style="font-size:12.5px;color:var(--text-3);">{% trans "Google Calendar ni ulang va qabullar avtomatik sinxronlanadi" %}</div>
             </div>
           </div>
 
@@ -88,20 +89,20 @@
           <div style="margin-bottom:16px;">
             <div style="display:flex;gap:12px;margin-bottom:14px;">
               <span style="width:28px;height:28px;border-radius:50%;background:#4285F4;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:13px;">1</span>
-              <div style="font-size:13px;color:var(--text-2);">Google hisobingizga kiring</div>
+              <div style="font-size:13px;color:var(--text-2);">{% trans "Google hisobingizga kiring" %}</div>
             </div>
             <div style="display:flex;gap:12px;margin-bottom:14px;">
               <span style="width:28px;height:28px;border-radius:50%;background:#4285F4;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:13px;">2</span>
-              <div style="font-size:13px;color:var(--text-2);">Ruxsatlarni tasdiqlang (kalendar boshqaruvi)</div>
+              <div style="font-size:13px;color:var(--text-2);">{% trans "Ruxsatlarni tasdiqlang (kalendar boshqaruvi)" %}</div>
             </div>
             <div style="display:flex;gap:12px;">
               <span style="width:28px;height:28px;border-radius:50%;background:#4285F4;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:13px;">3</span>
-              <div style="font-size:13px;color:var(--text-2);">Tayyor — qabullar avtomatik sinxronlanadi ✅</div>
+              <div style="font-size:13px;color:var(--text-2);">{% trans "Tayyor — qabullar avtomatik sinxronlanadi" %} ✅</div>
             </div>
           </div>
 
           <a href="{{ connect_url }}" class="btn btn-primary" style="background:#4285F4;border-color:#4285F4;">
-            <i class="bi bi-google me-1"></i> Google bilan ulanish
+            <i class="bi bi-google me-1"></i> {% trans "Google bilan ulanish" %}
           </a>
           {% endif %}
         {% endif %}
@@ -114,28 +115,28 @@
     <div class="card">
       <div class="card-body p-4">
         <h6 class="fw-semibold mb-3" style="font-size:.9rem;">
-          <i class="bi bi-question-circle me-2 text-primary"></i>Qanday ishlaydi
+          <i class="bi bi-question-circle me-2 text-primary"></i>{% trans "Qanday ishlaydi" %}
         </h6>
         <div style="font-size:.8rem;line-height:1.6;">
           <div class="d-flex gap-3 mb-3">
             <span class="badge rounded-circle" style="background:#4285F4;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.72rem;">1</span>
             <div>
-              <div class="fw-medium">Google hisobingizni ulang</div>
-              <div class="text-muted small">Google akkauntingiz orqali tizimga kiring va ruxsat bering</div>
+              <div class="fw-medium">{% trans "Google hisobingizni ulang" %}</div>
+              <div class="text-muted small">{% trans "Google akkauntingiz orqali tizimga kiring va ruxsat bering" %}</div>
             </div>
           </div>
           <div class="d-flex gap-3 mb-3">
             <span class="badge rounded-circle" style="background:#4285F4;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.72rem;">2</span>
             <div>
-              <div class="fw-medium">Avtomatik sinxronizatsiya</div>
-              <div class="text-muted small">Har bir yangi qabul Google Calendar da tadbir sifatida qo'shiladi</div>
+              <div class="fw-medium">{% trans "Avtomatik sinxronizatsiya" %}</div>
+              <div class="text-muted small">{% trans "Har bir yangi qabul Google Calendar da tadbir sifatida qo'shiladi" %}</div>
             </div>
           </div>
           <div class="d-flex gap-3">
             <span class="badge rounded-circle" style="background:#4285F4;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.72rem;">3</span>
             <div>
-              <div class="fw-medium">O'zgarishlar va bekor qilish</div>
-              <div class="text-muted small">Qabul tahrirlansa yoki bekor qilinsa, kalendar yangilanadi</div>
+              <div class="fw-medium">{% trans "O'zgarishlar va bekor qilish" %}</div>
+              <div class="text-muted small">{% trans "Qabul tahrirlansa yoki bekor qilinsa, kalendar yangilanadi" %}</div>
             </div>
           </div>
         </div>

@@ -1,11 +1,12 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Boshqaruv paneli{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Boshqaruv paneli" %}{% endblock %}
 {% block dashboard_content %}
 
 {% if was_downgraded %}
 <div class="ds-alert warning">
   <i class="bi bi-arrow-down-circle-fill"></i>
-  <span>Obuna muddati tugadi. Tarif <strong>Start</strong>ga qaytarildi. <a href="{% url 'business:upgrade' %}" style="font-weight:600;">Yangilash →</a></span>
+  <span>{% blocktrans %}Obuna muddati tugadi. Tarif <strong>Start</strong>ga qaytarildi.{% endblocktrans %} <a href="{% url 'business:upgrade' %}" style="font-weight:600;">{% trans "Yangilash" %} →</a></span>
   <button class="ds-alert-close" onclick="this.parentElement.remove()">×</button>
 </div>
 {% endif %}
@@ -13,7 +14,7 @@
 {% if sub_expiring %}
 <div class="ds-alert warning">
   <i class="bi bi-clock-history"></i>
-  <span>Obunangiz <strong>{{ days_left }} kun</strong> ichida tugaydi. <a href="{% url 'business:upgrade' %}" style="font-weight:600;">Uzaytirish →</a></span>
+  <span>{% blocktrans %}Obunangiz <strong>{{ days_left }} kun</strong> ichida tugaydi.{% endblocktrans %} <a href="{% url 'business:upgrade' %}" style="font-weight:600;">{% trans "Uzaytirish" %} →</a></span>
   <button class="ds-alert-close" onclick="this.parentElement.remove()">×</button>
 </div>
 {% endif %}
@@ -21,17 +22,17 @@
 <!-- Page header -->
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title">Xush kelibsiz, {{ user.first_name }} 👋</div>
+    <div class="page-hd-title">{% blocktrans %}Xush kelibsiz, {{ user.first_name }} 👋{% endblocktrans %}</div>
     <div class="page-hd-sub">
       {{ business.name }} &mdash;
       <a href="/{{ business.slug }}/" target="_blank" style="color:var(--p);text-decoration:none;font-weight:500;">
-        ommaviy sahifani ko'rish <i class="bi bi-arrow-up-right" style="font-size:10px;"></i>
+        {% trans "ommaviy sahifani ko'rish" %} <i class="bi bi-arrow-up-right" style="font-size:10px;"></i>
       </a>
     </div>
   </div>
   <div class="page-hd-actions">
     <a href="{% url 'appointments:create' %}" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Yangi qabul
+      <i class="bi bi-plus-lg"></i> {% trans "Yangi qabul" %}
     </a>
   </div>
 </div>
@@ -44,10 +45,10 @@
         <div class="stat-icon-wrap" style="background:#eef2ff;color:#6366f1;">
           <i class="bi bi-calendar-check"></i>
         </div>
-        <span class="stat-badge" style="background:#f1f5f9;color:#64748b;">Jami</span>
+        <span class="stat-badge" style="background:#f1f5f9;color:#64748b;">{% trans "Jami" %}</span>
       </div>
       <div class="stat-value">{{ total_appointments }}</div>
-      <div class="stat-label">Jami qabullar</div>
+      <div class="stat-label">{% trans "Jami qabullar" %}</div>
     </div>
   </div>
   <div class="col-6 col-xl-3">
@@ -56,10 +57,10 @@
         <div class="stat-icon-wrap" style="background:#f0fdf4;color:#16a34a;">
           <i class="bi bi-calendar-day"></i>
         </div>
-        <span class="stat-badge" style="background:#f0fdf4;color:#16a34a;">Bugun</span>
+        <span class="stat-badge" style="background:#f0fdf4;color:#16a34a;">{% trans "Bugun" %}</span>
       </div>
       <div class="stat-value">{{ today_count }}</div>
-      <div class="stat-label">Bugungi qabullar</div>
+      <div class="stat-label">{% trans "Bugungi qabullar" %}</div>
     </div>
   </div>
   <div class="col-6 col-xl-3">
@@ -68,10 +69,10 @@
         <div class="stat-icon-wrap" style="background:#fff7ed;color:#ea580c;">
           <i class="bi bi-hourglass-split"></i>
         </div>
-        <span class="stat-badge" style="background:#fff7ed;color:#ea580c;">Kutilmoqda</span>
+        <span class="stat-badge" style="background:#fff7ed;color:#ea580c;">{% trans "Kutilmoqda" %}</span>
       </div>
       <div class="stat-value">{{ upcoming_count|default:upcoming_appointments|length }}</div>
-      <div class="stat-label">Rejalashtirilgan</div>
+      <div class="stat-label">{% trans "Rejalashtirilgan" %}</div>
     </div>
   </div>
   <div class="col-6 col-xl-3">
@@ -80,10 +81,10 @@
         <div class="stat-icon-wrap" style="background:#fdf4ff;color:#9333ea;">
           <i class="bi bi-people"></i>
         </div>
-        <span class="stat-badge" style="background:#fdf4ff;color:#9333ea;">Mijozlar</span>
+        <span class="stat-badge" style="background:#fdf4ff;color:#9333ea;">{% trans "Mijozlar" %}</span>
       </div>
       <div class="stat-value">{{ total_customers }}</div>
-      <div class="stat-label">Jami mijozlar</div>
+      <div class="stat-label">{% trans "Jami mijozlar" %}</div>
     </div>
   </div>
 </div>
@@ -95,9 +96,9 @@
   <div class="col-lg-8">
     <div class="card" style="height:100%;">
       <div class="card-head">
-        <span class="card-head-title">Kutilayotgan qabullar</span>
+        <span class="card-head-title">{% trans "Kutilayotgan qabullar" %}</span>
         <a href="{% url 'appointments:list' %}" class="btn btn-secondary btn-sm">
-          Barchasi <i class="bi bi-arrow-right"></i>
+          {% trans "Barchasi" %} <i class="bi bi-arrow-right"></i>
         </a>
       </div>
       {% if upcoming_appointments %}
@@ -105,10 +106,10 @@
         <table class="ds-table">
           <thead>
             <tr>
-              <th style="padding-left:18px;">Mijoz</th>
-              <th>Xizmat</th>
-              <th>Sana & Vaqt</th>
-              <th>Holat</th>
+              <th style="padding-left:18px;">{% trans "Mijoz" %}</th>
+              <th>{% trans "Xizmat" %}</th>
+              <th>{% trans "Sana & Vaqt" %}</th>
+              <th>{% trans "Holat" %}</th>
             </tr>
           </thead>
           <tbody>
@@ -130,13 +131,13 @@
               </td>
               <td>
                 {% if a.status == 'new' %}
-                  <span class="status status-new">Yangi</span>
+                  <span class="status status-new">{% trans "Yangi" %}</span>
                 {% elif a.status == 'confirmed' %}
-                  <span class="status status-confirmed">Tasdiqlangan</span>
+                  <span class="status status-confirmed">{% trans "Tasdiqlangan" %}</span>
                 {% elif a.status == 'completed' %}
-                  <span class="status status-completed">Bajarildi</span>
+                  <span class="status status-completed">{% trans "Bajarildi" %}</span>
                 {% else %}
-                  <span class="status status-cancelled">Bekor qilindi</span>
+                  <span class="status status-cancelled">{% trans "Bekor qilindi" %}</span>
                 {% endif %}
               </td>
             </tr>
@@ -147,10 +148,10 @@
       {% else %}
       <div class="ds-empty">
         <div class="ds-empty-icon"><i class="bi bi-calendar-x"></i></div>
-        <div class="ds-empty-title">Rejalashtirilgan qabullar yo'q</div>
-        <div class="ds-empty-desc">Yangi qabul qo'shing yoki mijozlar o'zi band qilishini kuting.</div>
+        <div class="ds-empty-title">{% trans "Rejalashtirilgan qabullar yo'q" %}</div>
+        <div class="ds-empty-desc">{% trans "Yangi qabul qo'shing yoki mijozlar o'zi band qilishini kuting." %}</div>
         <a href="{% url 'appointments:create' %}" class="btn btn-primary">
-          <i class="bi bi-plus-lg"></i> Qabul qo'shish
+          <i class="bi bi-plus-lg"></i> {% trans "Qabul qo'shish" %}
         </a>
       </div>
       {% endif %}
@@ -164,17 +165,17 @@
       <!-- Quick actions -->
       <div class="card">
         <div class="card-head">
-          <span class="card-head-title">Tezkor harakatlar</span>
+          <span class="card-head-title">{% trans "Tezkor harakatlar" %}</span>
         </div>
         <div class="card-body" style="padding:12px;display:flex;flex-direction:column;gap:8px;">
           <a href="{% url 'appointments:create' %}" class="btn btn-primary" style="justify-content:center;">
-            <i class="bi bi-plus-circle"></i> Yangi qabul qo'shish
+            <i class="bi bi-plus-circle"></i> {% trans "Yangi qabul qo'shish" %}
           </a>
           <a href="{% url 'services:create' %}" class="btn btn-secondary" style="justify-content:center;">
-            <i class="bi bi-grid-3x3-gap"></i> Xizmat qo'shish
+            <i class="bi bi-grid-3x3-gap"></i> {% trans "Xizmat qo'shish" %}
           </a>
           <a href="{% url 'employees:create' %}" class="btn btn-secondary" style="justify-content:center;">
-            <i class="bi bi-person-plus"></i> Xodim qo'shish
+            <i class="bi bi-person-plus"></i> {% trans "Xodim qo'shish" %}
           </a>
         </div>
       </div>
@@ -187,18 +188,18 @@
               <i class="bi bi-telegram"></i>
             </div>
             <div>
-              <div style="font-size:13px;font-weight:600;color:var(--text);">Telegram xabarnomalar</div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);">{% trans "Telegram xabarnomalar" %}</div>
               {% if business.telegram_notifications_enabled %}
-                <div style="font-size:11.5px;color:#16a34a;">● Faol — xabarlar yuborilmoqda</div>
+                <div style="font-size:11.5px;color:#16a34a;">● {% trans "Faol — xabarlar yuborilmoqda" %}</div>
               {% elif business.telegram_chat_id %}
-                <div style="font-size:11.5px;color:#d97706;">● Ulangan, ammo o'chirilgan</div>
+                <div style="font-size:11.5px;color:#d97706;">● {% trans "Ulangan, ammo o'chirilgan" %}</div>
               {% else %}
-                <div style="font-size:11.5px;color:var(--text-4);">○ Ulanmagan</div>
+                <div style="font-size:11.5px;color:var(--text-4);">○ {% trans "Ulanmagan" %}</div>
               {% endif %}
             </div>
           </div>
           <a href="{% url 'business:telegram' %}" class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;">
-            Telegram sozlamalari
+            {% trans "Telegram sozlamalari" %}
           </a>
         </div>
       </div>
@@ -207,7 +208,7 @@
       <div class="card" style="background:linear-gradient(135deg,#0c0e14 0%,#1a1640 100%);border-color:rgba(99,102,241,.2);">
         <div class="card-body" style="padding:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-            <span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35);">Joriy tarif</span>
+            <span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35);">{% trans "Joriy tarif" %}</span>
             {% if business.subscription_plan == 'free' %}
               <span class="status status-gray" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);">Start</span>
             {% elif business.subscription_plan == 'growth' %}
@@ -219,20 +220,20 @@
           <div style="font-size:20px;font-weight:700;color:#fff;letter-spacing:-.03em;margin-bottom:4px;">{{ business.plan_display }}</div>
           {% if business.subscription_plan == 'free' %}
           <div style="font-size:12px;color:rgba(255,255,255,.35);margin-bottom:12px;">
-            {{ business.employees.count }}/{{ business.max_employees }} xodim &middot; Cheklangan imkoniyatlar
+            {% blocktrans with emp_count=business.employees.count max_emp=business.max_employees %}{{ emp_count }}/{{ max_emp }} xodim &middot; Cheklangan imkoniyatlar{% endblocktrans %}
           </div>
           {% else %}
           <div style="font-size:12px;color:rgba(255,255,255,.35);margin-bottom:12px;">
             {% if business.subscription_end %}
-              {{ business.subscription_end|date:"d.m.Y" }} gacha faol
+              {% blocktrans %}{{ business.subscription_end|date:"d.m.Y" }} gacha faol{% endblocktrans %}
             {% else %}
-              Faol obuna
+              {% trans "Faol obuna" %}
             {% endif %}
           </div>
           {% endif %}
           {% if business.subscription_plan != 'enterprise' %}
           <a href="{% url 'business:upgrade' %}" class="btn" style="background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;font-size:12px;width:100%;justify-content:center;">
-            <i class="bi bi-arrow-up-circle"></i> Tarifni oshirish
+            <i class="bi bi-arrow-up-circle"></i> {% trans "Tarifni oshirish" %}
           </a>
           {% endif %}
         </div>

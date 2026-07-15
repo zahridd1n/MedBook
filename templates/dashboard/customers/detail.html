@@ -1,4 +1,5 @@
 {% extends 'base_dashboard.html' %}
+{% load i18n %}
 {% block page_title %}{{ customer.full_name }}{% endblock %}
 {% block dashboard_content %}
 
@@ -10,7 +11,7 @@
     </a>
     <div>
       <div class="page-hd-title">{{ customer.full_name }}</div>
-      <div class="page-hd-sub">Mijoz profili va tashriflar tarixi</div>
+      <div class="page-hd-sub">{% trans "Mijoz profili va tashriflar tarixi" %}</div>
     </div>
   </div>
 </div>
@@ -28,12 +29,12 @@
         {% if customer.email %}
         <span style="font-size:12.5px;color:var(--text-3);"><i class="bi bi-envelope" style="margin-right:4px;"></i>{{ customer.email }}</span>
         {% endif %}
-        <span style="font-size:12.5px;color:var(--text-4);"><i class="bi bi-calendar" style="margin-right:4px;"></i>{{ customer.created_at|date:"d.m.Y" }} dan beri</span>
+        <span style="font-size:12.5px;color:var(--text-4);"><i class="bi bi-calendar" style="margin-right:4px;"></i>{% blocktrans %}{{ customer.created_at|date:"d.m.Y" }} dan beri{% endblocktrans %}</span>
       </div>
     </div>
     <div style="display:flex;gap:8px;">
-      <span class="status status-indigo"><i class="bi bi-clock-history" style="font-size:10px;"></i> {{ appointments|length }} tashrif</span>
-      <span class="status status-green"><i class="bi bi-check-circle" style="font-size:10px;"></i> {{ completed_count }} yakunlangan</span>
+      <span class="status status-indigo"><i class="bi bi-clock-history" style="font-size:10px;"></i> {% blocktrans count counter=appointments|length %}{{ counter }} tashrif{% plural %}{{ counter }} tashrif{% endblocktrans %}</span>
+      <span class="status status-green"><i class="bi bi-check-circle" style="font-size:10px;"></i> {% blocktrans %}{{ completed_count }} yakunlangan{% endblocktrans %}</span>
     </div>
   </div>
 </div>
@@ -50,14 +51,14 @@
           <div class="stat-card" style="padding:14px;">
             <div class="stat-icon-wrap" style="background:#eef2ff;color:#6366f1;width:34px;height:34px;margin-bottom:10px;"><i class="bi bi-calendar-check" style="font-size:14px;"></i></div>
             <div class="stat-value" style="font-size:20px;">{{ appointments|length }}</div>
-            <div class="stat-label">Tashriflar</div>
+            <div class="stat-label">{% trans "Tashriflar" %}</div>
           </div>
         </div>
         <div class="col-6">
           <div class="stat-card" style="padding:14px;">
             <div class="stat-icon-wrap" style="background:#f0fdf4;color:#16a34a;width:34px;height:34px;margin-bottom:10px;"><i class="bi bi-check2-circle" style="font-size:14px;"></i></div>
             <div class="stat-value" style="font-size:20px;">{{ completed_count }}</div>
-            <div class="stat-label">Yakunlangan</div>
+            <div class="stat-label">{% trans "Yakunlangan" %}</div>
           </div>
         </div>
       </div>
@@ -65,24 +66,24 @@
       <!-- Notes -->
       <div class="card">
         <div class="card-head">
-          <span class="card-head-title"><i class="bi bi-sticky" style="margin-right:6px;"></i>Eslatmalar</span>
+          <span class="card-head-title"><i class="bi bi-sticky" style="margin-right:6px;"></i>{% trans "Eslatmalar" %}</span>
           <button class="btn btn-ghost btn-sm" data-bs-toggle="collapse" data-bs-target="#addNoteForm">
-            <i class="bi bi-plus-lg" style="font-size:11px;"></i> Qo'shish
+            <i class="bi bi-plus-lg" style="font-size:11px;"></i> {% trans "Qo'shish" %}
           </button>
         </div>
         <div class="card-body">
           <form method="post" class="collapse mb-3" id="addNoteForm">
             {% csrf_token %}
             <input type="hidden" name="action" value="add_note">
-            <textarea name="customer_notes" class="form-control" rows="3" placeholder="Eslatma yozish..." style="font-size:13px;"></textarea>
+            <textarea name="customer_notes" class="form-control" rows="3" placeholder="{% trans "Eslatma yozish..." %}" style="font-size:13px;"></textarea>
             <button type="submit" class="btn btn-primary btn-sm" style="margin-top:8px;width:100%;justify-content:center;">
-              <i class="bi bi-check-lg"></i> Saqlash
+              <i class="bi bi-check-lg"></i> {% trans "Saqlash" %}
             </button>
           </form>
           {% if customer.notes %}
           <div style="font-size:12.5px;color:var(--text-2);white-space:pre-wrap;line-height:1.6;max-height:200px;overflow-y:auto;">{{ customer.notes }}</div>
           {% else %}
-          <div style="font-size:12.5px;color:var(--text-4);font-style:italic;">Hali eslatmalar yo'q</div>
+          <div style="font-size:12.5px;color:var(--text-4);font-style:italic;">{% trans "Hali eslatmalar yo'q" %}</div>
           {% endif %}
         </div>
       </div>
@@ -90,7 +91,7 @@
       <!-- Quick appointment -->
       <div class="card">
         <div class="card-head">
-          <span class="card-head-title"><i class="bi bi-plus-circle" style="margin-right:6px;"></i>Tez qabul qo'shish</span>
+          <span class="card-head-title"><i class="bi bi-plus-circle" style="margin-right:6px;"></i>{% trans "Tez qabul qo'shish" %}</span>
         </div>
         <div class="card-body">
           <form method="post">
@@ -98,25 +99,25 @@
             <input type="hidden" name="action" value="add_appointment">
             <div style="display:flex;flex-direction:column;gap:12px;">
               <div>
-                <label class="form-label">Xizmat</label>
+                <label class="form-label">{% trans "Xizmat" %}</label>
                 {{ appointment_form.service }}
               </div>
               <div>
-                <label class="form-label">Xodim</label>
+                <label class="form-label">{% trans "Xodim" %}</label>
                 {{ appointment_form.employee }}
               </div>
               <div class="row g-2">
                 <div class="col-6">
-                  <label class="form-label">Sana</label>
+                  <label class="form-label">{% trans "Sana" %}</label>
                   {{ appointment_form.date }}
                 </div>
                 <div class="col-6">
-                  <label class="form-label">Vaqt</label>
+                  <label class="form-label">{% trans "Vaqt" %}</label>
                   {{ appointment_form.time }}
                 </div>
               </div>
               <button type="submit" class="btn btn-primary" style="justify-content:center;">
-                <i class="bi bi-plus-lg"></i> Qabul qo'shish
+                <i class="bi bi-plus-lg"></i> {% trans "Qabul qo'shish" %}
               </button>
             </div>
           </form>
@@ -130,7 +131,7 @@
   <div class="col-lg-8">
     <div class="card">
       <div class="card-head">
-        <span class="card-head-title"><i class="bi bi-clock-history" style="margin-right:6px;"></i>Tashriflar tarixi</span>
+        <span class="card-head-title"><i class="bi bi-clock-history" style="margin-right:6px;"></i>{% trans "Tashriflar tarixi" %}</span>
       </div>
       {% if appointments %}
       {% for a in appointments %}
@@ -142,8 +143,8 @@
           </div>
           <div style="flex:1;min-width:0;">
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
-              <span style="font-weight:600;font-size:13px;color:var(--text);">{{ a.service.name|default:"Xizmat" }}</span>
-              <span style="font-size:12px;color:var(--text-3);"><i class="bi bi-person-badge" style="margin-right:3px;"></i>{{ a.employee.name|default:"Har qanday" }}</span>
+              <span style="font-weight:600;font-size:13px;color:var(--text);">{% if a.service.name %}{{ a.service.name }}{% else %}{% trans "Xizmat" %}{% endif %}</span>
+              <span style="font-size:12px;color:var(--text-3);"><i class="bi bi-person-badge" style="margin-right:3px;"></i>{% if a.employee.name %}{{ a.employee.name }}{% else %}{% trans "Har qanday" %}{% endif %}</span>
               <span style="font-size:12px;color:var(--text-3);"><i class="bi bi-clock" style="margin-right:3px;"></i>{{ a.time|time:"H:i" }}</span>
               <span class="status status-{{ a.status }}" style="margin-left:auto;">{{ a.get_status_display }}</span>
             </div>
@@ -153,14 +154,14 @@
             {% if a.doctor_notes %}
             <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;margin-top:8px;">
               <div style="font-size:10.5px;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
-                <i class="bi bi-file-text" style="margin-right:4px;"></i>Mutaxassis izohi
+                <i class="bi bi-file-text" style="margin-right:4px;"></i>{% trans "Mutaxassis izohi" %}
               </div>
               <div style="font-size:12.5px;color:var(--text-2);white-space:pre-wrap;">{{ a.doctor_notes }}</div>
             </div>
             {% endif %}
             <div style="margin-top:6px;">
               <a href="{% url 'appointments:edit' a.pk %}" style="font-size:12px;color:var(--p);text-decoration:none;">
-                <i class="bi bi-pencil" style="font-size:10px;"></i> Tahrirlash
+                <i class="bi bi-pencil" style="font-size:10px;"></i> {% trans "Tahrirlash" %}
               </a>
             </div>
           </div>
@@ -170,8 +171,8 @@
       {% else %}
       <div class="ds-empty">
         <div class="ds-empty-icon"><i class="bi bi-calendar-x"></i></div>
-        <div class="ds-empty-title">Tashriflar yo'q</div>
-        <div class="ds-empty-desc">Bu mijoz uchun hali qabullar qayd etilmagan</div>
+        <div class="ds-empty-title">{% trans "Tashriflar yo'q" %}</div>
+        <div class="ds-empty-desc">{% trans "Bu mijoz uchun hali qabullar qayd etilmagan" %}</div>
       </div>
       {% endif %}
     </div>

@@ -1,6 +1,7 @@
 {% extends 'superadmin/base_superadmin.html' %}
-{% block title %}Bizneslar — Admin{% endblock %}
-{% block page_title %}Bizneslar Ro'yxati{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Bizneslar — Admin" %}{% endblock %}
+{% block page_title %}{% trans "Bizneslar Ro'yxati" %}{% endblock %}
 
 {% block sa_content %}
 <!-- Filters & Search -->
@@ -8,40 +9,40 @@
   <div class="card-body p-3">
     <form method="get" class="row g-2 align-items-end">
       <div class="col-md-4">
-        <label class="form-label small fw-semibold text-muted">Qidiruv</label>
+        <label class="form-label small fw-semibold text-muted">{% trans "Qidiruv" %}</label>
         <div class="input-group">
           <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-          <input type="text" name="q" value="{{ query }}" class="form-control sa-search border-start-0" placeholder="Biznes nomi, email...">
+          <input type="text" name="q" value="{{ query }}" class="form-control sa-search border-start-0" placeholder="{% trans 'Biznes nomi, email...' %}">
         </div>
       </div>
       <div class="col-md-2">
-        <label class="form-label small fw-semibold text-muted">Kategoriya</label>
+        <label class="form-label small fw-semibold text-muted">{% trans "Kategoriya" %}</label>
         <select name="category" class="form-select form-select-sm">
-          <option value="">Barchasi</option>
+          <option value="">{% trans "Barchasi" %}</option>
           {% for val, label in category_choices %}
             <option value="{{ val }}" {% if val == selected_category %}selected{% endif %}>{{ label }}</option>
           {% endfor %}
         </select>
       </div>
       <div class="col-md-2">
-        <label class="form-label small fw-semibold text-muted">Status</label>
+        <label class="form-label small fw-semibold text-muted">{% trans "Status" %}</label>
         <select name="status" class="form-select form-select-sm">
-          <option value="">Barchasi</option>
-          <option value="active" {% if selected_status == 'active' %}selected{% endif %}>Faol</option>
-          <option value="blocked" {% if selected_status == 'blocked' %}selected{% endif %}>Bloklangan</option>
+          <option value="">{% trans "Barchasi" %}</option>
+          <option value="active" {% if selected_status == 'active' %}selected{% endif %}>{% trans "Faol" %}</option>
+          <option value="blocked" {% if selected_status == 'blocked' %}selected{% endif %}>{% trans "Bloklangan" %}</option>
         </select>
       </div>
       <div class="col-md-2">
-        <label class="form-label small fw-semibold text-muted">Plan</label>
+        <label class="form-label small fw-semibold text-muted">{% trans "Plan" %}</label>
         <select name="plan" class="form-select form-select-sm">
-          <option value="">Barchasi</option>
-          <option value="free" {% if selected_plan == 'free' %}selected{% endif %}>Start</option>
-          <option value="growth" {% if selected_plan == 'growth' %}selected{% endif %}>Pro</option>
-          <option value="enterprise" {% if selected_plan == 'enterprise' %}selected{% endif %}>Max</option>
+          <option value="">{% trans "Barchasi" %}</option>
+          <option value="free" {% if selected_plan == 'free' %}selected{% endif %}>{% trans "Start" %}</option>
+          <option value="growth" {% if selected_plan == 'growth' %}selected{% endif %}>{% trans "Pro" %}</option>
+          <option value="enterprise" {% if selected_plan == 'enterprise' %}selected{% endif %}>{% trans "Max" %}</option>
         </select>
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="bi bi-funnel-fill me-1"></i>Filtrlash</button>
+        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="bi bi-funnel-fill me-1"></i>{% trans "Filtrlash" %}</button>
       </div>
     </form>
   </div>
@@ -50,7 +51,7 @@
 <!-- Results Count -->
 <div class="d-flex justify-content-between align-items-center mb-3">
   <span class="text-muted" style="font-size:.85rem;">
-    <strong>{{ total_count }}</strong> ta biznes topildi
+    {% blocktrans with count=total_count %}<strong>{{ count }}</strong> ta biznes topildi{% endblocktrans %}
   </span>
 </div>
 
@@ -59,17 +60,17 @@
   <div class="table-responsive">
     <table class="table sa-table mb-0">
       <thead>
-        <tr>
-          <th>#</th>
-          <th>Biznes</th>
-          <th>Egasi</th>
-          <th>Kategoriya</th>
-          <th>Plan</th>
-          <th>Obuna</th>
-          <th>Status</th>
-          <th>Sana</th>
-          <th class="text-end">Amallar</th>
-        </tr>
+          <tr>
+            <th>#</th>
+            <th>{% trans "Biznes" %}</th>
+            <th>{% trans "Egasi" %}</th>
+            <th>{% trans "Kategoriya" %}</th>
+            <th>{% trans "Plan" %}</th>
+            <th>{% trans "Obuna" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Sana" %}</th>
+            <th class="text-end">{% trans "Amallar" %}</th>
+          </tr>
       </thead>
       <tbody>
         {% for b in businesses %}
@@ -104,37 +105,37 @@
           </td>
           <td>
             {% if b.subscription_status == 'active' %}
-              <span class="badge-status badge-paid">Faol</span>
+              <span class="badge-status badge-paid">{% trans "Faol" %}</span>
             {% elif b.subscription_status == 'trial' %}
-              <span class="badge-status badge-trial">Trial</span>
+              <span class="badge-status badge-trial">{% trans "Trial" %}</span>
             {% elif b.subscription_status == 'expired' %}
-              <span class="badge-status badge-expired">Tugagan</span>
+              <span class="badge-status badge-expired">{% trans "Tugagan" %}</span>
             {% else %}
-              <span class="badge-status badge-blocked">Bekor</span>
+              <span class="badge-status badge-blocked">{% trans "Bekor" %}</span>
             {% endif %}
           </td>
           <td>
             {% if b.is_blocked %}
-              <span class="badge-status badge-blocked"><i class="bi bi-shield-x me-1"></i>Bloklangan</span>
+              <span class="badge-status badge-blocked"><i class="bi bi-shield-x me-1"></i>{% trans "Bloklangan" %}</span>
             {% else %}
-              <span class="badge-status badge-active"><i class="bi bi-check-circle me-1"></i>Faol</span>
+              <span class="badge-status badge-active"><i class="bi bi-check-circle me-1"></i>{% trans "Faol" %}</span>
             {% endif %}
           </td>
           <td class="text-muted" style="font-size:.8rem;">{{ b.created_at|date:"d.m.Y" }}</td>
           <td class="text-end">
             <div class="d-flex gap-1 justify-content-end">
-              <a href="{% url 'superadmin:business_detail' b.pk %}" class="btn btn-sm btn-outline-primary" title="Batafsil">
+              <a href="{% url 'superadmin:business_detail' b.pk %}" class="btn btn-sm btn-outline-primary" title="{% trans 'Batafsil' %}">
                 <i class="bi bi-eye"></i>
               </a>
               <form method="post" action="{% url 'superadmin:toggle_block' b.pk %}" style="display:inline;">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{% url 'superadmin:businesses' %}?q={{ query }}&category={{ selected_category }}&status={{ selected_status }}&plan={{ selected_plan }}">
                 {% if b.is_blocked %}
-                  <button type="submit" class="btn btn-sm btn-outline-success" title="Blokdan chiqarish">
+                  <button type="submit" class="btn btn-sm btn-outline-success" title="{% trans 'Blokdan chiqarish' %}">
                     <i class="bi bi-unlock-fill"></i>
                   </button>
                 {% else %}
-                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Bloklash" onclick="return confirm('{{ b.name }} ni bloklashni xohlaysizmi?')">
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="{% trans 'Bloklash' %}" onclick="return confirm("{% blocktrans with name=b.name|escapejs %}{{ name }} ni bloklashni xohlaysizmi?{% endblocktrans %}")">
                     <i class="bi bi-lock-fill"></i>
                   </button>
                 {% endif %}
@@ -147,7 +148,7 @@
           <td colspan="9" class="text-center py-5">
             <div class="text-muted">
               <i class="bi bi-inbox display-4 d-block mb-2" style="opacity:.3;"></i>
-              Hech qanday biznes topilmadi
+              {% trans "Hech qanday biznes topilmadi" %}
             </div>
           </td>
         </tr>

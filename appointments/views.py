@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
+from django.utils.translation import gettext as _
 from .models import Appointment
 from .forms import AppointmentForm
 from business.models import Business
@@ -62,8 +63,8 @@ def appointment_create(request):
     if not business.can_create_appointment():
         messages.error(
             request,
-            f"Oylik qabullar limiti tugadi ({business.plan_display} — oyiga {business.max_appointments_monthly or 'cheksiz'} ta)."
-            f" Yangilash uchun tarifni oshiring."
+            _(f"Oylik qabullar limiti tugadi ({business.plan_display} — oyiga {business.max_appointments_monthly or 'cheksiz'} ta)."
+            f" Yangilash uchun tarifni oshiring.")
         )
         return redirect('appointments:list')
     if request.method == 'POST':
@@ -76,7 +77,7 @@ def appointment_create(request):
             appt.business = business
             appt.customer = customer
             appt.save()
-            messages.success(request, 'Appointment created.')
+            messages.success(request, _('Appointment created.'))
             return redirect('appointments:list')
     else:
         form = AppointmentForm(business=business)
@@ -98,7 +99,7 @@ def appointment_edit(request, pk):
             appt = form.save(commit=False)
             appt.customer = customer
             appt.save()
-            messages.success(request, 'Appointment updated.')
+            messages.success(request, _('Appointment updated.'))
             return redirect('appointments:list')
     else:
         form = AppointmentForm(instance=appt, business=business)
@@ -113,7 +114,7 @@ def appointment_delete(request, pk):
     appt = get_object_or_404(Appointment, pk=pk, business=business)
     if request.method == 'POST':
         appt.delete()
-        messages.success(request, 'Appointment deleted.')
+        messages.success(request, _('Appointment deleted.'))
     return redirect('appointments:list')
 
 
@@ -126,5 +127,5 @@ def appointment_status(request, pk):
         if new_status in dict(Appointment.STATUS_CHOICES):
             appt.status = new_status
             appt.save(update_fields=['status'])
-            messages.success(request, f'Status: {appt.get_status_display()}')
+            messages.success(request, _(f'Status: {appt.get_status_display()}'))
     return redirect('appointments:list')

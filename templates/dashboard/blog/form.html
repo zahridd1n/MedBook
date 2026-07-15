@@ -1,4 +1,5 @@
 {% extends 'base_dashboard.html' %}
+{% load i18n %}
 {% block page_title %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
@@ -9,7 +10,7 @@
     </a>
     <div>
       <div class="page-hd-title">{{ title }}</div>
-      <div class="page-hd-sub">Maqola yozing yoki tahrirlang</div>
+      <div class="page-hd-sub">{% trans "Maqola yozing yoki tahrirlang" %}</div>
     </div>
   </div>
 </div>
@@ -22,7 +23,7 @@
         <div class="card-body">
           <div style="display:flex;flex-direction:column;gap:16px;">
             <div>
-              <label class="form-label">Blog sarlavhasi <span style="color:#ef4444;">*</span></label>
+              <label class="form-label">{% trans "Blog sarlavhasi" %} <span style="color:#ef4444;">*</span></label>
               {{ form.title }}
               {% if form.title.errors %}
               <div class="form-error">{{ form.title.errors.0 }}</div>
@@ -30,16 +31,16 @@
             </div>
 
             <div>
-              <label class="form-label">Qisqa mazmuni <span style="color:var(--text-4);">(ixtiyoriy)</span></label>
+              <label class="form-label">{% trans "Qisqa mazmuni" %} <span style="color:var(--text-4);">({% trans "ixtiyoriy" %})</span></label>
               {{ form.excerpt }}
-              <div class="form-hint">Blog ro'yxatida ko'rsatiladigan qisqa matn</div>
+              <div class="form-hint">{% trans "Blog ro'yxatida ko'rsatiladigan qisqa matn" %}</div>
               {% if form.excerpt.errors %}
               <div class="form-error">{{ form.excerpt.errors.0 }}</div>
               {% endif %}
             </div>
 
             <div>
-              <label class="form-label">Mazmuni <span style="color:#ef4444;">*</span></label>
+              <label class="form-label">{% trans "Mazmuni" %} <span style="color:#ef4444;">*</span></label>
               {{ form.content }}
               {% if form.content.errors %}
               <div class="form-error">{{ form.content.errors.0 }}</div>
@@ -47,9 +48,9 @@
             </div>
             
             <div>
-              <label class="form-label">Sarlavhali rasm <span style="color:var(--text-4);">(ixtiyoriy)</span></label>
+              <label class="form-label">{% trans "Sarlavhali rasm" %} <span style="color:var(--text-4);">({% trans "ixtiyoriy" %})</span></label>
               {{ form.featured_image }}
-              <div class="form-hint">Blog ro'yxatida va maqola ichida ko'rsatiladigan rasm</div>
+              <div class="form-hint">{% trans "Blog ro'yxatida va maqola ichida ko'rsatiladigan rasm" %}</div>
               {% if form.featured_image.errors %}
               <div class="form-error">{{ form.featured_image.errors.0 }}</div>
               {% endif %}
@@ -61,13 +62,13 @@
 
     <div class="col-lg-4">
       <div class="card" style="margin-bottom:16px;">
-        <div class="card-head"><span class="card-head-title">Nashr parametrlari</span></div>
+        <div class="card-head"><span class="card-head-title">{% trans "Nashr parametrlari" %}</span></div>
         <div class="card-body" style="padding:16px;">
           <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
             {{ form.is_published }}
             <div>
-              <div style="font-size:13px;font-weight:600;color:var(--text);">Foydalanuvchilarga ko'rsatish</div>
-              <div style="font-size:11.5px;color:var(--text-3);">O'chirilgan bo'lsa qoralama sifatida saqlanadi</div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);">{% trans "Foydalanuvchilarga ko'rsatish" %}</div>
+              <div style="font-size:11.5px;color:var(--text-3);">{% trans "O'chirilgan bo'lsa qoralama sifatida saqlanadi" %}</div>
             </div>
           </label>
         </div>
@@ -76,10 +77,10 @@
       <div class="card">
         <div class="card-body" style="padding:16px;display:flex;flex-direction:column;gap:8px;">
           <button type="submit" class="btn btn-primary" style="justify-content:center;width:100%;">
-            <i class="bi bi-check-lg"></i> Saqlash
+            <i class="bi bi-check-lg"></i> {% trans "Saqlash" %}
           </button>
           <a href="{% url 'blog:list' %}" class="btn btn-secondary" style="justify-content:center;width:100%;">
-            Bekor qilish
+            {% trans "Bekor qilish" %}
           </a>
         </div>
       </div>

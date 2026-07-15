@@ -11,7 +11,7 @@ class SiteSettingsForm(forms.ModelForm):
             'growth_price_monthly', 'growth_price_yearly',
             'enterprise_price_monthly', 'enterprise_price_yearly',
             'stats_uptime', 'stats_appointments', 'stats_businesses',
-            'logo', 'contact_phone', 'contact_email', 'contact_telegram',
+            'logo', 'logo_light', 'contact_phone', 'contact_email', 'contact_telegram',
             'payment_card_number', 'payment_card_holder',
         ]
         widgets = {
@@ -53,6 +53,9 @@ class SiteSettingsForm(forms.ModelForm):
             'logo': forms.FileInput(attrs={
                 'class': 'form-control',
             }),
+            'logo_light': forms.FileInput(attrs={
+                'class': 'form-control',
+            }),
             'contact_phone': forms.TextInput(attrs={
                 'class': 'form-control', 'placeholder': '+998 90 123 45 67',
             }),
@@ -81,7 +84,8 @@ class SiteSettingsForm(forms.ModelForm):
             'stats_uptime': 'Uptime ko\'rsatkichi',
             'stats_appointments': 'Jami Bandlovlar',
             'stats_businesses': 'Faol Bizneslar',
-            'logo': 'Sayt Logotipi',
+            'logo': 'Sayt Logotipi (Dark rejim)',
+            'logo_light': 'Sayt Logotipi (Light rejim)',
             'contact_phone': 'Aloqa Telefon Raqami',
             'contact_email': 'Aloqa Email Manzili',
             'contact_telegram': 'Telegram Havolasi',

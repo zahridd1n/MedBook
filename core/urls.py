@@ -12,6 +12,8 @@ from public_site.views import (
 )
 
 urlpatterns = [
+    path('i18n/', include('django.conf.urls.i18n')),
+
     path('admin/', admin.site.urls),
 
     # Super Admin Dashboard

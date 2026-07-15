@@ -1,6 +1,7 @@
 {% extends 'base_dashboard.html' %}
+{% load i18n %}
 {% load humanize %}
-{% block page_title %}Analitika{% endblock %}
+{% block page_title %}{% trans "Analitika" %}{% endblock %}
 {% block dashboard_content %}
 
 <style>
@@ -12,12 +13,12 @@
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title"><i class="bi bi-graph-up-arrow" style="margin-right:8px;color:var(--p);"></i>Analitika</div>
-    <div class="page-hd-sub">Biznes ko'rsatkichlari va diagnostika</div>
+    <div class="page-hd-title"><i class="bi bi-graph-up-arrow" style="margin-right:8px;color:var(--p);"></i>{% trans "Analitika" %}</div>
+    <div class="page-hd-sub">{% trans "Biznes ko'rsatkichlari va diagnostika" %}</div>
   </div>
   <div class="page-hd-actions">
     <button class="btn btn-sm btn-outline-secondary" onclick="window.location.reload()">
-      <i class="bi bi-arrow-clockwise"></i> Yangilash
+      <i class="bi bi-arrow-clockwise"></i> {% trans "Yangilash" %}
     </button>
   </div>
 </div>
@@ -26,9 +27,9 @@
 <div class="ds-alert warning" style="margin-bottom:20px;">
   <i class="bi bi-lock-fill"></i>
   <div>
-    <strong>Analitika faqat Pro va Max tariflarida mavjud.</strong><br>
-    <span>29 dan ortiq statistika, interaktiv chartlar va biznes diagnostikasi.</span>
-    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> Tarifni oshirish</a>
+    <strong>{% trans "Analitika faqat Pro va Max tariflarida mavjud." %}</strong><br>
+    <span>{% trans "29 dan ortiq statistika, interaktiv chartlar va biznes diagnostikasi." %}</span>
+    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> {% trans "Tarifni oshirish" %}</a>
   </div>
 </div>
 {% endif %}
@@ -41,9 +42,9 @@
         <div class="stat-icon-wrap" style="background:linear-gradient(135deg,#eef2ff,#e0e7ff);color:#6366f1"><i class="bi bi-calendar-check"></i></div>
       </div>
       <div class="stat-value">{{ total_appointments|default:0 }}</div>
-      <div class="stat-label">Jami qabullar</div>
+      <div class="stat-label">{% trans "Jami qabullar" %}</div>
       <div class="mt-2 d-flex gap-1 flex-wrap">
-        <span class="status status-green">{{ this_month_appointments }} oyda</span>
+        <span class="status status-green">{% blocktrans %}{{ this_month_appointments }} oyda{% endblocktrans %}</span>
       </div>
     </div>
   </div>
@@ -53,10 +54,10 @@
         <div class="stat-icon-wrap" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);color:#16a34a"><i class="bi bi-check-circle"></i></div>
       </div>
       <div class="stat-value">{{ completed_count|default:0 }}</div>
-      <div class="stat-label">Yakunlangan</div>
+      <div class="stat-label">{% trans "Yakunlangan" %}</div>
       {% if total_appointments %}
       <div class="mt-2 d-flex gap-1 flex-wrap">
-        <span class="status status-gray">{{ completed_count|add:cancelled_count }} jami</span>
+        <span class="status status-gray">{% blocktrans %}{{ completed_count|add:cancelled_count }} jami{% endblocktrans %}</span>
       </div>
       {% endif %}
     </div>
@@ -67,9 +68,9 @@
         <div class="stat-icon-wrap" style="background:linear-gradient(135deg,#fdf4ff,#fae8ff);color:#9333ea"><i class="bi bi-people"></i></div>
       </div>
       <div class="stat-value">{{ total_customers|default:0 }}</div>
-      <div class="stat-label">Jami mijozlar</div>
+      <div class="stat-label">{% trans "Jami mijozlar" %}</div>
       <div class="mt-2 d-flex gap-1 flex-wrap">
-        <span class="status status-indigo">+{{ new_customers_this_month }} oyda</span>
+        <span class="status status-indigo">{% blocktrans %}+{{ new_customers_this_month }} oyda{% endblocktrans %}</span>
       </div>
     </div>
   </div>
@@ -79,9 +80,9 @@
         <div class="stat-icon-wrap" style="background:linear-gradient(135deg,#fff7ed,#ffedd5);color:#ea580c"><i class="bi bi-graph-down"></i></div>
       </div>
       <div class="stat-value">{{ cancellation_rate }}%</div>
-      <div class="stat-label">Bekor qilish darajasi</div>
+      <div class="stat-label">{% trans "Bekor qilish darajasi" %}</div>
       <div class="mt-2 d-flex gap-1 flex-wrap">
-        <span class="status status-gray">{{ avg_per_day }} / kun</span>
+        <span class="status status-gray">{% blocktrans %}{{ avg_per_day }} / kun{% endblocktrans %}</span>
       </div>
     </div>
   </div>
@@ -92,10 +93,10 @@
   <div class="col-lg-8">
     <div class="card">
       <div class="card-head">
-        <span class="card-head-title"><i class="bi bi-bar-chart-line me-1" style="color:var(--p);"></i>Qabullar dinamikasi (12 oy)</span>
+        <span class="card-head-title"><i class="bi bi-bar-chart-line me-1" style="color:var(--p);"></i>{% trans "Qabullar dinamikasi (12 oy)" %}</span>
         <div class="d-flex gap-2">
-          <span class="status status-green" style="font-size:10px;">Qabullar</span>
-          <span class="status status-indigo" style="font-size:10px;">Daromad</span>
+          <span class="status status-green" style="font-size:10px;">{% trans "Qabullar" %}</span>
+          <span class="status status-indigo" style="font-size:10px;">{% trans "Daromad" %}</span>
         </div>
       </div>
       <div class="card-body chart-container" style="height:260px;">
@@ -106,7 +107,7 @@
   <div class="col-lg-4">
     <div class="card">
       <div class="card-head">
-        <span class="card-head-title"><i class="bi bi-pie-chart me-1" style="color:var(--p);"></i>Qabul holatlari</span>
+        <span class="card-head-title"><i class="bi bi-pie-chart me-1" style="color:var(--p);"></i>{% trans "Qabul holatlari" %}</span>
       </div>
       <div class="card-body chart-container" style="height:260px;">
         <canvas id="statusChart"></canvas>
@@ -120,7 +121,7 @@
   <div class="col-lg-5">
     <div class="card">
       <div class="card-head">
-        <span class="card-head-title"><i class="bi bi-calendar-week me-1" style="color:var(--p);"></i>Hafta kunlari bo'yicha</span>
+        <span class="card-head-title"><i class="bi bi-calendar-week me-1" style="color:var(--p);"></i>{% trans "Hafta kunlari bo'yicha" %}</span>
       </div>
       <div class="card-body chart-container" style="height:220px;">
         <canvas id="weekdayChart"></canvas>
@@ -130,7 +131,7 @@
   <div class="col-lg-7">
     <div class="card">
       <div class="card-head">
-        <span class="card-head-title"><i class="bi bi-person-plus me-1" style="color:var(--p);"></i>Mijozlar o'sishi (12 oy)</span>
+        <span class="card-head-title"><i class="bi bi-person-plus me-1" style="color:var(--p);"></i>{% trans "Mijozlar o'sishi (12 oy)" %}</span>
       </div>
       <div class="card-body chart-container" style="height:220px;">
         <canvas id="customerChart"></canvas>
@@ -143,11 +144,11 @@
 <div class="row g-4 mt-1">
   <div class="col-lg-4">
     <div class="card" style="height:100%;">
-      <div class="card-head"><span class="card-head-title"><i class="bi bi-grid-3x3-gap me-1" style="color:var(--p);"></i>Eng ko'p tanlangan xizmatlar</span></div>
+      <div class="card-head"><span class="card-head-title"><i class="bi bi-grid-3x3-gap me-1" style="color:var(--p);"></i>{% trans "Eng ko'p tanlangan xizmatlar" %}</span></div>
       <div class="card-body p-0">
         {% if top_services %}
         <table class="ds-table">
-          <thead><tr><th style="padding-left:16px;">#</th><th>Xizmat</th><th>Qabul</th><th>Daromad</th></tr></thead>
+          <thead><tr><th style="padding-left:16px;">#</th><th>{% trans "Xizmat" %}</th><th>{% trans "Qabul" %}</th><th>{% trans "Daromad" %}</th></tr></thead>
           <tbody>
             {% for s in top_services %}
             <tr>
@@ -162,7 +163,7 @@
         {% else %}
         <div class="ds-empty" style="padding:32px;">
           <div class="ds-empty-icon" style="width:40px;height:40px;font-size:16px;"><i class="bi bi-grid-3x3-gap"></i></div>
-          <div class="ds-empty-title" style="font-size:13px;">Ma'lumot yo'q</div>
+          <div class="ds-empty-title" style="font-size:13px;">{% trans "Ma'lumot yo'q" %}</div>
         </div>
         {% endif %}
       </div>
@@ -170,11 +171,11 @@
   </div>
   <div class="col-lg-4">
     <div class="card" style="height:100%;">
-      <div class="card-head"><span class="card-head-title"><i class="bi bi-person-badge me-1" style="color:var(--p);"></i>Eng faol xodimlar</span></div>
+      <div class="card-head"><span class="card-head-title"><i class="bi bi-person-badge me-1" style="color:var(--p);"></i>{% trans "Eng faol xodimlar" %}</span></div>
       <div class="card-body p-0">
         {% if top_employees %}
         <table class="ds-table">
-          <thead><tr><th style="padding-left:16px;">#</th><th>Xodim</th><th>Qabul</th></tr></thead>
+          <thead><tr><th style="padding-left:16px;">#</th><th>{% trans "Xodim" %}</th><th>{% trans "Qabul" %}</th></tr></thead>
           <tbody>
             {% for e in top_employees %}
             <tr>
@@ -188,7 +189,7 @@
         {% else %}
         <div class="ds-empty" style="padding:32px;">
           <div class="ds-empty-icon" style="width:40px;height:40px;font-size:16px;"><i class="bi bi-person-badge"></i></div>
-          <div class="ds-empty-title" style="font-size:13px;">Ma'lumot yo'q</div>
+          <div class="ds-empty-title" style="font-size:13px;">{% trans "Ma'lumot yo'q" %}</div>
         </div>
         {% endif %}
       </div>
@@ -196,35 +197,35 @@
   </div>
   <div class="col-lg-4">
     <div class="card" style="height:100%;">
-      <div class="card-head"><span class="card-head-title"><i class="bi bi-speedometer2 me-1" style="color:var(--p);"></i>Qisqa ko'rsatkichlar</span></div>
+      <div class="card-head"><span class="card-head-title"><i class="bi bi-speedometer2 me-1" style="color:var(--p);"></i>{% trans "Qisqa ko'rsatkichlar" %}</span></div>
       <div class="card-body" style="display:flex;flex-direction:column;gap:6px;padding:14px;">
         <div class="stat-micro">
           <span class="stat-micro-val">{{ total_appointments|default:0 }}</span>
-          <div><div class="stat-micro-label">Jami qabullar</div></div>
+          <div><div class="stat-micro-label">{% trans "Jami qabullar" %}</div></div>
         </div>
         <div class="stat-micro">
           <span class="stat-micro-val">{{ completed_count|default:0 }}</span>
-          <div><div class="stat-micro-label">Yakunlangan</div></div>
+          <div><div class="stat-micro-label">{% trans "Yakunlangan" %}</div></div>
         </div>
         <div class="stat-micro">
           <span class="stat-micro-val">{{ cancelled_count|default:0 }}</span>
-          <div><div class="stat-micro-label">Bekor qilingan</div></div>
+          <div><div class="stat-micro-label">{% trans "Bekor qilingan" %}</div></div>
         </div>
         <div class="stat-micro">
           <span class="stat-micro-val">{{ total_customers|default:0 }}</span>
-          <div><div class="stat-micro-label">Jami mijozlar</div></div>
+          <div><div class="stat-micro-label">{% trans "Jami mijozlar" %}</div></div>
         </div>
         <div class="stat-micro">
           <span class="stat-micro-val">{{ new_customers_this_month|default:0 }}</span>
-          <div><div class="stat-micro-label">Yangi mijozlar (oy)</div></div>
+          <div><div class="stat-micro-label">{% trans "Yangi mijozlar (oy)" %}</div></div>
         </div>
         <div class="stat-micro">
           <span class="stat-micro-val">{{ cancellation_rate }}%</span>
-          <div><div class="stat-micro-label">Bekor qilish darajasi</div></div>
+          <div><div class="stat-micro-label">{% trans "Bekor qilish darajasi" %}</div></div>
         </div>
         <div class="stat-micro">
           <span class="stat-micro-val">{{ avg_per_day }}</span>
-          <div><div class="stat-micro-label">O'rtacha qabul / kun</div></div>
+          <div><div class="stat-micro-label">{% trans "O'rtacha qabul / kun" %}</div></div>
         </div>
       </div>
     </div>
@@ -250,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
         labels: [{% for m in months_data %}'{{ m.month_name }}',{% endfor %}],
         datasets: [
           {
-            label: 'Qabullar',
+            label: '{% trans "Qabullar" %}',
             data: [{% for m in months_data %}{{ m.total }},{% endfor %}],
             backgroundColor: 'rgba(99,102,241,.6)',
             borderColor: blue,
@@ -260,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
             yAxisID: 'y',
           },
           {
-            label: 'Daromad (UZS)',
+            label: '{% trans "Daromad (UZS)" %}',
             data: [{% for r in revenue_data %}{{ r.total }},{% endfor %}],
             type: 'line',
             borderColor: green,
@@ -321,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
       data: {
         labels: [{% for name in weekday_names %}'{{ name }}',{% endfor %}],
         datasets: [{
-          label: 'Qabullar',
+          label: '{% trans "Qabullar" %}',
           data: [{% for d in weekday_data %}{{ d }},{% endfor %}],
           backgroundColor: [
             'rgba(99,102,241,.5)','rgba(99,102,241,.5)','rgba(99,102,241,.5)',
@@ -351,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
       data: {
         labels: [{% for c in customer_growth %}'{{ c.month_name }}',{% endfor %}],
         datasets: [{
-          label: 'Yangi mijozlar',
+          label: '{% trans "Yangi mijozlar" %}',
           data: [{% for c in customer_growth %}{{ c.total }},{% endfor %}],
           borderColor: purple,
           backgroundColor: 'rgba(147,51,234,.1)',

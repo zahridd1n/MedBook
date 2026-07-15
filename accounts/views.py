@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils.translation import gettext as _
 from .forms import RegisterForm, LoginForm
 from .models import User
 
@@ -14,7 +15,7 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, 'Account created! Set up your business profile.')
+            messages.success(request, _('Account created! Set up your business profile.'))
             return redirect('business:setup')
     else:
         form = RegisterForm()
@@ -29,7 +30,7 @@ def login_view(request):
         next_url = request.GET.get('next', '')
         if next_url.startswith('/superadmin/'):
             logout(request)
-            messages.info(request, "Superadmin sahifasiga kirish uchun administrator hisobingiz bilan tizimga kiring.")
+            messages.info(request, _("Superadmin sahifasiga kirish uchun administrator hisobingiz bilan tizimga kiring."))
         else:
             return redirect('dashboard:home')
             
@@ -44,7 +45,7 @@ def login_view(request):
                     return redirect(next_url)
                 return redirect('superadmin:dashboard')
             return redirect(request.GET.get('next', 'dashboard:home'))
-        messages.error(request, 'Invalid email or password.')
+        messages.error(request, _('Invalid email or password.'))
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})

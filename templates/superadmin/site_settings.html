@@ -1,6 +1,7 @@
 {% extends 'superadmin/base_superadmin.html' %}
-{% block title %}Sayt Sozlamalari — Admin{% endblock %}
-{% block page_title %}Sayt Sozlamalari (Marketing){% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Sayt Sozlamalari — Admin" %}{% endblock %}
+{% block page_title %}{% trans "Sayt Sozlamalari (Marketing)" %}{% endblock %}
 
 {% block sa_content %}
 <form method="post" enctype="multipart/form-data" class="row g-4">
@@ -10,7 +11,7 @@
     <!-- Hero Section Content -->
     <div class="card stat-card mb-4">
       <div class="card-header bg-white border-bottom p-3 fw-bold">
-        <i class="bi bi-text-paragraph me-2 text-primary"></i>Bosh Sahifa Matnlari
+        <i class="bi bi-text-paragraph me-2 text-primary"></i>{% trans "Bosh Sahifa Matnlari" %}
       </div>
       <div class="card-body p-4">
         <div class="mb-3">
@@ -29,7 +30,7 @@
           <label class="form-label fw-semibold">{{ form.marketing_content.label }}</label>
           {{ form.marketing_content }}
           <div class="form-text text-muted">
-            Ixtiyoriy JSON override. Masalan: {"ru":{"home":{"title":"..."}}}
+            {% blocktrans %}Ixtiyoriy JSON override. Masalan: {"ru":{"home":{"title":"..."}}}{% endblocktrans %}
           </div>
           {% if form.marketing_content.errors %}<div class="text-danger small mt-1">{{ form.marketing_content.errors }}</div>{% endif %}
         </div>
@@ -39,7 +40,7 @@
     <!-- Statistics Section -->
     <div class="card stat-card">
       <div class="card-header bg-white border-bottom p-3 fw-bold">
-        <i class="bi bi-bar-chart-fill me-2 text-primary"></i>Statistikalar (Marketing sahifa uchun)
+        <i class="bi bi-bar-chart-fill me-2 text-primary"></i>{% trans "Statistikalar (Marketing sahifa uchun)" %}
       </div>
       <div class="card-body p-4">
         <div class="mb-3">
@@ -63,16 +64,56 @@
     <!-- Contact & Branding Section -->
     <div class="card stat-card mb-4 mt-4">
       <div class="card-header bg-white border-bottom p-3 fw-bold">
-        <i class="bi bi-megaphone-fill me-2 text-primary"></i>Brending va Aloqa
+        <i class="bi bi-megaphone-fill me-2 text-primary"></i>{% trans "Brending va Aloqa" %}
       </div>
       <div class="card-body p-4">
+        <!-- Logo: Dark & Light -->
         <div class="mb-3">
-          <label class="form-label fw-semibold">{{ form.logo.label }}</label>
-          {{ form.logo }}
-          <div class="form-text text-muted">{{ form.logo.help_text }}</div>
-          {% if form.instance.logo %}
-          <div class="mt-2"><img src="{{ form.instance.logo.url }}" height="40" alt="Logo"></div>
-          {% endif %}
+          <label class="form-label fw-bold mb-2 d-block">
+            <i class="bi bi-image me-1 text-primary"></i> {% trans "Logotip" %}
+          </label>
+          <div class="row g-3">
+            <!-- Dark logo -->
+            <div class="col-md-6">
+              <div class="border rounded-3 p-3" style="background:#0f0c29;">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <span class="badge bg-dark border border-secondary" style="font-size:.65rem;">🌙 DARK</span>
+                  <span class="text-white-50" style="font-size:.75rem;">{% trans "Qorong'i rejim uchun logo" %}</span>
+                </div>
+                {% if form.instance.logo %}
+                <div class="mb-2 text-center py-2">
+                  <img src="{{ form.instance.logo.url }}" height="36" alt="Dark Logo" style="border-radius:6px;">
+                </div>
+                {% endif %}
+                {{ form.logo }}
+                {% if form.logo.errors %}<div class="text-danger small mt-1">{{ form.logo.errors }}</div>{% endif %}
+              </div>
+            </div>
+            <!-- Light logo -->
+            <div class="col-md-6">
+              <div class="border rounded-3 p-3" style="background:#f4f6fb;">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <span class="badge text-dark border" style="background:#e2e8f0;font-size:.65rem;">☀️ LIGHT</span>
+                  <span class="text-muted" style="font-size:.75rem;">{% trans "Yorug' rejim uchun logo" %}</span>
+                </div>
+                {% if form.instance.logo_light %}
+                <div class="mb-2 text-center py-2" style="background:#eef1f8;border-radius:8px;">
+                  <img src="{{ form.instance.logo_light.url }}" height="36" alt="Light Logo" style="border-radius:6px;">
+                </div>
+                {% else %}
+                <div class="mb-2 text-center py-2 text-muted" style="font-size:.75rem;background:#eef1f8;border-radius:8px;min-height:52px;display:flex;align-items:center;justify-content:center;">
+                  {% trans "Logo yuklanmagan — dark logo ishlatiladi" %}
+                </div>
+                {% endif %}
+                {{ form.logo_light }}
+                {% if form.logo_light.errors %}<div class="text-danger small mt-1">{{ form.logo_light.errors }}</div>{% endif %}
+              </div>
+            </div>
+          </div>
+          <div class="form-text text-muted mt-2">
+            <i class="bi bi-info-circle me-1"></i>
+            {% trans "Dark logo — marketing sahifasi tungi rejimda; Light logo — kunduzgi rejimda. Light logo yuklanmasa, dark logo ko'rinadi." %}
+          </div>
         </div>
         <div class="mb-3">
           <label class="form-label fw-semibold">{{ form.contact_phone.label }}</label>
@@ -97,11 +138,11 @@
     <!-- Pricing Section -->
     <div class="card stat-card mb-4">
       <div class="card-header bg-white border-bottom p-3 fw-bold">
-        <i class="bi bi-tags-fill me-2 text-primary"></i>Tariflar Narxi (UZS)
+        <i class="bi bi-tags-fill me-2 text-primary"></i>{% trans "Tariflar Narxi (UZS)" %}
       </div>
       <div class="card-body p-4">
         
-        <h6 class="fw-bold mb-3 border-bottom pb-2">Start</h6>
+        <h6 class="fw-bold mb-3 border-bottom pb-2">{% trans "Start" %}</h6>
         <div class="mb-4">
           <label class="form-label fw-semibold">{{ form.starter_price.label }}</label>
           <div class="input-group">
@@ -110,7 +151,7 @@
           </div>
         </div>
 
-        <h6 class="fw-bold mb-3 border-bottom pb-2 text-primary">Pro</h6>
+        <h6 class="fw-bold mb-3 border-bottom pb-2 text-primary">{% trans "Pro" %}</h6>
         <div class="row g-3 mb-4">
           <div class="col-md-6">
             <label class="form-label fw-semibold">{{ form.growth_price_monthly.label }}</label>
@@ -128,7 +169,7 @@
           </div>
         </div>
 
-        <h6 class="fw-bold mb-3 border-bottom pb-2" style="color:#a855f7;">Max</h6>
+        <h6 class="fw-bold mb-3 border-bottom pb-2" style="color:#a855f7;">{% trans "Max" %}</h6>
         <div class="row g-3 mb-0">
           <div class="col-md-6">
             <label class="form-label fw-semibold">{{ form.enterprise_price_monthly.label }}</label>
@@ -151,26 +192,26 @@
       <!-- Payment Card Details -->
       <div class="card stat-card mb-4">
         <div class="card-header bg-white border-bottom p-3 fw-bold">
-          <i class="bi bi-credit-card-2-back me-2 text-primary"></i>To'lov ma'lumotlari
+          <i class="bi bi-credit-card-2-back me-2 text-primary"></i>{% trans "To'lov ma'lumotlari" %}
         </div>
         <div class="card-body p-4">
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label fw-semibold">{{ form.payment_card_number.label }}</label>
               {{ form.payment_card_number }}
-              <div class="text-muted small mt-1">Foydalanuvchiga to'lov uchun ko'rsatiladigan karta raqami</div>
+              <div class="text-muted small mt-1">{% trans "Foydalanuvchiga to'lov uchun ko'rsatiladigan karta raqami" %}</div>
             </div>
             <div class="col-md-6">
               <label class="form-label fw-semibold">{{ form.payment_card_holder.label }}</label>
               {{ form.payment_card_holder }}
-              <div class="text-muted small mt-1">Karta egasining ismi (lotincha)</div>
+              <div class="text-muted small mt-1">{% trans "Karta egasining ismi (lotincha)" %}</div>
             </div>
           </div>
         </div>
       </div>
 
       <div class="card-footer bg-light p-3 text-end">
-        <button type="submit" class="btn btn-primary px-4 fw-bold">Sozlamalarni Saqlash</button>
+        <button type="submit" class="btn btn-primary px-4 fw-bold">{% trans "Sozlamalarni Saqlash" %}</button>
       </div>
     </div>
   </div>

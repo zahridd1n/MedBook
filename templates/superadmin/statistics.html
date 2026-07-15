@@ -1,18 +1,19 @@
 {% extends 'superadmin/base_superadmin.html' %}
-{% block title %}Statistikalar — Admin{% endblock %}
-{% block page_title %}Platforma Statistikasi{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Statistikalar — Admin" %}{% endblock %}
+{% block page_title %}{% trans "Platforma Statistikasi" %}{% endblock %}
 
 {% block sa_content %}
 <div class="row g-4 mb-4">
   <div class="col-lg-8">
     <div class="chart-container h-100">
-      <h6><i class="bi bi-calendar-check me-2 text-primary"></i>Oxirgi 6 Oy: Bandlovlar Proi</h6>
+      <h6><i class="bi bi-calendar-check me-2 text-primary"></i>{% trans "Oxirgi 6 Oy: Bandlovlar Proi" %}</h6>
       <canvas id="monthsChart" height="100"></canvas>
     </div>
   </div>
   <div class="col-lg-4">
     <div class="chart-container h-100">
-      <h6><i class="bi bi-tags-fill me-2 text-primary"></i>Obunalar Taqvimi</h6>
+      <h6><i class="bi bi-tags-fill me-2 text-primary"></i>{% trans "Obunalar Taqvimi" %}</h6>
       <canvas id="planChart" height="200"></canvas>
     </div>
   </div>
@@ -22,10 +23,10 @@
   <!-- Top 10 Businesses -->
   <div class="col-lg-7">
     <div class="card sa-table-card h-100">
-      <div class="card-header border-bottom">Top 10 Bizneslar (Bandlovlar soni bo'yicha)</div>
+      <div class="card-header border-bottom">{% trans "Top 10 Bizneslar (Bandlovlar soni bo'yicha)" %}</div>
       <div class="table-responsive">
         <table class="table sa-table mb-0">
-          <thead><tr><th>#</th><th>Biznes</th><th>Kategoriya</th><th class="text-end">Bandlovlar</th></tr></thead>
+          <thead><tr><th>#</th><th>{% trans "Biznes" %}</th><th>{% trans "Kategoriya" %}</th><th class="text-end">{% trans "Bandlovlar" %}</th></tr></thead>
           <tbody>
             {% for b in top_businesses %}
             <tr>
@@ -35,7 +36,7 @@
               <td class="text-end fw-bold text-dark fs-5">{{ b.appt_count }}</td>
             </tr>
             {% empty %}
-            <tr><td colspan="4" class="text-center py-4 text-muted">Ma'lumot yo'q</td></tr>
+            <tr><td colspan="4" class="text-center py-4 text-muted">{% trans "Ma'lumot yo'q" %}</td></tr>
             {% endfor %}
           </tbody>
         </table>
@@ -46,10 +47,10 @@
   <!-- Category Breakdown List -->
   <div class="col-lg-5">
     <div class="card sa-table-card h-100">
-      <div class="card-header border-bottom">Kategoriyalar Bo'yicha Bizneslar</div>
+      <div class="card-header border-bottom">{% trans "Kategoriyalar Bo'yicha Bizneslar" %}</div>
       <div class="table-responsive">
         <table class="table sa-table mb-0">
-          <thead><tr><th>Kategoriya</th><th class="text-end">Soni</th></tr></thead>
+          <thead><tr><th>{% trans "Kategoriya" %}</th><th class="text-end">{% trans "Soni" %}</th></tr></thead>
           <tbody>
             {% for c in categories %}
             <tr>
@@ -57,7 +58,7 @@
               <td class="text-end"><span class="badge bg-light text-dark border px-3 py-2 fs-6">{{ c.count }}</span></td>
             </tr>
             {% empty %}
-            <tr><td colspan="2" class="text-center py-4 text-muted">Ma'lumot yo'q</td></tr>
+            <tr><td colspan="2" class="text-center py-4 text-muted">{% trans "Ma'lumot yo'q" %}</td></tr>
             {% endfor %}
           </tbody>
         </table>
@@ -76,7 +77,7 @@
     data: {
       labels: {{ months_labels|safe }},
       datasets: [{
-        label: 'Bandlovlar',
+        label: '{% trans "Bandlovlar" %}',
         data: {{ months_data|safe }},
         borderColor: '#6366f1',
         backgroundColor: 'rgba(99, 102, 241, 0.1)',

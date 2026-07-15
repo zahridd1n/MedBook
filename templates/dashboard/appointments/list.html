@@ -1,15 +1,16 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Qabullar{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Qabullar" %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title">Qabullar</div>
-    <div class="page-hd-sub">Barcha qabullar ro'yxati va boshqaruvi</div>
+    <div class="page-hd-title">{% trans "Qabullar" %}</div>
+    <div class="page-hd-sub">{% trans "Barcha qabullar ro'yxati va boshqaruvi" %}</div>
   </div>
   <div class="page-hd-actions">
     <a href="{% url 'appointments:create' %}" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Yangi qabul
+      <i class="bi bi-plus-lg"></i> {% trans "Yangi qabul" %}
     </a>
   </div>
 </div>
@@ -19,34 +20,34 @@
   <form method="get">
     <div class="row g-2 align-items-end">
       <div class="col-lg-3 col-md-6">
-        <label class="form-label">Qidirish</label>
-        <input type="text" name="q" value="{{ search }}" class="form-control" placeholder="Ism, telefon, xizmat...">
+        <label class="form-label">{% trans "Qidirish" %}</label>
+        <input type="text" name="q" value="{{ search }}" class="form-control" placeholder="{% trans "Ism, telefon, xizmat..." %}">
       </div>
       <div class="col-lg-2 col-md-6">
-        <label class="form-label">Holat</label>
+        <label class="form-label">{% trans "Holat" %}</label>
         <select name="status" class="form-select">
-          <option value="">Barcha holatlar</option>
+          <option value="">{% trans "Barcha holatlar" %}</option>
           {% for val,label in status_choices %}
           <option value="{{ val }}" {% if selected_status == val %}selected{% endif %}>{{ label }}</option>
           {% endfor %}
         </select>
       </div>
       <div class="col-lg-2 col-md-6">
-        <label class="form-label">Xodim</label>
+        <label class="form-label">{% trans "Xodim" %}</label>
         <select name="employee" class="form-select">
-          <option value="">Barcha xodimlar</option>
-          <option value="0" {% if selected_employee == '0' %}selected{% endif %}>Xodimsiz</option>
+          <option value="">{% trans "Barcha xodimlar" %}</option>
+          <option value="0" {% if selected_employee == '0' %}selected{% endif %}>{% trans "Xodimsiz" %}</option>
           {% for emp in employees %}
           <option value="{{ emp.pk }}" {% if selected_employee == emp.pk|stringformat:'s' %}selected{% endif %}>{{ emp.name }}</option>
           {% endfor %}
         </select>
       </div>
       <div class="col-lg-2 col-md-6">
-        <label class="form-label">Boshlanish sanasi</label>
+        <label class="form-label">{% trans "Boshlanish sanasi" %}</label>
         <input type="date" name="date_from" value="{{ date_from }}" class="form-control">
       </div>
       <div class="col-lg-2 col-md-6">
-        <label class="form-label">Tugash sanasi</label>
+        <label class="form-label">{% trans "Tugash sanasi" %}</label>
         <input type="date" name="date_to" value="{{ date_to }}" class="form-control">
       </div>
       <div class="col-lg-1 col-md-12">
@@ -55,7 +56,7 @@
             <i class="bi bi-search"></i>
           </button>
           {% if search or selected_status or selected_employee or date_from or date_to %}
-          <a href="{% url 'appointments:list' %}" class="btn btn-secondary" title="Tozalash">
+          <a href="{% url 'appointments:list' %}" class="btn btn-secondary" title="{% trans "Tozalash" %}">
             <i class="bi bi-x-lg"></i>
           </a>
           {% endif %}
@@ -72,12 +73,12 @@
       <table class="ds-table">
         <thead>
           <tr>
-            <th style="padding-left:18px;">Mijoz</th>
-            <th>Xizmat</th>
-            <th>Xodim</th>
-            <th>Sana</th>
-            <th>Vaqt</th>
-            <th>Holat</th>
+            <th style="padding-left:18px;">{% trans "Mijoz" %}</th>
+            <th>{% trans "Xizmat" %}</th>
+            <th>{% trans "Xodim" %}</th>
+            <th>{% trans "Sana" %}</th>
+            <th>{% trans "Vaqt" %}</th>
+            <th>{% trans "Holat" %}</th>
             <th style="text-align:right;padding-right:18px;width:80px;"></th>
           </tr>
         </thead>
@@ -116,12 +117,12 @@
             </td>
             <td style="text-align:right;padding-right:18px;">
               <div style="display:flex;gap:4px;justify-content:flex-end;">
-                <a href="{% url 'appointments:edit' a.pk %}" class="btn btn-secondary btn-icon-sm" title="Tahrirlash">
+                <a href="{% url 'appointments:edit' a.pk %}" class="btn btn-secondary btn-icon-sm" title="{% trans "Tahrirlash" %}">
                   <i class="bi bi-pencil" style="font-size:11px;"></i>
                 </a>
-                <form method="post" action="{% url 'appointments:delete' a.pk %}" style="display:inline;" onsubmit="return confirm('Qabulni o\'chirasizmi?')">
+                <form method="post" action="{% url 'appointments:delete' a.pk %}" style="display:inline;" onsubmit="return confirm('{% trans "Qabulni o'chirasizmi?" %}')">
                   {% csrf_token %}
-                  <button class="btn btn-danger btn-icon-sm" title="O'chirish">
+                  <button class="btn btn-danger btn-icon-sm" title="{% trans "O'chirish" %}">
                     <i class="bi bi-trash" style="font-size:11px;"></i>
                   </button>
                 </form>
@@ -135,7 +136,7 @@
   </div>
   {% if appointments.has_other_pages %}
   <div class="ds-pager">
-    <span>Jami {{ appointments.paginator.count }} ta qabul</span>
+    <span>{% blocktrans count total=appointments.paginator.count %}Jami {{ total }} ta qabul{% plural %}Jami {{ total }} ta qabul{% endblocktrans %}</span>
     <div class="ds-pager-pages">
       <a href="?page={{ appointments.previous_page_number|default:1 }}&q={{ search }}&status={{ selected_status }}&employee={{ selected_employee }}&date_from={{ date_from }}&date_to={{ date_to }}"
          class="ds-page-btn {% if not appointments.has_previous %}disabled{% endif %}">
@@ -160,19 +161,19 @@
 <div class="card">
   <div class="ds-empty">
     <div class="ds-empty-icon"><i class="bi bi-calendar-x"></i></div>
-    <div class="ds-empty-title">Qabullar topilmadi</div>
+    <div class="ds-empty-title">{% trans "Qabullar topilmadi" %}</div>
     <div class="ds-empty-desc">
       {% if search or selected_status or selected_employee or date_from or date_to %}
-        Filtrlash shartlariga mos qabullar yo'q. Filtrlarni o'zgartiring.
+        {% trans "Filtrlash shartlariga mos qabullar yo'q. Filtrlarni o'zgartiring." %}
       {% else %}
-        Hozircha qabullar mavjud emas. Birinchi qabulni qo'shing.
+        {% trans "Hozircha qabullar mavjud emas. Birinchi qabulni qo'shing." %}
       {% endif %}
     </div>
     {% if search or selected_status or selected_employee or date_from or date_to %}
-    <a href="{% url 'appointments:list' %}" class="btn btn-secondary">Filtrlarni tozalash</a>
+    <a href="{% url 'appointments:list' %}" class="btn btn-secondary">{% trans "Filtrlarni tozalash" %}</a>
     {% else %}
     <a href="{% url 'appointments:create' %}" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Qabul qo'shish
+      <i class="bi bi-plus-lg"></i> {% trans "Qabul qo'shish" %}
     </a>
     {% endif %}
   </div>

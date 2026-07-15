@@ -1,6 +1,7 @@
 {% extends 'superadmin/base_superadmin.html' %}
-{% block title %}Admin Dashboard — BookFlow{% endblock %}
-{% block page_title %}Dashboard{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Admin Dashboard" %} — BookFlow{% endblock %}
+{% block page_title %}{% trans "Dashboard" %}{% endblock %}
 
 {% block sa_content %}
 <!-- Stats Cards Row -->
@@ -13,7 +14,7 @@
         </div>
         <div>
           <div class="stat-value">{{ total_businesses }}</div>
-          <div class="stat-label">Jami Bizneslar</div>
+          <div class="stat-label">{% trans "Jami Bizneslar" %}</div>
         </div>
       </div>
     </div>
@@ -26,7 +27,7 @@
         </div>
         <div>
           <div class="stat-value">{{ active_businesses }}</div>
-          <div class="stat-label">Faol Bizneslar</div>
+          <div class="stat-label">{% trans "Faol Bizneslar" %}</div>
         </div>
       </div>
     </div>
@@ -39,7 +40,7 @@
         </div>
         <div>
           <div class="stat-value">{{ blocked_businesses }}</div>
-          <div class="stat-label">Bloklangan</div>
+          <div class="stat-label">{% trans "Bloklangan" %}</div>
         </div>
       </div>
     </div>
@@ -52,7 +53,7 @@
         </div>
         <div>
           <div class="stat-value">{{ total_appointments }}</div>
-          <div class="stat-label">Jami Bandlovlar</div>
+          <div class="stat-label">{% trans "Jami Bandlovlar" %}</div>
         </div>
       </div>
     </div>
@@ -69,7 +70,7 @@
         </div>
         <div>
           <div class="stat-value">{{ total_users }}</div>
-          <div class="stat-label">Jami Foydalanuvchilar</div>
+          <div class="stat-label">{% trans "Jami Foydalanuvchilar" %}</div>
         </div>
       </div>
     </div>
@@ -82,7 +83,7 @@
         </div>
         <div>
           <div class="stat-value">{{ today_appointments }}</div>
-          <div class="stat-label">Bugungi Bandlovlar</div>
+          <div class="stat-label">{% trans "Bugungi Bandlovlar" %}</div>
         </div>
       </div>
     </div>
@@ -95,7 +96,7 @@
         </div>
         <div>
           <div class="stat-value">{{ new_this_week }}</div>
-          <div class="stat-label">Bu Hafta Yangi</div>
+          <div class="stat-label">{% trans "Bu Hafta Yangi" %}</div>
         </div>
       </div>
     </div>
@@ -108,7 +109,7 @@
         </div>
         <div>
           <div class="stat-value">{{ new_this_month }}</div>
-          <div class="stat-label">Bu Oy Yangi</div>
+          <div class="stat-label">{% trans "Bu Oy Yangi" %}</div>
         </div>
       </div>
     </div>
@@ -119,13 +120,13 @@
 <div class="row g-3 mb-4">
   <div class="col-lg-8">
     <div class="chart-container">
-      <h6><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Oxirgi 14 Kun — Yangi Ro'yxatdan O'tishlar</h6>
+      <h6><i class="bi bi-bar-chart-fill me-2 text-primary"></i>{% trans "Oxirgi 14 Kun — Yangi Ro'yxatdan O'tishlar" %}</h6>
       <canvas id="regChart" height="120"></canvas>
     </div>
   </div>
   <div class="col-lg-4">
     <div class="chart-container h-100">
-      <h6><i class="bi bi-pie-chart-fill me-2 text-primary"></i>Kategoriya Bo'yicha</h6>
+      <h6><i class="bi bi-pie-chart-fill me-2 text-primary"></i>{% trans "Kategoriya Bo'yicha" %}</h6>
       <canvas id="catChart" height="180"></canvas>
     </div>
   </div>
@@ -156,19 +157,19 @@
 <!-- Recent Businesses Table -->
 <div class="card sa-table-card">
   <div class="card-header d-flex justify-content-between align-items-center">
-    <span><i class="bi bi-clock-history me-2"></i>Oxirgi Ro'yxatdan O'tganlar</span>
-    <a href="{% url 'superadmin:businesses' %}" class="btn btn-sm btn-outline-primary">Hammasini ko'rish</a>
+    <span><i class="bi bi-clock-history me-2"></i>{% trans "Oxirgi Ro'yxatdan O'tganlar" %}</span>
+    <a href="{% url 'superadmin:businesses' %}" class="btn btn-sm btn-outline-primary">{% trans "Hammasini ko'rish" %}</a>
   </div>
   <div class="table-responsive">
     <table class="table sa-table mb-0">
       <thead>
         <tr>
-          <th>Biznes</th>
-          <th>Egasi</th>
-          <th>Kategoriya</th>
-          <th>Plan</th>
-          <th>Status</th>
-          <th>Sana</th>
+          <th>{% trans "Biznes" %}</th>
+          <th>{% trans "Egasi" %}</th>
+          <th>{% trans "Kategoriya" %}</th>
+          <th>{% trans "Plan" %}</th>
+          <th>{% trans "Status" %}</th>
+          <th>{% trans "Sana" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -188,15 +189,15 @@
           </td>
           <td>
             {% if b.is_blocked %}
-              <span class="badge-status badge-blocked">Bloklangan</span>
+              <span class="badge-status badge-blocked">{% trans "Bloklangan" %}</span>
             {% else %}
-              <span class="badge-status badge-active">Faol</span>
+              <span class="badge-status badge-active">{% trans "Faol" %}</span>
             {% endif %}
           </td>
           <td class="text-muted" style="font-size:.8rem;">{{ b.created_at|date:"d.m.Y" }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="6" class="text-center text-muted py-4">Hozircha bizneslar yo'q</td></tr>
+        <tr><td colspan="6" class="text-center text-muted py-4">{% trans "Hozircha bizneslar yo'q" %}</td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -213,7 +214,7 @@
     data: {
       labels: {{ chart_labels|safe }},
       datasets: [{
-        label: 'Yangi bizneslar',
+        label: '{% trans "Yangi bizneslar" %}',
         data: {{ chart_data|safe }},
         backgroundColor: 'rgba(99, 102, 241, 0.7)',
         borderColor: '#6366f1',

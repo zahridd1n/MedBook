@@ -1,0 +1,4156 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: BookFlow\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-14 22:22+0500\n"
+"PO-Revision-Date: 2026-07-14 20:00+0500\n"
+"Last-Translator: BookFlow Team\n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\accounts\views.py:18
+msgid "Account created! Set up your business profile."
+msgstr "Аккаунт создан! Настройте профиль вашего бизнеса."
+
+#: .\accounts\views.py:33
+msgid ""
+"Superadmin sahifasiga kirish uchun administrator hisobingiz bilan tizimga "
+"kiring."
+msgstr ""
+"Войдите в систему с учетной записью администратора для доступа к странице "
+"суперадмина."
+
+#: .\accounts\views.py:48
+msgid "Invalid email or password."
+msgstr "Неверный email или пароль."
+
+#: .\appointments\views.py:66
+msgid "cheksiz"
+msgstr "безлимитно"
+
+#: .\appointments\views.py:80
+msgid "Appointment created."
+msgstr "Прием создан."
+
+#: .\appointments\views.py:102
+#, fuzzy
+#| msgid "FAQ updated."
+msgid "Appointment updated."
+msgstr "FAQ обновлен."
+
+#: .\appointments\views.py:117
+#, fuzzy
+#| msgid "FAQ deleted."
+msgid "Appointment deleted."
+msgstr "FAQ удален."
+
+#: .\blog\views.py:53
+#, fuzzy
+#| msgid "Yangi qabul qo'shish"
+msgid "Yangi Blog Qo'shish"
+msgstr "Добавить новый прием"
+
+#: .\blog\views.py:80
+#, fuzzy
+#| msgid "Tahrirlash"
+msgid "Blogni Tahrirlash"
+msgstr "Редактировать"
+
+#: .\business\views.py:88
+msgid "Business settings saved."
+msgstr "Настройки бизнеса сохранены."
+
+#: .\business\views.py:113
+msgid "Working hours saved."
+msgstr "Рабочее время сохранено."
+
+#: .\business\views.py:139
+msgid "FAQ added."
+msgstr "FAQ добавлен."
+
+#: .\business\views.py:156
+msgid "FAQ updated."
+msgstr "FAQ обновлен."
+
+#: .\business\views.py:171
+msgid "FAQ deleted."
+msgstr "FAQ удален."
+
+#: .\business\views.py:184
+msgid "Sahifa dizaynini sozlash faqat Pro va Max tariflarida mavjud."
+msgstr "Настройка дизайна страницы доступна только на тарифах Pro и Max."
+
+#: .\business\views.py:193
+#, fuzzy
+#| msgid "White Label o'chirildi."
+msgid "Banner rasmi o'chirildi."
+msgstr "White Label отключен."
+
+#: .\business\views.py:199
+msgid "Dizayn sozlamalari saqlandi."
+msgstr "Настройки дизайна сохранены."
+
+#: .\business\views.py:237
+msgid "Telegram xabarnomalari faqat Pro va Max tariflarida mavjud."
+msgstr "Telegram уведомления доступны только на тарифах Pro и Max."
+
+#: .\business\views.py:244
+msgid "TELEGRAM_BOT_TOKEN is not set in your .env file."
+msgstr "TELEGRAM_BOT_TOKEN не указан в файле .env."
+
+#: .\business\views.py:246
+msgid "TELEGRAM_BOT_USERNAME is not set in your .env file."
+msgstr "TELEGRAM_BOT_USERNAME не указан в файле .env."
+
+#: .\business\views.py:249
+msgid "Connection link generated. Click it to open Telegram."
+msgstr "Ссылка для подключения создана. Нажмите, чтобы открыть Telegram."
+
+#: .\business\views.py:258
+msgid "Telegram disconnected successfully."
+msgstr "Telegram успешно отключен."
+
+#: .\business\views.py:262
+msgid "Connect Telegram first before enabling notifications."
+msgstr "Сначала подключите Telegram, прежде чем включать уведомления."
+
+#: .\business\views.py:271
+msgid "Telegram is not connected yet."
+msgstr "Telegram еще не подключен."
+
+#: .\business\views.py:282
+#, fuzzy
+#| msgid "Test message sent! Check your Telegram."
+msgid "✅ Test message sent! Check your Telegram."
+msgstr "Тестовое сообщение отправлено! Проверьте Telegram."
+
+#: .\business\views.py:284
+#, fuzzy
+#| msgid "Failed to send. Check that TELEGRAM_BOT_TOKEN is correct."
+msgid "❌ Failed to send. Check that TELEGRAM_BOT_TOKEN is correct."
+msgstr "Не удалось отправить. Проверьте правильность TELEGRAM_BOT_TOKEN."
+
+#: .\business\views.py:426
+msgid "Noto'g'ri tarif tanlandi."
+msgstr "Выбран неверный тариф."
+
+#: .\business\views.py:437
+msgid "Chek rasmini yuklang."
+msgstr "Загрузите изображение чека."
+
+#: .\business\views.py:446
+msgid ""
+"To'lovingiz qabul qilindi. Admin tekshirgandan so'ng tarifingiz "
+"faollashtiriladi."
+msgstr ""
+"Ваш платеж принят. После проверки администратором тариф будет активирован."
+
+#: .\business\views.py:475
+msgid "Faqat pullik tariflarda mavjud"
+msgstr "Доступно только на платных тарифах"
+
+#: .\business\views.py:482
+msgid "Bu domen allaqachon boshqa biznes tomonidan ishlatilmoqda."
+msgstr "Этот домен уже используется другим бизнесом."
+
+#: .\business\views.py:488
+msgid "Domen saqlandi. Iltimos, DNS sozlamalarini qo'shing va tasdiqlang."
+msgstr "Домен сохранен. Пожалуйста, добавьте настройки DNS и подтвердите."
+
+#: .\business\views.py:495
+msgid "Domen o'chirildi."
+msgstr "Домен удален."
+
+#: .\business\views.py:501
+msgid "Avval domen kiriting."
+msgstr "Сначала введите домен."
+
+#: .\business\views.py:508
+#, fuzzy
+#| msgid "Domen muvaffaqiyatli tasdiqlandi!"
+msgid "Domen muvaffaqiyatli tasdiqlandi! ✅"
+msgstr "Домен успешно подтвержден!"
+
+#: .\business\views.py:510
+msgid ""
+"TXT record topilmadi. DNS sozlamalari tarqalishini kuting va qayta urinib "
+"ko'ring."
+msgstr ""
+"TXT запись не найдена. Дождитесь распространения DNS и попробуйте снова."
+
+#: .\business\views.py:548
+msgid "Google Calendar uzildi."
+msgstr "Google Calendar отключен."
+
+#: .\business\views.py:553
+msgid "Avval Google Calendar ga ulaning."
+msgstr "Сначала подключите Google Calendar."
+
+#: .\business\views.py:593
+msgid "Google Calendar ulanish uchun kod topilmadi."
+msgstr "Код для подключения Google Calendar не найден."
+
+#: .\business\views.py:597
+msgid "Google OAuth sozlanmagan."
+msgstr "Google OAuth не настроен."
+
+#: .\business\views.py:607
+#, fuzzy
+#| msgid "Google Calendar muvaffaqiyatli ulandi!"
+msgid "Google Calendar muvaffaqiyatli ulandi! ✅"
+msgstr "Google Calendar успешно подключен!"
+
+#: .\business\views.py:772
+msgid "White Label faqat Max tarifida mavjud."
+msgstr "White Label доступен только на тарифе Max."
+
+#: .\business\views.py:778
+msgid "White Label yoqildi — BookFlow brendi yashirildi."
+msgstr "White Label включен — бренд BookFlow скрыт."
+
+#: .\business\views.py:780
+msgid "White Label o'chirildi."
+msgstr "White Label отключен."
+
+#: .\business\views.py:798
+msgid "API va Webhook faqat Max tarifida mavjud."
+msgstr "API и Webhook доступны только на тарифе Max."
+
+#: .\business\views.py:807
+msgid "API kaliti muvaffaqiyatli yangilandi."
+msgstr "API ключ успешно обновлен."
+
+#: .\business\views.py:814
+msgid "Webhook URL saqlandi. Yangi qabullar avtomatik yuboriladi."
+msgstr "Webhook URL сохранен. Новые приемы будут отправляться автоматически."
+
+#: .\business\views.py:816
+msgid "Webhook URL o'chirildi."
+msgstr "Webhook URL удален."
+
+#: .\business\views.py:831
+#, fuzzy
+#| msgid "Test webhook muvaffaqiyatli yuborildi"
+msgid "Test webhook muvaffaqiyatli yuborildi ✅"
+msgstr "Тестовый webhook успешно отправлен"
+
+#: .\business\views.py:879
+msgid "API ruxsati yo'q. Max tarifini talab qiladi."
+msgstr "Нет доступа к API. Требуется тариф Max."
+
+#: .\business\views.py:882
+msgid ""
+"Noto'g'ri API kaliti. X-API-Key header yoki ?api_key= parametrini tekshiring."
+msgstr ""
+"Неверный API ключ. Проверьте заголовок X-API-Key или параметр ?api_key=."
+
+#: .\business\views.py:944
+msgid "JSON formatida yuboring"
+msgstr "Отправьте в формате JSON"
+
+#: .\business\views.py:958
+msgid ""
+"Majburiy maydonlar: customer_name, customer_phone, service_id, date, time"
+msgstr ""
+"Обязательные поля: customer_name, customer_phone, service_id, date, time"
+
+#: .\business\views.py:963
+msgid "Xizmat topilmadi"
+msgstr "Услуга не найдена"
+
+#: .\business\views.py:970
+msgid "Xodim topilmadi"
+msgstr "Сотрудник не найден"
+
+#: .\business\views.py:1001
+msgid "Qabul topilmadi"
+msgstr "Прием не найден"
+
+#: .\business\views.py:1005
+msgid "Qabul allaqachon bekor qilingan"
+msgstr "Прием уже отменен"
+
+#: .\business\views.py:1008
+msgid "Qabul bekor qilindi"
+msgstr "Прием отменен"
+
+#: .\customers\views.py:52
+#, fuzzy
+#| msgid "Eslatma yozish..."
+msgid "Eslatma qo'shildi."
+msgstr "Написать заметку..."
+
+#: .\customers\views.py:62
+#, fuzzy
+#| msgid "Yangi qabul qo'shish"
+msgid "Yangi qabul qo'shildi."
+msgstr "Добавить новый прием"
+
+#: .\employees\views.py:25
+#, python-format
+msgid ""
+"Xodimlar limiti tugadi (%(plan)s — %(max)s ta). Yangilash uchun <a "
+"href='#'>tarifni oshiring</a>."
+msgstr ""
+
+#: .\employees\views.py:44
+msgid "Employee added."
+msgstr "Сотрудник добавлен."
+
+#: .\employees\views.py:61
+#, fuzzy
+#| msgid "FAQ updated."
+msgid "Employee updated."
+msgstr "FAQ обновлен."
+
+#: .\employees\views.py:76
+#, fuzzy
+#| msgid "FAQ deleted."
+msgid "Employee deleted."
+msgstr "FAQ удален."
+
+#: .\employees\views.py:96
+msgid "Schedule saved."
+msgstr "График сохранен."
+
+#: .\notifications\views.py:60 .\templates\base_dashboard.html:1638
+msgid "Hozir"
+msgstr "Только что"
+
+#: .\notifications\views.py:133 .\superadmin\views.py:493
+msgid "Invalid JSON"
+msgstr "Неверный JSON"
+
+#: .\services\views.py:27
+msgid "Service added."
+msgstr "Услуга добавлена."
+
+#: .\services\views.py:44
+#, fuzzy
+#| msgid "FAQ updated."
+msgid "Service updated."
+msgstr "FAQ обновлен."
+
+#: .\services\views.py:59
+#, fuzzy
+#| msgid "FAQ deleted."
+msgid "Service deleted."
+msgstr "FAQ удален."
+
+#: .\superadmin\templates\admin\superadmin\businesssubscription\change_form.html:137
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\superadmin\templates\admin\superadmin\businesssubscription\change_list.html:134
+msgid "Filter"
+msgstr "Фильтр"
+
+#: .\superadmin\templates\admin\superadmin\businesssubscription\change_list.html:137
+msgid "Hide counts"
+msgstr "Скрыть количество"
+
+#: .\superadmin\templates\admin\superadmin\businesssubscription\change_list.html:138
+msgid "Show counts"
+msgstr "Показать количество"
+
+#: .\superadmin\templates\admin\superadmin\businesssubscription\change_list.html:141
+msgid "Clear all filters"
+msgstr "Очистить все фильтры"
+
+#: .\superadmin\views.py:292
+#, fuzzy
+#| msgid "Dizayn sozlamalari saqlandi."
+msgid "Sayt sozlamalari saqlandi."
+msgstr "Настройки дизайна сохранены."
+
+#: .\superadmin\views.py:365
+#, fuzzy
+#| msgid "Yangi kalit yaratildi"
+msgid "Yangi parol kiritilmadi."
+msgstr "Новый ключ создан"
+
+#: .\superadmin\views.py:367
+msgid "Parol kamida 6 belgidan iborat bo'lishi kerak."
+msgstr ""
+
+#: .\superadmin\views.py:369
+msgid "Parollar bir-biriga mos kelmadi."
+msgstr ""
+
+#: .\superadmin\views.py:443
+#, fuzzy
+#| msgid "API kaliti muvaffaqiyatli yangilandi."
+msgid "Yangi tarif muvaffaqiyatli qo'shildi."
+msgstr "API ключ успешно обновлен."
+
+#: .\superadmin\views.py:462
+#, fuzzy
+#| msgid "API kaliti muvaffaqiyatli yangilandi."
+msgid "Tarif muvaffaqiyatli yangilandi."
+msgstr "API ключ успешно обновлен."
+
+#: .\superadmin\views.py:477
+#, fuzzy
+#| msgid "Domen o'chirildi."
+msgid "Tarif o'chirildi."
+msgstr "Домен удален."
+
+#: .\templates\base_dashboard.html:1205
+msgid "Bepul tarif"
+msgstr "Бесплатный тариф"
+
+#: .\templates\base_dashboard.html:1206 .\templates\dashboard\home.html:230
+msgid "Faol obuna"
+msgstr "Активная подписка"
+
+#: .\templates\base_dashboard.html:1207
+msgid "Sinov davri"
+msgstr "Пробный период"
+
+#: .\templates\base_dashboard.html:1227
+#, fuzzy
+#| msgid "Asosiy"
+msgid "Asosiy"
+msgstr "Основное"
+
+#: .\templates\base_dashboard.html:1231 .\templates\base_dashboard.html:1232
+#: .\templates\base_dashboard.html:1474 .\templates\dashboard\home.html:3
+msgid "Boshqaruv paneli"
+msgstr "Панель управления"
+
+#: .\templates\base_dashboard.html:1234 .\templates\base_dashboard.html:1235
+#: .\templates\dashboard\analytics.html:98
+#: .\templates\dashboard\analytics.html:254
+#: .\templates\dashboard\analytics.html:325
+#: .\templates\dashboard\appointments\list.html:3
+#: .\templates\dashboard\appointments\list.html:8
+#: .\templates\dashboard\customers\list.html:29
+#: .\templates\dashboard\customers\list.html:79
+#: .\templates\dashboard\settings\api_docs.html:84
+msgid "Qabullar"
+msgstr "Приемы"
+
+#: .\templates\base_dashboard.html:1237 .\templates\base_dashboard.html:1238
+#: .\templates\dashboard\customers\list.html:3
+#: .\templates\dashboard\customers\list.html:8
+#: .\templates\dashboard\home.html:84
+#: .\templates\dashboard\settings\api_docs.html:259
+#: .\templates\superadmin\business_detail.html:134
+msgid "Mijozlar"
+msgstr "Клиенты"
+
+#: .\templates\base_dashboard.html:1240 .\templates\base_dashboard.html:1241
+#: .\templates\dashboard\employees\list.html:3
+#: .\templates\dashboard\employees\list.html:8
+#: .\templates\dashboard\settings\api_docs.html:232
+#: .\templates\superadmin\business_detail.html:140
+msgid "Xodimlar"
+msgstr "Сотрудники"
+
+#: .\templates\base_dashboard.html:1249
+#, fuzzy
+#| msgid "Sayt"
+msgid "Sayt"
+msgstr "Сайт"
+
+#: .\templates\base_dashboard.html:1254 .\templates\base_dashboard.html:1255
+#: .\templates\dashboard\settings\business.html:249
+msgid "Ommaviy sahifa"
+msgstr "Публичная страница"
+
+#: .\templates\base_dashboard.html:1256
+msgid "JONLI"
+msgstr "ЖИВОЙ"
+
+#: .\templates\base_dashboard.html:1259 .\templates\base_dashboard.html:1260
+#: .\templates\dashboard\services\list.html:3
+#: .\templates\dashboard\services\list.html:8
+#: .\templates\dashboard\settings\api_docs.html:205
+msgid "Xizmatlar"
+msgstr "Услуги"
+
+#: .\templates\base_dashboard.html:1262 .\templates\base_dashboard.html:1263
+#: .\templates\dashboard\blog\list.html:3
+#: .\templates\dashboard\blog\list.html:8
+msgid "Blog"
+msgstr "Блог"
+
+#: .\templates\base_dashboard.html:1265 .\templates\base_dashboard.html:1266
+msgid "FAQ"
+msgstr "FAQ"
+
+#: .\templates\base_dashboard.html:1268 .\templates\base_dashboard.html:1269
+#: .\templates\dashboard\settings\business.html:258
+#: .\templates\dashboard\settings\working_hours.html:3
+#: .\templates\dashboard\settings\working_hours.html:8
+msgid "Ish vaqtlari"
+msgstr "Рабочее время"
+
+#: .\templates\base_dashboard.html:1277
+#: .\templates\superadmin\businesses.html:65
+#: .\templates\superadmin\dashboard.html:167
+#: .\templates\superadmin\payment_detail.html:26
+#: .\templates\superadmin\payments.html:22
+#: .\templates\superadmin\statistics.html:29
+#: .\templates\superadmin\subscriptions.html:124
+msgid "Biznes"
+msgstr "Бизнес"
+
+#: .\templates\base_dashboard.html:1281 .\templates\base_dashboard.html:1282
+#: .\templates\dashboard\settings\business.html:4
+#: .\templates\dashboard\settings\business.html:98
+msgid "Biznes ma'lumotlari"
+msgstr "Информация о бизнесе"
+
+#: .\templates\base_dashboard.html:1284 .\templates\base_dashboard.html:1285
+#: .\templates\base_dashboard.html:1485 .\templates\base_dashboard.html:1491
+#: .\templates\dashboard\notifications\list.html:3
+#: .\templates\dashboard\notifications\list.html:8
+msgid "Bildirishnomalar"
+msgstr "Уведомления"
+
+#: .\templates\base_dashboard.html:1288 .\templates\base_dashboard.html:1289
+msgid "Integratsiyalar"
+msgstr "Интеграции"
+
+#: .\templates\base_dashboard.html:1290
+msgid "TEZ KUN"
+msgstr "СКОРО"
+
+#: .\templates\base_dashboard.html:1298
+#, fuzzy
+#| msgid "Premium"
+msgid "Premium"
+msgstr "Премиум"
+
+#: .\templates\base_dashboard.html:1308 .\templates\base_dashboard.html:1309
+#: .\templates\base_dashboard.html:1385 .\templates\base_dashboard.html:1386
+#: .\templates\dashboard\analytics.html:4
+#: .\templates\dashboard\analytics.html:16
+msgid "Analitika"
+msgstr "Аналитика"
+
+#: .\templates\base_dashboard.html:1311 .\templates\base_dashboard.html:1325
+#: .\templates\base_dashboard.html:1339 .\templates\base_dashboard.html:1353
+#: .\templates\base_dashboard.html:1362 .\templates\base_dashboard.html:1387
+#: .\templates\base_dashboard.html:1391 .\templates\base_dashboard.html:1395
+#: .\templates\base_dashboard.html:1399 .\templates\base_dashboard.html:1403
+msgid "Pro tarifni faollashtiring →"
+msgstr "Активируйте Pro тариф →"
+
+#: .\templates\base_dashboard.html:1317 .\templates\base_dashboard.html:1318
+#: .\templates\base_dashboard.html:1389 .\templates\base_dashboard.html:1390
+msgid "Telegram"
+msgstr "Telegram"
+
+#: .\templates\base_dashboard.html:1331 .\templates\base_dashboard.html:1332
+#: .\templates\base_dashboard.html:1393 .\templates\base_dashboard.html:1394
+msgid "Google Calendar"
+msgstr "Google Calendar"
+
+#: .\templates\base_dashboard.html:1345 .\templates\base_dashboard.html:1346
+#: .\templates\base_dashboard.html:1397 .\templates\base_dashboard.html:1398
+#: .\templates\dashboard\settings\custom_domain.html:3
+#: .\templates\dashboard\settings\custom_domain.html:15
+msgid "Maxsus domen"
+msgstr "Свой домен"
+
+#: .\templates\base_dashboard.html:1359 .\templates\base_dashboard.html:1360
+#: .\templates\base_dashboard.html:1401 .\templates\base_dashboard.html:1402
+#: .\templates\dashboard\settings\branding.html:3
+#: .\templates\dashboard\settings\branding.html:8
+msgid "Sahifa dizayni"
+msgstr "Дизайн страницы"
+
+#: .\templates\base_dashboard.html:1369 .\templates\base_dashboard.html:1370
+#: .\templates\base_dashboard.html:1405 .\templates\base_dashboard.html:1406
+msgid "White Label"
+msgstr "White Label"
+
+#: .\templates\base_dashboard.html:1372 .\templates\base_dashboard.html:1380
+#: .\templates\base_dashboard.html:1407 .\templates\base_dashboard.html:1411
+msgid "Max tarifni faollashtiring →"
+msgstr "Активируйте Max тариф →"
+
+#: .\templates\base_dashboard.html:1377 .\templates\base_dashboard.html:1378
+#: .\templates\base_dashboard.html:1409 .\templates\base_dashboard.html:1410
+msgid "API & Webhook"
+msgstr "API и Webhook"
+
+#: .\templates\base_dashboard.html:1420
+#, fuzzy
+#| msgid "Hisob"
+msgid "Hisob"
+msgstr "Счет"
+
+#: .\templates\base_dashboard.html:1424 .\templates\base_dashboard.html:1425
+#: .\templates\base_dashboard.html:1450
+msgid "Tarif va to'lov"
+msgstr "Тариф и оплата"
+
+#: .\templates\base_dashboard.html:1436
+msgid "Yig'ish"
+msgstr "Свернуть"
+
+#: .\templates\base_dashboard.html:1449
+#: .\templates\dashboard\employees\form.html:75
+#: .\templates\dashboard\settings\api_docs.html:47
+#: .\templates\superadmin\base_superadmin.html:309
+msgid "Sozlamalar"
+msgstr "Настройки"
+
+#: .\templates\base_dashboard.html:1454
+#: .\templates\superadmin\base_superadmin.html:335
+msgid "Chiqish"
+msgstr "Выход"
+
+#: .\templates\base_dashboard.html:1471
+msgid "Menyu"
+msgstr "Меню"
+
+#: .\templates\base_dashboard.html:1480
+#: .\templates\dashboard\appointments\form.html:3
+#: .\templates\dashboard\appointments\list.html:13
+#: .\templates\dashboard\home.html:35
+#: .\templates\dashboard\settings\api.html:218
+msgid "Yangi qabul"
+msgstr "Новый прием"
+
+#: .\templates\base_dashboard.html:1494
+msgid "Barchasini o'qildi deb belgilash"
+msgstr "Отметить все как прочитанные"
+
+#: .\templates\base_dashboard.html:1498 .\templates\base_dashboard.html:1606
+msgid "Yuklanmoqda..."
+msgstr "Загрузка..."
+
+#: .\templates\base_dashboard.html:1501
+msgid "Barcha bildirishnomalar"
+msgstr "Все уведомления"
+
+#: .\templates\base_dashboard.html:1508
+#: .\templates\dashboard\settings\branding.html:135
+#: .\templates\dashboard\settings\business.html:104
+msgid "Ommaviy sahifani ko'rish"
+msgstr "Смотреть публичную страницу"
+
+#: .\templates\base_dashboard.html:1515
+msgid "Til"
+msgstr "Язык"
+
+#: .\templates\base_dashboard.html:1610
+#, fuzzy
+#| msgid "Bildirishnomalar yo'q"
+msgid "Bildirishnomalar yo\\'q"
+msgstr "Нет уведомлений"
+
+#: .\templates\base_dashboard.html:1626
+msgid "Xatolik yuz berdi"
+msgstr "Произошла ошибка"
+
+#: .\templates\base_dashboard.html:1640
+msgid "daqiqa oldin"
+msgstr "минут назад"
+
+#: .\templates\base_dashboard.html:1642
+msgid "soat oldin"
+msgstr "часов назад"
+
+#: .\templates\base_dashboard.html:1644
+msgid "kun oldin"
+msgstr "дней назад"
+
+#: .\templates\dashboard\analytics.html:17
+msgid "Biznes ko'rsatkichlari va diagnostika"
+msgstr "Показатели бизнеса и диагностика"
+
+#: .\templates\dashboard\analytics.html:21 .\templates\dashboard\home.html:9
+#: .\templates\dashboard\settings\api.html:115
+msgid "Yangilash"
+msgstr "Обновить"
+
+#: .\templates\dashboard\analytics.html:30
+msgid "Analitika faqat Pro va Max tariflarida mavjud."
+msgstr "Аналитика доступна только на тарифах Pro и Max."
+
+#: .\templates\dashboard\analytics.html:31
+msgid "29 dan ortiq statistika, interaktiv chartlar va biznes diagnostikasi."
+msgstr "Более 29 статистик, интерактивные графики и диагностика бизнеса."
+
+#: .\templates\dashboard\analytics.html:32 .\templates\dashboard\home.html:236
+#: .\templates\dashboard\settings\branding.html:26
+#: .\templates\dashboard\settings\branding.html:90
+#: .\templates\dashboard\settings\google_calendar.html:19
+#: .\templates\dashboard\settings\telegram.html:19
+msgid "Tarifni oshirish"
+msgstr "Повысить тариф"
+
+#: .\templates\dashboard\analytics.html:45
+#: .\templates\dashboard\analytics.html:204 .\templates\dashboard\home.html:51
+msgid "Jami qabullar"
+msgstr "Всего приемов"
+
+#: .\templates\dashboard\analytics.html:47
+#, python-format
+msgid "%(this_month_appointments)s oyda"
+msgstr ""
+
+#: .\templates\dashboard\analytics.html:57
+#: .\templates\dashboard\analytics.html:208
+#: .\templates\dashboard\customers\detail.html:61
+msgid "Yakunlangan"
+msgstr "Завершено"
+
+#: .\templates\dashboard\analytics.html:60
+#, python-format
+msgid "%(completed_count|add:cancelled_count)s jami"
+msgstr ""
+
+#: .\templates\dashboard\analytics.html:71
+#: .\templates\dashboard\analytics.html:216
+#: .\templates\dashboard\customers\list.html:22
+#: .\templates\dashboard\home.html:87
+msgid "Jami mijozlar"
+msgstr "Всего клиентов"
+
+#: .\templates\dashboard\analytics.html:73
+#, python-format
+msgid "+%(new_customers_this_month)s oyda"
+msgstr ""
+
+#: .\templates\dashboard\analytics.html:83
+#: .\templates\dashboard\analytics.html:224
+msgid "Bekor qilish darajasi"
+msgstr "Уровень отмен"
+
+#: .\templates\dashboard\analytics.html:85
+#, python-format
+msgid "%(avg_per_day)s / kun"
+msgstr ""
+
+#: .\templates\dashboard\analytics.html:96
+msgid "Qabullar dinamikasi (12 oy)"
+msgstr "Динамика приемов (12 мес)"
+
+#: .\templates\dashboard\analytics.html:99
+#: .\templates\dashboard\analytics.html:151
+msgid "Daromad"
+msgstr "Доход"
+
+#: .\templates\dashboard\analytics.html:110
+msgid "Qabul holatlari"
+msgstr "Статусы приемов"
+
+#: .\templates\dashboard\analytics.html:124
+msgid "Hafta kunlari bo'yicha"
+msgstr "По дням недели"
+
+#: .\templates\dashboard\analytics.html:134
+msgid "Mijozlar o'sishi (12 oy)"
+msgstr "Рост клиентов (12 мес)"
+
+#: .\templates\dashboard\analytics.html:147
+msgid "Eng ko'p tanlangan xizmatlar"
+msgstr "Самые популярные услуги"
+
+#: .\templates\dashboard\analytics.html:151
+#: .\templates\dashboard\appointments\list.html:77
+#: .\templates\dashboard\customers\detail.html:102
+#: .\templates\dashboard\customers\detail.html:146
+#: .\templates\dashboard\home.html:110
+#: .\templates\superadmin\business_detail.html:150
+msgid "Xizmat"
+msgstr "Услуга"
+
+#: .\templates\dashboard\analytics.html:151
+#: .\templates\dashboard\analytics.html:178
+#, fuzzy
+#| msgid "Qabullar"
+msgid "Qabul"
+msgstr "Приемы"
+
+#: .\templates\dashboard\analytics.html:166
+#: .\templates\dashboard\analytics.html:192
+#: .\templates\superadmin\statistics.html:39
+#: .\templates\superadmin\statistics.html:61
+msgid "Ma'lumot yo'q"
+msgstr "Нет данных"
+
+#: .\templates\dashboard\analytics.html:174
+msgid "Eng faol xodimlar"
+msgstr "Самые активные сотрудники"
+
+#: .\templates\dashboard\analytics.html:178
+#: .\templates\dashboard\appointments\form.html:47
+#: .\templates\dashboard\appointments\list.html:36
+#: .\templates\dashboard\appointments\list.html:78
+#: .\templates\dashboard\customers\detail.html:106
+#: .\templates\dashboard\employees\list.html:43
+msgid "Xodim"
+msgstr "Сотрудник"
+
+#: .\templates\dashboard\analytics.html:200
+msgid "Qisqa ko'rsatkichlar"
+msgstr "Краткие показатели"
+
+#: .\templates\dashboard\analytics.html:212
+#: .\templates\superadmin\subscriptions.html:92
+msgid "Bekor qilingan"
+msgstr "Отменено"
+
+#: .\templates\dashboard\analytics.html:220
+msgid "Yangi mijozlar (oy)"
+msgstr "Новые клиенты (мес)"
+
+#: .\templates\dashboard\analytics.html:228
+#, fuzzy
+#| msgid "O'rtacha qabul"
+msgid "O'rtacha qabul / kun"
+msgstr "Средний прием"
+
+#: .\templates\dashboard\analytics.html:264
+msgid "Daromad (UZS)"
+msgstr "Доход (UZS)"
+
+#: .\templates\dashboard\analytics.html:355
+msgid "Yangi mijozlar"
+msgstr "Новые клиенты"
+
+#: .\templates\dashboard\appointments\form.html:3
+#: .\templates\dashboard\appointments\form.html:12
+#, fuzzy
+#| msgid "Qabulni o'chirasizmi?"
+msgid "Qabulni tahrirlash"
+msgstr "Удалить прием?"
+
+#: .\templates\dashboard\appointments\form.html:8
+#: .\templates\dashboard\employees\schedule.html:50
+#: .\templates\superadmin\pricing_plans\form.html:8
+msgid "Orqaga"
+msgstr "Назад"
+
+#: .\templates\dashboard\appointments\form.html:12
+#: .\templates\dashboard\customers\list.html:126
+#: .\templates\dashboard\home.html:172
+msgid "Yangi qabul qo'shish"
+msgstr "Добавить новый прием"
+
+#: .\templates\dashboard\appointments\form.html:13
+msgid "Mijoz va qabul ma'lumotlarini kiriting"
+msgstr "Введите данные клиента и приема"
+
+#: .\templates\dashboard\appointments\form.html:26
+msgid "Mijoz ismi"
+msgstr "Имя клиента"
+
+#: .\templates\dashboard\appointments\form.html:33
+msgid "Telefon raqami"
+msgstr "Номер телефона"
+
+#: .\templates\dashboard\appointments\form.html:40
+msgid "Xizmat turi"
+msgstr "Тип услуги"
+
+#: .\templates\dashboard\appointments\form.html:49
+msgid "Bo'sh qoldirsangiz, har qanday xodim qabul qiladi"
+msgstr "Если оставить пустым, любой сотрудник может принять"
+
+#: .\templates\dashboard\appointments\form.html:52
+#: .\templates\dashboard\appointments\list.html:79
+#: .\templates\dashboard\blog\list.html:37
+#: .\templates\dashboard\customers\detail.html:111
+#: .\templates\dashboard\upgrade.html:131
+#: .\templates\superadmin\businesses.html:71
+#: .\templates\superadmin\dashboard.html:172
+#: .\templates\superadmin\payments.html:28
+msgid "Sana"
+msgstr "Дата"
+
+#: .\templates\dashboard\appointments\form.html:59
+#: .\templates\dashboard\appointments\list.html:80
+#: .\templates\dashboard\customers\detail.html:115
+msgid "Vaqt"
+msgstr "Время"
+
+#: .\templates\dashboard\appointments\form.html:66
+#: .\templates\dashboard\appointments\list.html:27
+#: .\templates\dashboard\appointments\list.html:81
+#: .\templates\dashboard\blog\list.html:35 .\templates\dashboard\home.html:112
+#: .\templates\dashboard\settings\faq_list.html:28
+#: .\templates\dashboard\upgrade.html:130
+#: .\templates\superadmin\payments.html:27
+#: .\templates\superadmin\subscriptions.html:127
+msgid "Holat"
+msgstr "Статус"
+
+#: .\templates\dashboard\appointments\form.html:70
+#: .\templates\dashboard\blog\comment_list.html:3
+#: .\templates\dashboard\blog\comment_list.html:8
+#: .\templates\dashboard\blog\comment_list.html:24
+#: .\templates\dashboard\blog\list.html:24
+msgid "Izohlar"
+msgstr "Комментарии"
+
+#: .\templates\dashboard\appointments\form.html:72
+msgid "Qo'shimcha ma'lumot yoki eslatmalar"
+msgstr "Дополнительная информация или заметки"
+
+#: .\templates\dashboard\appointments\form.html:76
+#: .\templates\dashboard\customers\detail.html:157
+msgid "Mutaxassis izohi"
+msgstr "Заметка специалиста"
+
+#: .\templates\dashboard\appointments\form.html:78
+msgid "Tashxis, tavsiyalar va boshqa qaydlar"
+msgstr "Диагноз, рекомендации и другие записи"
+
+#: .\templates\dashboard\appointments\form.html:84
+#: .\templates\dashboard\blog\form.html:80
+#: .\templates\dashboard\customers\detail.html:80
+#: .\templates\dashboard\employees\form.html:105
+#: .\templates\dashboard\services\form.html:65
+#: .\templates\dashboard\settings\api.html:144
+#: .\templates\dashboard\settings\branding.html:106
+#: .\templates\dashboard\settings\business.html:238
+#: .\templates\dashboard\settings\custom_domain.html:47
+#: .\templates\dashboard\settings\faq_form.html:58
+#: .\templates\dashboard\settings\white_label.html:61
+#: .\templates\superadmin\business_detail.html:93
+#: .\templates\superadmin\pricing_plans\form.html:148
+msgid "Saqlash"
+msgstr "Сохранить"
+
+#: .\templates\dashboard\appointments\form.html:86
+#: .\templates\dashboard\blog\form.html:83
+#: .\templates\dashboard\employees\form.html:107
+#: .\templates\dashboard\services\form.html:67
+#: .\templates\dashboard\settings\api.html:222
+#: .\templates\dashboard\settings\faq_form.html:60
+#: .\templates\superadmin\pricing_plans\delete.html:16
+msgid "Bekor qilish"
+msgstr "Отмена"
+
+#: .\templates\dashboard\appointments\list.html:9
+msgid "Barcha qabullar ro'yxati va boshqaruvi"
+msgstr "Список всех приемов и управление"
+
+#: .\templates\dashboard\appointments\list.html:23
+#: .\templates\dashboard\customers\list.html:58
+msgid "Qidirish"
+msgstr "Поиск"
+
+#: .\templates\dashboard\appointments\list.html:24
+msgid "Ism, telefon, xizmat..."
+msgstr "Имя, телефон, услуга..."
+
+#: .\templates\dashboard\appointments\list.html:29
+msgid "Barcha holatlar"
+msgstr "Все статусы"
+
+#: .\templates\dashboard\appointments\list.html:38
+msgid "Barcha xodimlar"
+msgstr "Все сотрудники"
+
+#: .\templates\dashboard\appointments\list.html:39
+msgid "Xodimsiz"
+msgstr "Без сотрудника"
+
+#: .\templates\dashboard\appointments\list.html:46
+msgid "Boshlanish sanasi"
+msgstr "Дата начала"
+
+#: .\templates\dashboard\appointments\list.html:50
+msgid "Tugash sanasi"
+msgstr "Дата окончания"
+
+#: .\templates\dashboard\appointments\list.html:59
+#: .\templates\dashboard\customers\list.html:61
+msgid "Tozalash"
+msgstr "Очистить"
+
+#: .\templates\dashboard\appointments\list.html:76
+#: .\templates\dashboard\customers\list.html:77
+#: .\templates\dashboard\home.html:109
+#: .\templates\superadmin\business_detail.html:150
+msgid "Mijoz"
+msgstr "Клиент"
+
+#: .\templates\dashboard\appointments\list.html:120
+#: .\templates\dashboard\blog\list.html:63
+#: .\templates\dashboard\customers\detail.html:164
+#: .\templates\dashboard\employees\list.html:52
+#: .\templates\dashboard\employees\list.html:53
+#: .\templates\dashboard\services\list.html:59
+#: .\templates\dashboard\settings\faq_list.html:49
+#: .\templates\superadmin\pricing_plans\list.html:50
+msgid "Tahrirlash"
+msgstr "Редактировать"
+
+#: .\templates\dashboard\appointments\list.html:123
+msgid "Qabulni o'chirasizmi?"
+msgstr "Удалить прием?"
+
+#: .\templates\dashboard\appointments\list.html:125
+#: .\templates\dashboard\blog\comment_list.html:66
+#: .\templates\dashboard\blog\list.html:73
+#: .\templates\dashboard\employees\list.html:60
+#: .\templates\dashboard\services\list.html:64
+#: .\templates\dashboard\settings\faq_list.html:54
+#: .\templates\superadmin\pricing_plans\form.html:72
+#: .\templates\superadmin\pricing_plans\list.html:54
+msgid "O'chirish"
+msgstr "Удалить"
+
+#: .\templates\dashboard\appointments\list.html:139
+#, fuzzy, python-format
+#| msgid "Jami ta qabul"
+msgid "Jami %(total)s ta qabul"
+msgid_plural "Jami %(total)s ta qabul"
+msgstr[0] "Всего приемов"
+msgstr[1] "Всего приемов"
+
+#: .\templates\dashboard\appointments\list.html:164
+msgid "Qabullar topilmadi"
+msgstr "Приемы не найдены"
+
+#: .\templates\dashboard\appointments\list.html:167
+msgid "Filtrlash shartlariga mos qabullar yo'q. Filtrlarni o'zgartiring."
+msgstr "Нет приемов, соответствующих условиям фильтрации. Измените фильтры."
+
+#: .\templates\dashboard\appointments\list.html:169
+msgid "Hozircha qabullar mavjud emas. Birinchi qabulni qo'shing."
+msgstr "Пока нет приемов. Добавьте первый прием."
+
+#: .\templates\dashboard\appointments\list.html:173
+msgid "Filtrlarni tozalash"
+msgstr "Очистить фильтры"
+
+#: .\templates\dashboard\appointments\list.html:176
+#: .\templates\dashboard\customers\detail.html:120
+#: .\templates\dashboard\home.html:154
+msgid "Qabul qo'shish"
+msgstr "Добавить прием"
+
+#: .\templates\dashboard\blocked.html:3
+msgid "Biznes Bloklangan"
+msgstr "Бизнес заблокирован"
+
+#: .\templates\dashboard\blocked.html:11
+msgid "Biznesingiz Bloklangan"
+msgstr "Ваш бизнес заблокирован"
+
+#: .\templates\dashboard\blocked.html:13
+msgid ""
+"Hurmatli foydalanuvchi, sizning biznesingiz administrator tomonidan "
+"bloklangan. Iltimos, tafsilotlarni bilish yoki blokdan chiqarish uchun "
+"qo'llab-quvvatlash xizmatiga murojaat qiling."
+msgstr ""
+"Уважаемый пользователь, ваш бизнес заблокирован администратором. Пожалуйста, "
+"обратитесь в службу поддержки для получения информации или разблокировки."
+
+#: .\templates\dashboard\blocked.html:16
+msgid "Tizimdan chiqish"
+msgstr "Выйти из системы"
+
+#: .\templates\dashboard\blog\comment_list.html:9
+msgid "Tasdiqlash yoki o'chirish kerak bo'lgan izohlar"
+msgstr "Комментарии, требующие подтверждения или удаления"
+
+#: .\templates\dashboard\blog\comment_list.html:13
+#: .\templates\dashboard\blog\list.html:13
+msgid "Yangi post"
+msgstr "Новый пост"
+
+#: .\templates\dashboard\blog\comment_list.html:21
+#: .\templates\dashboard\blog\list.html:21
+msgid "Postlar"
+msgstr "Посты"
+
+#: .\templates\dashboard\blog\comment_list.html:39
+#: .\templates\dashboard\home.html:136
+#: .\templates\dashboard\settings\custom_domain.html:62
+#: .\templates\dashboard\upgrade.html:146
+#: .\templates\superadmin\payments.html:9
+#: .\templates\superadmin\payments.html:49
+msgid "Tasdiqlangan"
+msgstr "Подтвержден"
+
+#: .\templates\dashboard\blog\comment_list.html:41
+#: .\templates\dashboard\home.html:72 .\templates\dashboard\upgrade.html:148
+#: .\templates\superadmin\payments.html:47
+msgid "Kutilmoqda"
+msgstr "Ожидается"
+
+#: .\templates\dashboard\blog\comment_list.html:59
+#: .\templates\dashboard\settings\custom_domain.html:100
+#: .\templates\dashboard\settings\custom_domain.html:144
+#: .\templates\superadmin\payment_detail.html:86
+msgid "Tasdiqlash"
+msgstr "Подтвердить"
+
+#: .\templates\dashboard\blog\comment_list.html:63
+msgid "Izohni o'chirasizmi?"
+msgstr "Удалить комментарий?"
+
+#: .\templates\dashboard\blog\comment_list.html:79
+msgid "Izohlar yo'q"
+msgstr "Нет комментариев"
+
+#: .\templates\dashboard\blog\comment_list.html:80
+msgid "Foydalanuvchilar blog postlariga yozgan izohlar shu yerda ko'rinadi"
+msgstr "Здесь отображаются комментарии пользователей к постам блога"
+
+#: .\templates\dashboard\blog\form.html:13
+msgid "Maqola yozing yoki tahrirlang"
+msgstr "Напишите или отредактируйте статью"
+
+#: .\templates\dashboard\blog\form.html:26
+msgid "Blog sarlavhasi"
+msgstr "Заголовок блога"
+
+#: .\templates\dashboard\blog\form.html:34
+msgid "Qisqa mazmuni"
+msgstr "Краткое содержание"
+
+#: .\templates\dashboard\blog\form.html:34
+#: .\templates\dashboard\blog\form.html:51
+#, fuzzy
+#| msgid "Izoh (ixtiyoriy)"
+msgid "ixtiyoriy"
+msgstr "Комментарий (необязательно)"
+
+#: .\templates\dashboard\blog\form.html:36
+msgid "Blog ro'yxatida ko'rsatiladigan qisqa matn"
+msgstr "Краткий текст, отображаемый в списке блога"
+
+#: .\templates\dashboard\blog\form.html:43
+msgid "Mazmuni"
+msgstr "Содержание"
+
+#: .\templates\dashboard\blog\form.html:51
+msgid "Sarlavhali rasm"
+msgstr "Изображение заголовка"
+
+#: .\templates\dashboard\blog\form.html:53
+msgid "Blog ro'yxatida va maqola ichida ko'rsatiladigan rasm"
+msgstr "Изображение, отображаемое в списке и внутри статьи"
+
+#: .\templates\dashboard\blog\form.html:65
+msgid "Nashr parametrlari"
+msgstr "Параметры публикации"
+
+#: .\templates\dashboard\blog\form.html:70
+msgid "Foydalanuvchilarga ko'rsatish"
+msgstr "Показывать пользователям"
+
+#: .\templates\dashboard\blog\form.html:71
+msgid "O'chirilgan bo'lsa qoralama sifatida saqlanadi"
+msgstr "Если отключено, сохраняется как черновик"
+
+#: .\templates\dashboard\blog\list.html:9
+msgid "Maqola va postlarni boshqaring"
+msgstr "Управление статьями и постами"
+
+#: .\templates\dashboard\blog\list.html:34
+msgid "Sarlavha"
+msgstr "Заголовок"
+
+#: .\templates\dashboard\blog\list.html:36
+#: .\templates\dashboard\blog\list.html:67
+#: .\templates\dashboard\customers\list.html:102
+#: .\templates\dashboard\settings\branding.html:14
+#: .\templates\dashboard\settings\business.html:240
+#: .\templates\superadmin\payments.html:57
+msgid "Ko'rish"
+msgstr "Просмотр"
+
+#: .\templates\dashboard\blog\list.html:47
+msgid "Rasm mavjud"
+msgstr "Изображение есть"
+
+#: .\templates\dashboard\blog\list.html:52
+msgid "Nashr qilingan"
+msgstr "Опубликовано"
+
+#: .\templates\dashboard\blog\list.html:54
+msgid "Qoralama"
+msgstr "Черновик"
+
+#: .\templates\dashboard\blog\list.html:71
+msgid "Postni o'chirasizmi?"
+msgstr "Удалить пост?"
+
+#: .\templates\dashboard\blog\list.html:87
+#, python-format
+msgid "Jami %(total)s ta post"
+msgid_plural "Jami %(total)s ta post"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\templates\dashboard\blog\list.html:111
+msgid "Blogda postlar yo'q"
+msgstr "В блоге нет постов"
+
+#: .\templates\dashboard\blog\list.html:112
+msgid ""
+"Birinchi maqolani yozing. Blog mijozlaringizga ko'proq ishonch bildiradi."
+msgstr "Напишите первую статью. Блог повышает доверие клиентов."
+
+#: .\templates\dashboard\blog\list.html:114
+msgid "Birinchi postni yozish"
+msgstr "Написать первый пост"
+
+#: .\templates\dashboard\customers\detail.html:14
+msgid "Mijoz profili va tashriflar tarixi"
+msgstr "Профиль клиента и история посещений"
+
+#: .\templates\dashboard\customers\detail.html:32
+#, python-format
+msgid "%(customer.created_at|date:\"d.m.Y\")s dan beri"
+msgstr ""
+
+#: .\templates\dashboard\customers\detail.html:36
+#, python-format
+msgid "%(counter)s tashrif"
+msgid_plural "%(counter)s tashrif"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\templates\dashboard\customers\detail.html:37
+#, python-format
+msgid "%(completed_count)s yakunlangan"
+msgstr ""
+
+#: .\templates\dashboard\customers\detail.html:54
+msgid "Tashriflar"
+msgstr "Посещения"
+
+#: .\templates\dashboard\customers\detail.html:69
+msgid "Eslatmalar"
+msgstr "Заметки"
+
+#: .\templates\dashboard\customers\detail.html:71
+msgid "Qo'shish"
+msgstr "Добавить"
+
+#: .\templates\dashboard\customers\detail.html:78
+msgid "Eslatma yozish..."
+msgstr "Написать заметку..."
+
+#: .\templates\dashboard\customers\detail.html:86
+msgid "Hali eslatmalar yo'q"
+msgstr "Пока нет заметок"
+
+#: .\templates\dashboard\customers\detail.html:94
+msgid "Tez qabul qo'shish"
+msgstr "Быстрый прием"
+
+#: .\templates\dashboard\customers\detail.html:134
+msgid "Tashriflar tarixi"
+msgstr "История посещений"
+
+#: .\templates\dashboard\customers\detail.html:147
+msgid "Har qanday"
+msgstr "Любой"
+
+#: .\templates\dashboard\customers\detail.html:174
+#, fuzzy
+#| msgid "Tashriflar"
+msgid "Tashriflar yo'q"
+msgstr "Посещения"
+
+#: .\templates\dashboard\customers\detail.html:175
+msgid "Bu mijoz uchun hali qabullar qayd etilmagan"
+msgstr "Для этого клиента еще не записаны приемы"
+
+#: .\templates\dashboard\customers\list.html:9
+msgid "Mijozlar bazasi va tashrif tarixi"
+msgstr "База клиентов и история посещений"
+
+#: .\templates\dashboard\customers\list.html:19
+#: .\templates\dashboard\home.html:48
+msgid "Jami"
+msgstr "Всего"
+
+#: .\templates\dashboard\customers\list.html:32
+msgid "Jami qabullar soni"
+msgstr "Всего приемов"
+
+#: .\templates\dashboard\customers\list.html:39
+msgid "Natija"
+msgstr "Результат"
+
+#: .\templates\dashboard\customers\list.html:42
+msgid "Qidiruv natijasi"
+msgstr "Результат поиска"
+
+#: .\templates\dashboard\customers\list.html:52
+msgid "Ism yoki telefon bo'yicha qidirish"
+msgstr "Поиск по имени или телефону"
+
+#: .\templates\dashboard\customers\list.html:53
+msgid "Masalan: Jasur yoki +998..."
+msgstr "Например: Жасур или +998..."
+
+#: .\templates\dashboard\customers\list.html:78
+#: .\templates\dashboard\settings\business.html:135
+#: .\templates\superadmin\payment_detail.html:38
+msgid "Telefon"
+msgstr "Телефон"
+
+#: .\templates\dashboard\customers\list.html:80
+msgid "Oxirgi tashrif"
+msgstr "Последний визит"
+
+#: .\templates\dashboard\customers\list.html:98
+#, python-format
+msgid "%(c.appt_count)s ta"
+msgstr ""
+
+#: .\templates\dashboard\customers\list.html:114
+msgid "Mijozlar topilmadi"
+msgstr "Клиенты не найдены"
+
+#: .\templates\dashboard\customers\list.html:117
+#, fuzzy, python-format
+#| msgid "bo'yicha mijoz topilmadi. Boshqa nom yoki telefon raqamini kiriting."
+msgid ""
+"\"%(search)s\" bo'yicha mijoz topilmadi. Boshqa nom yoki telefon raqamini "
+"kiriting."
+msgstr "клиент не найден. Введите другое имя или номер телефона."
+
+#: .\templates\dashboard\customers\list.html:119
+msgid ""
+"Hali mijozlar mavjud emas. Birinchi qabul yaratilinganda mijoz avtomatik "
+"qo'shiladi."
+msgstr ""
+"Клиентов пока нет. При создании первого приема клиент добавляется "
+"автоматически."
+
+#: .\templates\dashboard\customers\list.html:123
+msgid "Filtrni tozalash"
+msgstr "Очистить фильтр"
+
+#: .\templates\dashboard\employees\form.html:3
+#: .\templates\dashboard\employees\form.html:12
+#, fuzzy
+#| msgid "Tahrirlash"
+msgid "Xodimni tahrirlash"
+msgstr "Редактировать"
+
+#: .\templates\dashboard\employees\form.html:3
+#, fuzzy
+#| msgid "Faol xodim"
+msgid "Yangi xodim"
+msgstr "Активный сотрудник"
+
+#: .\templates\dashboard\employees\form.html:12
+#, fuzzy
+#| msgid "Xodim qo'shish"
+msgid "Yangi xodim qo'shish"
+msgstr "Добавить сотрудника"
+
+#: .\templates\dashboard\employees\form.html:13
+msgid "Xodim ma'lumotlari va xizmat biriktirishlari"
+msgstr "Данные сотрудника и привязка услуг"
+
+#: .\templates\dashboard\employees\form.html:27
+#: .\templates\dashboard\settings\business.html:118
+msgid "Asosiy ma'lumotlar"
+msgstr "Основная информация"
+
+#: .\templates\dashboard\employees\form.html:28
+msgid "Xodimning ismi, lavozimi va profil rasmi"
+msgstr "Имя, должность и фото сотрудника"
+
+#: .\templates\dashboard\employees\form.html:31
+msgid "To'liq ism"
+msgstr "Полное имя"
+
+#: .\templates\dashboard\employees\form.html:35
+msgid "Lavozim"
+msgstr "Должность"
+
+#: .\templates\dashboard\employees\form.html:37
+msgid "Masalan: Terapevt, Sartarosh, Ustoz"
+msgstr "Например: Терапевт, Парикмахер, Мастер"
+
+#: .\templates\dashboard\employees\form.html:40
+msgid "Profil rasmi"
+msgstr "Фото профиля"
+
+#: .\templates\dashboard\employees\form.html:47
+msgid "JPG, PNG — tavsiya: 200×200 px kvadrat rasm"
+msgstr "JPG, PNG — рекомендуется: 200×200 px квадратное изображение"
+
+#: .\templates\dashboard\employees\form.html:50
+msgid "Qisqacha bio"
+msgstr "Краткое био"
+
+#: .\templates\dashboard\employees\form.html:52
+msgid "Ommaviy sahifada ko'rsatiladigan qisqa tavsif"
+msgstr "Краткое описание, отображаемое на публичной странице"
+
+#: .\templates\dashboard\employees\form.html:59
+msgid "Biriktirilgan xizmatlar"
+msgstr "Привязанные услуги"
+
+#: .\templates\dashboard\employees\form.html:60
+msgid "Xodim qabul qila oladigan xizmat turlarini tanlang"
+msgstr "Выберите услуги, которые может выполнять сотрудник"
+
+#: .\templates\dashboard\employees\form.html:78
+#: .\templates\dashboard\services\form.html:48
+#: .\templates\dashboard\settings\faq_form.html:41
+msgid "Tartib raqami"
+msgstr "Порядковый номер"
+
+#: .\templates\dashboard\employees\form.html:80
+#: .\templates\dashboard\settings\faq_form.html:43
+#, fuzzy
+#| msgid "Kichik raqam — birinchi ko'rinadi"
+msgid "Kichik raqam — birinchi ko'rsatiladi"
+msgstr "Маленькое число — показывается первым"
+
+#: .\templates\dashboard\employees\form.html:86
+msgid "Faol xodim"
+msgstr "Активный сотрудник"
+
+#: .\templates\dashboard\employees\form.html:87
+msgid "Yangi qabullar oladi"
+msgstr "Принимает новые приемы"
+
+#: .\templates\dashboard\employees\form.html:93
+msgid "Ommaviy sahifada ko'rsatish"
+msgstr "Показывать на публичной странице"
+
+#: .\templates\dashboard\employees\form.html:94
+msgid "Mijozlarga xodim ko'rinadi"
+msgstr "Сотрудник виден клиентам"
+
+#: .\templates\dashboard\employees\list.html:10
+#, fuzzy, python-format
+#| msgid "xodim ro'yxatda"
+msgid "%(emp_count)s xodim ro'yxatda"
+msgstr "сотрудник(ов) в списке"
+
+#: .\templates\dashboard\employees\list.html:17
+#: .\templates\dashboard\home.html:178
+msgid "Xodim qo'shish"
+msgstr "Добавить сотрудника"
+
+#: .\templates\dashboard\employees\list.html:20
+#, python-format
+msgid "Xodim limiti %(max)s taga yetdi"
+msgstr ""
+
+#: .\templates\dashboard\employees\list.html:21
+msgid "Limit tugagan"
+msgstr "Лимит исчерпан"
+
+#: .\templates\dashboard\employees\list.html:46
+msgid "Faol emas"
+msgstr "Не активен"
+
+#: .\templates\dashboard\employees\list.html:48
+#: .\templates\dashboard\services\list.html:52
+#: .\templates\dashboard\settings\api.html:87
+#: .\templates\dashboard\settings\api.html:104
+#: .\templates\dashboard\settings\faq_list.html:42
+#: .\templates\dashboard\settings\google_calendar.html:45
+#: .\templates\dashboard\settings\telegram.html:40
+#: .\templates\superadmin\business_detail.html:32
+#: .\templates\superadmin\businesses.html:31
+#: .\templates\superadmin\businesses.html:108
+#: .\templates\superadmin\businesses.html:121
+#: .\templates\superadmin\dashboard.html:194
+#: .\templates\superadmin\pricing_plans\list.html:24
+#: .\templates\superadmin\pricing_plans\list.html:44
+#: .\templates\superadmin\subscriptions.html:39
+#: .\templates\superadmin\subscriptions.html:90
+#: .\templates\superadmin\subscriptions.html:150
+#: .\templates\superadmin\subscriptions.html:185
+msgid "Faol"
+msgstr "Активный"
+
+#: .\templates\dashboard\employees\list.html:55
+#: .\templates\dashboard\employees\list.html:56
+msgid "Jadval"
+msgstr "График"
+
+#: .\templates\dashboard\employees\list.html:58
+#, fuzzy, python-format
+#| msgid "ni o'chirasizmi?"
+msgid "%(emp.name)sni o'chirasizmi?"
+msgstr "Удалить?"
+
+#: .\templates\dashboard\employees\list.html:74
+msgid "Xodimlar yo'q"
+msgstr "Нет сотрудников"
+
+#: .\templates\dashboard\employees\list.html:75
+msgid ""
+"Birinchi xodimingizni qo'shing. Xodimlar mijozlarga xizmat turlarini "
+"tanlashda ko'rsatiladi."
+msgstr ""
+"Добавьте первого сотрудника. Сотрудники показываются клиентам при выборе "
+"услуг."
+
+#: .\templates\dashboard\employees\list.html:77
+msgid "Birinchi xodimni qo'shish"
+msgstr "Добавить первого сотрудника"
+
+#: .\templates\dashboard\employees\schedule.html:3
+#: .\templates\dashboard\employees\schedule.html:12
+#, python-format
+msgid "%(employee.name)s — Ish grafigi"
+msgstr ""
+
+#: .\templates\dashboard\employees\schedule.html:13
+msgid "Har bir kun uchun ish vaqtlarini belgilang"
+msgstr "Установите рабочее время для каждого дня"
+
+#: .\templates\dashboard\employees\schedule.html:22
+msgid "Haftalik jadval"
+msgstr "Еженедельный график"
+
+#: .\templates\dashboard\employees\schedule.html:36
+#: .\templates\dashboard\settings\working_hours.html:30
+msgid "Boshlanish"
+msgstr "Начало"
+
+#: .\templates\dashboard\employees\schedule.html:40
+#: .\templates\dashboard\settings\working_hours.html:36
+msgid "Tugash"
+msgstr "Конец"
+
+#: .\templates\dashboard\employees\schedule.html:48
+msgid "Jadvalni saqlash"
+msgstr "Сохранить график"
+
+#: .\templates\dashboard\home.html:9
+#, fuzzy
+#| msgid "Obuna muddati tugadi. Tarif Startga qaytarildi."
+msgid "Obuna muddati tugadi. Tarif <strong>Start</strong>ga qaytarildi."
+msgstr "Срок подписки истек. Тариф понижен до Старт."
+
+#: .\templates\dashboard\home.html:17
+#, fuzzy, python-format
+#| msgid "Obunangiz kun ichida tugaydi."
+msgid "Obunangiz <strong>%(days_left)s kun</strong> ichida tugaydi."
+msgstr "Ваша подписка истекает через дней."
+
+#: .\templates\dashboard\home.html:17
+#, fuzzy
+#| msgid "Uzaytirish →"
+msgid "Uzaytirish"
+msgstr "Продлить →"
+
+#: .\templates\dashboard\home.html:25
+#, python-format
+msgid "Xush kelibsiz, %(user.first_name)s 👋"
+msgstr ""
+
+#: .\templates\dashboard\home.html:29
+msgid "ommaviy sahifani ko'rish"
+msgstr "смотреть публичную страницу"
+
+#: .\templates\dashboard\home.html:60
+msgid "Bugun"
+msgstr "Сегодня"
+
+#: .\templates\dashboard\home.html:63
+msgid "Bugungi qabullar"
+msgstr "Приемы на сегодня"
+
+#: .\templates\dashboard\home.html:75
+msgid "Rejalashtirilgan"
+msgstr "Запланировано"
+
+#: .\templates\dashboard\home.html:99
+msgid "Kutilayotgan qabullar"
+msgstr "Ожидаемые приемы"
+
+#: .\templates\dashboard\home.html:101
+#: .\templates\superadmin\businesses.html:21
+#: .\templates\superadmin\businesses.html:30
+#: .\templates\superadmin\businesses.html:38
+#: .\templates\superadmin\payments.html:11
+#: .\templates\superadmin\subscriptions.html:79
+#: .\templates\superadmin\subscriptions.html:88
+#: .\templates\superadmin\subscriptions.html:98
+msgid "Barchasi"
+msgstr "Все"
+
+#: .\templates\dashboard\home.html:111
+msgid "Sana & Vaqt"
+msgstr "Дата и Время"
+
+#: .\templates\dashboard\home.html:134
+msgid "Yangi"
+msgstr "Новый"
+
+#: .\templates\dashboard\home.html:138
+msgid "Bajarildi"
+msgstr "Выполнено"
+
+#: .\templates\dashboard\home.html:140
+msgid "Bekor qilindi"
+msgstr "Отменено"
+
+#: .\templates\dashboard\home.html:151
+msgid "Rejalashtirilgan qabullar yo'q"
+msgstr "Нет запланированных приемов"
+
+#: .\templates\dashboard\home.html:152
+msgid "Yangi qabul qo'shing yoki mijozlar o'zi band qilishini kuting."
+msgstr "Добавьте новый прием или ждите, пока клиенты запишутся сами."
+
+#: .\templates\dashboard\home.html:168
+msgid "Tezkor harakatlar"
+msgstr "Быстрые действия"
+
+#: .\templates\dashboard\home.html:175
+#: .\templates\dashboard\services\list.html:13
+msgid "Xizmat qo'shish"
+msgstr "Добавить услугу"
+
+#: .\templates\dashboard\home.html:191
+#: .\templates\dashboard\settings\business.html:260
+#: .\templates\dashboard\settings\telegram.html:3
+#: .\templates\dashboard\settings\telegram.html:8
+#: .\templates\superadmin\pricing_plans\form.html:114
+msgid "Telegram xabarnomalar"
+msgstr "Telegram уведомления"
+
+#: .\templates\dashboard\home.html:193
+msgid "Faol — xabarlar yuborilmoqda"
+msgstr "Активно — сообщения отправляются"
+
+#: .\templates\dashboard\home.html:195
+msgid "Ulangan, ammo o'chirilgan"
+msgstr "Подключено, но отключено"
+
+#: .\templates\dashboard\home.html:197
+#: .\templates\dashboard\settings\google_calendar.html:83
+#: .\templates\dashboard\settings\telegram.html:90
+#: .\templates\dashboard\settings\telegram.html:195
+msgid "Ulanmagan"
+msgstr "Не подключено"
+
+#: .\templates\dashboard\home.html:202
+msgid "Telegram sozlamalari"
+msgstr "Настройки Telegram"
+
+#: .\templates\dashboard\home.html:211
+#: .\templates\superadmin\payment_detail.html:42
+msgid "Joriy tarif"
+msgstr "Текущий тариф"
+
+#: .\templates\dashboard\home.html:223
+#, python-format
+msgid "%(emp_count)s/%(max_emp)s xodim &middot; Cheklangan imkoniyatlar"
+msgstr ""
+
+#: .\templates\dashboard\home.html:228
+#, python-format
+msgid "%(business.subscription_end|date:\"d.m.Y\")s gacha faol"
+msgstr ""
+
+#: .\templates\dashboard\notifications\list.html:9
+msgid "Barcha qabul va tizim xabarlari"
+msgstr "Все уведомления о приемах и системные сообщения"
+
+#: .\templates\dashboard\notifications\list.html:15
+msgid "Barchasini o'qilgan deb belgilash"
+msgstr "Отметить все как прочитанные"
+
+#: .\templates\dashboard\notifications\list.html:39
+#, python-format
+msgid "%(time)s oldin"
+msgstr ""
+
+#: .\templates\dashboard\notifications\list.html:53
+msgid "Bildirishnomalar yo'q"
+msgstr "Нет уведомлений"
+
+#: .\templates\dashboard\notifications\list.html:54
+msgid "Yangi qabul yozilganda bildirishnomalar shu yerda ko'rinadi"
+msgstr "Уведомления о новых приемах будут отображаться здесь"
+
+#: .\templates\dashboard\payment.html:3 .\templates\dashboard\payment.html:10
+msgid "To'lov"
+msgstr "Оплата"
+
+#: .\templates\dashboard\payment.html:12
+#, fuzzy
+#| msgid "tarifi uchun to'lov"
+msgid "Pro tarifi uchun to'lov"
+msgstr "оплата за тариф"
+
+#: .\templates\dashboard\payment.html:12
+#, fuzzy
+#| msgid "tarifi uchun to'lov"
+msgid "Max tarifi uchun to'lov"
+msgstr "оплата за тариф"
+
+#: .\templates\dashboard\payment.html:27
+msgid "Buyurtma xulosasi"
+msgstr "Итоги заказа"
+
+#: .\templates\dashboard\payment.html:30 .\templates\dashboard\upgrade.html:128
+#: .\templates\superadmin\payments.html:24
+#: .\templates\superadmin\subscriptions.html:77
+#: .\templates\superadmin\subscriptions.html:126
+msgid "Tarif"
+msgstr "Тариф"
+
+#: .\templates\dashboard\payment.html:36
+msgid "Davomiylik"
+msgstr "Длительность"
+
+#: .\templates\dashboard\payment.html:37
+msgid "30 kun (1 oy)"
+msgstr "30 дней (1 месяц)"
+
+#: .\templates\dashboard\payment.html:40
+msgid "Jami to'lov"
+msgstr "Итого к оплате"
+
+#: .\templates\dashboard\payment.html:53
+msgid "Quyidagi kartaga o'tkazma qiling"
+msgstr "Сделайте перевод на следующую карту"
+
+#: .\templates\dashboard\payment.html:64 .\templates\dashboard\payment.html:185
+msgid "Nusxa"
+msgstr "Копировать"
+
+#: .\templates\dashboard\payment.html:69
+#, python-format
+msgid ""
+"Summani to'liq — <strong>%(amount|floatformat:0)s UZS</strong> — o'tkazing"
+msgstr ""
+
+#: .\templates\dashboard\payment.html:79
+msgid "Chekni yuklang va yuboring"
+msgstr "Загрузите и отправьте чек"
+
+#: .\templates\dashboard\payment.html:86
+#: .\templates\superadmin\payment_detail.html:110
+msgid "Chek rasmi"
+msgstr "Изображение чека"
+
+#: .\templates\dashboard\payment.html:90
+msgid "To'lov screenshot yoki chek rasmi (JPG, PNG, PDF)"
+msgstr "Скриншот оплаты или изображение чека (JPG, PNG, PDF)"
+
+#: .\templates\dashboard\payment.html:94
+msgid "Izoh (ixtiyoriy)"
+msgstr "Комментарий (необязательно)"
+
+#: .\templates\dashboard\payment.html:95
+msgid "Qo'shimcha ma'lumot..."
+msgstr "Дополнительная информация..."
+
+#: .\templates\dashboard\payment.html:98
+msgid "Chekni yuborish"
+msgstr "Отправить чек"
+
+#: .\templates\dashboard\payment.html:113
+msgid "Jarayon qanday ishlaydi?"
+msgstr "Как это работает?"
+
+#: .\templates\dashboard\payment.html:117
+#, python-format
+msgid ""
+"Yuqoridagi kartaga <strong>%(amount|floatformat:0)s UZS</strong> o'tkazing"
+msgstr ""
+
+#: .\templates\dashboard\payment.html:121
+msgid "Chek yoki screenshot ni yuklang"
+msgstr "Загрузите чек или скриншот"
+
+#: .\templates\dashboard\payment.html:125
+#, fuzzy
+#| msgid "Admin 24 soat ichida tekshirib, tarifni faollashtiradi"
+msgid "Admin <strong>24 soat</strong> ichida tekshirib, tarifni faollashtiradi"
+msgstr "Админ проверит в течение 24 часов и активирует тариф"
+
+#: .\templates\dashboard\payment.html:129
+#, fuzzy
+#| msgid "Savol bo'lsa — bog'laning"
+msgid "Savol bo'lsa —"
+msgstr "Если есть вопросы — свяжитесь"
+
+#: .\templates\dashboard\payment.html:129
+msgid "bog'laning"
+msgstr ""
+
+#: .\templates\dashboard\payment.html:138
+#, fuzzy
+#| msgid "tarifi imkoniyatlari"
+msgid "Pro tarifi imkoniyatlari"
+msgstr "возможности тарифа"
+
+#: .\templates\dashboard\payment.html:138
+#, fuzzy
+#| msgid "tarifi imkoniyatlari"
+msgid "Max tarifi imkoniyatlari"
+msgstr "возможности тарифа"
+
+#: .\templates\dashboard\payment.html:142
+msgid "5 tagacha xodim profili"
+msgstr "До 5 профилей сотрудников"
+
+#: .\templates\dashboard\payment.html:143
+msgid "Cheksiz qabullar / oyiga"
+msgstr "Безлимитные приемы / месяц"
+
+#: .\templates\dashboard\payment.html:144
+msgid "Avtomatlashgan email xabarnomalar"
+msgstr "Автоматические email уведомления"
+
+#: .\templates\dashboard\payment.html:145
+msgid "Telegram xabarnomalar va botlar"
+msgstr "Telegram уведомления и боты"
+
+#: .\templates\dashboard\payment.html:146
+#: .\templates\superadmin\pricing_plans\form.html:122
+msgid "Shaxsiy domen ulash"
+msgstr "Подключение личного домена"
+
+#: .\templates\dashboard\payment.html:150
+msgid "Cheksiz xodimlar"
+msgstr "Безлимитные сотрудники"
+
+#: .\templates\dashboard\payment.html:151
+msgid "Maxsus CSS dizayn"
+msgstr "Индивидуальный CSS дизайн"
+
+#: .\templates\dashboard\payment.html:152
+msgid "REST API kirish"
+msgstr "Доступ к REST API"
+
+#: .\templates\dashboard\payment.html:153
+msgid "Ajratilgan domen"
+msgstr "Выделенный домен"
+
+#: .\templates\dashboard\payment.html:154
+msgid "Shaxsiy qo'llab-quvvatlash menejeri"
+msgstr "Личный менеджер поддержки"
+
+#: .\templates\dashboard\payment.html:165
+msgid "Obuna muddati"
+msgstr "Срок подписки"
+
+#: .\templates\dashboard\payment.html:167
+msgid ""
+"To'lov tasdiqlanganidan boshlab 30 kun davomida faol bo'ladi. Keyinchalik "
+"uzaytirish uchun qaytadan to'lov qilishingiz kerak."
+msgstr ""
+"Активен в течение 30 дней с момента подтверждения оплаты. Для продления "
+"нужно оплатить снова."
+
+#: .\templates\dashboard\payment.html:181
+#: .\templates\dashboard\settings\css_docs.html:50
+msgid "Nusxalandi!"
+msgstr "Скопировано!"
+
+#: .\templates\dashboard\services\form.html:3
+#: .\templates\dashboard\services\form.html:12
+#, fuzzy
+#| msgid "Xizmat turi"
+msgid "Xizmatni tahrirlash"
+msgstr "Тип услуги"
+
+#: .\templates\dashboard\services\form.html:3
+#, fuzzy
+#| msgid "Faol xizmat"
+msgid "Yangi xizmat"
+msgstr "Активная услуга"
+
+#: .\templates\dashboard\services\form.html:12
+#, fuzzy
+#| msgid "Yangi qabul qo'shish"
+msgid "Yangi xizmat qo'shish"
+msgstr "Добавить новый прием"
+
+#: .\templates\dashboard\services\form.html:13
+msgid "Xizmat turi ma'lumotlarini kiriting"
+msgstr "Введите информацию об услуге"
+
+#: .\templates\dashboard\services\form.html:26
+#: .\templates\dashboard\services\list.html:24
+msgid "Xizmat nomi"
+msgstr "Название услуги"
+
+#: .\templates\dashboard\services\form.html:30
+msgid "Tavsifi"
+msgstr "Описание"
+
+#: .\templates\dashboard\services\form.html:32
+msgid "Mijozlarga ko'rsatiladigan qisqa tavsif"
+msgstr "Краткое описание для клиентов"
+
+#: .\templates\dashboard\services\form.html:36
+msgid "Davomiyligi (daqiqa)"
+msgstr "Длительность (минуты)"
+
+#: .\templates\dashboard\services\form.html:38
+msgid "Masalan: 30, 60, 90"
+msgstr "Например: 30, 60, 90"
+
+#: .\templates\dashboard\services\form.html:41
+msgid "Narxi (so'm)"
+msgstr "Цена (сум)"
+
+#: .\templates\dashboard\services\form.html:43
+msgid "Bo'sh qoldiring — bepul"
+msgstr "Оставьте пустым — бесплатно"
+
+#: .\templates\dashboard\services\form.html:50
+msgid "Kichik raqam — birinchi ko'rinadi"
+msgstr "Маленькое число — показывается первым"
+
+#: .\templates\dashboard\services\form.html:56
+msgid "Faol xizmat"
+msgstr "Активная услуга"
+
+#: .\templates\dashboard\services\form.html:57
+msgid "Mijozlarga ko'rsatiladi"
+msgstr "Показывается клиентам"
+
+#: .\templates\dashboard\services\list.html:9
+msgid "Taklif qilinayotgan xizmat turlari ro'yxati"
+msgstr "Список предлагаемых услуг"
+
+#: .\templates\dashboard\services\list.html:25
+msgid "Davomiyligi"
+msgstr "Длительность"
+
+#: .\templates\dashboard\services\list.html:26
+msgid "Narxi"
+msgstr "Цена"
+
+#: .\templates\dashboard\services\list.html:27
+msgid "Holati"
+msgstr "Статус"
+
+#: .\templates\dashboard\services\list.html:45
+msgid "so'm"
+msgstr ""
+
+#: .\templates\dashboard\services\list.html:47
+#: .\templates\dashboard\upgrade.html:105
+msgid "Bepul"
+msgstr "Бесплатный"
+
+#: .\templates\dashboard\services\list.html:54
+#: .\templates\dashboard\settings\google_calendar.html:63
+#: .\templates\dashboard\settings\telegram.html:59
+#: .\templates\dashboard\settings\telegram.html:199
+msgid "O'chirilgan"
+msgstr "Отключен"
+
+#: .\templates\dashboard\services\list.html:62
+#, fuzzy, python-format
+#| msgid "ni o'chirasizmi?"
+msgid "%(s.name)sni o'chirasizmi?"
+msgstr "Удалить?"
+
+#: .\templates\dashboard\services\list.html:80
+msgid "Xizmatlar yo'q"
+msgstr "Нет услуг"
+
+#: .\templates\dashboard\services\list.html:81
+msgid ""
+"Birinchi xizmat turini qo'shing. Mijozlar aynan shu xizmatlardan birini "
+"tanlaydi."
+msgstr "Добавьте первую услугу. Клиенты выбирают именно из ваших услуг."
+
+#: .\templates\dashboard\services\list.html:83
+msgid "Birinchi xizmatni qo'shish"
+msgstr "Добавить первую услугу"
+
+#: .\templates\dashboard\settings\api.html:47
+msgid ""
+"REST API va webhook orqali tizimni tashqi xizmatlar bilan integratsiya qiling"
+msgstr "Интегрируйте систему с внешними сервисами через REST API и webhook"
+
+#: .\templates\dashboard\settings\api.html:50
+msgid "Dokumentatsiya"
+msgstr "Документация"
+
+#: .\templates\dashboard\settings\api.html:58
+#: .\templates\dashboard\settings\white_label.html:17
+#, fuzzy
+#| msgid "Bu funksiya faqat pullik tariflarda mavjud."
+msgid "Bu funksiya faqat Max tarifida mavjud."
+msgstr "Эта функция доступна только на платных тарифах."
+
+#: .\templates\dashboard\settings\api.html:59
+msgid ""
+"API va Webhook integratsiyasidan foydalanish uchun tarifingizni yangilang."
+msgstr "Обновите тариф для использования API и Webhook интеграции."
+
+#: .\templates\dashboard\settings\api.html:60
+#: .\templates\dashboard\settings\api_docs.html:57
+#: .\templates\dashboard\settings\white_label.html:19
+msgid "Max tarifga o'tish"
+msgstr "Перейти на Max тариф"
+
+#: .\templates\dashboard\settings\api.html:70
+msgid "Bugungi so'rovlar"
+msgstr "Запросов сегодня"
+
+#: .\templates\dashboard\settings\api.html:76
+msgid "Kalit yaratilgan"
+msgstr "Ключ создан"
+
+#: .\templates\dashboard\settings\api.html:82
+msgid "Endpointlar"
+msgstr "Эндпоинты"
+
+#: .\templates\dashboard\settings\api.html:88
+msgid "Webhook holati"
+msgstr "Статус Webhook"
+
+#: .\templates\dashboard\settings\api.html:102
+msgid "API Kaliti"
+msgstr "API Ключ"
+
+#: .\templates\dashboard\settings\api.html:114
+#: .\templates\dashboard\settings\css_docs.html:30
+#: .\templates\dashboard\settings\css_docs.html:52
+#: .\templates\dashboard\settings\custom_domain.html:88
+#: .\templates\dashboard\settings\custom_domain.html:89
+#: .\templates\dashboard\settings\telegram.html:148
+msgid "Nusxalash"
+msgstr "Копировать"
+
+#: .\templates\dashboard\settings\api.html:115
+msgid ""
+"API kalitini yangilaysizmi? Eski kalit ishlamay qoladi va barcha "
+"integratsiyalarni qayta sozlashingiz kerak bo'ladi."
+msgstr ""
+
+#: .\templates\dashboard\settings\api.html:120
+#, fuzzy
+#| msgid "API Kaliti"
+msgid "Kalitni"
+msgstr "API Ключ"
+
+#: .\templates\dashboard\settings\api.html:120
+#, fuzzy
+#| msgid "Kalitni X-API-Key header orqali yuboring."
+msgid "header orqali yuboring."
+msgstr "Отправляйте ключ через заголовок X-API-Key."
+
+#: .\templates\dashboard\settings\api.html:121
+#, fuzzy
+#| msgid "API hujjatlarini ko'ring."
+msgid "API hujjatlarini"
+msgstr "Смотрите документацию API."
+
+#: .\templates\dashboard\settings\api.html:121
+msgid "ko'ring."
+msgstr ""
+
+#: .\templates\dashboard\settings\api.html:130
+msgid "Webhook URL"
+msgstr "Webhook URL"
+
+#: .\templates\dashboard\settings\api.html:132
+#: .\templates\dashboard\settings\telegram.html:39
+#: .\templates\dashboard\settings\telegram.html:195
+msgid "Ulangan"
+msgstr "Подключено"
+
+#: .\templates\dashboard\settings\api.html:147
+msgid "Yangi qabul yaratilganda POST so'rov yuboriladi."
+msgstr "При создании нового приема отправляется POST запрос."
+
+#: .\templates\dashboard\settings\api.html:148
+msgid "Format:"
+msgstr ""
+
+#: .\templates\dashboard\settings\api.html:155
+msgid "Webhook faol"
+msgstr "Webhook активен"
+
+#: .\templates\dashboard\settings\api.html:160
+msgid "Test"
+msgstr "Тест"
+
+#: .\templates\dashboard\settings\api.html:170
+msgid "Tezkor endpointlar"
+msgstr "Быстрые эндпоинты"
+
+#: .\templates\dashboard\settings\api.html:209
+msgid "Cheksiz integratsiya"
+msgstr "Безлимитная интеграция"
+
+#: .\templates\dashboard\settings\api.html:214
+msgid "Ma'lumot olish"
+msgstr "Получение данных"
+
+#: .\templates\dashboard\settings\api.html:230
+msgid ""
+"API orqali o'z ilovangizdan qabullar, xizmatlar va xodimlar ma'lumotlarini "
+"oling va boshqaring. Webhook orqali yangi qabullar haqida real vaqtda xabar "
+"oling."
+msgstr ""
+"Получайте и управляйте данными о приемах, услугах и сотрудниках из вашего "
+"приложения через API. Получайте уведомления о новых приемах в реальном "
+"времени через Webhook."
+
+#: .\templates\dashboard\settings\api.html:233
+msgid "To'liq dokumentatsiya"
+msgstr "Полная документация"
+
+#: .\templates\dashboard\settings\api_docs.html:44
+msgid "REST API orqali tizim ma'lumotlarini olish va boshqarish"
+msgstr "Получение и управление данными системы через REST API"
+
+#: .\templates\dashboard\settings\api_docs.html:55
+msgid "API faqat Max tarifida mavjud."
+msgstr "API доступен только на тарифе Max."
+
+#: .\templates\dashboard\settings\api_docs.html:56
+msgid "API dokumentatsiyasini ko'rish uchun Max tarifiga o'ting."
+msgstr "Перейдите на тариф Max для просмотра документации API."
+
+#: .\templates\dashboard\settings\api_docs.html:67
+msgid "Barcha API so'rovlarida"
+msgstr ""
+
+#: .\templates\dashboard\settings\api_docs.html:67
+#, fuzzy
+#| msgid ""
+#| "Barcha API so'rovlarida X-API-Key header orqali kalit yuborilishi shart."
+msgid "header orqali kalit yuborilishi shart. Kalitni"
+msgstr ""
+"Во всех API запросах необходимо отправлять ключ через заголовок X-API-Key."
+
+#: .\templates\dashboard\settings\api_docs.html:67
+#, fuzzy
+#| msgid "DNS sozlamalari"
+msgid "API sozlamalari"
+msgstr "Настройки DNS"
+
+#: .\templates\dashboard\settings\api_docs.html:67
+msgid "sahifasidan olishingiz mumkin."
+msgstr ""
+
+#: .\templates\dashboard\settings\api_docs.html:73
+msgid "Base URL"
+msgstr "Базовый URL"
+
+#: .\templates\dashboard\settings\api_docs.html:74
+msgid "Barcha endpointlar quyidagi asosiy URL dan boshlanadi:"
+msgstr ""
+
+#: .\templates\dashboard\settings\api_docs.html:287
+#, fuzzy
+#| msgid "Statistikalar"
+msgid "Statistika"
+msgstr "Статистика"
+
+#: .\templates\dashboard\settings\api_docs.html:315
+msgid "Tezkor misollar"
+msgstr "Быстрые примеры"
+
+#: .\templates\dashboard\settings\api_docs.html:320
+msgid "So'rov namunalari"
+msgstr ""
+
+#: .\templates\dashboard\settings\api_docs.html:367
+msgid "Avtomatik xabarnomalar"
+msgstr "Автоматические уведомления"
+
+#: .\templates\dashboard\settings\api_docs.html:369
+msgid ""
+"Yangi qabul yaratilganda, sizning <strong>Webhook URL</strong> manzilingizga "
+"POST so'rov yuboriladi. So'rov <code>Content-Type: application/json</code> "
+"formatida keladi va quyidagi ma'lumotlarni o'z ichiga oladi:"
+msgstr ""
+
+#: .\templates\dashboard\settings\branding.html:9
+msgid "Ommaviy sahifangizning ko'rinishini moslashtiring"
+msgstr "Настройте внешний вид вашей публичной страницы"
+
+#: .\templates\dashboard\settings\branding.html:24
+#: .\templates\dashboard\settings\telegram.html:17
+msgid "Bu funksiya faqat pullik tariflarda mavjud."
+msgstr "Эта функция доступна только на платных тарифах."
+
+#: .\templates\dashboard\settings\branding.html:25
+#, fuzzy
+#| msgid "Sahifa dizaynini o'zgartirish uchun Pro yoki Max tarifiga o'ting."
+msgid ""
+"Sahifa dizaynini o'zgartirish uchun <strong>Pro</strong> yoki <strong>Max</"
+"strong> tarifiga o'ting."
+msgstr "Для изменения дизайна страницы перейдите на тариф Pro или Max."
+
+#: .\templates\dashboard\settings\branding.html:38
+msgid "Asosiy Rang"
+msgstr "Основной цвет"
+
+#: .\templates\dashboard\settings\branding.html:41
+msgid "Sahifangizning asosiy rangini tanlang"
+msgstr "Выберите основной цвет вашей страницы"
+
+#: .\templates\dashboard\settings\branding.html:45
+msgid "Banner Rasm"
+msgstr "Изображение баннера"
+
+#: .\templates\dashboard\settings\branding.html:47
+msgid "Ommaviy sahifangiz tepasida ko'rinadi (tavsiya: 1200x400px)"
+msgstr ""
+"Отображается вверху вашей публичной страницы (рекомендуется: 1200x400px)"
+
+#: .\templates\dashboard\settings\branding.html:52
+msgid "Rasmni o'chirish"
+msgstr "Удалить изображение"
+
+#: .\templates\dashboard\settings\branding.html:59
+msgid "Tugma shakli"
+msgstr "Форма кнопок"
+
+#: .\templates\dashboard\settings\branding.html:61
+msgid "Tugmalar qanday ko'rinishda bo'lsin"
+msgstr "Как должны выглядеть кнопки"
+
+#: .\templates\dashboard\settings\branding.html:64
+msgid "Kartochka soyasi"
+msgstr "Тень карточек"
+
+#: .\templates\dashboard\settings\branding.html:66
+msgid "Kartochkalar atrofidagi soya"
+msgstr "Тень вокруг карточек"
+
+#: .\templates\dashboard\settings\branding.html:71
+msgid "Menyu uslubi"
+msgstr "Стиль меню"
+
+#: .\templates\dashboard\settings\branding.html:72
+#: .\templates\superadmin\businesses.html:40
+#: .\templates\superadmin\site_settings.html:114
+#: .\templates\superadmin\subscriptions.html:26
+#: .\templates\superadmin\subscriptions.html:81
+msgid "Pro"
+msgstr "Про"
+
+#: .\templates\dashboard\settings\branding.html:76
+msgid "Glass Ultra"
+msgstr "Glass Ultra"
+
+#: .\templates\dashboard\settings\branding.html:77
+msgid "Minimal"
+msgstr "Минимальный"
+
+#: .\templates\dashboard\settings\branding.html:78
+msgid "Modern"
+msgstr "Современный"
+
+#: .\templates\dashboard\settings\branding.html:83
+msgid "Maxsus CSS"
+msgstr "Пользовательский CSS"
+
+#: .\templates\dashboard\settings\branding.html:84
+#: .\templates\superadmin\businesses.html:41
+#: .\templates\superadmin\site_settings.html:132
+#: .\templates\superadmin\subscriptions.html:32
+#: .\templates\superadmin\subscriptions.html:82
+msgid "Max"
+msgstr "Макс"
+
+#: .\templates\dashboard\settings\branding.html:89
+#, fuzzy
+#| msgid "Maxsus CSS faqat Max tarifida mavjud."
+msgid "Maxsus CSS faqat <strong>Max</strong> tarifida mavjud."
+msgstr "Пользовательский CSS доступен только на тарифе Max."
+
+#: .\templates\dashboard\settings\branding.html:95
+msgid "CSS biladiganlar uchun."
+msgstr "Для тех, кто знает CSS."
+
+#: .\templates\dashboard\settings\branding.html:115
+msgid "Qanday ko'rinadi"
+msgstr "Как это выглядит"
+
+#: .\templates\dashboard\settings\branding.html:128
+msgid "Sahifangiz banner va rang bilan"
+msgstr "Ваша страница с баннером и цветом"
+
+#: .\templates\dashboard\settings\branding.html:133
+msgid "O'zgarishlar avtomatik ommaviy sahifangizda qo'llaniladi."
+msgstr "Изменения автоматически применяются на вашей публичной странице."
+
+#: .\templates\dashboard\settings\business.html:99
+msgid "Kompaniya haqida asosiy ma'lumotlar va aloqa"
+msgstr "Основная информация о компании и контакты"
+
+#: .\templates\dashboard\settings\business.html:119
+msgid "Biznes nomi, kategoriya va haqida ma'lumot"
+msgstr "Название бизнеса, категория и информация"
+
+#: .\templates\dashboard\settings\business.html:121
+msgid "Biznes nomi"
+msgstr "Название бизнеса"
+
+#: .\templates\dashboard\settings\business.html:122
+#: .\templates\superadmin\businesses.html:19
+#: .\templates\superadmin\businesses.html:67
+#: .\templates\superadmin\dashboard.html:169
+#: .\templates\superadmin\statistics.html:29
+#: .\templates\superadmin\statistics.html:53
+msgid "Kategoriya"
+msgstr "Категория"
+
+#: .\templates\dashboard\settings\business.html:123
+msgid "Haqida"
+msgstr "О нас"
+
+#: .\templates\dashboard\settings\business.html:125
+msgid "Logo"
+msgstr "Логотип"
+
+#: .\templates\dashboard\settings\business.html:132
+msgid "Aloqa ma'lumotlari"
+msgstr "Контактная информация"
+
+#: .\templates\dashboard\settings\business.html:133
+msgid "Telefon, email, manzil va shahar"
+msgstr ""
+
+#: .\templates\dashboard\settings\business.html:136
+#: .\templates\superadmin\payment_detail.html:34
+msgid "Email"
+msgstr "Email"
+
+#: .\templates\dashboard\settings\business.html:137
+msgid "Manzil"
+msgstr "Адрес"
+
+#: .\templates\dashboard\settings\business.html:138
+msgid "Shahar"
+msgstr "Город"
+
+#: .\templates\dashboard\settings\business.html:145
+msgid "Joylashuv (Xarita)"
+msgstr "Местоположение (Карта)"
+
+#: .\templates\dashboard\settings\business.html:146
+msgid "Xaritada klinikaningiz yoki ofis joylashuvini belgilang"
+msgstr "Укажите местоположение вашей клиники или офиса на карте"
+
+#: .\templates\dashboard\settings\business.html:155
+#: .\templates\dashboard\settings\business.html:339
+msgid "Xaritada joy tanlang — manzil avtomatik aniqlanadi"
+msgstr "Выберите место на карте — адрес определится автоматически"
+
+#: .\templates\dashboard\settings\business.html:162
+msgid "Xaritada istalgan joyni bosing. Marker sudrab ham ko'chirish mumkin."
+msgstr "Нажмите на любое место на карте. Маркер можно перемещать."
+
+#: .\templates\dashboard\settings\business.html:166
+msgid "Joylashuvni o'chirish"
+msgstr "Удалить местоположение"
+
+#: .\templates\dashboard\settings\business.html:175
+msgid "Ijtimoiy tarmoqlar va veb-sayt"
+msgstr "Социальные сети и веб-сайт"
+
+#: .\templates\dashboard\settings\business.html:176
+msgid "Foydalanuvchilar bog'lanishi uchun havolalar"
+msgstr "Ссылки для связи с пользователями"
+
+#: .\templates\dashboard\settings\business.html:188
+#: .\templates\dashboard\settings\business.html:201
+msgid "Faqat username yozing, masalan:"
+msgstr "Введите только имя пользователя, например:"
+
+#: .\templates\dashboard\settings\business.html:205
+msgid "Veb-sayt"
+msgstr "Веб-сайт"
+
+#: .\templates\dashboard\settings\business.html:208
+msgid "To'liq URL yozing:"
+msgstr "Введите полный URL:"
+
+#: .\templates\dashboard\settings\business.html:217
+msgid "Marketing katalogi"
+msgstr "Маркетинговый каталог"
+
+#: .\templates\dashboard\settings\business.html:218
+msgid "Biznesingizni umumiy yo'naltiruvchi sahifada ko'rsatish"
+msgstr "Показывать бизнес на общей странице каталога"
+
+#: .\templates\dashboard\settings\business.html:228
+msgid "Katalogda ko'rsatish"
+msgstr "Показывать в каталоге"
+
+#: .\templates\dashboard\settings\business.html:229
+msgid "Yoqilsa, biznesingiz marketing sahifasidagi ro'yxatda ko'rinadi"
+msgstr ""
+"Если включено, ваш бизнес будет виден в списке на маркетинговой странице"
+
+#: .\templates\dashboard\settings\business.html:252
+msgid "Ochish"
+msgstr "Открыть"
+
+#: .\templates\dashboard\settings\business.html:256
+msgid "Tezkor havolalar"
+msgstr "Быстрые ссылки"
+
+#: .\templates\dashboard\settings\business.html:259
+#: .\templates\dashboard\settings\faq_list.html:3
+#: .\templates\dashboard\settings\faq_list.html:8
+msgid "Ko'p so'raladigan savollar"
+msgstr "Часто задаваемые вопросы"
+
+#: .\templates\dashboard\settings\business.html:265
+msgid "Saqlangan joylashuv"
+msgstr "Сохраненное местоположение"
+
+#: .\templates\dashboard\settings\css_docs.html:11
+#, fuzzy
+#| msgid ""
+#| "Quyidagi kodlardan foydalanib sahifangizni yanada chiroyli qilishingiz "
+#| "mumkin. Kodni nusxalash tugmasini bosib oling va Sahifa Dizayni → Maxsus "
+#| "CSS maydoniga joylang."
+msgid ""
+"Quyidagi kodlardan foydalanib sahifangizni yanada chiroyli qilishingiz "
+"mumkin. Kodni <strong>nusxalash</strong> tugmasini bosib oling va "
+"<strong>Sahifa Dizayni → Maxsus CSS</strong> maydoniga joylang."
+msgstr ""
+"Используйте следующие коды, чтобы сделать вашу страницу еще красивее. "
+"Нажмите кнопку копирования и вставьте в Дизайн страницы → поле "
+"Пользовательский CSS."
+
+#: .\templates\dashboard\settings\css_docs.html:41
+#, fuzzy
+#| msgid "Maslahatlar"
+msgid "Maslahat:"
+msgstr "Советы"
+
+#: .\templates\dashboard\settings\css_docs.html:41
+#, fuzzy
+#| msgid ""
+#| "Maslahat: Kodlarni bittadan sinab ko'ring. Agar noto'g'ri kod yozsangiz, "
+#| "sahifangiz buzilishi mumkin. Har doim avval bir dona kodni qo'shib, "
+#| "natijani tekshiring."
+msgid ""
+"Kodlarni bittadan sinab ko'ring. Agar noto'g'ri kod yozsangiz, sahifangiz "
+"buzilishi mumkin. Har doim avval bir dona kodni qo'shib, natijani tekshiring."
+msgstr ""
+"Совет: пробуйте коды по одному. Если напишете неправильный код, страница "
+"может сломаться. Всегда сначала добавляйте один код и проверяйте результат."
+
+#: .\templates\dashboard\settings\custom_domain.html:16
+msgid "O'z domeningizni ulang va professional ko'rinish bering"
+msgstr "Подключите свой домен и придайте профессиональный вид"
+
+#: .\templates\dashboard\settings\custom_domain.html:24
+msgid "Maxsus domen faqat Pro va Max tariflarida mavjud"
+msgstr "Свой домен доступен только на тарифах Pro и Max"
+
+#: .\templates\dashboard\settings\custom_domain.html:25
+msgid "O'z domeningizni ulash uchun tarifingizni yangilang"
+msgstr "Обновите тариф для подключения своего домена"
+
+#: .\templates\dashboard\settings\custom_domain.html:26
+msgid "Tarifni yangilash"
+msgstr "Обновить тариф"
+
+#: .\templates\dashboard\settings\custom_domain.html:36
+msgid "Domen sozlamalari"
+msgstr "Настройки домена"
+
+#: .\templates\dashboard\settings\custom_domain.html:42
+msgid "Sizning domeningiz"
+msgstr "Ваш домен"
+
+#: .\templates\dashboard\settings\custom_domain.html:50
+msgid "Faqat domen nomini kiriting (http:// yoki https:// siz)"
+msgstr "Введите только имя домена (без http:// или https://)"
+
+#: .\templates\dashboard\settings\custom_domain.html:58
+msgid "Tasdiqlash holati"
+msgstr "Статус подтверждения"
+
+#: .\templates\dashboard\settings\custom_domain.html:66
+msgid "Tasdiqlanmagan"
+msgstr "Не подтверждено"
+
+#: .\templates\dashboard\settings\custom_domain.html:74
+msgid "DNS sozlamalari"
+msgstr "Настройки DNS"
+
+#: .\templates\dashboard\settings\custom_domain.html:76
+msgid "Domeningizning DNS boshqaruv paneliga quyidagi TXT recordni qo'shing:"
+msgstr "Добавьте следующую TXT запись в панель управления DNS вашего домена:"
+
+#: .\templates\dashboard\settings\custom_domain.html:80
+msgid "Tur"
+msgstr "Тип"
+
+#: .\templates\dashboard\settings\custom_domain.html:80
+msgid "Nom"
+msgstr "Имя"
+
+#: .\templates\dashboard\settings\custom_domain.html:80
+msgid "Qiymat"
+msgstr "Значение"
+
+#: .\templates\dashboard\settings\custom_domain.html:85
+msgid "(yoki"
+msgstr ""
+
+#: .\templates\dashboard\settings\custom_domain.html:85
+#, fuzzy
+#| msgid "Sizning domeningiz"
+msgid "domeningiz"
+msgstr "Ваш домен"
+
+#: .\templates\dashboard\settings\custom_domain.html:85
+msgid ")"
+msgstr ""
+
+#: .\templates\dashboard\settings\custom_domain.html:88
+#, fuzzy
+#| msgid "Nusxalandi!"
+msgid "Nusxalandi"
+msgstr "Скопировано!"
+
+#: .\templates\dashboard\settings\custom_domain.html:96
+msgid ""
+"DNS o'zgarishlari tarqalgach (bir necha daqiqa - 48 soat), tasdiqlash "
+"tugmasini bosing:"
+msgstr ""
+"После распространения DNS изменений (от нескольких минут до 48 часов), "
+"нажмите кнопку подтверждения:"
+
+#: .\templates\dashboard\settings\custom_domain.html:107
+msgid "Domen tasdiqlangan"
+msgstr "Домен подтвержден"
+
+#: .\templates\dashboard\settings\custom_domain.html:110
+#, fuzzy, python-format
+#| msgid "Mijozlaringiz to'g'ridan-to'g'ri sizning sahifangizga kira oladi."
+msgid ""
+"Mijozlaringiz <strong>%(business.custom_domain)s</strong> orqali to'g'ridan-"
+"to'g'ri sizning sahifangizga kira oladi."
+msgstr "Ваши клиенты смогут заходить прямо на вашу страницу."
+
+#: .\templates\dashboard\settings\custom_domain.html:124
+msgid "Yo'riqnoma"
+msgstr "Инструкция"
+
+#: .\templates\dashboard\settings\custom_domain.html:130
+msgid "Domen sotib oling"
+msgstr "Купите домен"
+
+#: .\templates\dashboard\settings\custom_domain.html:131
+#, fuzzy
+#| msgid ""
+#| "Masalan: — bu sizning mijozlaringiz brauzerga yozadigan manzil bo'ladi."
+msgid ""
+"Masalan: <code>booking.meningklinikam.uz</code> — bu sizning mijozlaringiz "
+"brauzerga yozadigan manzil bo'ladi."
+msgstr "Например: — это адрес, который ваши клиенты будут вводить в браузере."
+
+#: .\templates\dashboard\settings\custom_domain.html:137
+msgid "DNS sozlamalarini qo'shing"
+msgstr "Добавьте настройки DNS"
+
+#: .\templates\dashboard\settings\custom_domain.html:138
+#, fuzzy, python-format
+#| msgid ""
+#| "Domen hosting panelida TXT record qo'shing So'ngra CNAME record qo'shib "
+#| "domeningizni ga yo'naltiring."
+msgid ""
+"Domen hosting panelida <strong>TXT record</strong> qo'shing va yuqoridagi "
+"qiymatni kiriting. So'ngra <strong>CNAME record</strong> qo'shib "
+"domeningizni <code>%(request.get_host)s</code> ga yo'naltiring."
+msgstr ""
+"Добавьте TXT запись в панели хостинга домена. Затем добавьте CNAME запись, "
+"направив ваш домен на."
+
+#: .\templates\dashboard\settings\custom_domain.html:145
+#, fuzzy
+#| msgid ""
+#| "DNS tarqalgach, \"Tasdiqlash\" tugmasini bosing. Biz TXT recordni "
+#| "tekshirib, domen egaligini tasdiqlaymiz."
+msgid ""
+"DNS tarqalgach, Tasdiqlash tugmasini bosing. Biz TXT recordni tekshirib, "
+"domen egaligini tasdiqlaymiz."
+msgstr ""
+"После распространения DNS нажмите \"Подтвердить\". Мы проверим TXT запись и "
+"подтвердим владение доменом."
+
+#: .\templates\dashboard\settings\custom_domain.html:151
+msgid "Tayyor!"
+msgstr "Готово!"
+
+#: .\templates\dashboard\settings\custom_domain.html:152
+#, fuzzy, python-format
+#| msgid ""
+#| "Endi mijozlaringiz orqali to'g'ridan-to'g'ri sizning booking sahifangizga "
+#| "kira oladi."
+msgid ""
+"Endi mijozlaringiz <code>%(business.custom_domain|default:\"domeningiz\")s</"
+"code> orqali to'g'ridan-to'g'ri sizning booking sahifangizga kira oladi."
+msgstr ""
+"Теперь ваши клиенты могут заходить прямо на вашу страницу бронирования."
+
+#: .\templates\dashboard\settings\faq_form.html:3
+#: .\templates\dashboard\settings\faq_form.html:12
+#, fuzzy
+#| msgid "Jadvalni saqlash"
+msgid "Savolni tahrirlash"
+msgstr "Сохранить график"
+
+#: .\templates\dashboard\settings\faq_form.html:3
+#: .\templates\dashboard\settings\faq_form.html:12
+#, fuzzy
+#| msgid "Yangi qabul qo'shish"
+msgid "Yangi savol qo'shish"
+msgstr "Добавить новый прием"
+
+#: .\templates\dashboard\settings\faq_form.html:13
+msgid "Ko'p so'raladigan savollar bo'limiga qo'shing"
+msgstr "Добавить в раздел часто задаваемых вопросов"
+
+#: .\templates\dashboard\settings\faq_form.html:26
+#: .\templates\dashboard\settings\faq_list.html:27
+msgid "Savol"
+msgstr "Вопрос"
+
+#: .\templates\dashboard\settings\faq_form.html:33
+msgid "Javob"
+msgstr "Ответ"
+
+#: .\templates\dashboard\settings\faq_form.html:49
+msgid "Faol savol"
+msgstr "Активный вопрос"
+
+#: .\templates\dashboard\settings\faq_form.html:50
+msgid "Ommaviy sahifada ko'rsatiladi"
+msgstr "Отображается на публичной странице"
+
+#: .\templates\dashboard\settings\faq_list.html:9
+msgid "Mijozlarga yordam beruvchi savollar va javoblar"
+msgstr "Вопросы и ответы для помощи клиентам"
+
+#: .\templates\dashboard\settings\faq_list.html:13
+msgid "Savol qo'shish"
+msgstr "Добавить вопрос"
+
+#: .\templates\dashboard\settings\faq_list.html:44
+msgid "Yashirin"
+msgstr "Скрытый"
+
+#: .\templates\dashboard\settings\faq_list.html:52
+msgid "Ushbu savolni o'chirasizmi?"
+msgstr "Удалить этот вопрос?"
+
+#: .\templates\dashboard\settings\faq_list.html:70
+msgid "Savollar yo'q"
+msgstr "Нет вопросов"
+
+#: .\templates\dashboard\settings\faq_list.html:71
+msgid ""
+"Mijozlaringizga tez-tez so'raladigan savollarga javob bering. Ommaviy "
+"sahifada ko'rsatiladi."
+msgstr ""
+"Отвечайте на часто задаваемые вопросы клиентов. Отображается на публичной "
+"странице."
+
+#: .\templates\dashboard\settings\faq_list.html:73
+msgid "Birinchi savolni qo'shish"
+msgstr "Добавить первый вопрос"
+
+#: .\templates\dashboard\settings\faq_list.html:83
+#: .\templates\dashboard\settings\working_hours.html:55
+msgid "Maslahatlar"
+msgstr "Советы"
+
+#: .\templates\dashboard\settings\faq_list.html:89
+msgid "Savollar ommaviy qabul sahifasida ko'rsatiladi"
+msgstr "Вопросы отображаются на публичной странице бронирования"
+
+#: .\templates\dashboard\settings\faq_list.html:93
+msgid "Tartib raqami orqali saralash mumkin"
+msgstr "Можно сортировать по порядковому номеру"
+
+#: .\templates\dashboard\settings\faq_list.html:97
+msgid "Yashirin savollar foydalanuvchilarga ko'rinmaydi"
+msgstr "Скрытые вопросы не видны пользователям"
+
+#: .\templates\dashboard\settings\google_calendar.html:9
+msgid "Qabullarni Google Calendar bilan sinxronlashtiring"
+msgstr "Синхронизируйте приемы с Google Calendar"
+
+#: .\templates\dashboard\settings\google_calendar.html:17
+#, fuzzy
+#| msgid "Analitika faqat Pro va Max tariflarida mavjud."
+msgid "Bu funksiya faqat Pro va Max tariflarida mavjud."
+msgstr "Аналитика доступна только на тарифах Pro и Max."
+
+#: .\templates\dashboard\settings\google_calendar.html:18
+msgid ""
+"Google Calendar sinxronizatsiyasidan foydalanish uchun tarifingizni "
+"yangilang."
+msgstr "Обновите тариф для использования синхронизации с Google Calendar."
+
+#: .\templates\dashboard\settings\google_calendar.html:26
+msgid "Google OAuth sozlanmagan"
+msgstr "Google OAuth не настроен"
+
+#: .\templates\dashboard\settings\google_calendar.html:27
+#, fuzzy
+#| msgid ""
+#| "Google Calendar ulanish uchun administrator .env faylida "
+#| "GOOGLE_OAUTH_CLIENT_CONFIG ni sozlashi kerak."
+msgid ""
+"Google Calendar ulanish uchun administrator .env faylida "
+"<code>GOOGLE_OAUTH_CLIENT_CONFIG</code> ni sozlashi kerak."
+msgstr ""
+"Для подключения Google Calendar администратор должен настроить "
+"GOOGLE_OAUTH_CLIENT_CONFIG в файле .env."
+
+#: .\templates\dashboard\settings\google_calendar.html:44
+msgid "Google Calendar ulangan"
+msgstr "Google Calendar подключен"
+
+#: .\templates\dashboard\settings\google_calendar.html:47
+msgid "Qabullar avtomatik Google Calendar ga qo'shiladi"
+msgstr "Приемы автоматически добавляются в Google Calendar"
+
+#: .\templates\dashboard\settings\google_calendar.html:53
+msgid "Sinxronizatsiya"
+msgstr "Синхронизация"
+
+#: .\templates\dashboard\settings\google_calendar.html:54
+msgid "Yangi qabullar Google Calendar ga avtomatik qo'shiladi"
+msgstr "Новые приемы автоматически добавляются в Google Calendar"
+
+#: .\templates\dashboard\settings\google_calendar.html:61
+#: .\templates\dashboard\settings\telegram.html:57
+#: .\templates\dashboard\settings\telegram.html:199
+msgid "Yoqilgan"
+msgstr "Включено"
+
+#: .\templates\dashboard\settings\google_calendar.html:69
+msgid "Google Calendar dan uzasizmi? Barcha sinxronizatsiya to'xtatiladi."
+msgstr "Отключить Google Calendar? Вся синхронизация остановится."
+
+#: .\templates\dashboard\settings\google_calendar.html:73
+msgid "Google Calendar dan uzish"
+msgstr "Отключить Google Calendar"
+
+#: .\templates\dashboard\settings\google_calendar.html:84
+msgid "Google Calendar ni ulang va qabullar avtomatik sinxronlanadi"
+msgstr ""
+"Подключите Google Calendar и приемы будут синхронизироваться автоматически"
+
+#: .\templates\dashboard\settings\google_calendar.html:92
+msgid "Google hisobingizga kiring"
+msgstr "Войдите в свой Google аккаунт"
+
+#: .\templates\dashboard\settings\google_calendar.html:96
+msgid "Ruxsatlarni tasdiqlang (kalendar boshqaruvi)"
+msgstr "Подтвердите разрешения (управление календарем)"
+
+#: .\templates\dashboard\settings\google_calendar.html:100
+msgid "Tayyor — qabullar avtomatik sinxronlanadi"
+msgstr "Готово — приемы синхронизируются автоматически"
+
+#: .\templates\dashboard\settings\google_calendar.html:105
+msgid "Google bilan ulanish"
+msgstr "Подключить Google"
+
+#: .\templates\dashboard\settings\google_calendar.html:118
+msgid "Qanday ishlaydi"
+msgstr "Как это работает"
+
+#: .\templates\dashboard\settings\google_calendar.html:124
+msgid "Google hisobingizni ulang"
+msgstr "Подключите ваш Google аккаунт"
+
+#: .\templates\dashboard\settings\google_calendar.html:125
+msgid "Google akkauntingiz orqali tizimga kiring va ruxsat bering"
+msgstr "Войдите в систему через свой Google аккаунт и дайте разрешение"
+
+#: .\templates\dashboard\settings\google_calendar.html:131
+msgid "Avtomatik sinxronizatsiya"
+msgstr "Автоматическая синхронизация"
+
+#: .\templates\dashboard\settings\google_calendar.html:132
+msgid "Har bir yangi qabul Google Calendar da tadbir sifatida qo'shiladi"
+msgstr "Каждый новый прием добавляется как событие в Google Calendar"
+
+#: .\templates\dashboard\settings\google_calendar.html:138
+msgid "O'zgarishlar va bekor qilish"
+msgstr "Изменения и отмена"
+
+#: .\templates\dashboard\settings\google_calendar.html:139
+msgid "Qabul tahrirlansa yoki bekor qilinsa, kalendar yangilanadi"
+msgstr "Если прием редактируется или отменяется, календарь обновляется"
+
+#: .\templates\dashboard\settings\telegram.html:9
+msgid "Yangi qabul kelganda Telegram botiga xabar oling"
+msgstr "Получайте сообщения в Telegram боте при новых приемах"
+
+#: .\templates\dashboard\settings\telegram.html:18
+#, fuzzy
+#| msgid ""
+#| "Telegram xabarnomalaridan foydalanish uchun Pro yoki Max tarifiga o'ting."
+msgid ""
+"Telegram xabarnomalaridan foydalanish uchun <strong>Pro</strong> yoki "
+"<strong>Max</strong> tarifiga o'ting."
+msgstr "Для использования Telegram уведомлений перейдите на тариф Pro или Max."
+
+#: .\templates\dashboard\settings\telegram.html:42
+#, fuzzy
+#| msgid "Chat ID"
+msgid "Chat ID:"
+msgstr "Chat ID"
+
+#: .\templates\dashboard\settings\telegram.html:49
+msgid "Qabul xabarnomalar"
+msgstr "Уведомления о приемах"
+
+#: .\templates\dashboard\settings\telegram.html:50
+msgid "Har yangi qabul uchun Telegramga xabar yuboriladi"
+msgstr "На каждое новое бронирование отправляется сообщение в Telegram"
+
+#: .\templates\dashboard\settings\telegram.html:71
+msgid "Test xabar yuborish"
+msgstr "Отправить тестовое сообщение"
+
+#: .\templates\dashboard\settings\telegram.html:74
+msgid "Telegramdan uzasizmi?"
+msgstr "Отключить Telegram?"
+
+#: .\templates\dashboard\settings\telegram.html:78
+msgid "Uzish"
+msgstr "Отключить"
+
+#: .\templates\dashboard\settings\telegram.html:91
+msgid "Telegram botini ulang va yangi qabul xabarnomalar oling"
+msgstr "Подключите Telegram бота и получайте уведомления о новых приемах"
+
+#: .\templates\dashboard\settings\telegram.html:110
+#, fuzzy
+#| msgid "Pastdagi \"Havola yaratish\" tugmasini bosing"
+msgid "Pastdagi <strong>\"Havola yaratish\"</strong> tugmasini bosing"
+msgstr "Нажмите кнопку \"Создать ссылку\" ниже"
+
+#: .\templates\dashboard\settings\telegram.html:114
+#, python-format
+msgid "Telegramda <strong>@%(bot_username)s</strong> botini oching"
+msgstr ""
+
+#: .\templates\dashboard\settings\telegram.html:118
+#, fuzzy
+#| msgid "Botda Boshlash tugmasini bosing — tayyor!"
+msgid "Botda <strong>Boshlash</strong> tugmasini bosing — tayyor! ✅"
+msgstr "Нажмите кнопку Старт в боте — готово!"
+
+#: .\templates\dashboard\settings\telegram.html:126
+msgid "Havola yaratish"
+msgstr "Создать ссылку"
+
+#: .\templates\dashboard\settings\telegram.html:138
+msgid "Ulanish havolasi"
+msgstr "Ссылка для подключения"
+
+#: .\templates\dashboard\settings\telegram.html:139
+msgid "Quyidagi tugmani bosing yoki havolani ko'chirib Telegramda oching:"
+msgstr "Нажмите кнопку ниже или скопируйте ссылку и откройте в Telegram:"
+
+#: .\templates\dashboard\settings\telegram.html:142
+msgid "Telegramda ochish"
+msgstr "Открыть в Telegram"
+
+#: .\templates\dashboard\settings\telegram.html:153
+msgid "Bir martalik havola — bosilganda yaroqsiz bo'ladi"
+msgstr "Одноразовая ссылка — после использования становится недействительной"
+
+#: .\templates\dashboard\settings\telegram.html:164
+msgid "Qanday xabar keladi"
+msgstr "Какое сообщение придет"
+
+#: .\templates\dashboard\settings\telegram.html:167
+#, fuzzy
+#| msgid "Yangi qabul"
+msgid "Yangi qabul!"
+msgstr "Новый прием"
+
+#: .\templates\dashboard\settings\telegram.html:169
+msgid "Mijoz:"
+msgstr "Клиент:"
+
+#: .\templates\dashboard\settings\telegram.html:170
+msgid "Tel:"
+msgstr "Тел:"
+
+#: .\templates\dashboard\settings\telegram.html:171
+msgid "Xizmat:"
+msgstr "Услуга:"
+
+#: .\templates\dashboard\settings\telegram.html:172
+msgid "Xodim:"
+msgstr "Сотрудник:"
+
+#: .\templates\dashboard\settings\telegram.html:173
+#: .\templates\superadmin\business_detail.html:51
+msgid "Sana:"
+msgstr "Дата:"
+
+#: .\templates\dashboard\settings\telegram.html:174
+msgid "Vaqt:"
+msgstr "Время:"
+
+#: .\templates\dashboard\settings\telegram.html:176
+msgid "Dashboard orqali boshqarish"
+msgstr "Управление через панель"
+
+#: .\templates\dashboard\settings\telegram.html:182
+msgid "Bot ma'lumotlari"
+msgstr "Информация о боте"
+
+#: .\templates\dashboard\settings\telegram.html:186
+msgid "Bot"
+msgstr "Бот"
+
+#: .\templates\dashboard\settings\telegram.html:187
+msgid "Sozlanmagan"
+msgstr "Не настроен"
+
+#: .\templates\dashboard\settings\telegram.html:190
+msgid "Token"
+msgstr "Токен"
+
+#: .\templates\dashboard\settings\telegram.html:191
+msgid "Mavjud"
+msgstr "Доступен"
+
+#: .\templates\dashboard\settings\telegram.html:191
+msgid "Yo'q"
+msgstr "Нет"
+
+#: .\templates\dashboard\settings\telegram.html:194
+#, fuzzy
+#| msgid "Boshlanish"
+msgid "Ulanish"
+msgstr "Начало"
+
+#: .\templates\dashboard\settings\telegram.html:198
+#, fuzzy
+#| msgid "Qabul xabarnomalar"
+msgid "Xabarnomalar"
+msgstr "Уведомления о приемах"
+
+#: .\templates\dashboard\settings\telegram.html:209
+msgid "Webhookni qayta ro'yxatdan o'tkazish"
+msgstr "Перерегистрировать Webhook"
+
+#: .\templates\dashboard\settings\telegram.html:212
+msgid "Domeningiz o'zgargandan so'ng ishlatiladi"
+msgstr "Используется после изменения домена"
+
+#: .\templates\dashboard\settings\white_label.html:9
+msgid "BookFlow brendini yashirib, to'liq shaxsiy ko'rinishga ega bo'ling"
+msgstr "Скройте бренд BookFlow и получите полностью индивидуальный вид"
+
+#: .\templates\dashboard\settings\white_label.html:18
+msgid ""
+"White Label orqali BookFlow logotipi va \"Tomonidan quvvatlanadi\" matnini "
+"olib tashlang."
+msgstr ""
+"С помощью White Label удалите логотип BookFlow и текст \"Работает на\"."
+
+#: .\templates\dashboard\settings\white_label.html:35
+msgid "Branding sozlamalari"
+msgstr "Настройки брендинга"
+
+#: .\templates\dashboard\settings\white_label.html:37
+msgid "Yoqilganda quyidagilar yashiriladi:"
+msgstr "При включении скрывается:"
+
+#: .\templates\dashboard\settings\white_label.html:40
+#, fuzzy
+#| msgid "Ommavy sahifadagi \"Tomonidan quvvatlanadi\" — BookFlow matni"
+msgid "Ommavy sahifadagi 'Tomonidan quvvatlanadi' — BookFlow matni"
+msgstr "Текст \"Работает на\" — BookFlow на публичной странице"
+
+#: .\templates\dashboard\settings\white_label.html:41
+msgid "Booking jarayonidagi BookFlow logotipi"
+msgstr "Логотип BookFlow в процессе бронирования"
+
+#: .\templates\dashboard\settings\white_label.html:56
+msgid "White Label rejimi"
+msgstr "Режим White Label"
+
+#: .\templates\dashboard\settings\white_label.html:57
+msgid "BookFlow brendi yashirilgan"
+msgstr "Бренд BookFlow скрыт"
+
+#: .\templates\dashboard\settings\white_label.html:57
+msgid "BookFlow brendi ko'rinadi"
+msgstr "Бренд BookFlow виден"
+
+#: .\templates\dashboard\settings\white_label.html:71
+msgid "O'z brendingizni yarating"
+msgstr "Создайте свой бренд"
+
+#: .\templates\dashboard\settings\white_label.html:73
+msgid ""
+"White Label bilan biznesingiz mijozlari BookFlow emas, balki sizning "
+"kompaniyangiz orqali xizmat qilayotganini ko'radi. Bu ishonchni oshiradi va "
+"professional ko'rinish beradi."
+msgstr ""
+"С White Label клиенты вашего бизнеса видят, что обслуживание происходит "
+"через вашу компанию, а не BookFlow. Это повышает доверие и придает "
+"профессиональный вид."
+
+#: .\templates\dashboard\settings\working_hours.html:9
+msgid "Har bir kun uchun ochiq/yopiq holat va ish soatlarini belgilang"
+msgstr "Установите статус открыто/закрыто и рабочее время для каждого дня"
+
+#: .\templates\dashboard\settings\working_hours.html:45
+msgid "Ish vaqtlarini saqlash"
+msgstr "Сохранить рабочее время"
+
+#: .\templates\dashboard\settings\working_hours.html:61
+msgid "Har bir kun uchun alohida ish soatlari belgilang"
+msgstr "Установите отдельное рабочее время для каждого дня"
+
+#: .\templates\dashboard\settings\working_hours.html:65
+msgid "Yopiq kunlarda qabul vaqtlari ko'rsatilmaydi"
+msgstr "В закрытые дни время приема не отображается"
+
+#: .\templates\dashboard\settings\working_hours.html:69
+msgid "O'zgarishlardan so'ng albatta saqlashni unutmang"
+msgstr "Не забудьте сохранить после изменений"
+
+#: .\templates\dashboard\upgrade.html:4 .\templates\dashboard\upgrade.html:10
+msgid "Tarif & Narxlar"
+msgstr "Тарифы и Цены"
+
+#: .\templates\dashboard\upgrade.html:12
+msgid "Joriy tarif:"
+msgstr "Текущий тариф:"
+
+#: .\templates\dashboard\upgrade.html:28
+msgid "Faol tarif"
+msgstr "Активный тариф"
+
+#: .\templates\dashboard\upgrade.html:34
+#, fuzzy
+#| msgid "Faol"
+msgid "● Faol"
+msgstr "Активный"
+
+#: .\templates\dashboard\upgrade.html:36
+#, fuzzy
+#| msgid "Sinov davri"
+msgid "● Sinov davri"
+msgstr "Пробный период"
+
+#: .\templates\dashboard\upgrade.html:38
+#, python-format
+msgid "● %(business.get_subscription_status_display)s"
+msgstr ""
+
+#: .\templates\dashboard\upgrade.html:41
+#, python-format
+msgid "%(business.subscription_end|date:\"d.m.Y\")s gacha"
+msgstr ""
+
+#: .\templates\dashboard\upgrade.html:47
+#, fuzzy, python-format
+#| msgid "Xodimlar (Employees)"
+msgid "Xodimlar: %(emp_count)s"
+msgstr "Сотрудники (Employees)"
+
+#: .\templates\dashboard\upgrade.html:53
+#, python-format
+msgid ""
+"Muddatgacha qoldi: <strong style=\"color:#fff;"
+"\">%(business.subscription_end|timeuntil)s</strong>"
+msgstr ""
+
+#: .\templates\dashboard\upgrade.html:70
+msgid "MASHHUR"
+msgstr "ПОПУЛЯРНЫЙ"
+
+#: .\templates\dashboard\upgrade.html:76 .\templates\dashboard\upgrade.html:103
+#, fuzzy
+#| msgid "Joriy tarif"
+msgid "✓ Joriy tarif"
+msgstr "Текущий тариф"
+
+#: .\templates\dashboard\upgrade.html:85
+msgid "UZS/oy"
+msgstr "UZS/мес"
+
+#: .\templates\dashboard\upgrade.html:108
+#, python-format
+msgid "To'lov — %(plan.price_monthly|intcomma)s UZS"
+msgstr ""
+
+#: .\templates\dashboard\upgrade.html:121
+msgid "To'lov tarixi"
+msgstr "История платежей"
+
+#: .\templates\dashboard\upgrade.html:122
+msgid "ta"
+msgstr "шт"
+
+#: .\templates\dashboard\upgrade.html:129
+#: .\templates\superadmin\payment_detail.html:50
+#: .\templates\superadmin\payments.html:25
+msgid "Summa"
+msgstr "Сумма"
+
+#: .\templates\dashboard\upgrade.html:132
+#: .\templates\superadmin\payment_detail.html:58
+#, fuzzy
+#| msgid "Izohlar"
+msgid "Izoh"
+msgstr "Комментарии"
+
+#: .\templates\dashboard\upgrade.html:150
+#: .\templates\superadmin\businesses.html:114
+#: .\templates\superadmin\subscriptions.html:156
+msgid "Bekor"
+msgstr "Отменено"
+
+#: .\templates\superadmin\base_superadmin.html:287
+#, fuzzy
+#| msgid "Admin Mode"
+msgid "Admin"
+msgstr "Режим Админа"
+
+#: .\templates\superadmin\base_superadmin.html:292
+msgid "Umumiy"
+msgstr "Общее"
+
+#: .\templates\superadmin\base_superadmin.html:294
+#: .\templates\superadmin\base_superadmin.html:344
+#: .\templates\superadmin\dashboard.html:4
+msgid "Dashboard"
+msgstr "Дашборд"
+
+#: .\templates\superadmin\base_superadmin.html:297
+#, fuzzy
+#| msgid "Biznes"
+msgid "Bizneslar"
+msgstr "Бизнес"
+
+#: .\templates\superadmin\base_superadmin.html:300
+msgid "Statistikalar"
+msgstr "Статистика"
+
+#: .\templates\superadmin\base_superadmin.html:303
+#: .\templates\superadmin\payments.html:6
+msgid "To'lovlar"
+msgstr "Платежи"
+
+#: .\templates\superadmin\base_superadmin.html:306
+msgid "Obunalar"
+msgstr "Подписки"
+
+#: .\templates\superadmin\base_superadmin.html:311
+msgid "Sayt Sozlamalari"
+msgstr "Настройки сайта"
+
+#: .\templates\superadmin\base_superadmin.html:314
+msgid "Tariflar (Pricing)"
+msgstr "Тарифы (Pricing)"
+
+#: .\templates\superadmin\base_superadmin.html:317
+msgid "Marketing Sahifasi"
+msgstr "Маркетинг страница"
+
+#: .\templates\superadmin\base_superadmin.html:320
+msgid "Tizim"
+msgstr "Система"
+
+#: .\templates\superadmin\base_superadmin.html:322
+msgid "Django Admin"
+msgstr "Django Admin"
+
+#: .\templates\superadmin\base_superadmin.html:333
+msgid "Super Admin"
+msgstr "Супер Админ"
+
+#: .\templates\superadmin\base_superadmin.html:347
+msgid "Admin Mode"
+msgstr "Режим Админа"
+
+#: .\templates\superadmin\business_detail.html:3
+#, python-format
+msgid "Biznes: %(name)s — Admin"
+msgstr ""
+
+#: .\templates\superadmin\business_detail.html:4
+#, fuzzy
+#| msgid "Biznes ma'lumotlari"
+msgid "Biznes Batafsil"
+msgstr "Информация о бизнесе"
+
+#: .\templates\superadmin\business_detail.html:30
+#: .\templates\superadmin\businesses.html:32
+#: .\templates\superadmin\businesses.html:119
+#: .\templates\superadmin\dashboard.html:43
+#: .\templates\superadmin\dashboard.html:192
+#: .\templates\superadmin\subscriptions.html:57
+#: .\templates\superadmin\subscriptions.html:183
+msgid "Bloklangan"
+msgstr "Заблокировано"
+
+#: .\templates\superadmin\business_detail.html:40
+#: .\templates\superadmin\businesses.html:134
+#, fuzzy
+#| msgid "Tizimdan chiqish"
+msgid "Blokdan chiqarish"
+msgstr "Выйти из системы"
+
+#: .\templates\superadmin\business_detail.html:42
+msgid "Rostdan ham bloklaysizmi?"
+msgstr ""
+
+#: .\templates\superadmin\business_detail.html:42
+#, fuzzy
+#| msgid "Biznesingiz Bloklangan"
+msgid "Biznesni bloklash"
+msgstr "Ваш бизнес заблокирован"
+
+#: .\templates\superadmin\business_detail.html:47
+msgid "Owner:"
+msgstr ""
+
+#: .\templates\superadmin\business_detail.html:48
+#, fuzzy
+#| msgid "Email"
+msgid "Email:"
+msgstr "Email"
+
+#: .\templates\superadmin\business_detail.html:49
+#, fuzzy
+#| msgid "Telefon"
+msgid "Telefon:"
+msgstr "Телефон"
+
+#: .\templates\superadmin\business_detail.html:50
+#, fuzzy
+#| msgid "Kategoriya"
+msgid "Kategoriya:"
+msgstr "Категория"
+
+#: .\templates\superadmin\business_detail.html:58
+#, fuzzy
+#| msgid "Boshqaruv paneli"
+msgid "Obuna Boshqaruvi"
+msgstr "Панель управления"
+
+#: .\templates\superadmin\business_detail.html:65
+msgid "Tarif rejasi (Plan)"
+msgstr ""
+
+#: .\templates\superadmin\business_detail.html:74
+#, fuzzy
+#| msgid "Obuna muddati"
+msgid "Obuna Holati"
+msgstr "Срок подписки"
+
+#: .\templates\superadmin\business_detail.html:84
+#, fuzzy
+#| msgid "Obuna muddati"
+msgid "Obuna tugash vaqti"
+msgstr "Срок подписки"
+
+#: .\templates\superadmin\business_detail.html:101
+msgid "Egasi Parolini O'zgartirish"
+msgstr ""
+
+#: .\templates\superadmin\business_detail.html:104
+msgid "Parolni o'zgartirishni tasdiqlaysizmi?"
+msgstr ""
+
+#: .\templates\superadmin\business_detail.html:107
+#, fuzzy
+#| msgid "Yangi post"
+msgid "Yangi parol"
+msgstr "Новый пост"
+
+#: .\templates\superadmin\business_detail.html:108
+msgid "Kamida 6 belgi"
+msgstr ""
+
+#: .\templates\superadmin\business_detail.html:111
+msgid "Parolni takrorlang"
+msgstr ""
+
+#: .\templates\superadmin\business_detail.html:112
+msgid "Yana bir marta kiriting"
+msgstr ""
+
+#: .\templates\superadmin\business_detail.html:114
+#, fuzzy
+#| msgid "Tarifni yangilash"
+msgid "Parolni yangilash"
+msgstr "Обновить тариф"
+
+#: .\templates\superadmin\business_detail.html:128
+#: .\templates\superadmin\statistics.html:29
+#: .\templates\superadmin\statistics.html:80
+#, fuzzy
+#| msgid "Jami Bandlovlar"
+msgid "Bandlovlar"
+msgstr "Всего бронирований"
+
+#: .\templates\superadmin\business_detail.html:147
+#, fuzzy
+#| msgid "Bugungi Bandlovlar"
+msgid "Oxirgi Bandlovlar (20 ta)"
+msgstr "Бронирования на сегодня"
+
+#: .\templates\superadmin\business_detail.html:150
+#, fuzzy
+#| msgid "Sana & Vaqt"
+msgid "Sana/Vaqt"
+msgstr "Дата и Время"
+
+#: .\templates\superadmin\business_detail.html:150
+#: .\templates\superadmin\businesses.html:28
+#: .\templates\superadmin\businesses.html:70
+#: .\templates\superadmin\dashboard.html:171
+#: .\templates\superadmin\subscriptions.html:130
+msgid "Status"
+msgstr "Статус"
+
+#: .\templates\superadmin\business_detail.html:160
+#, fuzzy
+#| msgid "Savollar yo'q"
+msgid "Bandlovlar yo'q"
+msgstr "Нет вопросов"
+
+#: .\templates\superadmin\businesses.html:3
+#, fuzzy
+#| msgid "Biznes nomi"
+msgid "Bizneslar — Admin"
+msgstr "Название бизнеса"
+
+#: .\templates\superadmin\businesses.html:4
+#, fuzzy
+#| msgid "Biznes nomi"
+msgid "Bizneslar Ro'yxati"
+msgstr "Название бизнеса"
+
+#: .\templates\superadmin\businesses.html:12
+#: .\templates\superadmin\subscriptions.html:73
+#, fuzzy
+#| msgid "Qidirish"
+msgid "Qidiruv"
+msgstr "Поиск"
+
+#: .\templates\superadmin\businesses.html:15
+#: .\templates\superadmin\subscriptions.html:74
+#, fuzzy
+#| msgid "Biznes nomi"
+msgid "Biznes nomi, email..."
+msgstr "Название бизнеса"
+
+#: .\templates\superadmin\businesses.html:36
+#: .\templates\superadmin\businesses.html:68
+#: .\templates\superadmin\dashboard.html:170
+msgid "Plan"
+msgstr "План"
+
+#: .\templates\superadmin\businesses.html:39
+#: .\templates\superadmin\site_settings.html:105
+#: .\templates\superadmin\subscriptions.html:20
+#: .\templates\superadmin\subscriptions.html:80
+msgid "Start"
+msgstr "Старт"
+
+#: .\templates\superadmin\businesses.html:45
+#, fuzzy
+#| msgid "Filtrni tozalash"
+msgid "Filtrlash"
+msgstr "Очистить фильтр"
+
+#: .\templates\superadmin\businesses.html:54
+#, python-format
+msgid "<strong>%(count)s</strong> ta biznes topildi"
+msgstr ""
+
+#: .\templates\superadmin\businesses.html:66
+#: .\templates\superadmin\dashboard.html:168
+#: .\templates\superadmin\payment_detail.html:30
+#: .\templates\superadmin\payments.html:23
+#: .\templates\superadmin\subscriptions.html:125
+msgid "Egasi"
+msgstr "Владелец"
+
+#: .\templates\superadmin\businesses.html:69
+#, fuzzy
+#| msgid "Obunalar"
+msgid "Obuna"
+msgstr "Подписки"
+
+#: .\templates\superadmin\businesses.html:72
+#: .\templates\superadmin\pricing_plans\list.html:25
+#: .\templates\superadmin\subscriptions.html:131
+#, fuzzy
+#| msgid "Qabullar"
+msgid "Amallar"
+msgstr "Приемы"
+
+#: .\templates\superadmin\businesses.html:110
+msgid "Trial"
+msgstr ""
+
+#: .\templates\superadmin\businesses.html:112
+#: .\templates\superadmin\subscriptions.html:51
+#: .\templates\superadmin\subscriptions.html:154
+#, fuzzy
+#| msgid "Tugash"
+msgid "Tugagan"
+msgstr "Конец"
+
+#: .\templates\superadmin\businesses.html:127
+#: .\templates\superadmin\subscriptions.html:190
+msgid "Batafsil"
+msgstr ""
+
+#: .\templates\superadmin\businesses.html:138
+#, fuzzy
+#| msgid "Bloklangan"
+msgid "Bloklash"
+msgstr "Заблокировано"
+
+#: .\templates\superadmin\businesses.html:138
+#, python-format
+msgid "%(name)s ni bloklashni xohlaysizmi?"
+msgstr ""
+
+#: .\templates\superadmin\businesses.html:151
+msgid "Hech qanday biznes topilmadi"
+msgstr ""
+
+#: .\templates\superadmin\dashboard.html:3
+#, fuzzy
+#| msgid "Dashboard"
+msgid "Admin Dashboard"
+msgstr "Дашборд"
+
+#: .\templates\superadmin\dashboard.html:17
+msgid "Jami Bizneslar"
+msgstr "Всего бизнесов"
+
+#: .\templates\superadmin\dashboard.html:30
+msgid "Faol Bizneslar"
+msgstr "Активные бизнесы"
+
+#: .\templates\superadmin\dashboard.html:56
+msgid "Jami Bandlovlar"
+msgstr "Всего бронирований"
+
+#: .\templates\superadmin\dashboard.html:73
+msgid "Jami Foydalanuvchilar"
+msgstr "Всего пользователей"
+
+#: .\templates\superadmin\dashboard.html:86
+msgid "Bugungi Bandlovlar"
+msgstr "Бронирования на сегодня"
+
+#: .\templates\superadmin\dashboard.html:99
+msgid "Bu Hafta Yangi"
+msgstr "Новые за неделю"
+
+#: .\templates\superadmin\dashboard.html:112
+msgid "Bu Oy Yangi"
+msgstr "Новые за месяц"
+
+#: .\templates\superadmin\dashboard.html:123
+msgid "Oxirgi 14 Kun — Yangi Ro'yxatdan O'tishlar"
+msgstr "Последние 14 дней — Новые регистрации"
+
+#: .\templates\superadmin\dashboard.html:129
+msgid "Kategoriya Bo'yicha"
+msgstr "По категориям"
+
+#: .\templates\superadmin\dashboard.html:160
+msgid "Oxirgi Ro'yxatdan O'tganlar"
+msgstr "Последние зарегистрированные"
+
+#: .\templates\superadmin\dashboard.html:161
+msgid "Hammasini ko'rish"
+msgstr "Смотреть все"
+
+#: .\templates\superadmin\dashboard.html:200
+msgid "Hozircha bizneslar yo'q"
+msgstr "Пока нет бизнесов"
+
+#: .\templates\superadmin\dashboard.html:217
+msgid "Yangi bizneslar"
+msgstr "Новые бизнесы"
+
+#: .\templates\superadmin\payment_detail.html:3
+#, python-format
+msgid "To'lov #%(id)s — Superadmin"
+msgstr ""
+
+#: .\templates\superadmin\payment_detail.html:8
+#, fuzzy, python-format
+#| msgid "To'lov"
+msgid "To'lov #%(id)s"
+msgstr "Оплата"
+
+#: .\templates\superadmin\payment_detail.html:15
+#: .\templates\superadmin\site_settings.html:155
+#, fuzzy
+#| msgid "Aloqa ma'lumotlari"
+msgid "To'lov ma'lumotlari"
+msgstr "Контактная информация"
+
+#: .\templates\superadmin\payment_detail.html:46
+#, fuzzy
+#| msgid "Faol tarif"
+msgid "So'ralgan tarif"
+msgstr "Активный тариф"
+
+#: .\templates\superadmin\payment_detail.html:54
+#, fuzzy
+#| msgid "Yoqilgan"
+msgid "Yuborilgan sana"
+msgstr "Включено"
+
+#: .\templates\superadmin\payment_detail.html:63
+#: .\templates\superadmin\payment_detail.html:94
+msgid "Rad etish sababi"
+msgstr ""
+
+#: .\templates\superadmin\payment_detail.html:74
+#, fuzzy
+#| msgid "Tasdiqlash"
+msgid "To'lovni tasdiqlash"
+msgstr "Подтвердить"
+
+#: .\templates\superadmin\payment_detail.html:81
+#, python-format
+msgid ""
+"<strong>%(plan)s</strong> tarifi <strong>30 kun</strong> ga "
+"faollashtiriladi.\n"
+"            Biznes egasiga tarif tasdiqlangani haqida xabar beriladi."
+msgstr ""
+
+#: .\templates\superadmin\payment_detail.html:95
+msgid "Sababini kiriting..."
+msgstr ""
+
+#: .\templates\superadmin\payment_detail.html:97
+msgid "Rad etish"
+msgstr "Отклонить"
+
+#: .\templates\superadmin\payment_detail.html:119
+#, fuzzy
+#| msgid "Telegramda ochish"
+msgid "Asl hajmda ochish"
+msgstr "Открыть в Telegram"
+
+#: .\templates\superadmin\payments.html:3
+#, fuzzy
+#| msgid "To'lov — UZS"
+msgid "To'lovlar — Superadmin"
+msgstr "Оплата — UZS"
+
+#: .\templates\superadmin\payments.html:8
+#, fuzzy
+#| msgid "Kutilayotgan qabullar"
+msgid "Kutilayotgan"
+msgstr "Ожидаемые приемы"
+
+#: .\templates\superadmin\payments.html:10
+#: .\templates\superadmin\payments.html:51
+msgid "Rad etilgan"
+msgstr ""
+
+#: .\templates\superadmin\payments.html:26
+msgid "Chek"
+msgstr ""
+
+#: .\templates\superadmin\payments.html:29
+msgid "Amal"
+msgstr ""
+
+#: .\templates\superadmin\payments.html:63
+#, fuzzy
+#| msgid "To'lovlar"
+msgid "To'lovlar mavjud emas"
+msgstr "Платежи"
+
+#: .\templates\superadmin\pricing_plans\delete.html:3
+#, fuzzy
+#| msgid "Tarifni oshirish"
+msgid "Tarifni o'chirish"
+msgstr "Повысить тариф"
+
+#: .\templates\superadmin\pricing_plans\delete.html:11
+#, python-format
+msgid "Rostdan ham \"%(name)s\" tarifini o'chirmoqchimisiz?"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\delete.html:12
+msgid ""
+"Bu amalni bekor qilib bo'lmaydi. Bu tarifga ulangan bizneslar mavjud bo'lsa, "
+"xatolik yuz berishi mumkin."
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\delete.html:17
+#, fuzzy
+#| msgid "Rasmni o'chirish"
+msgid "Ha, o'chirish"
+msgstr "Удалить изображение"
+
+#: .\templates\superadmin\pricing_plans\form.html:3
+#: .\templates\superadmin\pricing_plans\form.html:10
+#, python-format
+msgid "%(action)s Tarif"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:20
+#, fuzzy
+#| msgid "Aloqa ma'lumotlari"
+msgid "Tarif Ma'lumotlari"
+msgstr "Контактная информация"
+
+#: .\templates\superadmin\pricing_plans\form.html:23
+#: .\templates\superadmin\pricing_plans\list.html:20
+msgid "Nomi"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:27
+msgid "Slug (tizim uchun)"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:29
+msgid "free, pro, max kabi (bo'sh joylarsiz kichik harfda)"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:32
+msgid "Ta'rif (Description)"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:36
+msgid "Oylik Narx (UZS)"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:40
+msgid "Yillik Narx (UZS)"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:44
+#, fuzzy
+#| msgid "Xodimlar"
+msgid "Xodimlar limiti"
+msgstr "Сотрудники"
+
+#: .\templates\superadmin\pricing_plans\form.html:46
+#: .\templates\superadmin\pricing_plans\form.html:51
+msgid "0 = cheksiz"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:49
+msgid "Bandlov limiti"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:54
+msgid "Tartib (Order)"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:56
+#, fuzzy
+#| msgid "Kichik raqam — birinchi ko'rinadi"
+msgid "Kichik raqam oldin chiqadi"
+msgstr "Маленькое число — показывается первым"
+
+#: .\templates\superadmin\pricing_plans\form.html:64
+msgid "Tarif Imkoniyatlari (Features - ro'yxat)"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:69
+msgid "Matn"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:70
+#, fuzzy
+#| msgid "Kalit yaratilgan"
+msgid "Kiritilgan?"
+msgstr "Ключ создан"
+
+#: .\templates\superadmin\pricing_plans\form.html:71
+#: .\templates\superadmin\pricing_plans\list.html:19
+#, fuzzy
+#| msgid "Tartib raqami"
+msgid "Tartib"
+msgstr "Порядковый номер"
+
+#: .\templates\superadmin\pricing_plans\form.html:90
+#, fuzzy
+#| msgid "Xizmat qo'shish"
+msgid "Imkoniyat qo'shish"
+msgstr "Добавить услугу"
+
+#: .\templates\superadmin\pricing_plans\form.html:100
+msgid "Holat & Belgilar"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:103
+#, fuzzy
+#| msgid "Tarif va to'lov"
+msgid "Tarif faol"
+msgstr "Тариф и оплата"
+
+#: .\templates\superadmin\pricing_plans\form.html:107
+msgid "Mashhur (Ommabop) belgisini qo'yish"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:111
+msgid "Texnik Ruxsatlar"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:118
+#, fuzzy
+#| msgid "Qabul xabarnomalar"
+msgid "Email xabarnomalar"
+msgstr "Уведомления о приемах"
+
+#: .\templates\superadmin\pricing_plans\form.html:126
+msgid "Brending"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\form.html:130
+#, fuzzy
+#| msgid "Maxsus CSS dizayn"
+msgid "Maxsus dizayn (Custom CSS)"
+msgstr "Индивидуальный CSS дизайн"
+
+#: .\templates\superadmin\pricing_plans\form.html:134
+#, fuzzy
+#| msgid "Google Calendar dan uzish"
+msgid "Google Calendar sinxronizatsiya"
+msgstr "Отключить Google Calendar"
+
+#: .\templates\superadmin\pricing_plans\form.html:138
+#, fuzzy
+#| msgid "Integratsiyalar"
+msgid "API integratsiya"
+msgstr "Интеграции"
+
+#: .\templates\superadmin\pricing_plans\form.html:142
+#, fuzzy
+#| msgid "White Label yoqildi — BookFlow brendi yashirildi."
+msgid "White Label (BookFlow brendini olib tashlash)"
+msgstr "White Label включен — бренд BookFlow скрыт."
+
+#: .\templates\superadmin\pricing_plans\list.html:4
+#, fuzzy
+#| msgid "Tariflar (Pricing)"
+msgid "Tariflar (Pricing Plans)"
+msgstr "Тарифы (Pricing)"
+
+#: .\templates\superadmin\pricing_plans\list.html:8
+#, fuzzy
+#| msgid "Tashriflar tarixi"
+msgid "Tariflar Ro'yxati"
+msgstr "История посещений"
+
+#: .\templates\superadmin\pricing_plans\list.html:10
+#, fuzzy
+#| msgid "Yangi mijozlar"
+msgid "Yangi Tarif"
+msgstr "Новые клиенты"
+
+#: .\templates\superadmin\pricing_plans\list.html:21
+msgid "Slug"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\list.html:22
+#, fuzzy
+#| msgid "Narxi (so'm)"
+msgid "Narxi (oy)"
+msgstr "Цена (сум)"
+
+#: .\templates\superadmin\pricing_plans\list.html:23
+msgid "Mashhur"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\list.html:46
+msgid "Nofaol"
+msgstr ""
+
+#: .\templates\superadmin\pricing_plans\list.html:62
+msgid "Hozircha tariflar kiritilmagan."
+msgstr ""
+
+#: .\templates\superadmin\site_settings.html:3
+#, fuzzy
+#| msgid "Sayt Sozlamalari"
+msgid "Sayt Sozlamalari — Admin"
+msgstr "Настройки сайта"
+
+#: .\templates\superadmin\site_settings.html:4
+#, fuzzy
+#| msgid "Sayt Sozlamalari"
+msgid "Sayt Sozlamalari (Marketing)"
+msgstr "Настройки сайта"
+
+#: .\templates\superadmin\site_settings.html:14
+msgid "Bosh Sahifa Matnlari"
+msgstr ""
+
+#: .\templates\superadmin\site_settings.html:33
+msgid ""
+"Ixtiyoriy JSON override. Masalan: {\"ru\":{\"home\":{\"title\":\"...\"}}}"
+msgstr ""
+
+#: .\templates\superadmin\site_settings.html:43
+msgid "Statistikalar (Marketing sahifa uchun)"
+msgstr ""
+
+#: .\templates\superadmin\site_settings.html:67
+msgid "Brending va Aloqa"
+msgstr ""
+
+#: .\templates\superadmin\site_settings.html:101
+#, fuzzy
+#| msgid "Tashriflar tarixi"
+msgid "Tariflar Narxi (UZS)"
+msgstr "История посещений"
+
+#: .\templates\superadmin\site_settings.html:162
+msgid "Foydalanuvchiga to'lov uchun ko'rsatiladigan karta raqami"
+msgstr ""
+
+#: .\templates\superadmin\site_settings.html:167
+msgid "Karta egasining ismi (lotincha)"
+msgstr ""
+
+#: .\templates\superadmin\site_settings.html:174
+#, fuzzy
+#| msgid "DNS sozlamalarini qo'shing"
+msgid "Sozlamalarni Saqlash"
+msgstr "Добавьте настройки DNS"
+
+#: .\templates\superadmin\statistics.html:3
+#, fuzzy
+#| msgid "Statistikalar"
+msgid "Statistikalar — Admin"
+msgstr "Статистика"
+
+#: .\templates\superadmin\statistics.html:4
+msgid "Platforma Statistikasi"
+msgstr ""
+
+#: .\templates\superadmin\statistics.html:10
+msgid "Oxirgi 6 Oy: Bandlovlar Proi"
+msgstr ""
+
+#: .\templates\superadmin\statistics.html:16
+#, fuzzy
+#| msgid "Obunalar"
+msgid "Obunalar Taqvimi"
+msgstr "Подписки"
+
+#: .\templates\superadmin\statistics.html:26
+msgid "Top 10 Bizneslar (Bandlovlar soni bo'yicha)"
+msgstr ""
+
+#: .\templates\superadmin\statistics.html:50
+#, fuzzy
+#| msgid "Kategoriya Bo'yicha"
+msgid "Kategoriyalar Bo'yicha Bizneslar"
+msgstr "По категориям"
+
+#: .\templates\superadmin\statistics.html:53
+msgid "Soni"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:3
+msgid "Obunalar — Superadmin"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:4
+#, fuzzy
+#| msgid "Tarifni oshirish"
+msgid "Obunalarni boshqarish"
+msgstr "Повысить тариф"
+
+#: .\templates\superadmin\subscriptions.html:14
+#, fuzzy
+#| msgid "Jami Bizneslar"
+msgid "Jami biznes"
+msgstr "Всего бизнесов"
+
+#: .\templates\superadmin\subscriptions.html:45
+#: .\templates\superadmin\subscriptions.html:89
+#: .\templates\superadmin\subscriptions.html:152
+#, fuzzy
+#| msgid "Sinov davri"
+msgid "Sinov"
+msgstr "Пробный период"
+
+#: .\templates\superadmin\subscriptions.html:63
+#, fuzzy
+#| msgid "Obunangiz kun ichida tugaydi."
+msgid "7 kunda tugaydi"
+msgstr "Ваша подписка истекает через дней."
+
+#: .\templates\superadmin\subscriptions.html:86
+#, fuzzy
+#| msgid "Obuna muddati"
+msgid "Obuna holati"
+msgstr "Срок подписки"
+
+#: .\templates\superadmin\subscriptions.html:91
+#: .\templates\superadmin\subscriptions.html:172
+msgid "Muddati o'tgan"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:96
+msgid "Muddati yaqin"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:99
+msgid "7 kun ichida"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:100
+msgid "30 kun ichida"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:107
+msgid "Reset"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:115
+#, python-format
+msgid "<strong>%(count)s</strong> ta obuna"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:128
+#, fuzzy
+#| msgid "Obuna muddati"
+msgid "Muddati"
+msgstr "Срок подписки"
+
+#: .\templates\superadmin\subscriptions.html:129
+#, fuzzy
+#| msgid "Yoqilgan"
+msgid "Qolgan"
+msgstr "Включено"
+
+#: .\templates\superadmin\subscriptions.html:198
+#, fuzzy
+#| msgid "Tarifni oshirish"
+msgid "Tarifni o'zgartirish"
+msgstr "Повысить тариф"
+
+#: .\templates\superadmin\subscriptions.html:204
+msgid "➜ Start (free)"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:213
+msgid "➜ Pro (growth)"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:222
+msgid "➜ Max (enterprise)"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:230
+msgid "✅ Faollashtirish"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:237
+msgid "❌ Muddatini tugatish"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:245
+msgid "🔓 Blokdan chiqarish"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:247
+msgid "⛔ Bloklash"
+msgstr ""
+
+#: .\templates\superadmin\subscriptions.html:261
+#, fuzzy
+#| msgid "Qabullar topilmadi"
+msgid "Obunalar topilmadi"
+msgstr "Приемы не найдены"
+
+#, fuzzy
+#~| msgid "Biznes"
+#~ msgid "⚙️ Biznes"
+#~ msgstr "Бизнес"
+
+#~ msgid "Xush kelibsiz"
+#~ msgstr "Добро пожаловать"
+
+#~ msgid "xodim"
+#~ msgstr "сотрудник"
+
+#~ msgid "Cheklangan imkoniyatlar"
+#~ msgstr "Ограниченные возможности"
+
+#~ msgid "gacha faol"
+#~ msgstr "активен до"
+
+#~ msgid "oyda"
+#~ msgstr "в месяц"
+
+#~ msgid "jami"
+#~ msgstr "всего"
+
+#~ msgid "kun"
+#~ msgstr "день"
+
+#~ msgid "Dushanba"
+#~ msgstr "Понедельник"
+
+#~ msgid "Seshanba"
+#~ msgstr "Вторник"
+
+#~ msgid "Chorshanba"
+#~ msgstr "Среда"
+
+#~ msgid "Payshanba"
+#~ msgstr "Четверг"
+
+#~ msgid "Juma"
+#~ msgstr "Пятница"
+
+#~ msgid "Shanba"
+#~ msgstr "Суббота"
+
+#~ msgid "Yakshanba"
+#~ msgstr "Воскресенье"
+
+#~ msgid "Summani to'liq — o'tkazing"
+#~ msgstr "Переведите полную сумму"
+
+#~ msgid "Yuqoridagi kartaga o'tkazing"
+#~ msgstr "Переведите на карту выше"
+
+#~ msgid "Xodimlar:"
+#~ msgstr "Сотрудники:"
+
+#~ msgid "Muddatgacha qoldi:"
+#~ msgstr "Осталось до конца:"
+
+#~ msgid "Ish grafigi"
+#~ msgstr "График работы"
+
+#~ msgid "tashrif"
+#~ msgstr "посещение"
+
+#~ msgid "yakunlangan"
+#~ msgstr "завершено"
+
+#~ msgid "oldin"
+#~ msgstr "назад"
+
+#~ msgid "Jami post"
+#~ msgstr "Всего постов"
+
+#~ msgid "Manzil belgilangan"
+#~ msgstr "Адрес указан"
+
+#~ msgid "Instagram"
+#~ msgstr "Instagram"
+
+#~ msgid "Manzil aniqlanmoqda..."
+#~ msgstr "Определение адреса..."
+
+#~ msgid "Tarifni oshirish →"
+#~ msgstr "Повысить тариф →"
+
+#~ msgid "CSS Documentation"
+#~ msgstr "CSS Documentation"
+
+#~ msgid "Telegramda botini oching"
+#~ msgstr "Откройте бота в Telegram"
+
+#~ msgid "Copy"
+#~ msgstr "Копировать"
+
+#~ msgid "Copied!"
+#~ msgstr "Скопировано!"
+
+#~ msgid "Premium Feature"
+#~ msgstr "Премиум функция"
+
+#~ msgid "Max Feature"
+#~ msgstr "Функция Max"
+
+#~ msgid "Authentication"
+#~ msgstr "Аутентификация"
+
+#~ msgid "Qabullar (Appointments)"
+#~ msgstr "Приемы (Appointments)"
+
+#~ msgid "Xizmatlar (Services)"
+#~ msgstr "Услуги (Services)"
+
+#~ msgid "Mijozlar (Customers)"
+#~ msgstr "Клиенты (Customers)"
+
+#~ msgid "Statistika (Stats)"
+#~ msgstr "Статистика (Stats)"
+
+#~ msgid ""
+#~ "Yangi qabul yaratilganda, sizning Webhook URL manzilingizga POST so'rov "
+#~ "yuboriladi."
+#~ msgstr ""
+#~ "При создании нового приема на ваш Webhook URL отправляется POST запрос."
+
+#~ msgid "Webhook set to"
+#~ msgstr "Webhook установлен на"
+
+#~ msgid "Webhook error:"
+#~ msgstr "Ошибка Webhook:"
+
+#~ msgid "Google Calendar ulanishda xatolik:"
+#~ msgstr "Ошибка подключения Google Calendar:"
+
+#~ msgid "Google Calendar ulanish bekor qilindi yoki xatolik:"
+#~ msgstr "Подключение Google Calendar отменено или ошибка:"
+
+#~ msgid "Webhook test xatosi:"
+#~ msgstr "Ошибка теста webhook:"
+
+#~ msgid "Yangilash →"
+#~ msgstr "Обновить →"
+
+#~ msgid "Qayta urinib ko'ring"
+#~ msgstr "Попробуйте снова"
+
+#~ msgid "Pro tsennikni faollashtiring →"
+#~ msgstr "Активируйте Pro тариф →"

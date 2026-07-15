@@ -1,11 +1,12 @@
 {% extends 'base_dashboard.html' %}
+{% load i18n %}
 {% block page_title %}White Label{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
     <div class="page-hd-title"><i class="bi bi-brush" style="margin-right:8px;color:#8b5cf6;"></i>White Label</div>
-    <div class="page-hd-sub">BookFlow brendini yashirib, to'liq shaxsiy ko'rinishga ega bo'ling</div>
+    <div class="page-hd-sub">{% trans "BookFlow brendini yashirib, to'liq shaxsiy ko'rinishga ega bo'ling" %}</div>
   </div>
 </div>
 
@@ -13,9 +14,9 @@
 <div class="ds-alert warning" style="margin-bottom:20px;">
   <i class="bi bi-lock-fill"></i>
   <div>
-    <strong>Bu funksiya faqat Max tarifida mavjud.</strong><br>
-    <span>White Label orqali BookFlow logotipi va "Tomonidan quvvatlanadi" matnini olib tashlang.</span>
-    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> Max tarifga o'tish</a>
+    <strong>{% trans "Bu funksiya faqat Max tarifida mavjud." %}</strong><br>
+    <span>{% blocktrans %}White Label orqali BookFlow logotipi va "Tomonidan quvvatlanadi" matnini olib tashlang.{% endblocktrans %}</span>
+    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> {% trans "Max tarifga o'tish" %}</a>
   </div>
 </div>
 {% else %}
@@ -31,13 +32,13 @@
               <i class="bi bi-brush" style="color:#8b5cf6;"></i>
             </div>
             <div>
-              <div style="font-size:16px;font-weight:700;color:var(--text);">Branding sozlamalari</div>
+              <div style="font-size:16px;font-weight:700;color:var(--text);">{% trans "Branding sozlamalari" %}</div>
               <div style="font-size:12px;color:var(--text-3);margin-top:2px;">
-                Yoqilganda quyidagilar yashiriladi:
+                {% trans "Yoqilganda quyidagilar yashiriladi:" %}
               </div>
               <ul style="font-size:12px;color:var(--text-3);margin-top:6px;padding-left:18px;">
-                <li>Ommavy sahifadagi "Tomonidan quvvatlanadi" &mdash; BookFlow matni</li>
-                <li>Booking jarayonidagi BookFlow logotipi</li>
+                <li>{% trans "Ommavy sahifadagi 'Tomonidan quvvatlanadi' — BookFlow matni" %}</li>
+                <li>{% trans "Booking jarayonidagi BookFlow logotipi" %}</li>
               </ul>
             </div>
           </div>
@@ -52,12 +53,12 @@
               </span>
             </label>
             <div>
-              <div style="font-size:14px;font-weight:600;color:var(--text);">White Label rejimi</div>
-              <div style="font-size:11px;color:var(--text-3);">{% if business.white_label_enabled %}BookFlow brendi yashirilgan{% else %}BookFlow brendi ko'rinadi{% endif %}</div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">{% trans "White Label rejimi" %}</div>
+              <div style="font-size:11px;color:var(--text-3);">{% if business.white_label_enabled %}{% trans "BookFlow brendi yashirilgan" %}{% else %}{% trans "BookFlow brendi ko'rinadi" %}{% endif %}</div>
             </div>
           </div>
 
-          <noscript><button type="submit" class="btn btn-primary mt-3">Saqlash</button></noscript>
+          <noscript><button type="submit" class="btn btn-primary mt-3">{% trans "Saqlash" %}</button></noscript>
         </form>
       </div>
     </div>
@@ -67,9 +68,9 @@
     <div class="card" style="background:linear-gradient(135deg,#0c0e14,#1e1b4b);color:#fff;border:none;">
       <div class="card-body p-4">
         <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.6;margin-bottom:8px;">⭐ Premium Feature</div>
-        <div style="font-size:15px;font-weight:700;margin-bottom:6px;">O'z brendingizni yarating</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px;">{% trans "O'z brendingizni yarating" %}</div>
         <div style="font-size:12px;opacity:.7;line-height:1.5;">
-          White Label bilan biznesingiz mijozlari BookFlow emas, balki sizning kompaniyangiz orqali xizmat qilayotganini ko'radi. Bu ishonchni oshiradi va professional ko'rinish beradi.
+          {% blocktrans %}White Label bilan biznesingiz mijozlari BookFlow emas, balki sizning kompaniyangiz orqali xizmat qilayotganini ko'radi. Bu ishonchni oshiradi va professional ko'rinish beradi.{% endblocktrans %}
         </div>
       </div>
     </div>

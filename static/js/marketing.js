@@ -4,6 +4,37 @@
   const menu = document.querySelector("[data-mkt-menu]");
   const panel = document.querySelector(".mkt-nav-panel");
 
+  // ── Theme (Light / Dark) ─────────────────────
+  const THEME_KEY = "mkt-theme";
+  const html = document.documentElement;
+
+  function applyTheme(theme) {
+    html.setAttribute("data-theme", theme);
+    localStorage.setItem(THEME_KEY, theme);
+    // Update all toggle buttons
+    document.querySelectorAll("[data-mkt-theme-toggle]").forEach((btn) => {
+      btn.setAttribute("title", theme === "dark" ? "Yorug' rejim" : "Tungi rejim");
+      btn.setAttribute("aria-label", theme === "dark" ? "Yorug' rejimga o'tish" : "Tungi rejimga o'tish");
+    });
+  }
+
+  // Load saved theme or detect system preference
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved) {
+    applyTheme(saved);
+  } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+    applyTheme("light");
+  } else {
+    applyTheme("dark");
+  }
+
+  // Listen for system preference changes
+  window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", (e) => {
+    if (!localStorage.getItem(THEME_KEY)) {
+      applyTheme(e.matches ? "light" : "dark");
+    }
+  });
+
   const updateNav = () => {
     if (!nav) return;
     nav.classList.toggle("is-scrolled", window.scrollY > 18);
@@ -65,4 +96,12 @@
 
   updateParallax();
   window.addEventListener("scroll", updateParallax, { passive: true });
+
+  // ── Theme toggle click ─────────────────────
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("[data-mkt-theme-toggle]")) {
+      const current = html.getAttribute("data-theme") || "dark";
+      applyTheme(current === "dark" ? "light" : "dark");
+    }
+  });
 })();

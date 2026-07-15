@@ -436,7 +436,12 @@ class SiteSettings(models.Model):
     logo = models.ImageField(
         upload_to='site_logos/',
         null=True, blank=True,
-        help_text='Sayt logotipi',
+        help_text='Sayt logotipi (qorong\'i/dark rejim uchun)',
+    )
+    logo_light = models.ImageField(
+        upload_to='site_logos/',
+        null=True, blank=True,
+        help_text='Sayt logotipi (yorug\'/light rejim uchun). Bo\'sh qoldirilsa, dark logo ishlatiladi.',
     )
     contact_phone = models.CharField(
         max_length=50,

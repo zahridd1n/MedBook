@@ -1,11 +1,12 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Mijozlar{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Mijozlar" %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title">Mijozlar</div>
-    <div class="page-hd-sub">Mijozlar bazasi va tashrif tarixi</div>
+    <div class="page-hd-title">{% trans "Mijozlar" %}</div>
+    <div class="page-hd-sub">{% trans "Mijozlar bazasi va tashrif tarixi" %}</div>
   </div>
 </div>
 
@@ -15,30 +16,30 @@
     <div class="stat-card">
       <div class="stat-card-top">
         <div class="stat-icon-wrap" style="background:#eef2ff;color:#6366f1;"><i class="bi bi-people"></i></div>
-        <span class="stat-badge" style="background:#f1f5f9;color:#64748b;">Jami</span>
+        <span class="stat-badge" style="background:#f1f5f9;color:#64748b;">{% trans "Jami" %}</span>
       </div>
       <div class="stat-value">{{ total_customers }}</div>
-      <div class="stat-label">Jami mijozlar</div>
+      <div class="stat-label">{% trans "Jami mijozlar" %}</div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="stat-card">
       <div class="stat-card-top">
         <div class="stat-icon-wrap" style="background:#f0fdf4;color:#16a34a;"><i class="bi bi-calendar-check"></i></div>
-        <span class="stat-badge" style="background:#f0fdf4;color:#16a34a;">Qabullar</span>
+        <span class="stat-badge" style="background:#f0fdf4;color:#16a34a;">{% trans "Qabullar" %}</span>
       </div>
       <div class="stat-value">{{ total_appts_all }}</div>
-      <div class="stat-label">Jami qabullar soni</div>
+      <div class="stat-label">{% trans "Jami qabullar soni" %}</div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="stat-card">
       <div class="stat-card-top">
         <div class="stat-icon-wrap" style="background:#eff6ff;color:#2563eb;"><i class="bi bi-funnel"></i></div>
-        <span class="stat-badge" style="background:#eff6ff;color:#2563eb;">Natija</span>
+        <span class="stat-badge" style="background:#eff6ff;color:#2563eb;">{% trans "Natija" %}</span>
       </div>
       <div class="stat-value">{{ customers_data|length }}</div>
-      <div class="stat-label">Qidiruv natijasi</div>
+      <div class="stat-label">{% trans "Qidiruv natijasi" %}</div>
     </div>
   </div>
 </div>
@@ -48,16 +49,16 @@
   <form method="get">
     <div class="row g-2 align-items-end">
       <div class="col-md-8">
-        <label class="form-label">Ism yoki telefon bo'yicha qidirish</label>
-        <input type="text" name="q" value="{{ search }}" class="form-control" placeholder="Masalan: Jasur yoki +998...">
+        <label class="form-label">{% trans "Ism yoki telefon bo'yicha qidirish" %}</label>
+        <input type="text" name="q" value="{{ search }}" class="form-control" placeholder="{% trans "Masalan: Jasur yoki +998..." %}">
       </div>
       <div class="col-md-4">
         <div style="display:flex;gap:8px;">
           <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center;">
-            <i class="bi bi-search"></i> Qidirish
+            <i class="bi bi-search"></i> {% trans "Qidirish" %}
           </button>
           {% if search %}
-          <a href="{% url 'customers:list' %}" class="btn btn-secondary" title="Tozalash">
+          <a href="{% url 'customers:list' %}" class="btn btn-secondary" title="{% trans "Tozalash" %}">
             <i class="bi bi-x-lg"></i>
           </a>
           {% endif %}
@@ -73,10 +74,10 @@
     <table class="ds-table">
       <thead>
         <tr>
-          <th style="padding-left:18px;">Mijoz</th>
-          <th>Telefon</th>
-          <th>Qabullar</th>
-          <th>Oxirgi tashrif</th>
+          <th style="padding-left:18px;">{% trans "Mijoz" %}</th>
+          <th>{% trans "Telefon" %}</th>
+          <th>{% trans "Qabullar" %}</th>
+          <th>{% trans "Oxirgi tashrif" %}</th>
           <th style="text-align:right;padding-right:18px;width:60px;"></th>
         </tr>
       </thead>
@@ -94,11 +95,11 @@
           </td>
           <td style="font-weight:500;">{{ c.phone }}</td>
           <td>
-            <span class="status status-indigo">{{ c.appt_count }} ta</span>
+            <span class="status status-indigo">{% blocktrans %}{{ c.appt_count }} ta{% endblocktrans %}</span>
           </td>
           <td style="color:var(--text-3);">{{ c.last_visit_date|default:"<span style='font-style:italic;color:var(--text-4);'>—</span>" }}</td>
           <td style="text-align:right;padding-right:18px;">
-            <a href="{% url 'customers:detail' c.pk %}" class="btn btn-secondary btn-icon-sm" title="Ko'rish">
+            <a href="{% url 'customers:detail' c.pk %}" class="btn btn-secondary btn-icon-sm" title="{% trans "Ko'rish" %}">
               <i class="bi bi-arrow-right" style="font-size:11px;"></i>
             </a>
           </td>
@@ -110,19 +111,19 @@
   {% else %}
   <div class="ds-empty">
     <div class="ds-empty-icon"><i class="bi bi-people"></i></div>
-    <div class="ds-empty-title">Mijozlar topilmadi</div>
+    <div class="ds-empty-title">{% trans "Mijozlar topilmadi" %}</div>
     <div class="ds-empty-desc">
       {% if search %}
-        "{{ search }}" bo'yicha mijoz topilmadi. Boshqa nom yoki telefon raqamini kiriting.
+        {% blocktrans %}"{{ search }}" bo'yicha mijoz topilmadi. Boshqa nom yoki telefon raqamini kiriting.{% endblocktrans %}
       {% else %}
-        Hali mijozlar mavjud emas. Birinchi qabul yaratilinganda mijoz avtomatik qo'shiladi.
+        {% trans "Hali mijozlar mavjud emas. Birinchi qabul yaratilinganda mijoz avtomatik qo'shiladi." %}
       {% endif %}
     </div>
     {% if search %}
-    <a href="{% url 'customers:list' %}" class="btn btn-secondary">Filtrni tozalash</a>
+    <a href="{% url 'customers:list' %}" class="btn btn-secondary">{% trans "Filtrni tozalash" %}</a>
     {% else %}
     <a href="{% url 'appointments:create' %}" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Yangi qabul qo'shish
+      <i class="bi bi-plus-lg"></i> {% trans "Yangi qabul qo'shish" %}
     </a>
     {% endif %}
   </div>

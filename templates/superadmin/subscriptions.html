@@ -1,6 +1,7 @@
 {% extends 'superadmin/base_superadmin.html' %}
-{% block title %}Obunalar — Superadmin{% endblock %}
-{% block page_title %}Obunalarni boshqarish{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Obunalar — Superadmin" %}{% endblock %}
+{% block page_title %}{% trans "Obunalarni boshqarish" %}{% endblock %}
 
 {% block sa_content %}
 
@@ -10,56 +11,56 @@
     <div class="card stat-card accent-indigo p-3">
       <div class="d-flex align-items-center gap-3">
         <div class="stat-value">{{ stats.total }}</div>
-        <div class="stat-label">Jami biznes</div>
+        <div class="stat-label">{% trans "Jami biznes" %}</div>
       </div>
     </div>
   </div>
   <div class="col-6 col-md-3">
     <div class="card stat-card p-3 text-center" style="border-top: 3px solid #94a3b8;">
-      <div class="stat-label mb-1">Start</div>
+      <div class="stat-label mb-1">{% trans "Start" %}</div>
       <div class="stat-value" style="color:#94a3b8;font-size:1.4rem;">{{ stats.by_plan.free }}</div>
     </div>
   </div>
   <div class="col-6 col-md-3">
     <div class="card stat-card p-3 text-center" style="border-top: 3px solid #6366f1;">
-      <div class="stat-label mb-1">Pro</div>
+      <div class="stat-label mb-1">{% trans "Pro" %}</div>
       <div class="stat-value" style="color:#6366f1;font-size:1.4rem;">{{ stats.by_plan.growth }}</div>
     </div>
   </div>
   <div class="col-6 col-md-3">
     <div class="card stat-card p-3 text-center" style="border-top: 3px solid #a855f7;">
-      <div class="stat-label mb-1">Max</div>
+      <div class="stat-label mb-1">{% trans "Max" %}</div>
       <div class="stat-value" style="color:#a855f7;font-size:1.4rem;">{{ stats.by_plan.enterprise }}</div>
     </div>
   </div>
   <div class="col-4 col-md-2">
     <div class="card stat-card p-2 text-center" style="border-top: 2px solid #10b981;">
       <div class="stat-value" style="font-size:1.1rem;color:#10b981;">{{ stats.by_status.active }}</div>
-      <div class="stat-label" style="font-size:.65rem;">Faol</div>
+      <div class="stat-label" style="font-size:.65rem;">{% trans "Faol" %}</div>
     </div>
   </div>
   <div class="col-4 col-md-2">
     <div class="card stat-card p-2 text-center" style="border-top: 2px solid #f59e0b;">
       <div class="stat-value" style="font-size:1.1rem;color:#f59e0b;">{{ stats.by_status.trial }}</div>
-      <div class="stat-label" style="font-size:.65rem;">Sinov</div>
+      <div class="stat-label" style="font-size:.65rem;">{% trans "Sinov" %}</div>
     </div>
   </div>
   <div class="col-4 col-md-2">
     <div class="card stat-card p-2 text-center" style="border-top: 2px solid #ef4444;">
       <div class="stat-value" style="font-size:1.1rem;color:#ef4444;">{{ stats.by_status.expired }}</div>
-      <div class="stat-label" style="font-size:.65rem;">Tugagan</div>
+      <div class="stat-label" style="font-size:.65rem;">{% trans "Tugagan" %}</div>
     </div>
   </div>
   <div class="col-4 col-md-2">
     <div class="card stat-card p-2 text-center" style="border-top: 2px solid #ef4444;">
       <div class="stat-value" style="font-size:1.1rem;color:#ef4444;">{{ stats.blocked }}</div>
-      <div class="stat-label" style="font-size:.65rem;">Bloklangan</div>
+      <div class="stat-label" style="font-size:.65rem;">{% trans "Bloklangan" %}</div>
     </div>
   </div>
   <div class="col-4 col-md-2">
     <div class="card stat-card p-2 text-center" style="border-top: 2px solid #f59e0b;">
       <div class="stat-value" style="font-size:1.1rem;color:#f59e0b;">{{ stats.expiring_7 }}</div>
-      <div class="stat-label" style="font-size:.65rem;">7 kunda tugaydi</div>
+      <div class="stat-label" style="font-size:.65rem;">{% trans "7 kunda tugaydi" %}</div>
     </div>
   </div>
 </div>
@@ -69,41 +70,41 @@
   <div class="card-body p-3">
     <form method="get" class="row g-2 align-items-end">
       <div class="col-md-3">
-        <label class="form-label small fw-semibold text-muted">Qidiruv</label>
-        <input type="text" name="q" value="{{ query }}" class="form-control sa-search" placeholder="Biznes nomi, email...">
+        <label class="form-label small fw-semibold text-muted">{% trans "Qidiruv" %}</label>
+        <input type="text" name="q" value="{{ query }}" class="form-control sa-search" placeholder="{% trans 'Biznes nomi, email...' %}">
       </div>
       <div class="col-md-2">
-        <label class="form-label small fw-semibold text-muted">Tarif</label>
+        <label class="form-label small fw-semibold text-muted">{% trans "Tarif" %}</label>
         <select name="plan" class="form-select form-select-sm">
-          <option value="">Barchasi</option>
-          <option value="free" {% if selected_plan == 'free' %}selected{% endif %}>Start</option>
-          <option value="growth" {% if selected_plan == 'growth' %}selected{% endif %}>Pro</option>
-          <option value="enterprise" {% if selected_plan == 'enterprise' %}selected{% endif %}>Max</option>
+          <option value="">{% trans "Barchasi" %}</option>
+          <option value="free" {% if selected_plan == 'free' %}selected{% endif %}>{% trans "Start" %}</option>
+          <option value="growth" {% if selected_plan == 'growth' %}selected{% endif %}>{% trans "Pro" %}</option>
+          <option value="enterprise" {% if selected_plan == 'enterprise' %}selected{% endif %}>{% trans "Max" %}</option>
         </select>
       </div>
       <div class="col-md-2">
-        <label class="form-label small fw-semibold text-muted">Obuna holati</label>
+        <label class="form-label small fw-semibold text-muted">{% trans "Obuna holati" %}</label>
         <select name="sub_status" class="form-select form-select-sm">
-          <option value="">Barchasi</option>
-          <option value="trial" {% if selected_sub_status == 'trial' %}selected{% endif %}>Sinov</option>
-          <option value="active" {% if selected_sub_status == 'active' %}selected{% endif %}>Faol</option>
-          <option value="expired" {% if selected_sub_status == 'expired' %}selected{% endif %}>Muddati o'tgan</option>
-          <option value="cancelled" {% if selected_sub_status == 'cancelled' %}selected{% endif %}>Bekor qilingan</option>
+          <option value="">{% trans "Barchasi" %}</option>
+          <option value="trial" {% if selected_sub_status == 'trial' %}selected{% endif %}>{% trans "Sinov" %}</option>
+          <option value="active" {% if selected_sub_status == 'active' %}selected{% endif %}>{% trans "Faol" %}</option>
+          <option value="expired" {% if selected_sub_status == 'expired' %}selected{% endif %}>{% trans "Muddati o'tgan" %}</option>
+          <option value="cancelled" {% if selected_sub_status == 'cancelled' %}selected{% endif %}>{% trans "Bekor qilingan" %}</option>
         </select>
       </div>
       <div class="col-md-2">
-        <label class="form-label small fw-semibold text-muted">Muddati yaqin</label>
+        <label class="form-label small fw-semibold text-muted">{% trans "Muddati yaqin" %}</label>
         <select name="expiring" class="form-select form-select-sm">
-          <option value="">Barchasi</option>
-          <option value="7" {% if selected_expiring == '7' %}selected{% endif %}>7 kun ichida</option>
-          <option value="30" {% if selected_expiring == '30' %}selected{% endif %}>30 kun ichida</option>
+          <option value="">{% trans "Barchasi" %}</option>
+          <option value="7" {% if selected_expiring == '7' %}selected{% endif %}>{% trans "7 kun ichida" %}</option>
+          <option value="30" {% if selected_expiring == '30' %}selected{% endif %}>{% trans "30 kun ichida" %}</option>
         </select>
       </div>
       <div class="col-md-1">
         <button type="submit" class="btn btn-primary btn-sm w-100"><i class="bi bi-funnel-fill"></i></button>
       </div>
       <div class="col-md-2">
-        <a href="{% url 'superadmin:subscriptions' %}" class="btn btn-outline-secondary btn-sm w-100"><i class="bi bi-arrow-counterclockwise"></i> Reset</a>
+        <a href="{% url 'superadmin:subscriptions' %}" class="btn btn-outline-secondary btn-sm w-100"><i class="bi bi-arrow-counterclockwise"></i> {% trans "Reset" %}</a>
       </div>
     </form>
   </div>
@@ -111,7 +112,7 @@
 
 <!-- ─── Count ─────────────────────────────────────────────────────────────── -->
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <span class="text-muted" style="font-size:.85rem;"><strong>{{ total_count }}</strong> ta obuna</span>
+  <span class="text-muted" style="font-size:.85rem;">{% blocktrans with count=total_count %}<strong>{{ count }}</strong> ta obuna{% endblocktrans %}</span>
 </div>
 
 <!-- ─── Table ─────────────────────────────────────────────────────────────── -->
@@ -119,16 +120,16 @@
   <div class="table-responsive">
     <table class="table sa-table mb-0">
       <thead>
-        <tr>
-          <th>Biznes</th>
-          <th>Egasi</th>
-          <th>Tarif</th>
-          <th>Holat</th>
-          <th>Muddati</th>
-          <th>Qolgan</th>
-          <th>Status</th>
-          <th class="text-end">Amallar</th>
-        </tr>
+          <tr>
+            <th>{% trans "Biznes" %}</th>
+            <th>{% trans "Egasi" %}</th>
+            <th>{% trans "Tarif" %}</th>
+            <th>{% trans "Holat" %}</th>
+            <th>{% trans "Muddati" %}</th>
+            <th>{% trans "Qolgan" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th class="text-end">{% trans "Amallar" %}</th>
+          </tr>
       </thead>
       <tbody>
         {% for b in subscriptions %}
@@ -146,13 +147,13 @@
           </td>
           <td>
             {% if b.subscription_status == 'active' %}
-              <span class="badge-status badge-paid">Faol</span>
+              <span class="badge-status badge-paid">{% trans "Faol" %}</span>
             {% elif b.subscription_status == 'trial' %}
-              <span class="badge-status badge-trial">Sinov</span>
+              <span class="badge-status badge-trial">{% trans "Sinov" %}</span>
             {% elif b.subscription_status == 'expired' %}
-              <span class="badge-status badge-expired">Tugagan</span>
+              <span class="badge-status badge-expired">{% trans "Tugagan" %}</span>
             {% else %}
-              <span class="badge-status badge-blocked">Bekor</span>
+              <span class="badge-status badge-blocked">{% trans "Bekor" %}</span>
             {% endif %}
           </td>
           <td style="font-size:.8rem;">
@@ -168,7 +169,7 @@
             {% if b.subscription_end %}
               {% with remaining=b.subscription_end|timeuntil %}
                 {% if b.subscription_end < now %}
-                  <span style="color:#ef4444;font-weight:600;">Muddati o'tgan</span>
+                  <span style="color:#ef4444;font-weight:600;">{% trans "Muddati o'tgan" %}</span>
                 {% else %}
                   <span style="color:#10b981;">{{ remaining }}</span>
                 {% endif %}
@@ -179,14 +180,14 @@
           </td>
           <td>
             {% if b.is_blocked %}
-              <span class="badge-status badge-blocked">Bloklangan</span>
+              <span class="badge-status badge-blocked">{% trans "Bloklangan" %}</span>
             {% else %}
-              <span class="badge-status badge-active">Faol</span>
+              <span class="badge-status badge-active">{% trans "Faol" %}</span>
             {% endif %}
           </td>
           <td class="text-end">
             <div class="d-flex gap-1 justify-content-end">
-              <a href="{% url 'superadmin:business_detail' b.pk %}" class="btn btn-sm btn-outline-primary" title="Batafsil">
+              <a href="{% url 'superadmin:business_detail' b.pk %}" class="btn btn-sm btn-outline-primary" title="{% trans 'Batafsil' %}">
                 <i class="bi bi-eye"></i>
               </a>
               <div class="dropdown">
@@ -194,13 +195,13 @@
                   <i class="bi bi-gear"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" style="font-size:.8rem;">
-                  <li><h6 class="dropdown-header">Tarifni o'zgartirish</h6></li>
+                  <li><h6 class="dropdown-header">{% trans "Tarifni o'zgartirish" %}</h6></li>
                   <li>
                     <form method="post" action="{% url 'superadmin:update_subscription' b.pk %}">
                       {% csrf_token %}
                       <input type="hidden" name="subscription_plan" value="free">
                       <input type="hidden" name="subscription_status" value="trial">
-                      <button type="submit" class="dropdown-item">➜ Start (free)</button>
+                      <button type="submit" class="dropdown-item">{% trans "➜ Start (free)" %}</button>
                     </form>
                   </li>
                   <li>
@@ -209,7 +210,7 @@
                       <input type="hidden" name="subscription_plan" value="growth">
                       <input type="hidden" name="subscription_status" value="active">
                       <input type="hidden" name="subscription_start" value="{% now 'Y-m-d' %}">
-                      <button type="submit" class="dropdown-item">➜ Pro (growth)</button>
+                      <button type="submit" class="dropdown-item">{% trans "➜ Pro (growth)" %}</button>
                     </form>
                   </li>
                   <li>
@@ -218,7 +219,7 @@
                       <input type="hidden" name="subscription_plan" value="enterprise">
                       <input type="hidden" name="subscription_status" value="active">
                       <input type="hidden" name="subscription_start" value="{% now 'Y-m-d' %}">
-                      <button type="submit" class="dropdown-item">➜ Max (enterprise)</button>
+                      <button type="submit" class="dropdown-item">{% trans "➜ Max (enterprise)" %}</button>
                     </form>
                   </li>
                   <li><hr class="dropdown-divider"></li>
@@ -226,14 +227,14 @@
                     <form method="post" action="{% url 'superadmin:update_subscription' b.pk %}">
                       {% csrf_token %}
                       <input type="hidden" name="subscription_status" value="active">
-                      <button type="submit" class="dropdown-item">✅ Faollashtirish</button>
+                      <button type="submit" class="dropdown-item">{% trans "✅ Faollashtirish" %}</button>
                     </form>
                   </li>
                   <li>
                     <form method="post" action="{% url 'superadmin:update_subscription' b.pk %}">
                       {% csrf_token %}
                       <input type="hidden" name="subscription_status" value="expired">
-                      <button type="submit" class="dropdown-item">❌ Muddatini tugatish</button>
+                      <button type="submit" class="dropdown-item">{% trans "❌ Muddatini tugatish" %}</button>
                     </form>
                   </li>
                   <li><hr class="dropdown-divider"></li>
@@ -241,9 +242,9 @@
                     <form method="post" action="{% url 'superadmin:toggle_block' b.pk %}">
                       {% csrf_token %}
                       {% if b.is_blocked %}
-                        <button type="submit" class="dropdown-item">🔓 Blokdan chiqarish</button>
+                        <button type="submit" class="dropdown-item">{% trans "🔓 Blokdan chiqarish" %}</button>
                       {% else %}
-                        <button type="submit" class="dropdown-item">⛔ Bloklash</button>
+                        <button type="submit" class="dropdown-item">{% trans "⛔ Bloklash" %}</button>
                       {% endif %}
                     </form>
                   </li>
@@ -257,7 +258,7 @@
           <td colspan="8" class="text-center py-5">
             <div class="text-muted">
               <i class="bi bi-inbox display-4 d-block mb-2" style="opacity:.3;"></i>
-              Obunalar topilmadi
+              {% trans "Obunalar topilmadi" %}
             </div>
           </td>
         </tr>

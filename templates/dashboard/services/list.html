@@ -1,15 +1,16 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Xizmatlar{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Xizmatlar" %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title">Xizmatlar</div>
-    <div class="page-hd-sub">Taklif qilinayotgan xizmat turlari ro'yxati</div>
+    <div class="page-hd-title">{% trans "Xizmatlar" %}</div>
+    <div class="page-hd-sub">{% trans "Taklif qilinayotgan xizmat turlari ro'yxati" %}</div>
   </div>
   <div class="page-hd-actions">
     <a href="{% url 'services:create' %}" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Xizmat qo'shish
+      <i class="bi bi-plus-lg"></i> {% trans "Xizmat qo'shish" %}
     </a>
   </div>
 </div>
@@ -20,10 +21,10 @@
     <table class="ds-table">
       <thead>
         <tr>
-          <th style="padding-left:18px;">Xizmat nomi</th>
-          <th>Davomiyligi</th>
-          <th>Narxi</th>
-          <th>Holati</th>
+          <th style="padding-left:18px;">{% trans "Xizmat nomi" %}</th>
+          <th>{% trans "Davomiyligi" %}</th>
+          <th>{% trans "Narxi" %}</th>
+          <th>{% trans "Holati" %}</th>
           <th style="text-align:right;padding-right:18px;width:90px;"></th>
         </tr>
       </thead>
@@ -41,26 +42,26 @@
           </td>
           <td>
             {% if s.price %}
-            <span style="font-weight:600;color:var(--text);">{{ s.price|floatformat:0 }} so'm</span>
+            <span style="font-weight:600;color:var(--text);">{{ s.price|floatformat:0 }} {% trans "so'm" %}</span>
             {% else %}
-            <span style="color:var(--text-4);font-style:italic;">Bepul</span>
+            <span style="color:var(--text-4);font-style:italic;">{% trans "Bepul" %}</span>
             {% endif %}
           </td>
           <td>
             {% if s.is_active %}
-            <span class="status status-green">Faol</span>
+            <span class="status status-green">{% trans "Faol" %}</span>
             {% else %}
-            <span class="status status-gray">O'chirilgan</span>
+            <span class="status status-gray">{% trans "O'chirilgan" %}</span>
             {% endif %}
           </td>
           <td style="text-align:right;padding-right:18px;">
             <div style="display:flex;gap:4px;justify-content:flex-end;">
-              <a href="{% url 'services:edit' s.pk %}" class="btn btn-secondary btn-icon-sm" title="Tahrirlash">
+              <a href="{% url 'services:edit' s.pk %}" class="btn btn-secondary btn-icon-sm" title="{% trans "Tahrirlash" %}">
                 <i class="bi bi-pencil" style="font-size:11px;"></i>
               </a>
-              <form method="post" action="{% url 'services:delete' s.pk %}" style="display:inline;" onsubmit="return confirm('{{ s.name }}ni o\'chirasizmi?')">
+              <form method="post" action="{% url 'services:delete' s.pk %}" style="display:inline;" onsubmit="return confirm('{% blocktrans %}{{ s.name }}ni o'chirasizmi?{% endblocktrans %}')">
                 {% csrf_token %}
-                <button class="btn btn-danger btn-icon-sm" title="O'chirish">
+                <button class="btn btn-danger btn-icon-sm" title="{% trans "O'chirish" %}">
                   <i class="bi bi-trash" style="font-size:11px;"></i>
                 </button>
               </form>
@@ -76,10 +77,10 @@
 <div class="card">
   <div class="ds-empty">
     <div class="ds-empty-icon"><i class="bi bi-grid-3x3-gap"></i></div>
-    <div class="ds-empty-title">Xizmatlar yo'q</div>
-    <div class="ds-empty-desc">Birinchi xizmat turini qo'shing. Mijozlar aynan shu xizmatlardan birini tanlaydi.</div>
+    <div class="ds-empty-title">{% trans "Xizmatlar yo'q" %}</div>
+    <div class="ds-empty-desc">{% trans "Birinchi xizmat turini qo'shing. Mijozlar aynan shu xizmatlardan birini tanlaydi." %}</div>
     <a href="{% url 'services:create' %}" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Birinchi xizmatni qo'shish
+      <i class="bi bi-plus-lg"></i> {% trans "Birinchi xizmatni qo'shish" %}
     </a>
   </div>
 </div>

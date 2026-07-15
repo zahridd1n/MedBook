@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.conf import settings
 from django.http import JsonResponse
+from django.utils.translation import gettext as _
 
 from .models import Business, WorkingHours, FAQ, Payment
 from .forms import BusinessSetupForm, FAQForm, BrandingForm
@@ -84,7 +85,7 @@ def business_setup(request):
                         business=b, day=day,
                         defaults={'is_open': day < 6, 'open_time': '09:00', 'close_time': '18:00'},
                     )
-            messages.success(request, 'Business settings saved.')
+            messages.success(request, _('Business settings saved.'))
             return redirect('dashboard:home')
     else:
         form = BusinessSetupForm(instance=business)
@@ -109,7 +110,7 @@ def working_hours(request):
             h.open_time = request.POST.get(f'open_time_{h.day}') or None
             h.close_time = request.POST.get(f'close_time_{h.day}') or None
             h.save()
-        messages.success(request, 'Working hours saved.')
+        messages.success(request, _('Working hours saved.'))
         return redirect('business:working_hours')
     return render(request, 'dashboard/settings/working_hours.html', {
         'business': business, 'hours': hours,
@@ -135,7 +136,7 @@ def faq_create(request):
             f = form.save(commit=False)
             f.business = business
             f.save()
-            messages.success(request, 'FAQ added.')
+            messages.success(request, _('FAQ added.'))
             return redirect('business:faq_list')
     else:
         form = FAQForm()
@@ -152,7 +153,7 @@ def faq_edit(request, pk):
         form = FAQForm(request.POST, instance=faq)
         if form.is_valid():
             form.save()
-            messages.success(request, 'FAQ updated.')
+            messages.success(request, _('FAQ updated.'))
             return redirect('business:faq_list')
     else:
         form = FAQForm(instance=faq)
@@ -167,7 +168,7 @@ def faq_delete(request, pk):
     faq = get_object_or_404(FAQ, pk=pk, business=business)
     if request.method == 'POST':
         faq.delete()
-        messages.success(request, 'FAQ deleted.')
+        messages.success(request, _('FAQ deleted.'))
     return redirect('business:faq_list')
 
 
@@ -180,7 +181,7 @@ def branding_settings(request):
 
     if request.method == 'POST':
         if not can_use:
-            messages.error(request, 'Sahifa dizaynini sozlash faqat Pro va Max tariflarida mavjud.')
+            messages.error(request, _('Sahifa dizaynini sozlash faqat Pro va Max tariflarida mavjud.'))
             return redirect('business:branding')
 
         # Handle remove banner separately (before form saves old value back)
@@ -189,18 +190,18 @@ def branding_settings(request):
                 business.banner_image.delete(save=False)
             business.banner_image = None
             business.save(update_fields=['banner_image'])
-            messages.success(request, 'Banner rasmi o\'chirildi.')
+            messages.success(request, _('Banner rasmi o\'chirildi.'))
             return redirect('business:branding')
 
         form = BrandingForm(request.POST, request.FILES, instance=business)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Dizayn sozlamalari saqlandi.')
+            messages.success(request, _('Dizayn sozlamalari saqlandi.'))
             return redirect('business:branding')
         else:
             for field, errors in form.errors.items():
                 for err in errors:
-                    messages.error(request, f'{field}: {err}')
+                    messages.error(request, _(f'{field}: {err}'))
     else:
         form = BrandingForm(instance=business)
 
@@ -233,19 +234,19 @@ def telegram_settings(request):
 
     if request.method == 'POST':
         if not can_use_tg:
-            messages.error(request, 'Telegram xabarnomalari faqat Pro va Max tariflarida mavjud.')
+            messages.error(request, _('Telegram xabarnomalari faqat Pro va Max tariflarida mavjud.'))
             return redirect('business:telegram')
 
         action = request.POST.get('action')
 
         if action == 'generate_link':
             if not bot_token_set:
-                messages.error(request, 'TELEGRAM_BOT_TOKEN is not set in your .env file.')
+                messages.error(request, _('TELEGRAM_BOT_TOKEN is not set in your .env file.'))
             elif not bot_username:
-                messages.error(request, 'TELEGRAM_BOT_USERNAME is not set in your .env file.')
+                messages.error(request, _('TELEGRAM_BOT_USERNAME is not set in your .env file.'))
             else:
                 business.generate_connect_token()
-                messages.success(request, 'Connection link generated. Click it to open Telegram.')
+                messages.success(request, _('Connection link generated. Click it to open Telegram.'))
 
         elif action == 'disconnect':
             business.telegram_chat_id = ''
@@ -254,20 +255,20 @@ def telegram_settings(request):
             business.save(update_fields=[
                 'telegram_chat_id', 'telegram_notifications_enabled', 'telegram_connect_token'
             ])
-            messages.success(request, 'Telegram disconnected successfully.')
+            messages.success(request, _('Telegram disconnected successfully.'))
 
         elif action == 'toggle':
             if not business.telegram_chat_id:
-                messages.error(request, 'Connect Telegram first before enabling notifications.')
+                messages.error(request, _('Connect Telegram first before enabling notifications.'))
             else:
                 business.telegram_notifications_enabled = not business.telegram_notifications_enabled
                 business.save(update_fields=['telegram_notifications_enabled'])
                 state = 'enabled' if business.telegram_notifications_enabled else 'paused'
-                messages.success(request, f'Telegram notifications {state}.')
+                messages.success(request, _(f'Telegram notifications {state}.'))
 
         elif action == 'test':
             if not business.telegram_chat_id:
-                messages.error(request, 'Telegram is not connected yet.')
+                messages.error(request, _('Telegram is not connected yet.'))
             else:
                 from notifications.utils import send_telegram_message
                 ok = send_telegram_message(
@@ -278,17 +279,17 @@ def telegram_settings(request):
                     f'<i>You will receive a message like this every time a new booking arrives.</i>'
                 )
                 if ok:
-                    messages.success(request, '✅ Test message sent! Check your Telegram.')
+                    messages.success(request, _('✅ Test message sent! Check your Telegram.'))
                 else:
-                    messages.error(request, '❌ Failed to send. Check that TELEGRAM_BOT_TOKEN is correct.')
+                    messages.error(request, _('❌ Failed to send. Check that TELEGRAM_BOT_TOKEN is correct.'))
 
         elif action == 'set_webhook':
             from notifications.utils import set_telegram_webhook
             result = set_telegram_webhook(settings.SITE_URL)
             if result.get('ok'):
-                messages.success(request, f'Webhook set to {settings.SITE_URL}/telegram/webhook/…')
+                messages.success(request, _(f'Webhook set to {settings.SITE_URL}/telegram/webhook/…'))
             else:
-                messages.error(request, f'Webhook error: {result.get("description", result)}')
+                messages.error(request, _(f'Webhook error: {result.get("description", result)}'))
 
         return redirect('business:telegram')
 
@@ -422,7 +423,7 @@ def payment_view(request):
     from superadmin.models import PricingPlan
     plan = PricingPlan.objects.filter(slug=plan_id).first()
     if not plan or plan.slug == 'free':
-        messages.error(request, 'Noto\'g\'ri tarif tanlandi.')
+        messages.error(request, _('Noto\'g\'ri tarif tanlandi.'))
         return redirect('business:upgrade')
 
     site = SiteSettings.load()
@@ -433,7 +434,7 @@ def payment_view(request):
         receipt = request.FILES.get('receipt')
         note = request.POST.get('note', '')
         if not receipt:
-            messages.error(request, 'Chek rasmini yuklang.')
+            messages.error(request, _('Chek rasmini yuklang.'))
         else:
             Payment.objects.create(
                 business=business,
@@ -442,7 +443,7 @@ def payment_view(request):
                 receipt=receipt,
                 note=note,
             )
-            messages.success(request, 'To\'lovingiz qabul qilindi. Admin tekshirgandan so\'ng tarifingiz faollashtiriladi.')
+            messages.success(request, _('To\'lovingiz qabul qilindi. Admin tekshirgandan so\'ng tarifingiz faollashtiriladi.'))
             return redirect('dashboard:home')
 
     context = {
@@ -471,42 +472,42 @@ def custom_domain_settings(request):
 
         if action == 'save_domain':
             if not can_use:
-                return HttpResponseForbidden('Faqat pullik tariflarda mavjud')
+                return HttpResponseForbidden(_('Faqat pullik tariflarda mavjud'))
 
             domain = request.POST.get('custom_domain', '').strip().lower()
             domain = domain.replace('https://', '').replace('http://', '').replace('/', '')
 
             if domain:
                 if Business.objects.filter(custom_domain=domain).exclude(pk=business.pk).exists():
-                    messages.error(request, 'Bu domen allaqachon boshqa biznes tomonidan ishlatilmoqda.')
+                    messages.error(request, _('Bu domen allaqachon boshqa biznes tomonidan ishlatilmoqda.'))
                 else:
                     business.custom_domain = domain
                     business.domain_verified = False
                     business.domain_verify_token = secrets.token_urlsafe(32)
                     business.save(update_fields=['custom_domain', 'domain_verified', 'domain_verify_token'])
-                    messages.success(request, 'Domen saqlandi. Iltimos, DNS sozlamalarini qo\'shing va tasdiqlang.')
+                    messages.success(request, _('Domen saqlandi. Iltimos, DNS sozlamalarini qo\'shing va tasdiqlang.'))
             else:
                 # Clear
                 business.custom_domain = None
                 business.domain_verified = False
                 business.domain_verify_token = ''
                 business.save(update_fields=['custom_domain', 'domain_verified', 'domain_verify_token'])
-                messages.success(request, 'Domen o\'chirildi.')
+                messages.success(request, _('Domen o\'chirildi.'))
 
             return redirect('business:custom_domain')
 
         elif action == 'verify':
             if not business.custom_domain or not business.domain_verify_token:
-                messages.error(request, 'Avval domen kiriting.')
+                messages.error(request, _('Avval domen kiriting.'))
                 return redirect('business:custom_domain')
 
             verified = _verify_domain_txt(business.custom_domain, business.domain_verify_token)
             if verified:
                 business.domain_verified = True
                 business.save(update_fields=['domain_verified'])
-                messages.success(request, 'Domen muvaffaqiyatli tasdiqlandi! ✅')
+                messages.success(request, _('Domen muvaffaqiyatli tasdiqlandi! ✅'))
             else:
-                messages.error(request, 'TXT record topilmadi. DNS sozlamalari tarqalishini kuting va qayta urinib ko\'ring.')
+                messages.error(request, _('TXT record topilmadi. DNS sozlamalari tarqalishini kuting va qayta urinib ko\'ring.'))
 
             return redirect('business:custom_domain')
 
@@ -544,17 +545,17 @@ def google_calendar_settings(request):
             business.google_credentials = None
             business.google_calendar_sync_enabled = False
             business.save(update_fields=['google_credentials', 'google_calendar_sync_enabled'])
-            messages.success(request, 'Google Calendar uzildi.')
+            messages.success(request, _('Google Calendar uzildi.'))
             return redirect('business:google_calendar')
 
         elif action == 'toggle_sync':
             if not has_creds:
-                messages.error(request, 'Avval Google Calendar ga ulaning.')
+                messages.error(request, _('Avval Google Calendar ga ulaning.'))
             else:
                 business.google_calendar_sync_enabled = not business.google_calendar_sync_enabled
                 business.save(update_fields=['google_calendar_sync_enabled'])
                 state = 'yoqildi' if business.google_calendar_sync_enabled else 'o\'chirildi'
-                messages.success(request, f'Google Calendar sinxronizatsiya {state}.')
+                messages.success(request, _(f'Google Calendar sinxronizatsiya {state}.'))
 
         return redirect('business:google_calendar')
 
@@ -584,16 +585,16 @@ def google_calendar_callback(request):
     business = get_object_or_404(Business, owner=request.user)
     error = request.GET.get('error')
     if error:
-        messages.error(request, f'Google Calendar ulanish bekor qilindi yoki xatolik: {error}')
+        messages.error(request, _(f'Google Calendar ulanish bekor qilindi yoki xatolik: {error}'))
         return redirect('business:google_calendar')
 
     code = request.GET.get('code')
     if not code:
-        messages.error(request, 'Google Calendar ulanish uchun kod topilmadi.')
+        messages.error(request, _('Google Calendar ulanish uchun kod topilmadi.'))
         return redirect('business:google_calendar')
 
     if not settings.GOOGLE_OAUTH_CLIENT_CONFIG:
-        messages.error(request, 'Google OAuth sozlanmagan.')
+        messages.error(request, _('Google OAuth sozlanmagan.'))
         return redirect('business:google_calendar')
 
     from .google_calendar import get_flow
@@ -603,10 +604,10 @@ def google_calendar_callback(request):
         business.google_credentials = flow.credentials.to_json()
         business.google_calendar_sync_enabled = True
         business.save(update_fields=['google_credentials', 'google_calendar_sync_enabled'])
-        messages.success(request, 'Google Calendar muvaffaqiyatli ulandi! ✅')
+        messages.success(request, _('Google Calendar muvaffaqiyatli ulandi! ✅'))
     except Exception as e:
         logger.error(f'Google Calendar callback error: {e}')
-        messages.error(request, f'Google Calendar ulanishda xatolik: {e}')
+        messages.error(request, _(f'Google Calendar ulanishda xatolik: {e}'))
 
     return redirect('business:google_calendar')
 
@@ -768,15 +769,15 @@ def white_label_settings(request):
 
     if request.method == 'POST':
         if not can_use:
-            messages.error(request, 'White Label faqat Max tarifida mavjud.')
+            messages.error(request, _('White Label faqat Max tarifida mavjud.'))
             return redirect('business:white_label')
         enabled = request.POST.get('white_label_enabled') == 'on'
         business.white_label_enabled = enabled
         business.save(update_fields=['white_label_enabled'])
         if enabled:
-            messages.success(request, 'White Label yoqildi — BookFlow brendi yashirildi.')
+            messages.success(request, _('White Label yoqildi — BookFlow brendi yashirildi.'))
         else:
-            messages.success(request, 'White Label o\'chirildi.')
+            messages.success(request, _('White Label o\'chirildi.'))
         return redirect('business:white_label')
 
     return render(request, 'dashboard/settings/white_label.html', {
@@ -794,7 +795,7 @@ def api_settings(request):
 
     if request.method == 'POST':
         if not can_use:
-            messages.error(request, 'API va Webhook faqat Max tarifida mavjud.')
+            messages.error(request, _('API va Webhook faqat Max tarifida mavjud.'))
             return redirect('business:api')
 
         action = request.POST.get('action')
@@ -803,16 +804,16 @@ def api_settings(request):
             business.api_key = secrets.token_hex(32)
             business.api_key_created = timezone.now()
             business.save(update_fields=['api_key', 'api_key_created'])
-            messages.success(request, 'API kaliti muvaffaqiyatli yangilandi.')
+            messages.success(request, _('API kaliti muvaffaqiyatli yangilandi.'))
 
         elif action == 'save_webhook':
             webhook_url = request.POST.get('webhook_url', '').strip()
             business.webhook_url = webhook_url
             business.save(update_fields=['webhook_url'])
             if webhook_url:
-                messages.success(request, 'Webhook URL saqlandi. Yangi qabullar avtomatik yuboriladi.')
+                messages.success(request, _('Webhook URL saqlandi. Yangi qabullar avtomatik yuboriladi.'))
             else:
-                messages.success(request, 'Webhook URL o\'chirildi.')
+                messages.success(request, _('Webhook URL o\'chirildi.'))
 
         elif action == 'test_webhook':
             import json
@@ -827,11 +828,11 @@ def api_settings(request):
                     method='POST',
                 )
                 urlopen(req, timeout=5)
-                messages.success(request, 'Test webhook muvaffaqiyatli yuborildi ✅')
+                messages.success(request, _('Test webhook muvaffaqiyatli yuborildi ✅'))
             except URLError as e:
-                messages.error(request, f'Webhook test xatosi: {e.reason}')
+                messages.error(request, _(f'Webhook test xatosi: {e.reason}'))
             except Exception as e:
-                messages.error(request, f'Webhook test xatosi: {e}')
+                messages.error(request, _(f'Webhook test xatosi: {e}'))
 
         return redirect('business:api')
 
@@ -875,10 +876,10 @@ def api_docs(request):
 def _api_auth(request, business):
     """Verify API access and key. Returns JsonResponse on failure, None on success."""
     if not business.can_use_api():
-        return JsonResponse({'error': 'API ruxsati yo\'q. Max tarifini talab qiladi.'}, status=403)
+        return JsonResponse({'error': _('API ruxsati yo\'q. Max tarifini talab qiladi.')}, status=403)
     api_key = request.GET.get('api_key') or request.headers.get('X-API-Key') or request.POST.get('api_key')
     if not api_key or api_key != business.api_key:
-        return JsonResponse({'error': 'Noto\'g\'ri API kaliti. X-API-Key header yoki ?api_key= parametrini tekshiring.'}, status=401)
+        return JsonResponse({'error': _('Noto\'g\'ri API kaliti. X-API-Key header yoki ?api_key= parametrini tekshiring.')}, status=401)
     # Track API call count (cache may be unavailable)
     try:
         from django.core.cache import cache
@@ -940,7 +941,7 @@ def api_appointments(request):
         try:
             body = json.loads(request.body) if request.body else request.POST.dict()
         except json.JSONDecodeError:
-            return JsonResponse({'ok': False, 'error': 'JSON formatida yuboring'}, status=400)
+            return JsonResponse({'ok': False, 'error': _('JSON formatida yuboring')}, status=400)
 
         from customers.models import Customer
         from services.models import Service
@@ -954,19 +955,19 @@ def api_appointments(request):
         time_str = body.get('time', '')
 
         if not all([customer_name, customer_phone, service_id, date_str, time_str]):
-            return JsonResponse({'ok': False, 'error': 'Majburiy maydonlar: customer_name, customer_phone, service_id, date, time'}, status=400)
+            return JsonResponse({'ok': False, 'error': _('Majburiy maydonlar: customer_name, customer_phone, service_id, date, time')}, status=400)
 
         try:
             service = Service.objects.get(id=service_id, business=business)
         except Service.DoesNotExist:
-            return JsonResponse({'ok': False, 'error': 'Xizmat topilmadi'}, status=404)
+            return JsonResponse({'ok': False, 'error': _('Xizmat topilmadi')}, status=404)
 
         employee = None
         if employee_id:
             try:
                 employee = Employee.objects.get(id=employee_id, business=business)
             except Employee.DoesNotExist:
-                return JsonResponse({'ok': False, 'error': 'Xodim topilmadi'}, status=404)
+                return JsonResponse({'ok': False, 'error': _('Xodim topilmadi')}, status=404)
 
         customer, _ = Customer.objects.get_or_create(
             business=business, phone=customer_phone,
@@ -997,14 +998,14 @@ def api_appointment_detail(request, pk):
     try:
         a = Appointment.objects.get(id=pk, business=business)
     except Appointment.DoesNotExist:
-        return JsonResponse({'ok': False, 'error': 'Qabul topilmadi'}, status=404)
+        return JsonResponse({'ok': False, 'error': _('Qabul topilmadi')}, status=404)
 
     if request.method == 'DELETE':
         if a.status == 'cancelled':
-            return JsonResponse({'ok': False, 'error': 'Qabul allaqachon bekor qilingan'}, status=400)
+            return JsonResponse({'ok': False, 'error': _('Qabul allaqachon bekor qilingan')}, status=400)
         a.status = 'cancelled'
         a.save(update_fields=['status'])
-        return JsonResponse({'ok': True, 'message': 'Qabul bekor qilindi'})
+        return JsonResponse({'ok': True, 'message': _('Qabul bekor qilindi')})
 
     data = {
         'id': a.id,

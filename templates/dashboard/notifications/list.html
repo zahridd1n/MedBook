@@ -1,17 +1,18 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Bildirishnomalar{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Bildirishnomalar" %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title">Bildirishnomalar</div>
-    <div class="page-hd-sub">Barcha qabul va tizim xabarlari</div>
+    <div class="page-hd-title">{% trans "Bildirishnomalar" %}</div>
+    <div class="page-hd-sub">{% trans "Barcha qabul va tizim xabarlari" %}</div>
   </div>
   <div class="page-hd-actions">
     <form method="post" action="{% url 'notifications:mark_all_read' %}" id="markAllFormPage">
       {% csrf_token %}
       <button type="submit" class="btn btn-secondary">
-        <i class="bi bi-check-all"></i> Barchasini o'qilgan deb belgilash
+        <i class="bi bi-check-all"></i> {% trans "Barchasini o'qilgan deb belgilash" %}
       </button>
     </form>
   </div>
@@ -35,7 +36,7 @@
       <div style="flex:1;min-width:0;">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px;">
           <span style="font-weight:600;font-size:13.5px;color:var(--text);">{{ n.title }}</span>
-          <span style="font-size:11px;color:var(--text-4);margin-left:auto;white-space:nowrap;">{{ n.created_at|timesince }} oldin</span>
+          <span style="font-size:11px;color:var(--text-4);margin-left:auto;white-space:nowrap;">{% blocktrans with time=n.created_at|timesince %}{{ time }} oldin{% endblocktrans %}</span>
         </div>
         <div style="font-size:13px;color:var(--text-3);line-height:1.5;">{{ n.message }}</div>
       </div>
@@ -49,8 +50,8 @@
   {% else %}
   <div class="ds-empty">
     <div class="ds-empty-icon"><i class="bi bi-bell-slash"></i></div>
-    <div class="ds-empty-title">Bildirishnomalar yo'q</div>
-    <div class="ds-empty-desc">Yangi qabul yozilganda bildirishnomalar shu yerda ko'rinadi</div>
+    <div class="ds-empty-title">{% trans "Bildirishnomalar yo'q" %}</div>
+    <div class="ds-empty-desc">{% trans "Yangi qabul yozilganda bildirishnomalar shu yerda ko'rinadi" %}</div>
   </div>
   {% endif %}
 </div>

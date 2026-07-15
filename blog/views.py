@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.utils.translation import gettext as _
 from .models import BlogPost, BlogComment
 from .forms import BlogPostForm, BlogCommentForm
 from business.models import Business
@@ -49,7 +50,7 @@ def blog_create(request):
         'form': form,
         'business': business,
         'active_tab': 'blog',
-        'title': 'Yangi Blog Qo\'shish',
+        'title': _('Yangi Blog Qo\'shish'),
     })
 
 
@@ -76,7 +77,7 @@ def blog_edit(request, pk):
         'post': post,
         'business': business,
         'active_tab': 'blog',
-        'title': 'Blogni Tahrirlash',
+        'title': _('Blogni Tahrirlash'),
     })
 
 

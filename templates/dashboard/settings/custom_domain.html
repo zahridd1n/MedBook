@@ -1,5 +1,6 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Maxsus domen{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Maxsus domen" %}{% endblock %}
 {% block dashboard_content %}
 <style>
 .dns-table{font-size:.8rem}
@@ -11,8 +12,8 @@
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title"><i class="bi bi-globe2" style="margin-right:8px;color:var(--p);"></i>Maxsus domen</div>
-    <div class="page-hd-sub">O'z domeningizni ulang va professional ko'rinish bering</div>
+    <div class="page-hd-title"><i class="bi bi-globe2" style="margin-right:8px;color:var(--p);"></i>{% trans "Maxsus domen" %}</div>
+    <div class="page-hd-sub">{% trans "O'z domeningizni ulang va professional ko'rinish bering" %}</div>
   </div>
 </div>
 
@@ -20,9 +21,9 @@
 <div class="ds-alert warning" style="margin-bottom:20px;">
   <span style="font-size:1.5rem;">🔒</span>
   <div>
-    <strong>Maxsus domen faqat Pro va Max tariflarida mavjud</strong><br>
-    <span style="font-size:12.5px;">O'z domeningizni ulash uchun tarifingizni yangilang</span><br>
-    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> Tarifni yangilash</a>
+    <strong>{% trans "Maxsus domen faqat Pro va Max tariflarida mavjud" %}</strong><br>
+    <span style="font-size:12.5px;">{% trans "O'z domeningizni ulash uchun tarifingizni yangilang" %}</span><br>
+    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> {% trans "Tarifni yangilash" %}</a>
   </div>
 </div>
 {% endif %}
@@ -32,21 +33,21 @@
     <div class="card">
       <div class="card-body p-4">
         <h6 class="fw-semibold mb-3" style="font-size:.9rem;">
-          <i class="bi bi-globe2 me-2 text-primary"></i>Domen sozlamalari
+          <i class="bi bi-globe2 me-2 text-primary"></i>{% trans "Domen sozlamalari" %}
         </h6>
 
         <form method="post">
           {% csrf_token %}
           <div class="mb-3">
-            <label class="form-label fw-medium" style="font-size:.82rem;">Sizning domeningiz</label>
+            <label class="form-label fw-medium" style="font-size:.82rem;">{% trans "Sizning domeningiz" %}</label>
             <div class="input-group">
               <input type="text" name="custom_domain" class="form-control" placeholder="booking.meningklinikam.uz"
                      value="{{ business.custom_domain|default:'' }}" {% if not can_use %}disabled{% endif %}>
               <button type="submit" name="action" value="save_domain" class="btn btn-primary" {% if not can_use %}disabled{% endif %}>
-                <i class="bi bi-check-lg me-1"></i>Saqlash
+                <i class="bi bi-check-lg me-1"></i>{% trans "Saqlash" %}
               </button>
             </div>
-            <div class="form-text small text-muted">Faqat domen nomini kiriting (http:// yoki https:// siz)</div>
+            <div class="form-text small text-muted">{% trans "Faqat domen nomini kiriting (http:// yoki https:// siz)" %}</div>
           </div>
         </form>
 
@@ -54,15 +55,15 @@
         <div class="mt-4">
           <div class="d-flex align-items-center gap-3 mb-3">
             <h6 class="fw-semibold mb-0" style="font-size:.82rem;">
-              <i class="bi bi-shield-check me-1"></i>Tasdiqlash holati
+              <i class="bi bi-shield-check me-1"></i>{% trans "Tasdiqlash holati" %}
             </h6>
             {% if business.domain_verified %}
             <span class="badge fw-semibold" style="background:#f0fdf4;color:#16a34a;font-size:.72rem;padding:4px 10px;border-radius:5px;">
-              <i class="bi bi-check-circle me-1"></i>Tasdiqlangan
+              <i class="bi bi-check-circle me-1"></i>{% trans "Tasdiqlangan" %}
             </span>
             {% else %}
             <span class="badge fw-semibold" style="background:#fef2f2;color:#dc2626;font-size:.72rem;padding:4px 10px;border-radius:5px;">
-              <i class="bi bi-x-circle me-1"></i>Tasdiqlanmagan
+              <i class="bi bi-x-circle me-1"></i>{% trans "Tasdiqlanmagan" %}
             </span>
             {% endif %}
           </div>
@@ -70,43 +71,43 @@
           {% if not business.domain_verified %}
           <div class="alert" style="background:#f0f4ff;border:1px solid #dbeafe;border-radius:8px;font-size:.8rem;">
             <div class="fw-semibold mb-2" style="color:#1d4ed8;">
-              <i class="bi bi-info-circle me-1"></i>DNS sozlamalari
+              <i class="bi bi-info-circle me-1"></i>{% trans "DNS sozlamalari" %}
             </div>
-            <p class="small text-muted mb-3">Domeningizning DNS boshqaruv paneliga quyidagi TXT recordni qo'shing:</p>
+            <p class="small text-muted mb-3">{% trans "Domeningizning DNS boshqaruv paneliga quyidagi TXT recordni qo'shing:" %}</p>
 
             <table class="table dns-table mb-3">
               <thead>
-                <tr><th>Tur</th><th>Nom</th><th>Qiymat</th></tr>
+                <tr><th>{% trans "Tur" %}</th><th>{% trans "Nom" %}</th><th>{% trans "Qiymat" %}</th></tr>
               </thead>
               <tbody>
                 <tr>
                   <td>TXT</td>
-                  <td>@ <span class="text-muted fw-normal" style="font-family:inherit;">(yoki <em>domeningiz</em>)</span></td>
+                  <td>@ <span class="text-muted fw-normal" style="font-family:inherit;">{% trans "(yoki" %} <em>{% trans "domeningiz" %}</em>{% trans ")" %}</span></td>
                   <td>
                     <code id="verifyToken">{{ business.domain_verify_token }}</code>
-                    <button class="copy-btn ms-2" onclick="navigator.clipboard.writeText(document.getElementById('verifyToken').textContent);this.textContent='Nusxalandi';setTimeout(()=>this.textContent='Nusxalash',2000);">
-                      Nusxalash
+                    <button class="copy-btn ms-2" onclick="navigator.clipboard.writeText(document.getElementById('verifyToken').textContent);this.textContent='{% trans "Nusxalandi" %}';setTimeout(()=>this.textContent='{% trans "Nusxalash" %}',2000);">
+                      {% trans "Nusxalash" %}
                     </button>
                   </td>
                 </tr>
               </tbody>
             </table>
 
-            <p class="small text-muted mb-2">DNS o'zgarishlari tarqalgach (bir necha daqiqa - 48 soat), tasdiqlash tugmasini bosing:</p>
+            <p class="small text-muted mb-2">{% trans "DNS o'zgarishlari tarqalgach (bir necha daqiqa - 48 soat), tasdiqlash tugmasini bosing:" %}</p>
             <form method="post">
               {% csrf_token %}
               <button type="submit" name="action" value="verify" class="btn btn-sm btn-primary">
-                <i class="bi bi-arrow-repeat me-1"></i>Tasdiqlash
+                <i class="bi bi-arrow-repeat me-1"></i>{% trans "Tasdiqlash" %}
               </button>
             </form>
           </div>
           {% else %}
           <div class="alert" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:.8rem;">
             <div class="fw-semibold mb-1" style="color:#15803d;">
-              <i class="bi bi-check-circle me-1"></i>Domen tasdiqlangan
+              <i class="bi bi-check-circle me-1"></i>{% trans "Domen tasdiqlangan" %}
             </div>
             <p class="small text-muted mb-0">
-              Mijozlaringiz <strong>{{ business.custom_domain }}</strong> orqali to'g'ridan-to'g'ri sizning sahifangizga kira oladi.
+              {% blocktrans %}Mijozlaringiz <strong>{{ business.custom_domain }}</strong> orqali to'g'ridan-to'g'ri sizning sahifangizga kira oladi.{% endblocktrans %}
             </p>
           </div>
           {% endif %}
@@ -120,35 +121,35 @@
     <div class="card">
       <div class="card-body p-4">
         <h6 class="fw-semibold mb-3" style="font-size:.9rem;">
-          <i class="bi bi-question-circle me-2 text-primary"></i>Yo'riqnoma
+          <i class="bi bi-question-circle me-2 text-primary"></i>{% trans "Yo'riqnoma" %}
         </h6>
         <div style="font-size:.8rem;line-height:1.6;">
           <div class="d-flex gap-3 mb-3">
             <span class="badge rounded-circle" style="background:#6366f1;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.72rem;">1</span>
             <div>
-              <div class="fw-medium">Domen sotib oling</div>
-              <div class="text-muted small">Masalan: <code>booking.meningklinikam.uz</code> — bu sizning mijozlaringiz brauzerga yozadigan manzil bo'ladi.</div>
+              <div class="fw-medium">{% trans "Domen sotib oling" %}</div>
+              <div class="text-muted small">{% blocktrans %}Masalan: <code>booking.meningklinikam.uz</code> — bu sizning mijozlaringiz brauzerga yozadigan manzil bo'ladi.{% endblocktrans %}</div>
             </div>
           </div>
           <div class="d-flex gap-3 mb-3">
             <span class="badge rounded-circle" style="background:#6366f1;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.72rem;">2</span>
             <div>
-              <div class="fw-medium">DNS sozlamalarini qo'shing</div>
-              <div class="text-muted small">Domen hosting panelida <strong>TXT record</strong> qo'shing va yuqoridagi qiymatni kiriting. So'ngra <strong>CNAME record</strong> qo'shib domeningizni <code>{{ request.get_host }}</code> ga yo'naltiring.</div>
+              <div class="fw-medium">{% trans "DNS sozlamalarini qo'shing" %}</div>
+              <div class="text-muted small">{% blocktrans %}Domen hosting panelida <strong>TXT record</strong> qo'shing va yuqoridagi qiymatni kiriting. So'ngra <strong>CNAME record</strong> qo'shib domeningizni <code>{{ request.get_host }}</code> ga yo'naltiring.{% endblocktrans %}</div>
             </div>
           </div>
           <div class="d-flex gap-3 mb-3">
             <span class="badge rounded-circle" style="background:#6366f1;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.72rem;">3</span>
             <div>
-              <div class="fw-medium">Tasdiqlash</div>
-              <div class="text-muted small">DNS tarqalgach, "Tasdiqlash" tugmasini bosing. Biz TXT recordni tekshirib, domen egaligini tasdiqlaymiz.</div>
+              <div class="fw-medium">{% trans "Tasdiqlash" %}</div>
+              <div class="text-muted small">{% trans "DNS tarqalgach, Tasdiqlash tugmasini bosing. Biz TXT recordni tekshirib, domen egaligini tasdiqlaymiz." %}</div>
             </div>
           </div>
           <div class="d-flex gap-3">
             <span class="badge rounded-circle" style="background:#6366f1;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.72rem;">4</span>
             <div>
-              <div class="fw-medium">Tayyor!</div>
-              <div class="text-muted small">Endi mijozlaringiz <code>{{ business.custom_domain|default:"domeningiz" }}</code> orqali to'g'ridan-to'g'ri sizning booking sahifangizga kira oladi.</div>
+              <div class="fw-medium">{% trans "Tayyor!" %}</div>
+              <div class="text-muted small">{% blocktrans %}Endi mijozlaringiz <code>{{ business.custom_domain|default:"domeningiz" }}</code> orqali to'g'ridan-to'g'ri sizning booking sahifangizga kira oladi.{% endblocktrans %}</div>
             </div>
           </div>
         </div>

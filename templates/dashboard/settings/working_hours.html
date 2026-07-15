@@ -1,11 +1,12 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Ish vaqtlari{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Ish vaqtlari" %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title"><i class="bi bi-clock" style="margin-right:8px;color:var(--p);"></i>Ish vaqtlari</div>
-    <div class="page-hd-sub">Har bir kun uchun ochiq/yopiq holat va ish soatlarini belgilang</div>
+    <div class="page-hd-title"><i class="bi bi-clock" style="margin-right:8px;color:var(--p);"></i>{% trans "Ish vaqtlari" %}</div>
+    <div class="page-hd-sub">{% trans "Har bir kun uchun ochiq/yopiq holat va ish soatlarini belgilang" %}</div>
   </div>
 </div>
 
@@ -26,13 +27,13 @@
                   style="width:18px;height:18px;accent-color:var(--p);">
               </label>
               <div>
-                <label style="font-size:10px;color:var(--text-4);margin-bottom:3px;display:block;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">Boshlanish</label>
+                <label style="font-size:10px;color:var(--text-4);margin-bottom:3px;display:block;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">{% trans "Boshlanish" %}</label>
                 <input type="time" class="form-control" name="open_time_{{ h.day }}" id="open_time_{{ h.day }}"
                   value="{{ h.open_time|date:'H:i' }}" {% if not h.is_open %}disabled{% endif %}
                   style="font-size:13px;padding:6px 10px;">
               </div>
               <div>
-                <label style="font-size:10px;color:var(--text-4);margin-bottom:3px;display:block;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">Tugash</label>
+                <label style="font-size:10px;color:var(--text-4);margin-bottom:3px;display:block;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">{% trans "Tugash" %}</label>
                 <input type="time" class="form-control" name="close_time_{{ h.day }}" id="close_time_{{ h.day }}"
                   value="{{ h.close_time|date:'H:i' }}" {% if not h.is_open %}disabled{% endif %}
                   style="font-size:13px;padding:6px 10px;">
@@ -41,7 +42,7 @@
             {% endfor %}
           </div>
           <button type="submit" class="btn btn-primary">
-            <i class="bi bi-check-lg"></i> Ish vaqtlarini saqlash
+            <i class="bi bi-check-lg"></i> {% trans "Ish vaqtlarini saqlash" %}
           </button>
         </form>
       </div>
@@ -51,21 +52,21 @@
   <div class="col-lg-4">
     <div class="card">
       <div class="card-head">
-        <span class="card-head-title"><i class="bi bi-info-circle" style="margin-right:6px;color:#0284c7;"></i>Maslahatlar</span>
+        <span class="card-head-title"><i class="bi bi-info-circle" style="margin-right:6px;color:#0284c7;"></i>{% trans "Maslahatlar" %}</span>
       </div>
       <div class="card-body">
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
           <li style="display:flex;gap:8px;font-size:12.5px;color:var(--text-2);">
             <i class="bi bi-check-circle" style="color:#16a34a;flex-shrink:0;margin-top:1px;"></i>
-            Har bir kun uchun alohida ish soatlari belgilang
+            {% trans "Har bir kun uchun alohida ish soatlari belgilang" %}
           </li>
           <li style="display:flex;gap:8px;font-size:12.5px;color:var(--text-2);">
             <i class="bi bi-check-circle" style="color:#16a34a;flex-shrink:0;margin-top:1px;"></i>
-            Yopiq kunlarda qabul vaqtlari ko'rsatilmaydi
+            {% trans "Yopiq kunlarda qabul vaqtlari ko'rsatilmaydi" %}
           </li>
           <li style="display:flex;gap:8px;font-size:12.5px;color:var(--text-2);">
             <i class="bi bi-check-circle" style="color:#16a34a;flex-shrink:0;margin-top:1px;"></i>
-            O'zgarishlardan so'ng albatta saqlashni unutmang
+            {% trans "O'zgarishlardan so'ng albatta saqlashni unutmang" %}
           </li>
         </ul>
       </div>

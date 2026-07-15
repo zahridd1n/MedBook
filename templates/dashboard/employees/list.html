@@ -1,22 +1,24 @@
 {% extends 'base_dashboard.html' %}
-{% block page_title %}Xodimlar{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Xodimlar" %}{% endblock %}
 {% block dashboard_content %}
 
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title">Xodimlar</div>
+    <div class="page-hd-title">{% trans "Xodimlar" %}</div>
     <div class="page-hd-sub">
-      {{ employees|length }}{% if business.max_employees %}/{{ business.max_employees }}{% endif %} xodim ro'yxatda
+      {% blocktrans with emp_count=employees|length %}{{ emp_count }} xodim ro'yxatda{% endblocktrans %}
+      {% if business.max_employees %}/{{ business.max_employees }}{% endif %}
     </div>
   </div>
   <div class="page-hd-actions">
     {% if business.can_add_employee %}
     <a href="{% url 'employees:create' %}" class="btn btn-primary">
-      <i class="bi bi-person-plus"></i> Xodim qo'shish
+      <i class="bi bi-person-plus"></i> {% trans "Xodim qo'shish" %}
     </a>
     {% else %}
-    <button class="btn btn-secondary" disabled title="Xodim limiti {{ business.max_employees }} taga yetdi">
-      <i class="bi bi-lock"></i> Limit tugagan
+    <button class="btn btn-secondary" disabled title="{% blocktrans with max=business.max_employees %}Xodim limiti {{ max }} taga yetdi{% endblocktrans %}">
+      <i class="bi bi-lock"></i> {% trans "Limit tugagan" %}
     </button>
     {% endif %}
   </div>
@@ -38,24 +40,24 @@
         {% endif %}
 
         <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;">{{ emp.name }}</div>
-        <div style="font-size:12px;color:var(--text-3);margin-bottom:10px;">{{ emp.position|default:"Xodim" }}</div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:10px;">{% if emp.position %}{{ emp.position }}{% else %}{% trans "Xodim" %}{% endif %}</div>
 
         {% if not emp.is_active %}
-        <span class="status status-gray" style="margin-bottom:10px;display:inline-flex;">Faol emas</span>
+        <span class="status status-gray" style="margin-bottom:10px;display:inline-flex;">{% trans "Faol emas" %}</span>
         {% else %}
-        <span class="status status-green" style="margin-bottom:10px;display:inline-flex;">Faol</span>
+        <span class="status status-green" style="margin-bottom:10px;display:inline-flex;">{% trans "Faol" %}</span>
         {% endif %}
 
         <div style="display:flex;gap:6px;justify-content:center;margin-top:12px;padding-top:14px;border-top:1px solid var(--border);">
-          <a href="{% url 'employees:edit' emp.pk %}" class="btn btn-secondary btn-sm" title="Tahrirlash">
-            <i class="bi bi-pencil"></i> Tahrirlash
+          <a href="{% url 'employees:edit' emp.pk %}" class="btn btn-secondary btn-sm" title="{% trans "Tahrirlash" %}">
+            <i class="bi bi-pencil"></i> {% trans "Tahrirlash" %}
           </a>
-          <a href="{% url 'employees:schedule' emp.pk %}" class="btn btn-secondary btn-sm" title="Jadval">
-            <i class="bi bi-clock"></i> Jadval
+          <a href="{% url 'employees:schedule' emp.pk %}" class="btn btn-secondary btn-sm" title="{% trans "Jadval" %}">
+            <i class="bi bi-clock"></i> {% trans "Jadval" %}
           </a>
-          <form method="post" action="{% url 'employees:delete' emp.pk %}" style="display:inline;" onsubmit="return confirm('{{ emp.name }}ni o\'chirasizmi?')">
+          <form method="post" action="{% url 'employees:delete' emp.pk %}" style="display:inline;" onsubmit="return confirm('{% blocktrans %}{{ emp.name }}ni o'chirasizmi?{% endblocktrans %}')">
             {% csrf_token %}
-            <button class="btn btn-danger btn-sm btn-icon-sm" title="O'chirish">
+            <button class="btn btn-danger btn-sm btn-icon-sm" title="{% trans "O'chirish" %}">
               <i class="bi bi-trash" style="font-size:11px;"></i>
             </button>
           </form>
@@ -69,10 +71,10 @@
 <div class="card">
   <div class="ds-empty">
     <div class="ds-empty-icon"><i class="bi bi-person-badge"></i></div>
-    <div class="ds-empty-title">Xodimlar yo'q</div>
-    <div class="ds-empty-desc">Birinchi xodimingizni qo'shing. Xodimlar mijozlarga xizmat turlarini tanlashda ko'rsatiladi.</div>
+    <div class="ds-empty-title">{% trans "Xodimlar yo'q" %}</div>
+    <div class="ds-empty-desc">{% trans "Birinchi xodimingizni qo'shing. Xodimlar mijozlarga xizmat turlarini tanlashda ko'rsatiladi." %}</div>
     <a href="{% url 'employees:create' %}" class="btn btn-primary">
-      <i class="bi bi-person-plus"></i> Birinchi xodimni qo'shish
+      <i class="bi bi-person-plus"></i> {% trans "Birinchi xodimni qo'shish" %}
     </a>
   </div>
 </div>

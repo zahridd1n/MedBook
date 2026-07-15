@@ -1,14 +1,15 @@
 {% extends 'base_dashboard.html' %}
+{% load i18n %}
 {% load humanize %}
-{% block page_title %}Tarif & Narxlar{% endblock %}
+{% block page_title %}{% trans "Tarif & Narxlar" %}{% endblock %}
 {% block dashboard_content %}
 
 <!-- Header -->
 <div class="page-header">
   <div>
-    <div class="page-header-title">Tarif & Narxlar</div>
+    <div class="page-header-title">{% trans "Tarif & Narxlar" %}</div>
     <div class="page-header-sub">
-      Joriy tarif:
+      {% trans "Joriy tarif:" %}
       <span class="fw-semibold" style="color:var(--p);">
         {% if business.subscription_plan == 'free' %}Start
         {% elif business.subscription_plan == 'growth' %}Pro
@@ -24,34 +25,32 @@
   <div class="card-body p-4">
     <div class="row align-items-center g-3">
       <div class="col-sm-6">
-        <div style="font-size:11px;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Faol tarif</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">{% trans "Faol tarif" %}</div>
         <div style="font-size:22px;font-weight:700;color:#fff;letter-spacing:-.02em;">
           {% if business.subscription_plan == 'growth' %}Pro{% else %}Max{% endif %}
         </div>
         <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:4px;">
           {% if business.subscription_status == 'active' %}
-            <span style="color:#22c55e;">● Faol</span>
+            <span style="color:#22c55e;">{% trans "● Faol" %}</span>
           {% elif business.subscription_status == 'trial' %}
-            <span style="color:#f59e0b;">● Sinov davri</span>
+            <span style="color:#f59e0b;">{% trans "● Sinov davri" %}</span>
           {% else %}
-            <span style="color:#ef4444;">● {{ business.get_subscription_status_display }}</span>
+            <span style="color:#ef4444;">{% blocktrans %}● {{ business.get_subscription_status_display }}{% endblocktrans %}</span>
           {% endif %}
           {% if business.subscription_end %}
-            &mdash; {{ business.subscription_end|date:"d.m.Y" }} gacha
+            &mdash; {% blocktrans %}{{ business.subscription_end|date:"d.m.Y" }} gacha{% endblocktrans %}
           {% endif %}
         </div>
       </div>
       <div class="col-sm-6 text-sm-end">
         <div style="font-size:13px;color:rgba(255,255,255,.5);">
-          Xodimlar: {{ business.employees.count }}
+          {% blocktrans with emp_count=business.employees.count %}Xodimlar: {{ emp_count }}{% endblocktrans %}
           {% if business.max_employees %}/{{ business.max_employees }}{% else %}/∞{% endif %}
         </div>
         {% if business.subscription_end %}
         {% now "U" as now_ts %}
         <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:4px;">
-          Muddatgacha qoldi: <strong style="color:#fff;">
-            {{ business.subscription_end|timeuntil }}
-          </strong>
+          {% blocktrans %}Muddatgacha qoldi: <strong style="color:#fff;">{{ business.subscription_end|timeuntil }}</strong>{% endblocktrans %}
         </div>
         {% endif %}
       </div>
@@ -67,14 +66,14 @@
     <div class="card h-100 position-relative" style="{% if plan.slug == 'enterprise' %}background:#0d1117;border-color:#1e293b;{% elif plan.is_popular %}background:#fafafe;{% endif %}{% if business.subscription_plan == plan.slug %}border:2px solid {% if plan.slug == 'enterprise' %}#7c3aed{% else %}var(--p){% endif %};{% endif %}">
       
       {% if plan.is_popular %}
-      <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--p),#8b5cf6);color:#fff;font-size:10.5px;font-weight:700;padding:3px 14px;border-radius:99px;white-space:nowrap;letter-spacing:.05em;box-shadow:0 2px 8px rgba(99,102,241,.35);">
-        ⭐ MASHHUR
+      <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--p),#8b5cf6);color:#fff;font-size:10.5px;font-weight:700;padding:3px 14px;border-radius:99px;white-space:nowrap;letter-spacing:.05em;box-shadow:0 2px 8px rgba(99,102,241,.35));">
+        ⭐ {% trans "MASHHUR" %}
       </div>
       {% endif %}
 
       <div class="card-body p-4">
         {% if business.subscription_plan == plan.slug %}
-        <span class="badge mb-3" style="background:{% if plan.slug == 'enterprise' %}rgba(124,58,237,.3){% else %}#eef2ff{% endif %};color:{% if plan.slug == 'enterprise' %}#c4b5fd{% else %}var(--p){% endif %};font-size:11px;">✓ Joriy tarif</span>
+        <span class="badge mb-3" style="background:{% if plan.slug == 'enterprise' %}rgba(124,58,237,.3){% else %}#eef2ff{% endif %};color:{% if plan.slug == 'enterprise' %}#c4b5fd{% else %}var(--p){% endif %};font-size:11px;">{% trans "✓ Joriy tarif" %}</span>
         {% else %}
         <div style="height:26px;"></div>
         {% endif %}
@@ -83,7 +82,7 @@
         
         <div style="font-size:28px;font-weight:800;letter-spacing:-.03em;{% if plan.slug == 'enterprise' %}color:#fff;{% endif %}margin-bottom:2px;">
           {{ plan.price_monthly|intcomma }}
-          <span style="font-size:14px;font-weight:500;color:{% if plan.slug == 'enterprise' %}rgba(255,255,255,.4){% else %}var(--gray-400){% endif %};">UZS/oy</span>
+          <span style="font-size:14px;font-weight:500;color:{% if plan.slug == 'enterprise' %}rgba(255,255,255,.4){% else %}var(--gray-400){% endif %};">{% trans "UZS/oy" %}</span>
         </div>
         
         <div style="font-size:13px;color:{% if plan.slug == 'enterprise' %}rgba(255,255,255,.4){% else %}var(--gray-500){% endif %};margin-bottom:20px;line-height:1.4;">
@@ -101,12 +100,12 @@
         </ul>
 
         {% if business.subscription_plan == plan.slug %}
-        <button class="btn btn-primary w-100" disabled style="{% if plan.slug == 'enterprise' %}background:#7c3aed;border-color:#7c3aed;{% elif not plan.is_popular %}background:var(--gray-400);border-color:var(--gray-400);{% endif %}">✓ Joriy tarif</button>
+        <button class="btn btn-primary w-100" disabled style="{% if plan.slug == 'enterprise' %}background:#7c3aed;border-color:#7c3aed;{% elif not plan.is_popular %}background:var(--gray-400);border-color:var(--gray-400);{% endif %}">{% trans "✓ Joriy tarif" %}</button>
         {% elif plan.price_monthly == 0 %}
-        <button class="btn btn-outline-secondary w-100" disabled style="cursor:default;">Bepul</button>
+        <button class="btn btn-outline-secondary w-100" disabled style="cursor:default;">{% trans "Bepul" %}</button>
         {% else %}
         <a href="{% url 'business:payment' %}?plan={{ plan.slug }}" class="btn btn-primary w-100" style="{% if plan.slug == 'enterprise' %}background:#7c3aed;border-color:#7c3aed;{% endif %}font-weight:600;">
-          <i class="bi bi-credit-card me-2"></i>To'lov — {{ plan.price_monthly|intcomma }} UZS
+          <i class="bi bi-credit-card me-2"></i>{% blocktrans %}To'lov — {{ plan.price_monthly|intcomma }} UZS{% endblocktrans %}
         </a>
         {% endif %}
       </div>
@@ -119,18 +118,18 @@
 {% if payments %}
 <div class="card">
   <div class="card-header d-flex align-items-center justify-content-between">
-    <span style="font-size:13.5px;font-weight:600;">To'lov tarixi</span>
-    <span class="badge" style="background:var(--gray-100);color:var(--gray-600);">{{ payments|length }} ta</span>
+    <span style="font-size:13.5px;font-weight:600;">{% trans "To'lov tarixi" %}</span>
+    <span class="badge" style="background:var(--gray-100);color:var(--gray-600);">{{ payments|length }} {% trans "ta" %}</span>
   </div>
   <div class="card-body p-0">
     <table class="table mb-0">
       <thead>
         <tr>
-          <th class="ps-4">Tarif</th>
-          <th>Summa</th>
-          <th>Holat</th>
-          <th>Sana</th>
-          <th>Izoh</th>
+          <th class="ps-4">{% trans "Tarif" %}</th>
+          <th>{% trans "Summa" %}</th>
+          <th>{% trans "Holat" %}</th>
+          <th>{% trans "Sana" %}</th>
+          <th>{% trans "Izoh" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -144,11 +143,11 @@
           <td>{{ p.amount|intcomma }} UZS</td>
           <td>
             {% if p.status == 'approved' %}
-              <span class="badge-status" style="background:#f0fdf4;color:#15803d;">✓ Tasdiqlangan</span>
+              <span class="badge-status" style="background:#f0fdf4;color:#15803d;">✓ {% trans "Tasdiqlangan" %}</span>
             {% elif p.status == 'pending' %}
-              <span class="badge-status" style="background:#fffbeb;color:#92400e;">⏳ Kutilmoqda</span>
+              <span class="badge-status" style="background:#fffbeb;color:#92400e;">⏳ {% trans "Kutilmoqda" %}</span>
             {% else %}
-              <span class="badge-status" style="background:#fef2f2;color:#b91c1c;">✗ Bekor</span>
+              <span class="badge-status" style="background:#fef2f2;color:#b91c1c;">✗ {% trans "Bekor" %}</span>
             {% endif %}
           </td>
           <td style="color:var(--gray-500);">{{ p.created_at|date:"d.m.Y H:i" }}</td>

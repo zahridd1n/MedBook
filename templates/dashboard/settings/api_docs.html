@@ -1,4 +1,5 @@
 {% extends 'base_dashboard.html' %}
+{% load i18n %}
 {% block page_title %}API Documentation{% endblock %}
 {% block dashboard_content %}
 
@@ -40,10 +41,10 @@
 <div class="page-hd">
   <div class="page-hd-left">
     <div class="page-hd-title"><i class="bi bi-file-text" style="margin-right:8px;color:#10b981;"></i>API Documentation</div>
-    <div class="page-hd-sub">REST API orqali tizim ma'lumotlarini olish va boshqarish</div>
+    <div class="page-hd-sub">{% trans "REST API orqali tizim ma'lumotlarini olish va boshqarish" %}</div>
   </div>
   <div class="page-hd-right">
-    <a href="{% url 'business:api' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-gear"></i> Sozlamalar</a>
+    <a href="{% url 'business:api' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-gear"></i> {% trans "Sozlamalar" %}</a>
   </div>
 </div>
 
@@ -51,9 +52,9 @@
 <div class="ds-alert warning" style="margin-bottom:20px;">
   <i class="bi bi-lock-fill"></i>
   <div>
-    <strong>API faqat Max tarifida mavjud.</strong><br>
-    <span>API dokumentatsiyasini ko'rish uchun Max tarifiga o'ting.</span>
-    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;">Max tarifga o'tish</a>
+    <strong>{% trans "API faqat Max tarifida mavjud." %}</strong><br>
+    <span>{% trans "API dokumentatsiyasini ko'rish uchun Max tarifiga o'ting." %}</span>
+    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;">{% trans "Max tarifga o'tish" %}</a>
   </div>
 </div>
 {% else %}
@@ -63,14 +64,14 @@
     <div class="row g-4">
       <div class="col-md-6">
         <h6 style="font-weight:700;margin-bottom:8px;"><i class="bi bi-shield-check me-2" style="color:#10b981;"></i>Authentication</h6>
-        <p style="font-size:13px;color:var(--text-3);line-height:1.6;">Barcha API so'rovlarida <code>X-API-Key</code> header orqali kalit yuborilishi shart. Kalitni <a href="{% url 'business:api' %}">API sozlamalari</a> sahifasidan olishingiz mumkin.</p>
+        <p style="font-size:13px;color:var(--text-3);line-height:1.6;">{% trans "Barcha API so'rovlarida" %} <code>X-API-Key</code> {% trans "header orqali kalit yuborilishi shart. Kalitni" %} <a href="{% url 'business:api' %}">{% trans "API sozlamalari" %}</a> {% trans "sahifasidan olishingiz mumkin." %}</p>
         <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;">
           <code style="font-size:11px;">X-API-Key: {{ api_key|truncatechars:40 }}</code>
         </div>
       </div>
       <div class="col-md-6">
-        <h6 style="font-weight:700;margin-bottom:8px;"><i class="bi bi-info-circle me-2" style="color:#6366f1;"></i>Base URL</h6>
-        <p style="font-size:13px;color:var(--text-3);line-height:1.6;">Barcha endpointlar quyidagi asosiy URL dan boshlanadi:</p>
+        <h6 style="font-weight:700;margin-bottom:8px;"><i class="bi bi-info-circle me-2" style="color:#6366f1;"></i>{% trans "Base URL" %}</h6>
+        <p style="font-size:13px;color:var(--text-3);line-height:1.6;">{% trans "Barcha endpointlar quyidagi asosiy URL dan boshlanadi:" %}</p>
         <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;">
           <code style="font-size:11px;">{{ base_url }}</code>
         </div>
@@ -80,7 +81,7 @@
 </div>
 
 <div class="api-doc-section">
-  <h5>📅 Qabullar (Appointments)</h5>
+  <h5>📅 {% trans "Qabullar" %} (Appointments)</h5>
 
   <div class="api-endpoint">
     <div class="api-endpoint-head">
@@ -201,7 +202,7 @@ Response:
 </div>
 
 <div class="api-doc-section">
-  <h5>📋 Xizmatlar (Services)</h5>
+  <h5>📋 {% trans "Xizmatlar" %} (Services)</h5>
 
   <div class="api-endpoint">
     <div class="api-endpoint-head">
@@ -228,7 +229,7 @@ Response:
 </div>
 
 <div class="api-doc-section">
-  <h5>👨‍⚕️ Xodimlar (Employees)</h5>
+  <h5>👨‍⚕️ {% trans "Xodimlar" %} (Employees)</h5>
 
   <div class="api-endpoint">
     <div class="api-endpoint-head">
@@ -255,7 +256,7 @@ Response:
 </div>
 
 <div class="api-doc-section">
-  <h5>👥 Mijozlar (Customers)</h5>
+  <h5>👥 {% trans "Mijozlar" %} (Customers)</h5>
 
   <div class="api-endpoint">
     <div class="api-endpoint-head">
@@ -283,7 +284,7 @@ Response:
 </div>
 
 <div class="api-doc-section">
-  <h5>📊 Statistika (Stats)</h5>
+  <h5>📊 {% trans "Statistika" %} (Stats)</h5>
 
   <div class="api-endpoint">
     <div class="api-endpoint-head">
@@ -311,12 +312,12 @@ Response:
 </div>
 
 <div class="api-doc-section">
-  <h5>⚡ Tezkor misollar</h5>
+  <h5>⚡ {% trans "Tezkor misollar" %}</h5>
 
   <div class="api-endpoint">
     <div class="api-endpoint-head" style="border-radius:var(--radius-sm);">
       <span style="font-size:11px;color:var(--text-2);">curl</span>
-      <span>So'rov namunalari</span>
+      <span>{% trans "So'rov namunalari" %}</span>
     </div>
     <div class="api-endpoint-body">{% filter force_escape %}# Barcha qabullarni olish
 curl -H "X-API-Key: your_key_here" {{ base_url }}appointments/
@@ -363,10 +364,9 @@ print(r.json()){% endfilter %}</div>
 <div class="card" style="background:linear-gradient(135deg,#0c0e14,#065f46);color:#fff;border:none;">
   <div class="card-body p-4">
     <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.6;margin-bottom:8px;">⚡ Webhook</div>
-    <div style="font-size:14px;font-weight:600;margin-bottom:6px;">Avtomatik xabarnomalar</div>
+    <div style="font-size:14px;font-weight:600;margin-bottom:6px;">{% trans "Avtomatik xabarnomalar" %}</div>
     <div style="font-size:12px;opacity:.7;line-height:1.6;">
-      Yangi qabul yaratilganda, sizning <strong>Webhook URL</strong> manzilingizga POST so'rov yuboriladi.
-      So'rov <code>Content-Type: application/json</code> formatida keladi va quyidagi ma'lumotlarni o'z ichiga oladi:
+      {% blocktrans %}Yangi qabul yaratilganda, sizning <strong>Webhook URL</strong> manzilingizga POST so'rov yuboriladi. So'rov <code>Content-Type: application/json</code> formatida keladi va quyidagi ma'lumotlarni o'z ichiga oladi:{% endblocktrans %}
       <code style="display:block;margin-top:6px;font-size:11px;">{ id, date, time, status, customer_name, customer_phone, service_name, employee_name, price }</code>
     </div>
   </div>

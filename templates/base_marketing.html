@@ -7,6 +7,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/marketing.css' %}">
   {% block marketing_extra_css %}{% endblock %}
+  {# Anti-flash: apply saved theme before CSS renders #}
+  <script>
+    (function(){
+      var t = localStorage.getItem('mkt-theme');
+      if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 {% endblock %}
 
 {% block body %}
@@ -20,8 +28,23 @@
     <div class="mkt-container">
       <div class="mkt-nav-panel">
         <a class="mkt-brand" href="{% url 'marketing:home' %}" aria-label="BookFlow home">
-          {% if site.logo %}
-            <span class="mkt-brand-logo"><img src="{{ site.logo.url }}" alt="BookFlow"></span>
+          {% if site_settings.logo or site_settings.logo_light %}
+            {# Dark mode logo #}
+            {% if site_settings.logo %}
+            <span class="mkt-brand-logo" data-logo="dark">
+              <img src="{{ site_settings.logo.url }}" alt="BookFlow">
+            </span>
+            {% endif %}
+            {# Light mode logo — if no logo_light, reuse dark logo #}
+            {% if site_settings.logo_light %}
+            <span class="mkt-brand-logo" data-logo="light">
+              <img src="{{ site_settings.logo_light.url }}" alt="BookFlow">
+            </span>
+            {% elif site_settings.logo %}
+            <span class="mkt-brand-logo" data-logo="light">
+              <img src="{{ site_settings.logo.url }}" alt="BookFlow">
+            </span>
+            {% endif %}
           {% else %}
             <span class="mkt-brand-mark"><i class="bi bi-calendar2-check"></i></span>
             <span>BookFlow</span>
@@ -47,6 +70,10 @@
               <a href="?lang={{ code }}" class="{% if current_lang == code %}active{% endif %}">{{ label }}</a>
             {% endfor %}
           </div>
+          <button class="mkt-theme-toggle" data-mkt-theme-toggle type="button" title="Yorug' rejim" aria-label="Yorug' rejimga o'tish">
+            <span class="icon-dark">☀️</span>
+            <span class="icon-light">🌙</span>
+          </button>
           {% if user.is_authenticated %}
             <a class="mkt-btn mkt-btn-secondary mkt-btn-sm" href="{% url 'dashboard:home' %}">{{ m.nav.dashboard }}</a>
           {% else %}
@@ -67,8 +94,21 @@
       <div class="mkt-footer-panel">
         <div>
           <a class="mkt-brand" href="{% url 'marketing:home' %}">
-            {% if site.logo %}
-              <span class="mkt-brand-logo"><img src="{{ site.logo.url }}" alt="BookFlow"></span>
+            {% if site_settings.logo or site_settings.logo_light %}
+              {% if site_settings.logo %}
+              <span class="mkt-brand-logo" data-logo="dark">
+                <img src="{{ site_settings.logo.url }}" alt="BookFlow">
+              </span>
+              {% endif %}
+              {% if site_settings.logo_light %}
+              <span class="mkt-brand-logo" data-logo="light">
+                <img src="{{ site_settings.logo_light.url }}" alt="BookFlow">
+              </span>
+              {% elif site_settings.logo %}
+              <span class="mkt-brand-logo" data-logo="light">
+                <img src="{{ site_settings.logo.url }}" alt="BookFlow">
+              </span>
+              {% endif %}
             {% else %}
               <span class="mkt-brand-mark"><i class="bi bi-calendar2-check"></i></span>
               <span>BookFlow</span>

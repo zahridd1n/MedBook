@@ -1,5 +1,6 @@
 {% extends 'superadmin/base_superadmin.html' %}
-{% block page_title %}Tarifni o'chirish{% endblock %}
+{% load i18n %}
+{% block page_title %}{% trans "Tarifni o'chirish" %}{% endblock %}
 
 {% block sa_content %}
 <div class="row justify-content-center mt-5">
@@ -7,13 +8,13 @@
         <div class="card border-danger shadow-sm">
             <div class="card-body text-center p-5">
                 <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
-                <h4 class="mt-4 fw-bold">Rostdan ham "{{ plan.name }}" tarifini o'chirmoqchimisiz?</h4>
-                <p class="text-muted mt-2">Bu amalni bekor qilib bo'lmaydi. Bu tarifga ulangan bizneslar mavjud bo'lsa, xatolik yuz berishi mumkin.</p>
+                <h4 class="mt-4 fw-bold">{% blocktrans with name=plan.name %}Rostdan ham "{{ name }}" tarifini o'chirmoqchimisiz?{% endblocktrans %}</h4>
+                <p class="text-muted mt-2">{% trans "Bu amalni bekor qilib bo'lmaydi. Bu tarifga ulangan bizneslar mavjud bo'lsa, xatolik yuz berishi mumkin." %}</p>
                 
                 <form method="post" class="mt-4">
                     {% csrf_token %}
-                    <a href="{% url 'superadmin:pricing_plan_list' %}" class="btn btn-light me-2">Bekor qilish</a>
-                    <button type="submit" class="btn btn-danger fw-bold">Ha, o'chirish</button>
+                    <a href="{% url 'superadmin:pricing_plan_list' %}" class="btn btn-light me-2">{% trans "Bekor qilish" %}</a>
+                    <button type="submit" class="btn btn-danger fw-bold">{% trans "Ha, o'chirish" %}</button>
                 </form>
             </div>
         </div>

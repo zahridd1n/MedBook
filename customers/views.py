@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Count, OuterRef, Subquery, Sum
+from django.utils.translation import gettext as _
 from .models import Customer
 from business.models import Business
 from appointments.models import Appointment
@@ -48,7 +49,7 @@ def customer_detail(request, pk):
             if note_text:
                 customer.notes = (customer.notes + '\n---\n' + note_text) if customer.notes else note_text
                 customer.save(update_fields=['notes'])
-                messages.success(request, 'Eslatma qo\'shildi.')
+                messages.success(request, _('Eslatma qo\'shildi.'))
         elif action == 'add_appointment':
             form = AppointmentForm(request.POST, business=business)
             if form.is_valid():
@@ -58,7 +59,7 @@ def customer_detail(request, pk):
                 appt.business = business
                 appt.customer = cust
                 appt.save()
-                messages.success(request, 'Yangi qabul qo\'shildi.')
+                messages.success(request, _('Yangi qabul qo\'shildi.'))
         return redirect('customers:detail', pk=pk)
 
     total_spent = sum(

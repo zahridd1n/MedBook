@@ -6,6 +6,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.conf import settings
+from django.utils.translation import gettext as _
 
 from .models import Notification
 from business.models import Business
@@ -56,16 +57,16 @@ def _timesince(dt):
     now = timezone.now()
     diff = now - dt
     if diff < timedelta(minutes=1):
-        return 'Hozir'
+        return _('Hozir')
     if diff < timedelta(hours=1):
         m = int(diff.total_seconds() / 60)
-        return f'{m} daqiqa oldin'
+        return _(f'{m} daqiqa oldin')
     if diff < timedelta(days=1):
         h = int(diff.total_seconds() / 3600)
-        return f'{h} soat oldin'
+        return _(f'{h} soat oldin')
     if diff < timedelta(days=7):
         d = diff.days
-        return f'{d} kun oldin'
+        return _(f'{d} kun oldin')
     return dt.strftime('%d.%m.%Y')
 
 
@@ -129,7 +130,7 @@ def telegram_webhook(request, token):
     try:
         data = json.loads(request.body)
     except (json.JSONDecodeError, ValueError):
-        return JsonResponse({'ok': False, 'error': 'Invalid JSON'}, status=400)
+        return JsonResponse({'ok': False, 'error': _('Invalid JSON')}, status=400)
 
     logger.debug(f'[Telegram webhook] Update: {data}')
 
