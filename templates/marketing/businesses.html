@@ -1,345 +1,987 @@
 {% extends 'base_marketing.html' %}
 
-{% block title %}Bizneslar katalogi - BookFlow{% endblock %}
+{% block title %}Bizneslar katalogi — BookFlow{% endblock %}
+{% block meta_description %}Yaqingingizdagi eng yaxshi bizneslarni toping — klinikalar, salonlar, sartaroshxonalar va boshqa xizmat ko'rsatuvchilar. Onlayn band qiling.{% endblock %}
 
 {% block marketing_extra_css %}
 <style>
-/* ── Directory page styles ──────────────────────────────────────── */
-.dir-hero {
-  padding: 4.5rem 0 3rem;
+/* ═══════════════════════════════════════════════════════════════
+   CATALOG PAGE — Premium Marketplace Design
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Hero Search ─────────────────────────────────────────────── */
+.cat-hero {
+  padding: 150px 0 2rem;
   text-align: center;
 }
-.dir-hero h1 {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 800;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+.cat-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background: rgba(99,102,241,.1);
+  border: 1px solid rgba(99,102,241,.2);
+  color: #818cf8;
+  margin-bottom: 1rem;
+}
+.cat-hero h1 {
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: -.03em;
+  line-height: 1.15;
+  margin-bottom: .75rem;
+  background: linear-gradient(135deg, #e2e8f0 0%, #6366f1 50%, #8b5cf6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: .75rem;
 }
-.dir-hero p {
-  color: #64748b;
-  font-size: 1.05rem;
-  max-width: 520px;
-  margin: 0 auto 1.5rem;
+[data-theme="light"] .cat-hero h1 {
+  background: linear-gradient(135deg, #1e293b 0%, #4f46e5 50%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-.dir-count-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 16px;
-  background: rgba(99,102,241,.08);
-  border: 1px solid rgba(99,102,241,.2);
-  border-radius: 999px;
-  font-size: .85rem;
-  font-weight: 600;
-  color: #6366f1;
+.cat-hero p {
+  font-size: 1rem;
+  color: var(--mkt-subtle);
+  max-width: 500px;
+  margin: 0 auto 1.75rem;
 }
 
-/* ── Filter Bar ────────────────────────────────────────────────── */
-.dir-filter-bar {
+/* ── Search Box ───────────────────────────────────────────────── */
+.cat-search-wrap {
+  max-width: 600px;
+  margin: 0 auto 1rem;
+  position: relative;
+}
+.cat-search-wrap .search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  color: #6366f1;
+  pointer-events: none;
+}
+.cat-search-input {
+  width: 100%;
+  padding: 14px 18px 14px 48px;
+  border-radius: 16px;
+  border: 1.5px solid var(--mkt-border-soft);
+  background: var(--mkt-card);
+  color: var(--mkt-text);
+  font-size: 1rem;
+  font-family: inherit;
+  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+  transition: all .2s ease;
+  outline: none;
+}
+.cat-search-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99,102,241,.12), 0 4px 24px rgba(0,0,0,.08);
+}
+.cat-search-input::placeholder { color: var(--mkt-subtle); }
+.cat-search-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 18px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .2s;
+}
+.cat-search-btn:hover { opacity: .88; }
+
+/* ── Quick category pills ─────────────────────────────────────── */
+.cat-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 0;
 }
-.dir-filter-btn {
+.cat-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
+  gap: 5px;
+  padding: 6px 14px;
   border-radius: 999px;
-  font-size: .85rem;
+  font-size: .82rem;
   font-weight: 600;
-  border: 1.5px solid #e2e8f0;
-  background: white;
-  color: #475569;
+  border: 1.5px solid var(--mkt-border-soft);
+  background: var(--mkt-card);
+  color: var(--mkt-subtle);
   cursor: pointer;
   text-decoration: none;
-  transition: all .2s cubic-bezier(.4,0,.2,1);
-  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  transition: all .2s ease;
 }
-.dir-filter-btn:hover {
+.cat-pill:hover {
   border-color: #6366f1;
-  color: #6366f1;
-  background: rgba(99,102,241,.04);
-  transform: translateY(-1px);
+  color: #818cf8;
+  background: rgba(99,102,241,.06);
+  text-decoration: none;
 }
-.dir-filter-btn.active {
+.cat-pill.active {
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: white;
   border-color: transparent;
-  box-shadow: 0 4px 16px rgba(99,102,241,.35);
+  box-shadow: 0 4px 14px rgba(99,102,241,.35);
 }
-.dir-filter-btn .badge-cnt {
-  background: rgba(255,255,255,.25);
+.cat-pill .cnt {
+  background: rgba(255,255,255,.2);
   border-radius: 999px;
-  padding: 1px 7px;
-  font-size: .75rem;
+  padding: 1px 6px;
+  font-size: .72rem;
 }
-.dir-filter-btn:not(.active) .badge-cnt {
-  background: #f1f5f9;
-  color: #94a3b8;
+.cat-pill:not(.active) .cnt {
+  background: var(--mkt-surface);
+  color: var(--mkt-subtle);
 }
 
-/* ── Business Cards Grid ───────────────────────────────────────── */
-.dir-grid {
+/* ═══════════════════════════════════════════════════════════════
+   MAIN LAYOUT: Sidebar + Cards
+   ═══════════════════════════════════════════════════════════════ */
+.cat-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  grid-template-columns: 240px 1fr;
+  gap: 2rem;
+  align-items: start;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
 }
-.dir-card {
-  background: white;
-  border: 1px solid #f1f5f9;
+@media (max-width: 900px) {
+  .cat-layout { grid-template-columns: 1fr; }
+  .cat-sidebar { display: none; }
+  .cat-sidebar.show { display: block; }
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────── */
+.cat-sidebar {
+  position: sticky;
+  top: 80px;
+}
+.cat-filter-card {
+  background: var(--mkt-card);
+  border: 1px solid var(--mkt-border-soft);
   border-radius: 20px;
-  padding: 1.5rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,.06);
+}
+.cat-filter-head {
+  padding: .85rem 1.1rem;
+  background: var(--mkt-surface);
+  border-bottom: 1px solid var(--mkt-border-soft);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--mkt-subtle);
+}
+.cat-filter-head i { color: #6366f1; }
+.cat-filter-body { padding: .75rem; }
+
+.cat-filter-opt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--mkt-text);
+  font-size: .865rem;
+  font-weight: 500;
+  transition: all .18s;
+}
+.cat-filter-opt:hover {
+  background: rgba(99,102,241,.07);
+  color: #818cf8;
+  text-decoration: none;
+}
+.cat-filter-opt.active {
+  background: rgba(99,102,241,.12);
+  color: #818cf8;
+  font-weight: 700;
+}
+.cat-filter-opt .fopt-count {
+  margin-left: auto;
+  font-size: .72rem;
+  color: var(--mkt-subtle);
+  background: var(--mkt-surface);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+.cat-filter-opt.active .fopt-count {
+  background: rgba(99,102,241,.15);
+  color: #818cf8;
+}
+.cat-filter-opt i {
+  width: 18px;
+  text-align: center;
+  font-size: .9rem;
+  color: var(--mkt-subtle);
+}
+.cat-filter-opt.active i { color: #6366f1; }
+
+/* Toggle switch for Open Today */
+.toggle-filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--mkt-text);
+  font-size: .865rem;
+  font-weight: 500;
+  transition: background .18s;
+}
+.toggle-filter:hover { background: rgba(99,102,241,.07); }
+.toggle-dot {
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--mkt-surface);
+  border: 1.5px solid var(--mkt-border-soft);
+  position: relative;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.toggle-dot::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--mkt-subtle);
+  border-radius: 50%;
+  top: 1px;
+  left: 1px;
+  transition: all .2s;
+}
+.toggle-filter.active .toggle-dot {
+  background: #6366f1;
+  border-color: #6366f1;
+}
+.toggle-filter.active .toggle-dot::after {
+  left: 17px;
+  background: white;
+}
+
+/* City select */
+.cat-city-select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1.5px solid var(--mkt-border-soft);
+  background: var(--mkt-card);
+  color: var(--mkt-text);
+  font-size: .865rem;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+}
+.cat-city-select:focus {
+  border-color: #6366f1;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESULTS HEADER + SORT
+   ═══════════════════════════════════════════════════════════════ */
+.cat-results-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+.cat-count-label {
+  font-size: .9rem;
+  color: var(--mkt-subtle);
+}
+.cat-count-label strong { color: var(--mkt-text); font-weight: 700; }
+.cat-sort-row {
+  display: flex;
+  gap: 6px;
+}
+.cat-sort-btn {
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 600;
+  border: 1.5px solid var(--mkt-border-soft);
+  background: var(--mkt-card);
+  color: var(--mkt-subtle);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .18s;
+}
+.cat-sort-btn:hover {
+  border-color: #6366f1;
+  color: #818cf8;
+  text-decoration: none;
+}
+.cat-sort-btn.active {
+  background: rgba(99,102,241,.12);
+  border-color: rgba(99,102,241,.3);
+  color: #818cf8;
+  font-weight: 700;
+}
+
+/* Mobile filter toggle button */
+.cat-mobile-filter-btn {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  background: var(--mkt-card);
+  border: 1.5px solid var(--mkt-border-soft);
+  border-radius: 12px;
+  color: var(--mkt-text);
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .18s;
+}
+@media (max-width: 900px) {
+  .cat-mobile-filter-btn { display: flex; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BUSINESS CARD — Uniform, Premium Design
+   ═══════════════════════════════════════════════════════════════ */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.25rem;
+}
+.biz-card {
+  background: var(--mkt-card);
+  border: 1px solid var(--mkt-border-soft);
+  border-radius: 22px;
+  overflow: hidden;
   text-decoration: none;
   color: inherit;
   display: flex;
   flex-direction: column;
-  gap: 12px;
   transition: all .28s cubic-bezier(.4,0,.2,1);
-  box-shadow: 0 2px 12px rgba(0,0,0,.05);
+  box-shadow: 0 2px 16px rgba(0,0,0,.05);
   position: relative;
-  overflow: hidden;
 }
-.dir-card::before {
+.biz-card::after {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4);
   opacity: 0;
   transition: opacity .25s;
+  border-radius: 22px 22px 0 0;
 }
-.dir-card:hover {
-  border-color: #e0e7ff;
-  box-shadow: 0 12px 40px rgba(99,102,241,.15);
-  transform: translateY(-4px);
+.biz-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 48px rgba(99,102,241,.14);
+  border-color: rgba(99,102,241,.25);
+  text-decoration: none;
   color: inherit;
 }
-.dir-card:hover::before {
+.biz-card:hover::after {
   opacity: 1;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4);
 }
-.dir-card-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.dir-logo {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  object-fit: cover;
-  border: 1.5px solid #f1f5f9;
+
+/* ── Card Header: gradient bg + centered logo ─── */
+.biz-card-head {
+  width: 100%;
+  height: 90px;
+  position: relative;
   flex-shrink: 0;
-}
-.dir-logo-placeholder {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1.4rem;
+}
+/* Category gradient colors */
+.biz-card-head.cat-clinic   { background: linear-gradient(135deg,#0ea5e9,#0284c7); }
+.biz-card-head.cat-dental   { background: linear-gradient(135deg,#06b6d4,#0891b2); }
+.biz-card-head.cat-beauty   { background: linear-gradient(135deg,#ec4899,#a855f7); }
+.biz-card-head.cat-barber   { background: linear-gradient(135deg,#1e293b,#334155); }
+.biz-card-head.cat-education{ background: linear-gradient(135deg,#8b5cf6,#6366f1); }
+.biz-card-head.cat-auto     { background: linear-gradient(135deg,#f97316,#ef4444); }
+.biz-card-head.cat-other    { background: linear-gradient(135deg,#6366f1,#8b5cf6); }
+
+/* Subtle noise texture overlay */
+.biz-card-head::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Logo — uniform 64x64, centered */
+.biz-logo-centered {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  border: 3px solid rgba(255,255,255,.25);
+  object-fit: contain;
+  object-position: center;
+  padding: 6px;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 6px 20px rgba(0,0,0,.2);
+  position: relative;
+  z-index: 1;
+  display: block;
   flex-shrink: 0;
 }
-.dir-card-name {
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: #1e293b;
-  margin: 0;
-  line-height: 1.3;
+[data-theme="light"] .biz-logo-centered {
+  background: rgba(255,255,255,.95);
 }
-.dir-cat-chip {
+.biz-logo-placeholder-centered {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  border: 3px solid rgba(255,255,255,.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.15);
+  box-shadow: 0 6px 20px rgba(0,0,0,.2);
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(4px);
+}
+
+/* Badges: top-right corner of head */
+.biz-badges {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 2;
+}
+.biz-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 10px;
-  background: rgba(99,102,241,.08);
-  color: #6366f1;
-  border-radius: 999px;
-  font-size: .75rem;
-  font-weight: 600;
-  margin-top: 2px;
+  padding: 4px 9px;
+  border-radius: 8px;
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
-.dir-about {
-  font-size: .875rem;
-  color: #64748b;
-  line-height: 1.55;
+.biz-badge.verified-premium {
+  background: linear-gradient(135deg,#f59e0b,#f97316);
+  color: white;
+  box-shadow: 0 3px 10px rgba(245,158,11,.45);
+}
+.biz-badge.verified-pro {
+  background: linear-gradient(135deg,#6366f1,#8b5cf6);
+  color: white;
+  box-shadow: 0 3px 10px rgba(99,102,241,.45);
+}
+.biz-badge.new-badge {
+  background: rgba(6,182,212,.9);
+  color: white;
+  box-shadow: 0 2px 8px rgba(6,182,212,.35);
+}
+
+/* Card Body */
+.biz-card-body {
+  padding: 1rem 1rem .5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.biz-card-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.biz-name {
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--mkt-text);
+  line-height: 1.3;
+  margin: 0;
+  flex: 1;
+}
+.biz-cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  background: rgba(99,102,241,.1);
+  color: #818cf8;
+  border-radius: 999px;
+  font-size: .7rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+[data-theme="light"] .biz-cat-chip { background: rgba(99,102,241,.1); color: #4f46e5; }
+
+/* Stats row */
+.biz-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.biz-open-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: .74rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 7px;
+}
+.biz-open-badge.open {
+  background: rgba(16,185,129,.12);
+  color: #10b981;
+}
+.biz-open-badge.open::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  animation: pulse-open .9s ease infinite alternate;
+}
+@keyframes pulse-open {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: .4; transform: scale(.75); }
+}
+.biz-open-badge.closed {
+  background: rgba(100,116,139,.1);
+  color: #94a3b8;
+}
+.biz-stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: .74rem;
+  color: var(--mkt-subtle);
+}
+.biz-stat-chip i { color: #6366f1; font-size: .78rem; }
+
+/* About */
+.biz-about {
+  font-size: .815rem;
+  color: var(--mkt-subtle);
+  line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex: 1;
 }
-.dir-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: .78rem;
-  color: #94a3b8;
-}
-.dir-meta span {
+
+/* Location */
+.biz-location {
   display: flex;
   align-items: center;
-  gap: 4px;
-}
-.dir-meta i { color: #6366f1; }
-.dir-card-footer {
+  gap: 5px;
+  font-size: .775rem;
+  color: var(--mkt-subtle);
   margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid #f8fafc;
+  padding-top: 2px;
+}
+.biz-location i { color: #f43f5e; font-size: .85rem; flex-shrink:0; }
+
+/* Card footer */
+.biz-card-footer {
+  padding: .75rem 1rem;
+  border-top: 1px solid var(--mkt-border-soft);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
 }
-.dir-open-btn {
+.biz-book-btn {
+  flex: 1;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 7px 16px;
+  padding: 9px 16px;
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: white;
-  border-radius: 10px;
-  font-size: .82rem;
-  font-weight: 600;
-  box-shadow: 0 3px 10px rgba(99,102,241,.3);
-  transition: opacity .2s;
+  border-radius: 12px;
+  font-size: .83rem;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(99,102,241,.3);
+  transition: all .2s;
 }
-.dir-open-btn:hover { opacity: .88; }
-.dir-location-chip {
-  display: flex;
+.biz-book-btn:hover {
+  opacity: .9;
+  box-shadow: 0 6px 20px rgba(99,102,241,.4);
+  color: white;
+  text-decoration: none;
+}
+.biz-more-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: .78rem;
-  color: #64748b;
+  justify-content: center;
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  border: 1.5px solid var(--mkt-border-soft);
+  background: var(--mkt-surface);
+  color: var(--mkt-subtle);
+  transition: all .18s;
+  flex-shrink: 0;
 }
-.dir-location-chip i { color: #f43f5e; }
+.biz-more-btn:hover {
+  border-color: #6366f1;
+  color: #818cf8;
+  background: rgba(99,102,241,.07);
+}
 
-/* ── Empty State ───────────────────────────────────────────────── */
-.dir-empty {
+/* ── Empty state ─────────────────────────────────────────────── */
+.cat-empty {
   text-align: center;
   padding: 5rem 1rem;
-  color: #94a3b8;
+  color: var(--mkt-subtle);
+  grid-column: 1 / -1;
 }
-.dir-empty i {
-  font-size: 3rem;
+.cat-empty-icon {
+  font-size: 3.5rem;
   display: block;
   margin-bottom: 1rem;
-  opacity: .4;
+  opacity: .35;
 }
-.dir-empty h3 {
+.cat-empty h3 {
   font-size: 1.3rem;
-  font-weight: 700;
-  color: #475569;
+  font-weight: 800;
+  color: var(--mkt-text);
   margin-bottom: .5rem;
 }
 </style>
 {% endblock %}
 
 {% block marketing_content %}
-<section class="mkt-page-hero dir-hero">
-  <div class="mkt-container">
-    <div class="mkt-eyebrow reveal"><span></span> Bizneslar katalogi</div>
-    <h1 class="reveal">Eng yaxshi bizneslar</h1>
-    <p class="reveal">Yaqingingizdagi klinikalar, salonlar, sartaroshxonalar va boshqa xizmatlarni toping</p>
-    <span class="dir-count-badge reveal">
-      <i class="bi bi-buildings"></i>
-      {{ total_count }} faol biznes
-    </span>
-  </div>
-</section>
 
-<section class="mkt-section" style="padding-top:0">
+{# ── HERO ──────────────────────────────────────────────────────── #}
+<section class="cat-hero">
   <div class="mkt-container">
+    <div class="cat-hero-eyebrow reveal">
+      <i class="bi bi-buildings-fill"></i>
+      Bizneslar katalogi
+    </div>
+    <h1 class="reveal">Xizmatni toping,<br>onlayn band qiling</h1>
+    <p class="reveal">Yaqingingizdagi eng yaxshi klinikalar, salonlar, sartaroshxonalar va boshqa bizneslarni toping</p>
 
-    {# ── Category filters ── #}
-    {% if categories %}
-    <div class="dir-filter-bar reveal">
-      <a href="{% url 'marketing:businesses' %}"
-         class="dir-filter-btn {% if not selected_category %}active{% endif %}">
-        <i class="bi bi-grid"></i> Hammasi
-        <span class="badge-cnt">{{ total_count }}</span>
+    {# Search #}
+    <form method="get" action="" class="cat-search-wrap reveal" id="catalog-search-form">
+      {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+      {% if selected_city %}<input type="hidden" name="city" value="{{ selected_city }}">{% endif %}
+      {% if sort_by and sort_by != 'popular' %}<input type="hidden" name="sort" value="{{ sort_by }}">{% endif %}
+      {% if open_today %}<input type="hidden" name="open_today" value="1">{% endif %}
+      <i class="bi bi-search search-icon"></i>
+      <input
+        type="text"
+        name="q"
+        class="cat-search-input"
+        placeholder="Biznes nomi, xizmat turi, shahar..."
+        value="{{ search_q }}"
+        autocomplete="off"
+      >
+      <button type="submit" class="cat-search-btn">Qidirish</button>
+    </form>
+
+    {# Quick category pills #}
+    <div class="cat-pills reveal">
+      <a href="?{% if search_q %}q={{ search_q }}&{% endif %}{% if sort_by %}sort={{ sort_by }}&{% endif %}{% if open_today %}open_today=1&{% endif %}"
+         class="cat-pill {% if not selected_category %}active{% endif %}">
+        <i class="bi bi-grid-fill"></i> Hammasi
+        <span class="cnt">{{ total_count }}</span>
       </a>
       {% for cat in categories %}
-      <a href="{% url 'marketing:businesses' %}?category={{ cat.value }}"
-         class="dir-filter-btn {% if selected_category == cat.value %}active{% endif %}">
+      <a href="?category={{ cat.value }}{% if search_q %}&q={{ search_q }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}{% if open_today %}&open_today=1{% endif %}{% if selected_city %}&city={{ selected_city }}{% endif %}"
+         class="cat-pill {% if selected_category == cat.value %}active{% endif %}">
         <i class="bi bi-{{ cat.icon }}"></i> {{ cat.label }}
-        <span class="badge-cnt">{{ cat.count }}</span>
+        <span class="cnt">{{ cat.count }}</span>
       </a>
       {% endfor %}
     </div>
-    {% endif %}
-
-    {# ── Cards grid ── #}
-    {% if businesses %}
-    <div class="dir-grid">
-      {% for biz in businesses %}
-      <a href="/{{ biz.slug }}/" class="dir-card reveal">
-        <div class="dir-card-header">
-          {% if biz.logo %}
-            <img src="{{ biz.logo.url }}" alt="{{ biz.name }}" class="dir-logo">
-          {% else %}
-            <div class="dir-logo-placeholder">
-              <i class="bi bi-shop"></i>
-            </div>
-          {% endif %}
-          <div>
-            <p class="dir-card-name">{{ biz.name }}</p>
-            <span class="dir-cat-chip">
-              <i class="bi bi-tag"></i>
-              {{ biz.get_category_display }}
-            </span>
-          </div>
-        </div>
-
-        {% if biz.about %}
-        <p class="dir-about">{{ biz.about }}</p>
-        {% endif %}
-
-        <div class="dir-meta">
-          {% if biz.city or biz.address %}
-          <span><i class="bi bi-geo-alt-fill"></i> {{ biz.city }}{% if biz.city and biz.address %}, {% endif %}{{ biz.address|truncatechars:30 }}</span>
-          {% endif %}
-          {% if biz.phone %}
-          <span><i class="bi bi-telephone-fill"></i> {{ biz.phone }}</span>
-          {% endif %}
-        </div>
-
-        <div class="dir-card-footer">
-          <div class="dir-location-chip">
-            {% if biz.latitude and biz.longitude %}
-            <i class="bi bi-geo-alt-fill"></i> Xaritada
-            {% endif %}
-          </div>
-          <span class="dir-open-btn">
-            Ochish <i class="bi bi-arrow-right"></i>
-          </span>
-        </div>
-      </a>
-      {% endfor %}
-    </div>
-
-    {% else %}
-    <div class="dir-empty">
-      <i class="bi bi-buildings"></i>
-      <h3>Hozircha bizneslar yo'q</h3>
-      <p>
-        {% if selected_category %}
-          Bu kategoriyada hech qanday biznes topilmadi.
-          <a href="{% url 'marketing:businesses' %}">Barcha bizneslarni ko'rish</a>
-        {% else %}
-          Bizneslar katalogda ko'rinishi uchun sozlamalarini yoqishlari kerak.
-        {% endif %}
-      </p>
-    </div>
-    {% endif %}
-
   </div>
 </section>
+
+{# ── MAIN LAYOUT ───────────────────────────────────────────────── #}
+<section style="padding-bottom:0">
+  <div class="mkt-container">
+    <div class="cat-layout">
+
+      {# ── SIDEBAR ─────────────────────────────────────────────── #}
+      <aside class="cat-sidebar" id="cat-sidebar">
+
+        {# Bugun ochiq #}
+        <div class="cat-filter-card">
+          <div class="cat-filter-head">
+            <i class="bi bi-clock-fill"></i> Ish vaqti
+          </div>
+          <div class="cat-filter-body">
+            <a href="?{% if open_today %}{% else %}open_today=1&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_city %}city={{ selected_city }}&{% endif %}{% if search_q %}q={{ search_q }}&{% endif %}{% if sort_by %}sort={{ sort_by }}{% endif %}"
+               class="toggle-filter {% if open_today %}active{% endif %}">
+              <span>🟢 Bugun ochiq</span>
+              <span class="toggle-dot"></span>
+            </a>
+          </div>
+        </div>
+
+        {# Shahar #}
+        {% if cities %}
+        <div class="cat-filter-card">
+          <div class="cat-filter-head">
+            <i class="bi bi-geo-alt-fill"></i> Shahar
+          </div>
+          <div class="cat-filter-body">
+            <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if search_q %}q={{ search_q }}&{% endif %}{% if sort_by %}sort={{ sort_by }}{% endif %}{% if open_today %}&open_today=1{% endif %}"
+               class="cat-filter-opt {% if not selected_city %}active{% endif %}">
+              <i class="bi bi-globe"></i> Barcha shaharlar
+            </a>
+            {% for city in cities %}
+            <a href="?city={{ city }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_q %}&q={{ search_q }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}{% if open_today %}&open_today=1{% endif %}"
+               class="cat-filter-opt {% if selected_city == city %}active{% endif %}">
+              <i class="bi bi-geo-alt"></i> {{ city }}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {# Kategoriya #}
+        {% if categories %}
+        <div class="cat-filter-card">
+          <div class="cat-filter-head">
+            <i class="bi bi-tag-fill"></i> Kategoriya
+          </div>
+          <div class="cat-filter-body">
+            <a href="?{% if selected_city %}city={{ selected_city }}&{% endif %}{% if search_q %}q={{ search_q }}&{% endif %}{% if sort_by %}sort={{ sort_by }}{% endif %}{% if open_today %}&open_today=1{% endif %}"
+               class="cat-filter-opt {% if not selected_category %}active{% endif %}">
+              <i class="bi bi-grid"></i> Hammasi
+              <span class="fopt-count">{{ total_count }}</span>
+            </a>
+            {% for cat in categories %}
+            <a href="?category={{ cat.value }}{% if selected_city %}&city={{ selected_city }}{% endif %}{% if search_q %}&q={{ search_q }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}{% if open_today %}&open_today=1{% endif %}"
+               class="cat-filter-opt {% if selected_category == cat.value %}active{% endif %}">
+              <i class="bi bi-{{ cat.icon }}"></i> {{ cat.label }}
+              <span class="fopt-count">{{ cat.count }}</span>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+      </aside>
+
+      {# ── RESULTS AREA ────────────────────────────────────────── #}
+      <div>
+        {# Results header + Sort #}
+        <div class="cat-results-head reveal">
+          <div>
+            <button class="cat-mobile-filter-btn" onclick="toggleCatSidebar()">
+              <i class="bi bi-sliders"></i> Filtrlar
+            </button>
+          </div>
+          <p class="cat-count-label">
+            {% if search_q %}
+              "<strong>{{ search_q }}</strong>" bo'yicha — <strong>{{ result_count }}</strong> ta natija
+            {% else %}
+              Jami <strong>{{ result_count }}</strong> ta biznes
+              {% if selected_category %}
+                · <strong>{{ selected_category }}</strong>
+              {% endif %}
+              {% if selected_city %}
+                · <strong>{{ selected_city }}</strong>
+              {% endif %}
+            {% endif %}
+          </p>
+          <div class="cat-sort-row">
+            <a href="?sort=popular{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_city %}&city={{ selected_city }}{% endif %}{% if open_today %}&open_today=1{% endif %}{% if search_q %}&q={{ search_q }}{% endif %}"
+               class="cat-sort-btn {% if sort_by == 'popular' or not sort_by %}active{% endif %}">
+              <i class="bi bi-fire"></i> Mashhur
+            </a>
+            <a href="?sort=newest{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_city %}&city={{ selected_city }}{% endif %}{% if open_today %}&open_today=1{% endif %}{% if search_q %}&q={{ search_q }}{% endif %}"
+               class="cat-sort-btn {% if sort_by == 'newest' %}active{% endif %}">
+              <i class="bi bi-stars"></i> Yangi
+            </a>
+            <a href="?sort=name{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_city %}&city={{ selected_city }}{% endif %}{% if open_today %}&open_today=1{% endif %}{% if search_q %}&q={{ search_q }}{% endif %}"
+               class="cat-sort-btn {% if sort_by == 'name' %}active{% endif %}">
+              A–Z
+            </a>
+          </div>
+        </div>
+
+        {# ── Cards Grid ─────────────────────────────────────────── #}
+        {% if businesses_with_meta %}
+        <div class="cat-grid">
+          {% for item in businesses_with_meta %}
+          {% with biz=item.biz %}
+          <a href="/{{ biz.slug }}/" class="biz-card reveal" style="animation-delay: {{ forloop.counter0 }}00ms">
+
+            {# ── Card Header: colored gradient + centered logo ── #}
+            <div class="biz-card-head
+              {% if biz.category == 'clinic' %}cat-clinic
+              {% elif biz.category == 'dental' %}cat-dental
+              {% elif biz.category == 'beauty' %}cat-beauty
+              {% elif biz.category == 'barber' %}cat-barber
+              {% elif biz.category == 'education' %}cat-education
+              {% elif biz.category == 'auto' %}cat-auto
+              {% else %}cat-other{% endif %}">
+
+              {# Badges — top right #}
+              <div class="biz-badges">
+                {% if 'premium' in item.badges %}
+                  <span class="biz-badge verified-premium">
+                    <i class="bi bi-patch-check-fill"></i> Verified Premium
+                  </span>
+                {% elif 'pro' in item.badges %}
+                  <span class="biz-badge verified-pro">
+                    <i class="bi bi-patch-check-fill"></i> Verified Pro
+                  </span>
+                {% endif %}
+                {% if 'new' in item.badges %}
+                  <span class="biz-badge new-badge">Yangi</span>
+                {% endif %}
+              </div>
+
+              {# Logo — centered, uniform 64x64 #}
+              {% if biz.logo %}
+                <img src="{{ biz.logo.url }}" alt="{{ biz.name }}" class="biz-logo-centered">
+              {% else %}
+                <div class="biz-logo-placeholder-centered">
+                  <i class="bi bi-shop"></i>
+                </div>
+              {% endif %}
+            </div>
+
+            {# Card Body #}
+            <div class="biz-card-body">
+              {# Name + Category #}
+              <div class="biz-card-title-row">
+                <p class="biz-name">{{ biz.name }}</p>
+                <span class="biz-cat-chip">
+                  {{ biz.get_category_display }}
+                </span>
+              </div>
+
+              {# Open status + Employees #}
+              <div class="biz-stats-row">
+                {% if item.is_open_today %}
+                  <span class="biz-open-badge open">Bugun ochiq
+                    {% if item.today_wh %}
+                      &middot; {{ item.today_wh.open_time|time:"H:i" }}–{{ item.today_wh.close_time|time:"H:i" }}
+                    {% endif %}
+                  </span>
+                {% else %}
+                  <span class="biz-open-badge closed"><i class="bi bi-moon-fill"></i> Yopiq</span>
+                {% endif %}
+                {% if item.employee_count %}
+                <span class="biz-stat-chip">
+                  <i class="bi bi-people-fill"></i> {{ item.employee_count }} mutaxassis
+                </span>
+                {% endif %}
+              </div>
+
+              {# About #}
+              {% if biz.about %}
+              <p class="biz-about">{{ biz.about }}</p>
+              {% endif %}
+
+              {# Location #}
+              {% if biz.city or biz.address %}
+              <div class="biz-location">
+                <i class="bi bi-geo-alt-fill"></i>
+                <span>{{ biz.city }}{% if biz.city and biz.address %}, {% endif %}{{ biz.address|truncatechars:30 }}</span>
+              </div>
+              {% endif %}
+            </div>
+
+            {# Card Footer #}
+            <div class="biz-card-footer">
+              <span class="biz-book-btn">
+                <i class="bi bi-calendar2-check-fill"></i> Band qilish
+              </span>
+              <span class="biz-more-btn" title="Batafsil">
+                <i class="bi bi-arrow-right"></i>
+              </span>
+            </div>
+
+          </a>
+          {% endwith %}
+          {% endfor %}
+        </div>
+
+        {% else %}
+        {# Empty state #}
+        <div class="cat-empty reveal">
+          <i class="bi bi-search cat-empty-icon"></i>
+          <h3>Hech narsa topilmadi</h3>
+          <p>
+            {% if search_q %}
+              "<strong>{{ search_q }}</strong>" bo'yicha biznes topilmadi. Boshqacha kalit so'z kiriting.
+            {% elif selected_category or selected_city or open_today %}
+              Tanlangan filtrlar bo'yicha biznes yo'q.
+              <br><a href="{% url 'marketing:businesses' %}" style="color:#818cf8">Filtrlarni tozalash</a>
+            {% else %}
+              Hozircha katalogda bizneslar yo'q.
+            {% endif %}
+          </p>
+        </div>
+        {% endif %}
+
+      </div>{# end results #}
+    </div>{# end cat-layout #}
+  </div>
+</section>
+
+{# ── CTA Banner ──────────────────────────────────────────────── #}
+<section class="mkt-section" style="padding-top: 1rem;">
+  <div class="mkt-container">
+    <div class="mkt-cta-card reveal" style="text-align:center; padding: 2.5rem 2rem;">
+      <div class="mkt-eyebrow" style="margin: 0 auto 1rem;"><span></span> Biznesingizni ro'yxatga oling</div>
+      <h2 style="font-size:1.75rem; font-weight:800; margin-bottom:.75rem; letter-spacing:-.02em;">
+        Mijozlaringiz sizni BookFlow orqali topsin
+      </h2>
+      <p style="color: var(--mkt-subtle); max-width:480px; margin: 0 auto 1.75rem;">
+        Biznesingizni katalogga qo'shing va yangi mijozlarni onlayn band qilish orqali jalb qiling.
+      </p>
+      <a href="{% url 'accounts:register' %}" class="mkt-btn mkt-btn-primary">
+        <i class="bi bi-shop me-1"></i> Bepul qo'shish
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+function toggleCatSidebar() {
+  var sidebar = document.getElementById('cat-sidebar');
+  sidebar.classList.toggle('show');
+}
+</script>
 {% endblock %}

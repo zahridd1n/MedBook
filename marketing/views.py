@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db import models
 from django.db.models import Count
 
 from superadmin.models import SiteSettings
@@ -169,18 +170,79 @@ def tutorials(request):
 
 def businesses_directory(request):
     """Public directory of businesses that opted in to show_in_directory."""
+    from django.db.models import Count, Q
+    from django.utils import timezone
+    from business.models import WorkingHours
+
     lang = _language(request)
     site = SiteSettings.load()
     copy = site.marketing_copy(lang)
 
-    category_filter = request.GET.get('category', '')
-    qs = Business.objects.filter(show_in_directory=True, is_active=True).order_by('name')
+    # ─── Filters from GET params ───────────────────────────────────
+    category_filter = request.GET.get('category', '').strip()
+    city_filter     = request.GET.get('city', '').strip()
+    sort_by         = request.GET.get('sort', 'popular')
+    open_today      = request.GET.get('open_today', '')
+    q               = request.GET.get('q', '').strip()
+
+    # Base queryset
+    qs = (
+        Business.objects
+        .filter(show_in_directory=True, is_active=True, is_blocked=False)
+        .prefetch_related('employees', 'working_hours')
+        .annotate(employee_count=Count('employees', distinct=True))
+    )
+
+    # Search
+    if q:
+        qs = qs.filter(
+            Q(name__icontains=q) |
+            Q(about__icontains=q) |
+            Q(city__icontains=q) |
+            Q(address__icontains=q)
+        )
+
+    # Category filter
     if category_filter:
         qs = qs.filter(category=category_filter)
 
+    # City filter
+    if city_filter:
+        qs = qs.filter(city__iexact=city_filter)
+
+    # Open today filter
+    if open_today:
+        today_weekday = timezone.localdate().weekday()  # Monday=0, Sunday=6
+        open_business_ids = (
+            WorkingHours.objects
+            .filter(day=today_weekday, is_open=True)
+            .values_list('business_id', flat=True)
+        )
+        qs = qs.filter(id__in=open_business_ids)
+
+    # Sorting
+    if sort_by == 'newest':
+        qs = qs.order_by('-created_at')
+    elif sort_by == 'name':
+        qs = qs.order_by('name')
+    elif sort_by == 'employees':
+        qs = qs.order_by('-employee_count', 'name')
+    else:  # 'popular' — enterprise first, then growth, then free
+        qs = qs.order_by(
+            models.Case(
+                models.When(subscription_plan='enterprise', then=0),
+                models.When(subscription_plan='growth', then=1),
+                default=2,
+                output_field=models.IntegerField(),
+            ),
+            '-employee_count',
+            'name',
+        )
+
+    # ─── Category counts for filter sidebar ────────────────────────
     category_counts = (
         Business.objects
-        .filter(show_in_directory=True, is_active=True)
+        .filter(show_in_directory=True, is_active=True, is_blocked=False)
         .values('category')
         .annotate(cnt=Count('id'))
         .order_by('category')
@@ -196,16 +258,71 @@ def businesses_directory(request):
         for row in category_counts
     ]
 
+    # ─── City list for sidebar ─────────────────────────────────────
+    cities = (
+        Business.objects
+        .filter(show_in_directory=True, is_active=True, is_blocked=False)
+        .exclude(city='')
+        .values_list('city', flat=True)
+        .distinct()
+        .order_by('city')
+    )
+
+    # ─── Open-today check per business ─────────────────────────────
+    today_weekday = timezone.localdate().weekday()
+    open_biz_ids = set(
+        WorkingHours.objects
+        .filter(day=today_weekday, is_open=True)
+        .values_list('business_id', flat=True)
+    )
+
+    # ─── Build business list with badges ───────────────────────────
+    from datetime import timedelta
+    thirty_days_ago = timezone.now() - timedelta(days=30)
+    businesses_with_meta = []
+    for biz in qs:
+        badges = []
+        if biz.subscription_plan == 'enterprise':
+            badges.append('premium')
+            badges.append('verified')
+        elif biz.subscription_plan == 'growth':
+            badges.append('pro')
+        if biz.created_at >= thirty_days_ago:
+            badges.append('new')
+
+        # Today's working hours
+        today_wh = None
+        for wh in biz.working_hours.all():
+            if wh.day == today_weekday:
+                today_wh = wh
+                break
+
+        businesses_with_meta.append({
+            'biz': biz,
+            'badges': badges,
+            'is_open_today': biz.id in open_biz_ids,
+            'today_wh': today_wh,
+            'employee_count': biz.employee_count,
+        })
+
+    total_all = Business.objects.filter(show_in_directory=True, is_active=True, is_blocked=False).count()
+
     context = {
         'site': site,
         'm': copy,
         'current_lang': lang,
         'languages': [('uz', 'UZ'), ('ru', 'RU'), ('en', 'EN')],
-        'businesses': qs,
+        'businesses_with_meta': businesses_with_meta,
         'categories': categories,
+        'cities': list(cities),
         'selected_category': category_filter,
+        'selected_city': city_filter,
+        'sort_by': sort_by,
+        'open_today': open_today,
+        'search_q': q,
         'cat_labels': cat_labels,
         'cat_icons': CATEGORY_ICONS,
-        'total_count': Business.objects.filter(show_in_directory=True, is_active=True).count(),
+        'total_count': total_all,
+        'result_count': len(businesses_with_meta),
     }
     return render(request, 'marketing/businesses.html', context)

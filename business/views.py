@@ -89,7 +89,12 @@ def business_setup(request):
             return redirect('dashboard:home')
     else:
         form = BusinessSetupForm(instance=business)
-    return render(request, 'dashboard/settings/business.html', {'form': form, 'business': business})
+    from .forms import UZBEKISTAN_CITIES
+    return render(request, 'dashboard/settings/business.html', {
+        'form': form,
+        'business': business,
+        'uzbekistan_cities': UZBEKISTAN_CITIES,
+    })
 
 
 # ─── Working Hours ────────────────────────────────────────────────────────────

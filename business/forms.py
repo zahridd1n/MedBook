@@ -1,6 +1,33 @@
 from django import forms
 from .models import Business, WorkingHours, FAQ
 
+# O'zbekiston shaharlari (standart yozuv)
+UZBEKISTAN_CITIES = [
+    "Toshkent", "Samarqand", "Namangan", "Andijon", "Farg'ona",
+    "Buxoro", "Nukus", "Qarshi", "Jizzax", "Guliston",
+    "Termiz", "Navoiy", "Urganch", "Margilon", "Chirchiq",
+    "Qo'qon", "Angren", "Almaliq", "Bekobod", "Yangiyer",
+    "Zarafshon", "Muborak", "G'azalkent", "Salor", "Turon",
+    "Kitob", "Shaxrisabz", "Denov", "Shahrisabz", "Xiva",
+    "Kattaqo'rg'on", "Kogon", "Qibray", "To'rtko'l", "Xo'jayli",
+    "Gurlan", "Hazorasp", "Pitnak", "Sho'rchi", "Boysun",
+]
+
+# Normalizatsiya uchun mapping (kichik harf → standart yozuv)
+_CITY_LOWER_MAP = {c.lower(): c for c in UZBEKISTAN_CITIES}
+# Inglizcha variantlari ham qo'shamiz
+_CITY_LOWER_MAP.update({
+    'tashkent': 'Toshkent', 'samarkand': 'Samarqand',
+    'namangan': 'Namangan', 'andijan': 'Andijon',
+    'fergana': "Farg'ona", 'fargona': "Farg'ona",
+    'bukhara': 'Buxoro', 'buхoro': 'Buxoro',
+    'nukus': 'Nukus', 'karshi': 'Qarshi',
+    'jizzax': 'Jizzax', 'guliston': 'Guliston',
+    'termez': 'Termiz', 'navoi': 'Navoiy',
+    'urgench': 'Urganch', 'margilan': 'Margilon',
+    'chirchiq': 'Chirchiq', 'kokand': "Qo'qon",
+    'angren': 'Angren', 'almalyk': 'Almaliq',
+})
 
 class BusinessSetupForm(forms.ModelForm):
     class Meta:
@@ -20,7 +47,12 @@ class BusinessSetupForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'address': forms.TextInput(attrs={'class': 'form-control'}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'city': forms.TextInput(attrs={
+                'class': 'form-control',
+                'list': 'city-datalist',
+                'placeholder': "Shahar tanlang...",
+                'autocomplete': 'off',
+            }),
             'latitude': forms.HiddenInput(),
             'longitude': forms.HiddenInput(),
             'telegram': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '@username'}),
@@ -28,6 +60,17 @@ class BusinessSetupForm(forms.ModelForm):
             'website': forms.URLInput(attrs={'class': 'form-control'}),
             'show_in_directory': forms.CheckboxInput(attrs={'class': 'ios-toggle', 'id': 'id_show_in_directory'}),
         }
+
+    def clean_city(self):
+        """Normalize city name: strip, title-case, map to standard Uzbek spelling."""
+        city = self.cleaned_data.get('city', '').strip()
+        if not city:
+            return city
+        normalized = _CITY_LOWER_MAP.get(city.lower())
+        if normalized:
+            return normalized
+        # Fallback: title-case what they typed
+        return city.strip().title()
 
 
 class FAQForm(forms.ModelForm):
