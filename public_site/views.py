@@ -275,3 +275,17 @@ def public_employee_detail(request, slug, employee_id):
 def booking_success(request, slug):
     business = get_object_or_404(Business, slug=slug, is_active=True)
     return render(request, 'public/booking/success.html', {'business': business})
+
+
+def qr_scan_redirect(request, slug):
+    business = get_object_or_404(Business, slug=slug, is_active=True)
+
+    from business.models import QRCodeScan
+    QRCodeScan.objects.create(
+        business=business,
+        user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
+        ip_address=request.META.get('REMOTE_ADDR', None),
+        referrer=request.META.get('HTTP_REFERER', '')[:500],
+    )
+
+    return redirect('public-home', slug=slug)

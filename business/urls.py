@@ -29,4 +29,9 @@ urlpatterns = [
     path('api/employees/', views.api_employees, name='api_employees'),
     path('api/customers/', views.api_customers, name='api_customers'),
     path('api/stats/', views.api_stats, name='api_stats'),
+
+    # Marketing — QR Code
+    path('marketing/qr-code/', views.qr_code_settings, name='qr_code'),
+    path('marketing/qr-code/download/<str:size>/<str:fmt>/', views.qr_download, name='qr_download'),
+    path('marketing/link-sharing/', views.link_sharing, name='link_sharing'),
 ]

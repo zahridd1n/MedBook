@@ -1,0 +1,185 @@
+{% extends 'base_dashboard.html' %}
+{% load i18n %}
+{% load static %}
+{% block page_title %}{% trans "QR Code" %} — {{ business.name }}{% endblock %}
+{% block dashboard_content %}
+
+<!-- Page header -->
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title">{% trans "QR Code" %}</div>
+    <div class="page-hd-sub">
+      {% trans "Biznesingiz ommaviy sahifasiga havola qiluvchi QR kod. Bepul yuklab oling va istalgan joyga joylashtiring." %}
+    </div>
+  </div>
+</div>
+
+{% if not can_use %}
+<div class="upgrade-strip">
+  <i class="bi bi-stars" style="color:#a5b4fc;font-size:1.25rem;"></i>
+  <p>{% blocktrans %}QR Code <strong>Pro</strong> va <strong>Max</strong> tariflarida mavjud.{% endblocktrans %}</p>
+  <a href="{% url 'business:upgrade' %}" class="btn btn-primary btn-sm" style="flex-shrink:0;">{% trans "Yangilash" %} →</a>
+</div>
+{% endif %}
+
+<div class="row g-4">
+
+  <!-- LEFT: QR Code preview + downloads -->
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title">{% trans "QR Code" %}</span>
+      </div>
+      <div class="card-body" style="text-align:center;padding:28px 24px 20px;">
+        <div id="qr-preview" style="display:inline-block;background:#fff;padding:16px;border-radius:12px;border:1px solid var(--border);margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,.04);">
+          <img src="data:image/svg+xml;base64,{{ qr_svg_b64|default:'' }}" alt="QR Code" id="qr-img" style="width:200px;height:200px;display:block;image-rendering:pixelated;">
+        </div>
+
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:4px;">{% trans "Havola" %}</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--text);word-break:break-all;margin-bottom:20px;background:var(--bg);padding:8px 12px;border-radius:6px;" id="qr-url-display">
+          {{ qr_url }}
+        </div>
+
+        <div style="border-top:1px solid var(--border);padding-top:18px;">
+          <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:12px;">{% trans "Yuklab olish" %}</div>
+          <div class="row g-2">
+            {% for key, preset in size_presets.items %}
+            <div class="col-6">
+              <div class="card" style="border-color:var(--border);box-shadow:none;">
+                <div class="card-body" style="padding:10px;text-align:center;">
+                  <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px;">{{ preset.label }}</div>
+                  <div style="display:flex;gap:4px;justify-content:center;">
+                    <a href="{% url 'business:qr_download' size=key fmt='png' %}" class="btn btn-secondary btn-xs" style="font-size:11px;">
+                      <i class="bi bi-image"></i> PNG
+                    </a>
+                    <a href="{% url 'business:qr_download' size=key fmt='svg' %}" class="btn btn-secondary btn-xs" style="font-size:11px;">
+                      <i class="bi bi-file-earmark-code"></i> SVG
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Stats + share links -->
+  <div class="col-lg-7">
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Stats -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-head-title">{% trans "QR statistika" %}</span>
+        </div>
+        <div class="card-body" style="padding:16px;">
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="stat-card" style="box-shadow:none;border-color:var(--border);padding:14px;">
+                <div class="stat-value" style="font-size:22px;">{{ this_month_scans }}</div>
+                <div class="stat-label">{% trans "Bu oy skaner qilindi" %}</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-card" style="box-shadow:none;border-color:var(--border);padding:14px;">
+                <div class="stat-value" style="font-size:22px;">{{ total_scans }}</div>
+                <div class="stat-label">{% trans "Jami skaner" %}</div>
+              </div>
+            </div>
+          </div>
+
+          {% if can_use and scans_by_day %}
+          <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+            <div style="font-size:11px;font-weight:600;color:var(--text-3);margin-bottom:8px;">{% trans "Oxirgi 30 kun" %}</div>
+            <div style="display:flex;align-items:end;gap:2px;height:48px;">
+              {% for day in scans_by_day %}
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:end;height:100%;">
+                {% if day.count > 0 %}
+                <div style="width:100%;background:var(--p);border-radius:2px 2px 0 0;min-height:4px;height:{% widthratio day.count max_scan_count 36 %}px;max-height:36px;opacity:{% if day.count > 0 %}0.5{% else %}0.1{% endif %};transition:opacity .2s;" title="{{ day.date }}: {{ day.count }} skaner"></div>
+                {% else %}
+                <div style="width:100%;height:2px;background:var(--border);border-radius:1px;"></div>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="row g-4" style="margin-top:4px;">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title">{% trans "QR kodni qayerga joylashtirish mumkin?" %}</span>
+      </div>
+      <div class="card-body" style="padding:18px;">
+        <div class="row g-3">
+          <div class="col-md-3 col-6">
+            <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:10px;">
+              <div style="width:44px;height:44px;border-radius:10px;background:#eef2ff;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <i class="bi bi-printer" style="color:#6366f1;font-size:18px;"></i>
+              </div>
+              <div style="font-size:12px;font-weight:600;color:var(--text);">{% trans "Stol ustiga" %}</div>
+              <div style="font-size:10.5px;color:var(--text-3);margin-top:2px;">{% trans "A5 poster chop eting" %}</div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:10px;">
+              <div style="width:44px;height:44px;border-radius:10px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <i class="bi bi-person-vcard" style="color:#16a34a;font-size:18px;"></i>
+              </div>
+              <div style="font-size:12px;font-weight:600;color:var(--text);">{% trans "Vizitka" %}</div>
+              <div style="font-size:10.5px;color:var(--text-3);margin-top:2px;">{% trans "Vizitka dizayni" %}</div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:10px;">
+              <div style="width:44px;height:44px;border-radius:10px;background:#fffbeb;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <i class="bi bi-sticky" style="color:#d97706;font-size:18px;"></i>
+              </div>
+              <div style="font-size:12px;font-weight:600;color:var(--text);">{% trans "Stiker" %}</div>
+              <div style="font-size:10.5px;color:var(--text-3);margin-top:2px;">{% trans "Reception stoliga" %}</div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:10px;">
+              <div style="width:44px;height:44px;border-radius:10px;background:#fdf2f8;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
+                <i class="bi bi-window-stack" style="color:#db2777;font-size:18px;"></i>
+              </div>
+              <div style="font-size:12px;font-weight:600;color:var(--text);">{% trans "Instagram Bio" %}</div>
+              <div style="font-size:10.5px;color:var(--text-3);margin-top:2px;">{% trans "Havolani bio'ga qo'ying" %}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyLink(url, btn) {
+  navigator.clipboard.writeText(url).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="bi bi-check-lg"></i> ' + '{% trans "Nusxalandi" %}';
+    setTimeout(() => btn.innerHTML = orig, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = url;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+  });
+}
+</script>
+
+{% endblock %}

@@ -8,7 +8,7 @@ from blog.views import blog_public_list, blog_public_detail
 from public_site.views import (
     public_home, booking_step1_service,
     booking_step3_datetime, booking_step4_confirm, booking_success,
-    public_employee_detail,
+    public_employee_detail, qr_scan_redirect,
 )
 
 urlpatterns = [
@@ -43,6 +43,9 @@ urlpatterns = [
 
     # Public business pages — slug-based, must be LAST
     # Home and booking (3-step flow)
+    # QR scan tracking
+    re_path(r'^(?P<slug>[\w-]+)/qr-scan/$', qr_scan_redirect, name='qr-scan'),
+
     re_path(r'^(?P<slug>[\w-]+)/$', public_home, name='public-home'),
     re_path(r'^(?P<slug>[\w-]+)/book/$', booking_step1_service, name='public-booking-step1'),
     re_path(r'^(?P<slug>[\w-]+)/book/(?P<service_id>\d+)/(?P<employee_id>\d+)/$', booking_step3_datetime, name='public-booking-step2'),

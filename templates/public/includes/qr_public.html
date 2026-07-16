@@ -1,0 +1,23 @@
+{% if business.subscription_plan != 'free' %}
+{% load i18n %}
+<div class="bk-hours-card" style="margin-top:1rem;">
+  <div class="bk-hours-heading" style="margin-bottom:0.75rem;">
+    <i class="bi bi-qr-code"></i> QR Code
+  </div>
+  <div style="text-align:center;">
+    <a href="{% url 'qr-scan' business.slug %}" target="_blank" rel="noopener">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data={{ request.scheme }}://{{ request.get_host }}{% url 'qr-scan' business.slug %}&margin=10" 
+           alt="QR Code" 
+           style="width:140px;height:140px;border-radius:10px;border:1px solid var(--border);padding:6px;background:#fff;">
+    </a>
+    <div style="font-size:11px;color:var(--ink-subtle);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:4px;">
+      <i class="bi bi-camera"></i> {% trans "Skaner qiling va band qiling" %}
+    </div>
+    <div style="margin-top:10px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+      <a href="{% url 'qr-scan' business.slug %}" class="btn-service" style="font-size:11px;padding:5px 10px;width:auto;">
+        <i class="bi bi-box-arrow-up-right"></i> {% trans "Ochish" %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endif %}

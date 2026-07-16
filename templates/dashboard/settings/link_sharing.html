@@ -1,0 +1,184 @@
+{% extends 'base_dashboard.html' %}
+{% load i18n %}
+{% block page_title %}{% trans "Link ulashish" %} — {{ business.name }}{% endblock %}
+{% block dashboard_content %}
+
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title">{% trans "Link ulashish" %}</div>
+    <div class="page-hd-sub">
+      {% trans "Biznesingiz ommaviy sahifasi havolasini platformalarga ulashing." %}
+    </div>
+  </div>
+</div>
+
+{% if not can_use %}
+<div class="upgrade-strip">
+  <i class="bi bi-stars" style="color:#a5b4fc;font-size:1.25rem;"></i>
+  <p>{% blocktrans %}Link ulashish <strong>Pro</strong> va <strong>Max</strong> tariflarida mavjud.{% endblocktrans %}</p>
+  <a href="{% url 'business:upgrade' %}" class="btn btn-primary btn-sm" style="flex-shrink:0;">{% trans "Yangilash" %} →</a>
+</div>
+{% endif %}
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title">{% trans "Havolani nusxalash" %}</span>
+      </div>
+      <div class="card-body" style="padding:18px;">
+        <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:6px;">{% trans "Biznes sahifangiz" %}</div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" value="{{ qr_url }}" readonly id="share-link-input"
+                 style="flex:1;padding:9px 12px;font-size:13px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);outline:none;">
+          <button class="btn btn-primary" onclick="copyLink('{{ qr_url }}', this)" style="flex-shrink:0;">
+            <i class="bi bi-clipboard"></i> {% trans "Nusxalash" %}
+          </button>
+        </div>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+          <div style="font-size:11.5px;color:var(--text-3);margin-bottom:8px;">{% trans "Bir klikda ulashish" %}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <a href="https://t.me/share/url?url={{ qr_url|urlencode }}&text={% trans 'Online band qilish'|urlencode %}" target="_blank" class="btn" style="background:#f0f9ff;color:#0369a1;border-color:#bae6fd;font-size:12px;display:inline-flex;align-items:center;gap:6px;">
+              <i class="bi bi-telegram"></i> Telegram
+            </a>
+            <a href="https://wa.me/?text={{ qr_url|urlencode }}" target="_blank" class="btn" style="background:#f0fdf4;color:#16a34a;border-color:#bbf7d0;font-size:12px;display:inline-flex;align-items:center;gap:6px;">
+              <i class="bi bi-whatsapp"></i> WhatsApp
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ qr_url|urlencode }}" target="_blank" class="btn" style="background:#eff6ff;color:#2563eb;border-color:#bfdbfe;font-size:12px;display:inline-flex;align-items:center;gap:6px;">
+              <i class="bi bi-facebook"></i> Facebook
+            </a>
+            <button class="btn" style="background:#fdf4ff;color:#a21caf;border-color:#f5d0fe;font-size:12px;display:inline-flex;align-items:center;gap:6px;" onclick="copyLink('{{ qr_url }}', this)">
+              <i class="bi bi-link-45deg"></i> {% trans "Link nusxalash" %}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-head">
+        <span class="card-head-title">{% trans "Instagram Bio uchun" %}</span>
+      </div>
+      <div class="card-body" style="padding:18px;">
+        <div style="display:flex;align-items:center;gap:14px;padding:12px;background:linear-gradient(135deg,#fdf4ff,#fce7f3);border:1px solid #fbcfe8;border-radius:12px;">
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f58529,#dd2a7b);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="bi bi-instagram" style="color:#fff;font-size:20px;"></i>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:600;color:#831843;">Instagram Bio</div>
+            <div style="font-size:11.5px;color:#9d174d;word-break:break-all;margin-top:2px;">{{ qr_url }}</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" style="flex-shrink:0;" onclick="copyLink('{{ qr_url }}', this)">
+            <i class="bi bi-clipboard"></i> {% trans "Nusxalash" %}
+          </button>
+        </div>
+        <div style="margin-top:12px;padding:10px 12px;background:var(--bg);border-radius:8px;font-size:12px;color:var(--text-3);display:flex;align-items:flex-start;gap:8px;">
+          <i class="bi bi-info-circle" style="color:var(--p);flex-shrink:0;margin-top:1px;"></i>
+          <span>{% trans "Instagram bio'ngizga havolani qo'ying. Mijozlar 'Bio dagi havola' orqali band qilish sahifangizga o'tadi." %}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title">{% trans "Telegram ga ulashish" %}</span>
+      </div>
+      <div class="card-body" style="padding:18px;">
+        <div style="display:flex;align-items:center;gap:14px;padding:12px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;">
+          <div style="width:44px;height:44px;border-radius:50%;background:#0284c7;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="bi bi-telegram" style="color:#fff;font-size:20px;"></i>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:600;color:#075985;">Telegram</div>
+            <div style="font-size:11.5px;color:#0c4a6e;word-break:break-all;margin-top:2px;">{{ qr_url }}</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" style="flex-shrink:0;" onclick="copyLink('{{ qr_url }}', this)">
+            <i class="bi bi-clipboard"></i> {% trans "Nusxalash" %}
+          </button>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="https://t.me/share/url?url={{ qr_url|urlencode }}&text={% trans 'Online band qilish'|urlencode %}" target="_blank" class="btn btn-primary btn-sm" style="font-size:12px;">
+            <i class="bi bi-send"></i> {% trans "Telegram da ulashish" %}
+          </a>
+          <button class="btn btn-secondary btn-sm" style="font-size:12px;" onclick="copyLink('{{ qr_url }}', this)">
+            <i class="bi bi-clipboard"></i> {% trans "Link nusxalash" %}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-head">
+        <span class="card-head-title">{% trans "Qo'shimcha platformalar" %}</span>
+      </div>
+      <div class="card-body" style="padding:18px;">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;">
+            <div style="width:36px;height:36px;border-radius:8px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;color:#16a34a;font-size:16px;">
+              <i class="bi bi-whatsapp"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:12.5px;font-weight:600;color:var(--text);">WhatsApp</div>
+              <div style="font-size:11px;color:var(--text-3);">{% trans "Mijozlarga havolani yuboring" %}</div>
+            </div>
+            <a href="https://wa.me/?text={{ qr_url|urlencode }}" target="_blank" class="btn btn-secondary btn-xs">{% trans "Ulashish" %}</a>
+            <button class="btn btn-ghost btn-xs" onclick="copyLink('{{ qr_url }}', this)"><i class="bi bi-clipboard"></i></button>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;">
+            <div style="width:36px;height:36px;border-radius:8px;background:#eff6ff;display:flex;align-items:center;justify-content:center;color:#2563eb;font-size:16px;">
+              <i class="bi bi-facebook"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:12.5px;font-weight:600;color:var(--text);">Facebook</div>
+              <div style="font-size:11px;color:var(--text-3);">{% trans "Sahifa yoki guruhda ulashing" %}</div>
+            </div>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ qr_url|urlencode }}" target="_blank" class="btn btn-secondary btn-xs">{% trans "Ulashish" %}</a>
+            <button class="btn btn-ghost btn-xs" onclick="copyLink('{{ qr_url }}', this)"><i class="bi bi-clipboard"></i></button>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;">
+            <div style="width:36px;height:36px;border-radius:8px;background:#fdf4ff;display:flex;align-items:center;justify-content:center;color:#a21caf;font-size:16px;">
+              <i class="bi bi-envelope"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:12.5px;font-weight:600;color:var(--text);">Email</div>
+              <div style="font-size:11px;color:var(--text-3);">{% trans "Email orqali ulashing" %}</div>
+            </div>
+            <a href="mailto:?subject={% trans 'Online band qilish'|urlencode %}&body={{ qr_url|urlencode }}" class="btn btn-secondary btn-xs">{% trans "Ulashish" %}</a>
+            <button class="btn btn-ghost btn-xs" onclick="copyLink('{{ qr_url }}', this)"><i class="bi bi-clipboard"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyLink(text, btn) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      flashCopied(btn);
+    }).catch(() => fallbackCopy(text, btn));
+  } else {
+    fallbackCopy(text, btn);
+  }
+}
+function fallbackCopy(text, btn) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); flashCopied(btn); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function flashCopied(btn) {
+  var orig = btn.innerHTML;
+  btn.innerHTML = '<i class="bi bi-check-lg"></i> ' + '{% trans "Nusxalandi" %}';
+  setTimeout(function() { btn.innerHTML = orig; }, 2000);
+}
+</script>
+
+{% endblock %}

@@ -1295,6 +1295,43 @@ textarea.form-control { resize: vertical; min-height: 80px; }
       </div>
     </div>
 
+    <!-- 📢 MARKETING -->
+    <div class="sb-group" data-group="marketing">
+      <div class="sb-group-head" onclick="toggleGroup('marketing')" data-head>
+        <span class="sb-group-head-label">📢 {% trans "Marketing" %}</span>
+        <span class="sb-group-head-arrow" data-arrow>▾</span>
+      </div>
+      <div class="sb-group-body" data-body>
+        {% if user.is_authenticated %}
+        {% url 'business:qr_code' as qr_code_url %}
+        <a href="{% if user.business.subscription_plan == 'free' %}javascript:void(0){% else %}{{ qr_code_url }}{% endif %}"
+           class="sb-link {% if 'qr-code' in request.path and user.business.subscription_plan != 'free' %}active{% endif %} {% if user.business.subscription_plan == 'free' %}premium-locked{% endif %}"
+           title="{% trans 'QR Code' %}">
+          <i class="bi bi-qr-code"></i><span>{% trans "QR Code" %}</span>
+           {% if user.business.subscription_plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>{% endif %}
+          {% if user.business.subscription_plan == 'free' %}<span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
+        </a>
+        {% url 'business:link_sharing' as link_sharing_url %}
+        <a href="{% if user.business.subscription_plan == 'free' %}javascript:void(0){% else %}{{ link_sharing_url }}{% endif %}"
+           class="sb-link {% if 'link-sharing' in request.path and user.business.subscription_plan != 'free' %}active{% endif %} {% if user.business.subscription_plan == 'free' %}premium-locked{% endif %}"
+           title="{% trans 'Link ulashish' %}">
+          <i class="bi bi-share"></i><span>{% trans "Link ulashish" %}</span>
+          {% if user.business.subscription_plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
+        </a>
+        <a href="javascript:void(0)" class="sb-link" style="opacity:.5;cursor:default;" title="{% trans 'SMS marketing' %}">
+          <i class="bi bi-chat-dots"></i><span>{% trans "SMS marketing" %}</span>
+          <span class="sb-link-badge" style="background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);font-size:8px;letter-spacing:.04em;">{% trans "TEZ KUN" %}</span>
+        </a>
+        {% else %}
+        <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'QR Code' %}">
+          <i class="bi bi-qr-code"></i><span>{% trans "QR Code" %}</span>
+          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span>
+          <span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
     <!-- ⭐ PREMIUM -->
     <div class="sb-group" data-group="premium">
       <div class="sb-group-head" onclick="toggleGroup('premium')" data-head style="border-radius:var(--radius-sm) var(--radius-sm) 0 0;">

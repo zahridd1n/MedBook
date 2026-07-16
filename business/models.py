@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.utils.text import slugify
+import json
 
 
 class Business(models.Model):
@@ -391,3 +392,22 @@ class Payment(models.Model):
 
     def __str__(self):
         return f'{self.business.name} – {self.get_plan_display()} ({self.get_status_display()})'
+
+
+class QRCodeScan(models.Model):
+    business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='qr_scans')
+    scanned_at = models.DateTimeField(auto_now_add=True)
+    user_agent = models.TextField(blank=True, default='')
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    referrer = models.CharField(max_length=500, blank=True, default='')
+
+    class Meta:
+        ordering = ['-scanned_at']
+        verbose_name = 'QR Code Scan'
+        verbose_name_plural = 'QR Code Scans'
+        indexes = [
+            models.Index(fields=['business', 'scanned_at']),
+        ]
+
+    def __str__(self):
+        return f'{self.business.name} – {self.scanned_at}'

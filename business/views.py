@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.utils.translation import gettext as _
 
 from .models import Business, WorkingHours, FAQ, Payment
@@ -1161,3 +1161,99 @@ def api_employees(request):
     employees = Employee.objects.filter(business=business, is_active=True)
     data = [{'id': e.id, 'name': e.name, 'position': e.position, 'phone': '', 'email': ''} for e in employees]
     return JsonResponse({'ok': True, 'employees': data, 'total': len(data)})
+
+
+# ─── Link Sharing ────────────────────────────────────────────────────────────
+
+@login_required
+def link_sharing(request):
+    business = get_object_or_404(Business, owner=request.user)
+    can_use = business.subscription_plan != 'free'
+
+    from .qrcode_utils import get_business_url
+    qr_url = get_business_url(business)
+
+    return render(request, 'dashboard/settings/link_sharing.html', {
+        'business': business,
+        'can_use': can_use,
+        'qr_url': qr_url,
+    })
+
+
+# ─── QR Code Marketing ──────────────────────────────────────────────────────
+
+@login_required
+def qr_code_settings(request):
+    business = get_object_or_404(Business, owner=request.user)
+    can_use = business.subscription_plan != 'free'
+
+    from django.utils import timezone
+    from datetime import timedelta
+    from django.db.models import Count
+    from .models import QRCodeScan
+
+    now = timezone.now()
+    thirty_days_ago = now - timedelta(days=30)
+
+    this_month_scans = QRCodeScan.objects.filter(
+        business=business, scanned_at__gte=thirty_days_ago
+    ).count()
+
+    total_scans = QRCodeScan.objects.filter(business=business).count()
+
+    scans_by_day = []
+    max_scan_count = 0
+    for i in range(29, -1, -1):
+        day = (now - timedelta(days=i)).date()
+        cnt = QRCodeScan.objects.filter(
+            business=business,
+            scanned_at__date=day,
+        ).count()
+        if cnt > max_scan_count:
+            max_scan_count = cnt
+        scans_by_day.append({'date': day, 'count': cnt})
+
+    if max_scan_count == 0:
+        max_scan_count = 1
+
+    public_url = business.custom_domain if (business.custom_domain and business.domain_verified) else None
+
+    from .qrcode_utils import get_business_url, SIZE_PRESETS, generate_qr_svg
+    qr_url = get_business_url(business)
+
+    import base64
+    svg_buf = generate_qr_svg(business, border=2)
+    qr_svg_b64 = base64.b64encode(svg_buf.getvalue()).decode('utf-8')
+
+    context = {
+        'business': business,
+        'can_use': can_use,
+        'this_month_scans': this_month_scans,
+        'total_scans': total_scans,
+        'scans_by_day': scans_by_day,
+        'max_scan_count': max_scan_count,
+        'qr_url': qr_url,
+        'qr_svg_b64': qr_svg_b64,
+        'size_presets': SIZE_PRESETS,
+    }
+    return render(request, 'dashboard/settings/qrcode.html', context)
+
+
+@login_required
+def qr_download(request, size='visitka', fmt='png'):
+    business = get_object_or_404(Business, owner=request.user)
+
+    from .qrcode_utils import generate_qr_png, generate_qr_svg, SIZE_PRESETS
+
+    preset = SIZE_PRESETS.get(size, SIZE_PRESETS['visitka'])
+
+    if fmt == 'svg':
+        buf = generate_qr_svg(business, border=preset['border'])
+        response = HttpResponse(buf.getvalue(), content_type='image/svg+xml')
+        response['Content-Disposition'] = f'attachment; filename="{business.slug}_qr_{size}.svg"'
+    else:
+        buf = generate_qr_png(business, box_size=preset['box_size'], border=preset['border'])
+        response = HttpResponse(buf.getvalue(), content_type='image/png')
+        response['Content-Disposition'] = f'attachment; filename="{business.slug}_qr_{size}.png"'
+
+    return response
