@@ -14,54 +14,133 @@
           <a class="mkt-btn mkt-btn-primary" href="{% url 'accounts:register' %}">
             {{ m.home.primary_cta }} <i class="bi bi-arrow-right"></i>
           </a>
-          <a class="mkt-btn mkt-btn-secondary" href="{% url 'marketing:features' %}">
-            {{ m.home.secondary_cta }}
+          <a class="mkt-btn mkt-btn-secondary" href="{% url 'marketing:businesses' %}">
+            <i class="bi bi-grid"></i> Bizneslar katalogi
           </a>
         </div>
-        <div class="mkt-trust-row reveal reveal-delay-4">
-          {% for item in m.home.trust %}
-            <span><i class="bi bi-check2-circle"></i> {{ item }}</span>
-          {% endfor %}
+        <div class="mkt-trust-chips reveal reveal-delay-4">
+          <span class="mkt-trust-chip mkt-trust-chip--green"><i class="bi bi-check-circle-fill"></i> 99.9% Ishlash vaqti</span>
+          <span class="mkt-trust-chip mkt-trust-chip--blue"><i class="bi bi-telegram"></i> Telegram bildirishnomalar</span>
+          <span class="mkt-trust-chip mkt-trust-chip--purple"><i class="bi bi-calendar-event-fill"></i> Google Calendar</span>
+          <span class="mkt-trust-chip mkt-trust-chip--amber"><i class="bi bi-qr-code-scan"></i> QR Booking</span>
         </div>
       </div>
 
-      <div class="mkt-product-stage mkt-hero-summary reveal reveal-delay-2" data-tilt>
-        <div class="mkt-summary-card mkt-window">
-          <div class="mkt-summary-top">
-            <span>{{ site.stats_uptime }}</span>
-            <small>{{ stat_labels.uptime }}</small>
+      <div class="mkt-vis-stage reveal reveal-delay-2" data-tilt>
+        <div class="mkt-vis-window">
+          <div class="mkt-vis-titlebar">
+            <div class="mkt-vis-dot mkt-vis-dot--red"></div>
+            <div class="mkt-vis-dot mkt-vis-dot--yellow"></div>
+            <div class="mkt-vis-dot mkt-vis-dot--green"></div>
+            <div class="mkt-vis-titlebar-label">DEMO CLINIC &mdash; BAND QILISH</div>
           </div>
-          <div class="mkt-summary-stat">
-            <strong>{{ site.stats_appointments }}</strong>
-            <span>{{ stat_labels.appointments }}</span>
-          </div>
-          <div class="mkt-summary-stat">
-            <strong>{{ site.stats_businesses }}</strong>
-            <span>{{ stat_labels.businesses }}</span>
-          </div>
-          <div class="mkt-summary-line"></div>
-          <div class="mkt-summary-actions">
-            <span></span><span></span><span></span>
+          <div class="mkt-vis-body">
+            <div class="mkt-vis-search">
+              <i class="bi bi-search"></i>
+              <span>Xizmat yoki mutaxassis qidirish...</span>
+            </div>
+            <div class="mkt-vis-cal-header">
+              <div class="mkt-vis-cal-month" id="visCurMonth">Iyul 2026</div>
+              <div class="mkt-vis-cal-nav">
+                <button><i class="bi bi-chevron-left"></i></button>
+                <button><i class="bi bi-chevron-right"></i></button>
+              </div>
+            </div>
+            <div class="mkt-vis-cal-grid" id="visCalGrid"></div>
+            <div class="mkt-vis-slots">
+              <div class="mkt-vis-slot">
+                <span class="mkt-vis-slot-time">09:00</span>
+                <span class="mkt-vis-slot-svc">Stomatolog</span>
+                <span class="mkt-vis-slot-badge mkt-vis-slot-badge--free">Bo'sh</span>
+              </div>
+              <div class="mkt-vis-slot mkt-vis-slot--active">
+                <span class="mkt-vis-slot-time">10:30</span>
+                <span class="mkt-vis-slot-svc">Dr. Alisher O.</span>
+                <span class="mkt-vis-slot-badge mkt-vis-slot-badge--sel">Tanlandi</span>
+              </div>
+              <div class="mkt-vis-slot">
+                <span class="mkt-vis-slot-time">12:00</span>
+                <span class="mkt-vis-slot-svc">Lor shifokor</span>
+                <span class="mkt-vis-slot-badge mkt-vis-slot-badge--busy">Band</span>
+              </div>
+            </div>
           </div>
         </div>
-        {% if site.contact_phone %}
-        <a href="tel:{{ site.contact_phone }}" class="mkt-float-card mkt-float-a">
-          <i class="bi bi-telephone"></i>
-          <strong>{{ site.contact_phone }}</strong>
-          <span>{{ m.nav.contact }}</span>
-        </a>
-        {% endif %}
-        {% if site.contact_telegram %}
-        <a href="{{ site.contact_telegram }}" target="_blank" class="mkt-float-card mkt-float-b">
-          <i class="bi bi-telegram"></i>
-          <strong>Telegram</strong>
-          <span>{{ site.contact_telegram|cut:'https://t.me/'|cut:'t.me/'|cut:'@' }}</span>
-        </a>
-        {% endif %}
+
+        <!-- Floating confirmation card -->
+        <div class="mkt-vis-confirm">
+          <div class="mkt-vis-confirm-header">
+            <div class="mkt-vis-confirm-icon"><i class="bi bi-check-lg"></i></div>
+            <div>
+              <div class="mkt-vis-confirm-title">Tasdiqlandi!</div>
+              <div class="mkt-vis-confirm-sub">Band qilish muvaffaqiyatli</div>
+            </div>
+          </div>
+          <div class="mkt-vis-confirm-divider"></div>
+          <div class="mkt-vis-confirm-row">
+            <span class="mkt-vis-confirm-label">Sana</span>
+            <span class="mkt-vis-confirm-val">18 Iyul</span>
+          </div>
+          <div class="mkt-vis-confirm-row">
+            <span class="mkt-vis-confirm-label">Vaqt</span>
+            <span class="mkt-vis-confirm-val">10:30</span>
+          </div>
+          <div class="mkt-vis-confirm-row">
+            <span class="mkt-vis-confirm-label">Xizmat</span>
+            <span class="mkt-vis-confirm-val">Konsultatsiya</span>
+          </div>
+        </div>
+
+        <!-- Telegram notification -->
+        <div class="mkt-vis-tg">
+          <div class="mkt-vis-tg-icon"><i class="bi bi-telegram"></i></div>
+          <div>
+            <div class="mkt-vis-tg-app">Telegram</div>
+            <div class="mkt-vis-tg-msg">✅ Siz 10:30 ga band oldingiz!</div>
+            <div class="mkt-vis-tg-time">Hozir</div>
+          </div>
+        </div>
+
+        <!-- Online indicator -->
+        <div class="mkt-vis-online">
+          <span class="mkt-vis-online-dot"></span>
+          Onlayn band qilish faol
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var grid = document.getElementById('visCalGrid');
+  var monthEl = document.getElementById('visCurMonth');
+  if (!grid) return;
+  var now = new Date();
+  var y = now.getFullYear(), m = now.getMonth();
+  var monthNames = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'];
+  if (monthEl) monthEl.textContent = monthNames[m] + ' ' + y;
+  var dayNames = ['Du','Se','Ch','Pa','Ju','Sh','Ya'];
+  dayNames.forEach(function(d){
+    var el = document.createElement('div');
+    el.className = 'mkt-vis-cal-day-name'; el.textContent = d; grid.appendChild(el);
+  });
+  var first = new Date(y, m, 1).getDay();
+  var startOffset = (first === 0) ? 6 : first - 1;
+  var days = new Date(y, m+1, 0).getDate();
+  var bookingDays = [3,7,10,14,18,21,24];
+  for (var i=0; i<startOffset; i++) {
+    var el = document.createElement('div'); el.className='mkt-vis-cal-day empty'; el.textContent='·'; grid.appendChild(el);
+  }
+  for (var d=1; d<=days; d++) {
+    var el = document.createElement('div');
+    el.className = 'mkt-vis-cal-day';
+    if (d === now.getDate()) el.className += ' active';
+    else if (bookingDays.indexOf(d) !== -1) el.className += ' has-slot';
+    el.textContent = d; grid.appendChild(el);
+  }
+});
+</script>
 
 <section class="mkt-section">
   <div class="mkt-container">

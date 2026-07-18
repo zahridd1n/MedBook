@@ -6,6 +6,7 @@ from django.utils.translation import gettext as _
 from .models import BlogPost, BlogComment
 from .forms import BlogPostForm, BlogCommentForm
 from business.models import Business
+from core.seo import get_seo_context, get_json_ld_html
 
 
 @login_required
@@ -103,9 +104,13 @@ def blog_public_list(request, slug):
     page = request.GET.get('page')
     posts = paginator.get_page(page)
 
+    seo = get_seo_context(request, business, 'blog_list')
     return render(request, 'public/blog_list.html', {
         'business': business,
         'posts': posts,
+        **seo,
+        'json_ld_html': get_json_ld_html(seo['json_ld']),
+        'seo_enabled': seo['show_advanced_seo'],
     })
 
 
@@ -129,11 +134,15 @@ def blog_public_detail(request, slug, post_slug):
     else:
         form = BlogCommentForm()
 
+    seo = get_seo_context(request, business, 'blog_detail', post=post)
     return render(request, 'public/blog_detail.html', {
         'business': business,
         'post': post,
         'comments': comments,
         'form': form,
+        **seo,
+        'json_ld_html': get_json_ld_html(seo['json_ld']),
+        'seo_enabled': seo['show_advanced_seo'],
     })
 
 

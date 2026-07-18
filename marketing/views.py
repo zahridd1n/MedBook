@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.db import models
 from django.db.models import Count
+from django.conf import settings
 
 from superadmin.models import SiteSettings
 from business.models import Business
+from marketing.models import MarketingVideo
+from core.seo import _get_site_settings, get_json_ld_html
 
 
 CATEGORY_LABELS = {
@@ -129,10 +132,46 @@ def _plans(site, copy, lang):
     return result
 
 
+def _marketing_seo(request, title, description, og_type='website'):
+    site_settings = _get_site_settings()
+    canonical = request.build_absolute_uri(request.path)
+    og_image = site_settings.default_og_image.url if site_settings.default_og_image and hasattr(site_settings.default_og_image, 'url') else ''
+    return {
+        'meta_title': title,
+        'meta_description': description,
+        'canonical_url': canonical,
+        'hreflangs': [],
+        'og_title': title,
+        'og_description': description,
+        'og_type': og_type,
+        'og_image': og_image,
+        'json_ld_html': '',
+        'seo_enabled': True,
+        'meta_keywords': '',
+    }
+
+
 def _context(request):
     lang = _language(request)
     site = SiteSettings.load()
     copy = site.marketing_copy(lang)
+
+    # Published videolarni modeldan olish (agar bo'lsa, defaultlarni bekor qiladi)
+    model_videos = MarketingVideo.objects.filter(
+        language=lang, is_published=True
+    ).order_by('order', 'created_at')
+    if model_videos.exists():
+        copy['tutorials']['videos'] = [
+            {
+                'title': v.title,
+                'description': v.description,
+                'youtube_id': v.youtube_id,
+                'file_url': v.file_url(),
+                'duration': v.duration,
+            }
+            for v in model_videos
+        ]
+
     return {
         'site': site,
         'm': copy,
@@ -146,25 +185,36 @@ def _context(request):
 
 
 def home(request):
-    return render(request, 'marketing/home.html', _context(request))
+    ctx = _context(request)
+    ctx.update(_marketing_seo(request, ctx['m']['home']['title'], ctx['m']['home']['subtitle']))
+    return render(request, 'marketing/home.html', ctx)
 
 def features(request):
-    return render(request, 'marketing/features.html', _context(request))
+    ctx = _context(request)
+    ctx.update(_marketing_seo(request, f"Imkoniyatlar — BookFlow", ctx['m']['features']['subtitle']))
+    return render(request, 'marketing/features.html', ctx)
 
 def pricing(request):
-    return render(request, 'marketing/pricing.html', _context(request))
+    ctx = _context(request)
+    ctx.update(_marketing_seo(request, f"Tariflar — BookFlow", ctx['m']['pricing']['subtitle']))
+    return render(request, 'marketing/pricing.html', ctx)
 
 def faq(request):
-    return render(request, 'marketing/faq.html', _context(request))
+    ctx = _context(request)
+    ctx.update(_marketing_seo(request, f"Savol-Javob — BookFlow", ctx['m']['faq']['subtitle']))
+    return render(request, 'marketing/faq.html', ctx)
 
 def contact(request):
-    return render(request, 'marketing/contact.html', _context(request))
+    ctx = _context(request)
+    ctx.update(_marketing_seo(request, f"Aloqa — BookFlow", ctx['m']['contact']['subtitle']))
+    return render(request, 'marketing/contact.html', ctx)
 
 
 def tutorials(request):
     ctx = _context(request)
     ctx['tutorial_videos'] = ctx['m']['tutorials']['videos']
     ctx['tutorial_steps'] = ctx['m']['tutorials']['steps']
+    ctx.update(_marketing_seo(request, ctx['m']['tutorials']['hero_title'], ctx['m']['tutorials']['hero_subtitle']))
     return render(request, 'marketing/tutorials.html', ctx)
 
 
@@ -325,4 +375,6 @@ def businesses_directory(request):
         'total_count': total_all,
         'result_count': len(businesses_with_meta),
     }
+    context.update(_marketing_seo(request, 'Bizneslar katalogi — BookFlow', 'Xizmat ko\'rsatuvchi bizneslarning katalogi. Klinika, salon, sartarosh va boshqalar.'))
+
     return render(request, 'marketing/businesses.html', context)

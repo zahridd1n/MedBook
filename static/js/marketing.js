@@ -99,7 +99,14 @@
 
   // ── Theme toggle click ─────────────────────
   document.addEventListener("click", (e) => {
-    if (e.target.closest("[data-mkt-theme-toggle]")) {
+    const btn = e.target.closest("[data-mkt-theme-toggle]");
+    if (btn) {
+      // Trigger spin animation
+      btn.classList.remove("spinning");
+      void btn.offsetWidth; // reflow to restart animation
+      btn.classList.add("spinning");
+      setTimeout(() => btn.classList.remove("spinning"), 600);
+
       const current = html.getAttribute("data-theme") || "dark";
       applyTheme(current === "dark" ? "light" : "dark");
     }

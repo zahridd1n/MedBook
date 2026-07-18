@@ -808,7 +808,7 @@
               <i class="bi bi-sliders"></i> Filtrlar
             </button>
           </div>
-          <p class="cat-count-label">
+          <p class="cat-count-label" id="catCountLabel">
             {% if search_q %}
               "<strong>{{ search_q }}</strong>" bo'yicha — <strong>{{ result_count }}</strong> ta natija
             {% else %}
@@ -834,6 +834,9 @@
                class="cat-sort-btn {% if sort_by == 'name' %}active{% endif %}">
               A–Z
             </a>
+            <button class="cat-sort-btn" id="favFilterBtn" onclick="toggleFavFilter()" title="Saqlanganlar">
+              <i class="bi bi-heart"></i>
+            </button>
           </div>
         </div>
 
@@ -842,9 +845,10 @@
         <div class="cat-grid">
           {% for item in businesses_with_meta %}
           {% with biz=item.biz %}
-          <a href="/{{ biz.slug }}/" class="biz-card reveal" style="animation-delay: {{ forloop.counter0 }}00ms">
+          <div class="biz-card reveal" style="animation-delay: {{ forloop.counter0 }}00ms;position:relative;">
 
             {# ── Card Header: colored gradient + centered logo ── #}
+            <a href="/{{ biz.slug }}/" class="biz-card-link" style="display:block;text-decoration:none;color:inherit;">
             <div class="biz-card-head
               {% if biz.category == 'clinic' %}cat-clinic
               {% elif biz.category == 'dental' %}cat-dental
@@ -869,6 +873,14 @@
                   <span class="biz-badge new-badge">Yangi</span>
                 {% endif %}
               </div>
+
+              {# Favorite / Heart button #}
+              <button class="biz-fav-btn"
+                      data-id="{{ biz.id }}"
+                      title="Saqlash"
+                      onclick="event.stopPropagation();event.preventDefault();toggleFav(this, {{ biz.id }})">
+                <i class="bi bi-heart"></i>
+              </button>
 
               {# Logo — centered, uniform 64x64 #}
               {% if biz.logo %}
@@ -932,7 +944,8 @@
               </span>
             </div>
 
-          </a>
+            </a>
+          </div>
           {% endwith %}
           {% endfor %}
         </div>
@@ -978,10 +991,120 @@
   </div>
 </section>
 
+<style>
+.biz-card { position:relative; }
+.biz-fav-btn {
+  position:absolute; top:10px; right:10px; z-index:10;
+  width:34px; height:34px; border-radius:50%;
+  border:none; background:rgba(255,255,255,0.9);
+  backdrop-filter:blur(4px); box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .2s; font-size:1rem;
+  color:#94a3b8; padding:0;
+  opacity:0; pointer-events:none;
+}
+.biz-card:hover .biz-fav-btn { opacity:1; pointer-events:auto; }
+.biz-fav-btn:hover { transform:scale(1.12); background:#fff; box-shadow:0 4px 14px rgba(0,0,0,0.12); }
+.biz-fav-btn.favorited { color:#ef4444; background:#fff; opacity:1; pointer-events:auto; }
+.biz-fav-btn.favorited i { animation:heartPop .3s ease; }
+@keyframes heartPop {
+  0% { transform:scale(1); }
+  50% { transform:scale(1.3); }
+  100% { transform:scale(1); }
+}
+</style>
+
 <script>
+var FAV_KEY = 'bookflow_favs';
+
+function getFavs() {
+  try { return JSON.parse(localStorage.getItem(FAV_KEY)) || []; } catch(e) { return []; }
+}
+
+function saveFavs(ids) {
+  localStorage.setItem(FAV_KEY, JSON.stringify(ids));
+}
+
+function toggleFav(btn, bizId) {
+  var ids = getFavs();
+  var idx = ids.indexOf(bizId);
+  if (idx > -1) {
+    ids.splice(idx, 1);
+    btn.classList.remove('favorited');
+    btn.querySelector('i').className = 'bi bi-heart';
+    btn.title = 'Saqlash';
+  } else {
+    ids.push(bizId);
+    btn.classList.add('favorited');
+    btn.querySelector('i').className = 'bi bi-heart-fill';
+    btn.title = 'Saqlangan';
+    btn.querySelector('i').style.animation = 'none';
+    setTimeout(function() { btn.querySelector('i').style.animation = ''; }, 10);
+  }
+  saveFavs(ids);
+  if (favFilterActive) updateFavFilter();
+}
+
 function toggleCatSidebar() {
   var sidebar = document.getElementById('cat-sidebar');
   sidebar.classList.toggle('show');
 }
+
+var favFilterActive = false;
+
+function toggleFavFilter() {
+  favFilterActive = !favFilterActive;
+  var btn = document.getElementById('favFilterBtn');
+  var favIds = getFavs();
+  var cards = document.querySelectorAll('.biz-card');
+  var visibleCount = 0;
+
+  btn.classList.toggle('active', favFilterActive);
+
+  cards.forEach(function(card) {
+    var bizId = parseInt(card.querySelector('.biz-fav-btn').getAttribute('data-id'));
+    if (favFilterActive) {
+      if (favIds.indexOf(bizId) > -1) {
+        card.style.display = '';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    } else {
+      card.style.display = '';
+      visibleCount++;
+    }
+  });
+
+  // Empty state
+  var emptyState = document.querySelector('.cat-empty');
+  if (emptyState) {
+    emptyState.style.display = (favFilterActive && visibleCount === 0) ? '' : 'none';
+    if (favFilterActive && visibleCount === 0) {
+      emptyState.querySelector('h3').textContent = 'Saqlangan bizneslar yo\'q';
+      emptyState.querySelector('p').innerHTML = 'Biznes kartochkasidagi <i class="bi bi-heart"></i> tugmasini bosib saqlang.';
+    }
+  }
+
+  var countLabel = document.getElementById('catCountLabel');
+  if (countLabel && favFilterActive) {
+    countLabel.innerHTML = '<i class="bi bi-heart-fill" style="color:#ef4444;"></i> Saqlangan: <strong>' + visibleCount + '</strong>';
+  } else if (countLabel) {
+    countLabel.innerHTML = 'Jami <strong>{{ result_count|default:"0" }}</strong> ta biznes';
+  }
+}
+
+// Sahifa yuklanganda localStorage dagi favoritelarni joylaymiz
+document.addEventListener('DOMContentLoaded', function() {
+  var favIds = getFavs();
+  document.querySelectorAll('.biz-fav-btn').forEach(function(btn) {
+    var id = parseInt(btn.getAttribute('data-id'));
+    if (favIds.indexOf(id) > -1) {
+      btn.classList.add('favorited');
+      btn.querySelector('i').className = 'bi bi-heart-fill';
+      btn.title = 'Saqlangan';
+    }
+  });
+});
 </script>
 {% endblock %}

@@ -289,6 +289,9 @@ def site_settings(request):
         form = SiteSettingsForm(request.POST, request.FILES, instance=settings_obj)
         if form.is_valid():
             form.save()
+            from core.tasks import invalidate_business_seo_cache
+            from core.seo import invalidate_all_seo_cache
+            invalidate_all_seo_cache()
             messages.success(request, _('Sayt sozlamalari saqlandi.'))
             return redirect('superadmin:site_settings')
     else:

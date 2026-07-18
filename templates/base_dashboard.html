@@ -1402,6 +1402,15 @@ textarea.form-control { resize: vertical; min-height: 80px; }
           {% if plan == 'free' %}<span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
         </a>
 
+        {% url 'business:seo' as seo_url %}
+        <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ seo_url }}{% endif %}"
+           class="sb-link {% if 'seo' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
+           title="{% trans 'SEO' %}">
+          <i class="bi bi-search-heart"></i><span>{% trans "SEO" %}</span>
+          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>
+          <span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
+        </a>
+
         <!-- Max-only -->
         {% url 'business:white_label' as wl_url %}
         <a href="{% if plan != 'enterprise' %}javascript:void(0){% else %}{{ wl_url }}{% endif %}"
@@ -1440,6 +1449,10 @@ textarea.form-control { resize: vertical; min-height: 80px; }
         </a>
         <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'Sahifa dizayni' %}">
           <i class="bi bi-palette"></i><span>{% trans "Sahifa dizayni" %}</span>
+          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>
+        </a>
+        <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'SEO' %}">
+          <i class="bi bi-search-heart"></i><span>{% trans "SEO" %}</span>
           <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>
         </a>
         <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'White Label' %}">

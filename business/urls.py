@@ -30,6 +30,9 @@ urlpatterns = [
     path('api/customers/', views.api_customers, name='api_customers'),
     path('api/stats/', views.api_stats, name='api_stats'),
 
+    # SEO
+    path('seo/', views.seo_settings, name='seo'),
+
     # Marketing — QR Code
     path('marketing/qr-code/', views.qr_code_settings, name='qr_code'),
     path('marketing/qr-code/download/<str:size>/<str:fmt>/', views.qr_download, name='qr_download'),

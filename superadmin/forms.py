@@ -13,6 +13,8 @@ class SiteSettingsForm(forms.ModelForm):
             'stats_uptime', 'stats_appointments', 'stats_businesses',
             'logo', 'logo_light', 'contact_phone', 'contact_email', 'contact_telegram',
             'payment_card_number', 'payment_card_holder',
+            'default_meta_description', 'default_og_image',
+            'google_site_verification', 'yandex_verification',
         ]
         widgets = {
             'hero_title': forms.TextInput(attrs={
@@ -71,6 +73,17 @@ class SiteSettingsForm(forms.ModelForm):
             'payment_card_holder': forms.TextInput(attrs={
                 'class': 'form-control', 'placeholder': 'SUPER ADMIN',
             }),
+            'default_meta_description': forms.Textarea(attrs={
+                'class': 'form-control', 'rows': 3, 'maxlength': 160,
+                'placeholder': 'Global default meta description',
+            }),
+            'default_og_image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+            'google_site_verification': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Google Search Console verification code',
+            }),
+            'yandex_verification': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Yandex Webmaster verification code',
+            }),
         }
         labels = {
             'hero_title': 'Bosh Sarlavha',
@@ -91,6 +104,10 @@ class SiteSettingsForm(forms.ModelForm):
             'contact_telegram': 'Telegram Havolasi',
             'payment_card_number': 'Karta raqami',
             'payment_card_holder': 'Karta egasi (ism familya)',
+            'default_meta_description': 'Default Meta Description',
+            'default_og_image': 'Default OG Image',
+            'google_site_verification': 'Google Search Console kodi',
+            'yandex_verification': 'Yandex Webmaster kodi',
         }
 
 
@@ -118,6 +135,7 @@ class PricingPlanForm(forms.ModelForm):
             'allow_google_calendar': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'allow_api': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'allow_white_label': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'allow_advanced_seo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_popular': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }

@@ -443,6 +443,26 @@ class SiteSettings(models.Model):
         null=True, blank=True,
         help_text='Sayt logotipi (yorug\'/light rejim uchun). Bo\'sh qoldirilsa, dark logo ishlatiladi.',
     )
+    # ─── Global SEO ────────────────────────────────────────────────────────────
+    default_meta_description = models.CharField(
+        max_length=160, blank=True,
+        default='Online band qilish tizimi. Xizmat ko\'rsatuvchi bizneslar uchun onlayn qabul, xodimlar jadvali va mijozlar bazasi.',
+        help_text='Global default meta description (agar business/ post da bo\'lmasa)',
+    )
+    default_og_image = models.ImageField(
+        upload_to='site/og/', null=True, blank=True,
+        help_text='Global default OG Image (agar businessda bo\'lmasa)',
+    )
+    google_site_verification = models.CharField(
+        max_length=100, blank=True,
+        help_text='Google Search Console verification code',
+    )
+    yandex_verification = models.CharField(
+        max_length=100, blank=True,
+        help_text='Yandex Webmaster verification code',
+    )
+    # ─────────────────────────────────────────────────────────────────────────
+
     contact_phone = models.CharField(
         max_length=50,
         default='+998 90 123 45 67',
@@ -519,6 +539,7 @@ class PricingPlan(models.Model):
     allow_google_calendar = models.BooleanField(default=False, help_text="Google Calendar sinxronizatsiyasi")
     allow_api = models.BooleanField(default=False, help_text="API va Webhooklar")
     allow_white_label = models.BooleanField(default=False, help_text="White Label (BookFlow brendini yashirish)")
+    allow_advanced_seo = models.BooleanField(default=False, help_text="Advanced SEO (sitemap, schema.org, JSON-LD, OG teglar)")
     
     is_active = models.BooleanField(default=True, help_text="Aktiv tarif (Saytda ko'rinadi)")
     is_popular = models.BooleanField(default=False, help_text="Tavsiya etiladigan tarif belgisi (Mashhur)")

@@ -10,7 +10,7 @@ from django.http import JsonResponse, HttpResponse
 from django.utils.translation import gettext as _
 
 from .models import Business, WorkingHours, FAQ, Payment
-from .forms import BusinessSetupForm, FAQForm, BrandingForm
+from .forms import BusinessSetupForm, FAQForm, BrandingForm, SEOForm
 from superadmin.models import SiteSettings
 
 logger = logging.getLogger(__name__)
@@ -1166,6 +1166,35 @@ def api_employees(request):
 # ─── Link Sharing ────────────────────────────────────────────────────────────
 
 @login_required
+@login_required
+def seo_settings(request):
+    business = get_object_or_404(Business, owner=request.user)
+    can_use_advanced = business.can_use_advanced_seo()
+
+    if request.method == 'POST':
+        form = SEOForm(request.POST, request.FILES, instance=business)
+        if form.is_valid():
+            form.save()
+            from core.tasks import invalidate_business_seo_cache
+            invalidate_business_seo_cache.delay(business.id)
+            messages.success(request, _('SEO sozlamalari saqlandi.'))
+            return redirect('business:seo')
+        else:
+            for field, errors in form.errors.items():
+                for err in errors:
+                    messages.error(request, err)
+    else:
+        form = SEOForm(instance=business)
+
+    preview_url = request.build_absolute_uri(f'/{business.slug}/')
+    return render(request, 'dashboard/settings/seo.html', {
+        'business': business,
+        'form': form,
+        'can_use_advanced': can_use_advanced,
+        'preview_url': preview_url,
+    })
+
+
 def link_sharing(request):
     business = get_object_or_404(Business, owner=request.user)
     can_use = business.subscription_plan != 'free'

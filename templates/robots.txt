@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /dashboard/
+Disallow: /admin/
+Disallow: /superadmin/
+Disallow: /accounts/
+Disallow: /telegram/
+Disallow: /i18n/
+
+Sitemap: {{ site_url }}/sitemap.xml

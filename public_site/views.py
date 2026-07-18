@@ -10,6 +10,7 @@ from appointments.forms import BookingForm
 from customers.models import Customer
 from notifications.utils import create_notification, build_booking_message
 from notifications.tasks import send_telegram_notification_task
+from core.seo import get_seo_context, get_json_ld_html
 
 
 def public_home(request, slug):
@@ -26,6 +27,7 @@ def public_home(request, slug):
         ),
         slug=slug, is_active=True,
     )
+    seo = get_seo_context(request, business, 'home')
     return render(request, 'public/home.html', {
         'business': business,
         'services': business.services.filter(is_active=True).order_by('order'),
@@ -33,6 +35,9 @@ def public_home(request, slug):
         'faqs': business.faqs.filter(is_active=True).order_by('order'),
         'working_hours': business.working_hours.all().order_by('day'),
         'blog_posts': business.blog_posts.filter(is_published=True).order_by('-created_at')[:3],
+        **seo,
+        'json_ld_html': get_json_ld_html(seo['json_ld']),
+        'seo_enabled': seo['show_advanced_seo'],
     })
 
 
@@ -49,10 +54,14 @@ def booking_step1_service(request, slug):
         if service_employees.exists():
             employees = service_employees
 
+    seo = get_seo_context(request, business, 'booking')
     return render(request, 'public/booking/step1_service.html', {
         'business': business, 'services': services, 'employees': employees,
         'selected_service': selected_service,
         'selected_service_id': selected_service_id or None,
+        **seo,
+        'json_ld_html': get_json_ld_html(seo['json_ld']),
+        'seo_enabled': seo['show_advanced_seo'],
     })
 
 
@@ -171,9 +180,13 @@ def booking_step3_datetime(request, slug, service_id=0, employee_id=0):
         except ValueError:
             pass
 
+    seo = get_seo_context(request, business, 'booking')
     return render(request, 'public/booking/step3_datetime.html', {
         'business': business, 'service': service, 'employee': employee,
         'days': days, 'selected_date': selected_date, 'selected_slots': selected_slots,
+        **seo,
+        'json_ld_html': get_json_ld_html(seo['json_ld']),
+        'seo_enabled': seo['show_advanced_seo'],
     })
 
 
@@ -240,9 +253,13 @@ def booking_step4_confirm(request, slug):
             'date': date_str, 'time': time_str,
         })
 
+    seo = get_seo_context(request, business, 'booking')
     return render(request, 'public/booking/step4_confirm.html', {
         'business': business, 'service': service, 'employee': employee,
         'date': appt_date, 'time': appt_time, 'form': form,
+        **seo,
+        'json_ld_html': get_json_ld_html(seo['json_ld']),
+        'seo_enabled': seo['show_advanced_seo'],
     })
 
 
@@ -261,6 +278,7 @@ def public_employee_detail(request, slug, employee_id):
     completion_pct = int((completed_bookings / total_bookings * 100)) if total_bookings > 0 else 0
     completion_offset = 100 - completion_pct
 
+    seo = get_seo_context(request, business, 'employee', employee=employee)
     return render(request, 'public/employee_detail.html', {
         'business': business,
         'employee': employee,
@@ -269,12 +287,21 @@ def public_employee_detail(request, slug, employee_id):
         'completed_bookings': completed_bookings,
         'completion_pct': completion_pct,
         'completion_offset': completion_offset,
+        **seo,
+        'json_ld_html': get_json_ld_html(seo['json_ld']),
+        'seo_enabled': seo['show_advanced_seo'],
     })
 
 
 def booking_success(request, slug):
     business = get_object_or_404(Business, slug=slug, is_active=True)
-    return render(request, 'public/booking/success.html', {'business': business})
+    seo = get_seo_context(request, business, 'booking')
+    return render(request, 'public/booking/success.html', {
+        'business': business,
+        **seo,
+        'json_ld_html': get_json_ld_html(seo['json_ld']),
+        'seo_enabled': seo['show_advanced_seo'],
+    })
 
 
 def qr_scan_redirect(request, slug):

@@ -210,6 +210,40 @@
         </div>
       </div>
 
+      <!-- SEO Settings -->
+      <div class="card stat-card mb-4">
+        <div class="card-header bg-white border-bottom p-3 fw-bold">
+          <i class="bi bi-search-heart me-2 text-primary"></i>{% trans "SEO Sozlamalari" %}
+        </div>
+        <div class="card-body p-4">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ form.default_meta_description.label }}</label>
+            {{ form.default_meta_description }}
+            <div class="form-text text-muted">{% trans "Business yoki BlogPost da meta_description bo'lmasa, shu ishlatiladi." %}</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ form.default_og_image.label }}</label>
+            {% if form.instance.default_og_image %}
+            <div class="mb-2">
+              <img src="{{ form.instance.default_og_image.url }}" style="max-height:60px;border-radius:6px;border:1px solid #ddd;">
+            </div>
+            {% endif %}
+            {{ form.default_og_image }}
+            <div class="form-text text-muted">{% trans "Global OG Image (1200x630px). Businessda og_image bo'lmasa shu ishlatiladi." %}</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ form.google_site_verification.label }}</label>
+            {{ form.google_site_verification }}
+            <div class="form-text text-muted">{% trans "Google Search Console da saytni tasdiqlash uchun code" %}</div>
+          </div>
+          <div class="mb-0">
+            <label class="form-label fw-semibold">{{ form.yandex_verification.label }}</label>
+            {{ form.yandex_verification }}
+            <div class="form-text text-muted">{% trans "Yandex Webmaster da saytni tasdiqlash uchun code" %}</div>
+          </div>
+        </div>
+      </div>
+
       <div class="card-footer bg-light p-3 text-end">
         <button type="submit" class="btn btn-primary px-4 fw-bold">{% trans "Sozlamalarni Saqlash" %}</button>
       </div>

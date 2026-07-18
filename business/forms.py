@@ -84,6 +84,18 @@ class FAQForm(forms.ModelForm):
         }
 
 
+class SEOForm(forms.ModelForm):
+    class Meta:
+        model = Business
+        fields = ('meta_title', 'meta_description', 'meta_keywords', 'og_image')
+        widgets = {
+            'meta_title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'SEO title (bo\'sh qoldirilsa biznes nomi ishlatiladi)', 'maxlength': 70}),
+            'meta_description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Meta description (bo\'sh qoldirilsa "about" ishlatiladi)', 'rows': 3, 'maxlength': 160}),
+            'meta_keywords': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Kalit so\'zlar (vergul bilan ajrating)'}),
+            'og_image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+        }
+
+
 class BrandingForm(forms.ModelForm):
     class Meta:
         model = Business

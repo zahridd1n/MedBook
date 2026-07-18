@@ -1,0 +1,139 @@
+{% extends 'base_dashboard.html' %}
+{% load i18n %}
+{% block page_title %}{% trans "SEO Sozlamalari" %}{% endblock %}
+{% block dashboard_content %}
+
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title"><i class="bi bi-search-heart" style="margin-right:8px;color:var(--p);"></i>{% trans "SEO Sozlamalari" %}</div>
+    <div class="page-hd-sub">{% trans "Qidiruv tizimlari va ijtimoiy tarmoqlar uchun sahifangizni optimallashtiring" %}</div>
+  </div>
+  {% if business %}
+  <div class="page-hd-actions">
+    <a href="/{{ business.slug }}/" target="_blank" class="btn btn-secondary">
+      <i class="bi bi-box-arrow-up-right"></i> {% trans "Ommaviy sahifa" %}
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+{% if not can_use_advanced %}
+<div class="ds-alert warning" style="margin-bottom:20px;">
+  <i class="bi bi-lock-fill"></i>
+  <div>
+    <strong>{% trans "Advanced SEO faqat pullik tariflarda mavjud." %}</strong><br>
+    <span>{% blocktrans %}Schema.org JSON-LD, Open Graph, Twitter Cards, sitemap va boshqa SEO funksiyalarni yoqish uchun <strong>Pro</strong> yoki <strong>Max</strong> tarifiga o'ting.{% endblocktrans %}</span>
+    <a href="{% url 'business:upgrade' %}" class="btn btn-sm btn-primary" style="margin-top:8px;"><i class="bi bi-arrow-up-circle"></i> {% trans "Tarifni oshirish" %}</a>
+  </div>
+</div>
+{% endif %}
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="fw-bold mb-3"><i class="bi bi-tag me-1 text-primary"></i>{% trans "Meta ma'lumotlar" %}</h6>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{% trans "Meta Title" %} <span class="text-muted">({{ form.meta_title.maxlength|default:70 }} belgi)</span></label>
+            {{ form.meta_title }}
+            <div class="text-muted small mt-1">{% trans "Brauzer sarlavhasi va qidiruv natijalarida ko'rinadi. Bo'sh bo'lsa biznes nomi ishlatiladi." %}</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{% trans "Meta Description" %} <span class="text-muted">({{ form.meta_description.maxlength|default:160 }} belgi)</span></label>
+            {{ form.meta_description }}
+            <div class="text-muted small mt-1">{% trans "Qidiruv natijalarida matn ostida ko'rinadigan ta'rif. Bo'sh bo'lsa 'about' ishlatiladi." %}</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{% trans "Meta Keywords" %}</label>
+            {{ form.meta_keywords }}
+            <div class="text-muted small mt-1">{% trans "Kalit so'zlar (vergul bilan ajrating)" %}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="fw-bold mb-3"><i class="bi bi-share me-1 text-primary"></i>{% trans "Open Graph / Social Media" %}</h6>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{% trans "OG Image (Social rasm)" %}</label>
+            {% if form.instance.og_image %}
+            <div class="mb-2">
+              <img src="{{ form.instance.og_image.url }}" class="rounded-3 border" style="max-height:100px;max-width:100%;object-fit:cover;">
+            </div>
+            {% endif %}
+            {{ form.og_image }}
+            <div class="text-muted small mt-1">{% trans "Telegram, Facebook va boshqa tarmoqlarda link yuborilganda ko'rinadi (tavsiya: 1200x630px)" %}</div>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary px-4" {% if not can_use_advanced %}disabled{% endif %}>
+        <i class="bi bi-check-lg me-1"></i>{% trans "Saqlash" %}
+      </button>
+    </form>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="card-head-title" style="margin-bottom:12px;"><i class="bi bi-eye" style="margin-right:6px;color:var(--p);"></i>{% trans "Qidiruv natijasida ko'rinishi (Preview)" %}</div>
+        <div class="seo-preview" id="seoPreview">
+          <div class="rounded-3 border overflow-hidden" style="background:#fff;">
+            <div class="p-3">
+              <div class="text-success small text-uppercase" style="font-size:12px;line-height:1.3;">{{ preview_url|cut:"https://"|cut:"http://" }}</div>
+              <div class="seo-preview-title" id="previewTitle" style="color:#1a0dab;font-size:18px;font-weight:400;line-height:1.3;margin:2px 0;">{{ form.instance.meta_title|default:business.name }} | Online Band Qilish</div>
+              <div class="seo-preview-desc" id="previewDesc" style="color:#545454;font-size:14px;line-height:1.4;word-wrap:break-word;">{{ form.instance.meta_description|default:business.about|truncatewords:25 }}</div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="small text-muted">
+          <p class="mb-1"><i class="bi bi-info-circle me-1"></i>{% trans "O'zgarishlar saqlangandan so'ng ommaviy sahifada qo'llaniladi." %}</p>
+          <p class="mb-0"><i class="bi bi-clock me-1"></i>{% trans "Google natijalari yangilanishi uchun bir necha soat ketishi mumkin." %}</p>
+        </div>
+      </div>
+    </div>
+
+    {% if can_use_advanced %}
+    <div class="card">
+      <div class="card-body">
+        <div class="card-head-title" style="margin-bottom:12px;"><i class="bi bi-gear" style="margin-right:6px;color:var(--p);"></i>{% trans "Avtomatik SEO" %}</div>
+        <ul class="list-unstyled small mb-0">
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i> Schema.org JSON-LD (LocalBusiness)</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i> Open Graph (og:title, og:description, og:image)</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i> Twitter Cards</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i> Canonical URL</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i> Hreflang teglari</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i> Sitemap.xml</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i> FAQ Schema (FAQPage)</li>
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% if can_use_advanced %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const titleInput = document.getElementById('id_meta_title');
+  const descInput = document.getElementById('id_meta_description');
+  const previewTitle = document.getElementById('previewTitle');
+  const previewDesc = document.getElementById('previewDesc');
+  const businessName = '{{ business.name|escapejs }}';
+
+  function updatePreview() {
+    const title = titleInput.value.trim() || businessName;
+    previewTitle.textContent = title + ' | Online Band Qilish';
+    const desc = descInput.value.trim() || '{{ business.about|escapejs|truncatewords:25 }}';
+    previewDesc.textContent = desc;
+  }
+
+  titleInput.addEventListener('input', updatePreview);
+  descInput.addEventListener('input', updatePreview);
+});
+</script>
+{% endif %}
+{% endblock %}

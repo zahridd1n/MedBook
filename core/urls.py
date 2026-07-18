@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
+from django.contrib.sitemaps.views import sitemap
 from notifications.views import telegram_webhook
 from superadmin.views import superadmin_webhook
 from blog.views import blog_public_list, blog_public_detail
@@ -10,6 +12,8 @@ from public_site.views import (
     booking_step3_datetime, booking_step4_confirm, booking_success,
     public_employee_detail, qr_scan_redirect,
 )
+
+from core.sitemaps import sitemaps
 
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
@@ -40,6 +44,10 @@ urlpatterns = [
     path('dashboard/customers/', include('customers.urls')),
     path('dashboard/notifications/', include('notifications.urls')),
     path('dashboard/', include('blog.urls')),
+
+    # SEO
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
 
     # Public business pages — slug-based, must be LAST
     # Home and booking (3-step flow)

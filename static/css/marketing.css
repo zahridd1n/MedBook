@@ -265,6 +265,12 @@
 /* ══════════════════════════════════════════
    THEME TOGGLE BUTTON
 ══════════════════════════════════════════ */
+@keyframes mktSunSpin {
+  0%   { transform: scale(1)    rotate(0deg); }
+  40%  { transform: scale(1.18) rotate(180deg); }
+  100% { transform: scale(1)    rotate(360deg); }
+}
+
 .mkt-theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -276,8 +282,11 @@
   background: var(--mkt-card);
   color: var(--mkt-text);
   cursor: pointer;
-  font-size: 1.1rem;
-  transition: background 260ms var(--mkt-ease), border-color 260ms var(--mkt-ease), transform 260ms var(--mkt-ease), box-shadow 260ms var(--mkt-ease);
+  transition:
+    background  260ms var(--mkt-ease),
+    border-color 260ms var(--mkt-ease),
+    transform   260ms var(--mkt-ease),
+    box-shadow  260ms var(--mkt-ease);
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
@@ -287,24 +296,52 @@
 .mkt-theme-toggle:hover {
   background: var(--mkt-card-hover);
   border-color: var(--mkt-border);
-  transform: translateY(-2px) rotate(12deg);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+}
+
+/* Spinning animation on click */
+.mkt-theme-toggle.spinning .icon-dark i,
+.mkt-theme-toggle.spinning .icon-light i {
+  animation: mktSunSpin 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 .mkt-theme-toggle .icon-dark,
 .mkt-theme-toggle .icon-light {
   position: absolute;
-  transition: opacity 300ms var(--mkt-ease), transform 300ms var(--mkt-ease);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 320ms var(--mkt-ease), transform 320ms var(--mkt-ease);
   line-height: 1;
 }
 
-/* Dark mode: show sun icon (switch to light) */
-[data-theme="dark"] .mkt-theme-toggle .icon-dark  { opacity: 1; transform: scale(1) rotate(0deg); }
-[data-theme="dark"] .mkt-theme-toggle .icon-light { opacity: 0; transform: scale(0.6) rotate(90deg); }
+/* Bootstrap icon sizing & colour */
+.mkt-theme-toggle .icon-dark i {
+  font-size: 1rem;
+  color: var(--mkt-amber);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--mkt-amber) 55%, transparent));
+}
 
-/* Light mode: show moon icon (switch to dark) */
-[data-theme="light"] .mkt-theme-toggle .icon-dark  { opacity: 0; transform: scale(0.6) rotate(-90deg); }
+.mkt-theme-toggle .icon-light i {
+  font-size: 0.95rem;
+  color: var(--mkt-indigo);
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--mkt-indigo) 45%, transparent));
+}
+
+/* Dark mode: show sun (→ switch to light) */
+[data-theme="dark"] .mkt-theme-toggle .icon-dark  { opacity: 1; transform: scale(1) rotate(0deg); }
+[data-theme="dark"] .mkt-theme-toggle .icon-light { opacity: 0; transform: scale(0.5) rotate(90deg); }
+
+/* Light mode: show moon (→ switch to dark) */
+[data-theme="light"] .mkt-theme-toggle .icon-dark  { opacity: 0; transform: scale(0.5) rotate(-90deg); }
 [data-theme="light"] .mkt-theme-toggle .icon-light { opacity: 1; transform: scale(1) rotate(0deg); }
+
+/* Light mode button surface */
+[data-theme="light"] .mkt-theme-toggle {
+  border-color: rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.85);
+}
 
 html {
   scroll-behavior: smooth;
@@ -680,7 +717,7 @@ body:has(.marketing-shell) {
 
 .mkt-hero-title {
   max-width: 760px;
-  font-size: clamp(3.2rem, 7vw, 6.8rem);
+  font-size: clamp(2.5rem, 5vw, 4.8rem);
   line-height: 0.94;
   margin: 0 0 26px;
 }
@@ -1695,7 +1732,7 @@ body:has(.marketing-shell) {
   }
 
   .mkt-hero-title {
-    font-size: clamp(2.7rem, 15vw, 4.2rem);
+    font-size: clamp(2.2rem, 12vw, 3.4rem);
   }
 
   .mkt-window-body {
@@ -1735,3 +1772,292 @@ body:has(.marketing-shell) {
     padding: 68px 0;
   }
 }
+
+/* ══════════════════════════════════════════
+   PREMIUM HERO — Booking Window UI
+══════════════════════════════════════════ */
+
+/* Override hero grid for new visual */
+.mkt-hero-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+}
+
+/* Visual stage wrapper */
+.mkt-vis-stage {
+  position: relative;
+  height: 560px;
+  perspective: 1000px;
+}
+
+/* ── Main booking window ── */
+.mkt-vis-window {
+  position: absolute;
+  top: 20px; left: 0; right: 40px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 40px 80px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  animation: mktVisFloat 9s ease-in-out infinite;
+}
+@keyframes mktVisFloat {
+  0%,100% { transform: translateY(0) rotate(-0.4deg); }
+  50%      { transform: translateY(-14px) rotate(0.4deg); }
+}
+
+/* Chrome bar */
+.mkt-vis-titlebar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.03);
+}
+.mkt-vis-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.mkt-vis-dot--red    { background: #ff5f57; }
+.mkt-vis-dot--yellow { background: #ffbd2e; }
+.mkt-vis-dot--green  { background: #28c940; }
+.mkt-vis-titlebar-label {
+  margin: 0 auto;
+  font-size: 0.65rem; font-weight: 700;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+/* Body area */
+.mkt-vis-body { padding: 16px 18px; }
+
+/* Search bar */
+.mkt-vis-search {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 8px 14px;
+  margin-bottom: 14px;
+}
+.mkt-vis-search i { color: rgba(255,255,255,0.25); font-size: 0.8rem; }
+.mkt-vis-search span { color: rgba(255,255,255,0.22); font-size: 0.75rem; }
+
+/* Calendar */
+.mkt-vis-cal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.mkt-vis-cal-month { font-size: 0.78rem; font-weight: 700; color: #fff; }
+.mkt-vis-cal-nav { display: flex; gap: 4px; }
+.mkt-vis-cal-nav button {
+  width: 24px; height: 24px; border-radius: 7px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.45); font-size: 0.65rem;
+  display: flex; align-items: center; justify-content: center; cursor: default;
+}
+.mkt-vis-cal-grid {
+  display: grid; grid-template-columns: repeat(7,1fr); gap: 3px;
+}
+.mkt-vis-cal-day-name {
+  text-align: center; font-size: 0.55rem; font-weight: 700;
+  color: rgba(255,255,255,0.22); padding: 3px 0; letter-spacing: 0.04em;
+}
+.mkt-vis-cal-day {
+  text-align: center; font-size: 0.68rem; font-weight: 500;
+  padding: 5px 2px; border-radius: 6px; color: rgba(255,255,255,0.4);
+}
+.mkt-vis-cal-day.active {
+  background: var(--mkt-mint);
+  color: #06111c; font-weight: 800;
+  box-shadow: 0 4px 12px rgba(99,240,189,0.4);
+}
+.mkt-vis-cal-day.has-slot {
+  color: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.07);
+}
+.mkt-vis-cal-day.empty { color: transparent; }
+
+/* Time slots */
+.mkt-vis-slots {
+  margin-top: 12px; display: flex; flex-direction: column; gap: 6px;
+}
+.mkt-vis-slot {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; border-radius: 9px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+.mkt-vis-slot--active {
+  background: rgba(99,240,189,0.1);
+  border-color: rgba(99,240,189,0.28);
+}
+.mkt-vis-slot-time { font-size: 0.72rem; font-weight: 700; color: #fff; }
+.mkt-vis-slot-svc  { font-size: 0.62rem; color: rgba(255,255,255,0.38); }
+.mkt-vis-slot-badge {
+  font-size: 0.58rem; font-weight: 800;
+  padding: 3px 8px; border-radius: 100px;
+}
+.mkt-vis-slot-badge--free { background: rgba(99,240,189,0.15); color: var(--mkt-mint); }
+.mkt-vis-slot-badge--sel  { background: rgba(123,124,255,0.2); color: var(--mkt-indigo); }
+.mkt-vis-slot-badge--busy { background: rgba(255,122,182,0.12); color: var(--mkt-rose); }
+
+/* ── Floating confirmation card ── */
+.mkt-vis-confirm {
+  position: absolute;
+  top: 15px; right: -20px;
+  background: rgba(99,240,189,0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(99,240,189,0.28);
+  border-radius: 16px; padding: 14px 16px; width: 205px;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.45);
+  animation: mktVisCard1 7s ease-in-out 1s infinite;
+}
+@keyframes mktVisCard1 {
+  0%,100% { transform: translateY(0) rotate(1.5deg); }
+  50%      { transform: translateY(-10px) rotate(-0.5deg); }
+}
+.mkt-vis-confirm-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+}
+.mkt-vis-confirm-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(99,240,189,0.2); color: var(--mkt-mint);
+  font-size: 0.85rem; display: flex; align-items: center; justify-content: center;
+}
+.mkt-vis-confirm-title { font-size: 0.7rem; font-weight: 800; color: var(--mkt-mint); }
+.mkt-vis-confirm-sub { font-size: 0.6rem; color: rgba(255,255,255,0.45); }
+.mkt-vis-confirm-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 8px 0; }
+.mkt-vis-confirm-row {
+  display: flex; justify-content: space-between; font-size: 0.62rem;
+}
+.mkt-vis-confirm-row + .mkt-vis-confirm-row { margin-top: 4px; }
+.mkt-vis-confirm-label { color: rgba(255,255,255,0.3); }
+.mkt-vis-confirm-val   { color: rgba(255,255,255,0.85); font-weight: 700; }
+
+/* ── Telegram notification ── */
+.mkt-vis-tg {
+  position: absolute;
+  bottom: 90px; right: -14px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 11px 14px; width: 225px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+  display: flex; align-items: flex-start; gap: 10px;
+  animation: mktVisCard2 8s ease-in-out 0.5s infinite;
+}
+@keyframes mktVisCard2 {
+  0%,100% { transform: translateY(0) rotate(-1deg); }
+  50%      { transform: translateY(-8px) rotate(0.5deg); }
+}
+.mkt-vis-tg-icon {
+  width: 32px; height: 32px; border-radius: 10px; flex-shrink: 0;
+  background: linear-gradient(135deg, #29b6f6, #0288d1);
+  color: #fff; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.mkt-vis-tg-app  { font-size: 0.6rem; font-weight: 800; color: #29b6f6; margin-bottom: 2px; }
+.mkt-vis-tg-msg  { font-size: 0.68rem; color: rgba(255,255,255,0.75); line-height: 1.4; }
+.mkt-vis-tg-time { font-size: 0.56rem; color: rgba(255,255,255,0.28); margin-top: 3px; }
+
+/* ── Online indicator ── */
+.mkt-vis-online {
+  position: absolute;
+  bottom: 22px; left: 18px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px; padding: 6px 14px;
+  display: flex; align-items: center; gap: 7px;
+  font-size: 0.66rem; font-weight: 600; color: rgba(255,255,255,0.65);
+  animation: mktVisCard3 10s ease-in-out 2s infinite;
+}
+@keyframes mktVisCard3 {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+.mkt-vis-online-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--mkt-mint);
+  box-shadow: 0 0 12px var(--mkt-mint);
+  animation: mktVisPulse 2s ease infinite;
+}
+@keyframes mktVisPulse {
+  0%,100% { box-shadow: 0 0 6px var(--mkt-mint); }
+  50%      { box-shadow: 0 0 18px var(--mkt-mint); transform: scale(1.4); }
+}
+
+/* ── Trust chips ── */
+.mkt-trust-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 28px;
+}
+.mkt-trust-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.7rem; font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 100px; padding: 5px 12px;
+  transition: all 0.2s var(--mkt-ease);
+}
+.mkt-trust-chip:hover {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.85);
+  transform: translateY(-1px);
+}
+.mkt-trust-chip i { font-size: 0.75rem; }
+.mkt-trust-chip--green  i { color: var(--mkt-mint); }
+.mkt-trust-chip--blue   i { color: var(--mkt-blue); }
+.mkt-trust-chip--purple i { color: var(--mkt-indigo); }
+.mkt-trust-chip--amber  i { color: var(--mkt-amber); }
+.mkt-trust-chip--rose   i { color: var(--mkt-rose); }
+
+/* Light mode adjustments */
+[data-theme="light"] .mkt-vis-window {
+  background: rgba(255,255,255,0.75);
+  border-color: rgba(0,0,0,0.1);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9);
+}
+[data-theme="light"] .mkt-vis-titlebar { background: rgba(0,0,0,0.025); }
+[data-theme="light"] .mkt-vis-search {
+  background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .mkt-vis-search i,
+[data-theme="light"] .mkt-vis-search span { color: rgba(0,0,0,0.3); }
+[data-theme="light"] .mkt-vis-cal-month,
+[data-theme="light"] .mkt-vis-slot-time { color: #0d1117; }
+[data-theme="light"] .mkt-vis-cal-day { color: rgba(0,0,0,0.35); }
+[data-theme="light"] .mkt-vis-cal-day.has-slot { background: rgba(0,0,0,0.05); color: rgba(0,0,0,0.7); }
+[data-theme="light"] .mkt-vis-slot { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.07); }
+[data-theme="light"] .mkt-vis-slot--active { background: rgba(5,150,105,0.07); border-color: rgba(5,150,105,0.2); }
+[data-theme="light"] .mkt-vis-slot-svc { color: rgba(0,0,0,0.4); }
+[data-theme="light"] .mkt-vis-titlebar-label { color: rgba(0,0,0,0.25); }
+[data-theme="light"] .mkt-vis-confirm { background: rgba(5,150,105,0.07); border-color: rgba(5,150,105,0.25); }
+[data-theme="light"] .mkt-vis-confirm-sub,
+[data-theme="light"] .mkt-vis-confirm-val { color: rgba(0,0,0,0.7); }
+[data-theme="light"] .mkt-vis-confirm-label { color: rgba(0,0,0,0.35); }
+[data-theme="light"] .mkt-vis-tg { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.1); }
+[data-theme="light"] .mkt-vis-tg-msg { color: rgba(0,0,0,0.65); }
+[data-theme="light"] .mkt-vis-online { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.1); color: rgba(0,0,0,0.55); }
+[data-theme="light"] .mkt-trust-chip { color: rgba(0,0,0,0.45); background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08); }
+[data-theme="light"] .mkt-trust-chip:hover { background: rgba(0,0,0,0.08); color: rgba(0,0,0,0.75); }
+[data-theme="light"] .mkt-vis-cal-nav button { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08); color: rgba(0,0,0,0.4); }
+
+/* Responsive */
+@media (max-width: 991px) {
+  .mkt-vis-stage { height: 440px; }
+  .mkt-vis-confirm { right: -5px; top: 8px; width: 185px; }
+  .mkt-vis-tg { right: -5px; width: 200px; }
+}
+@media (max-width: 767px) {
+  .mkt-vis-stage { height: 320px; margin-top: 2rem; }
+  .mkt-vis-confirm,
+  .mkt-vis-tg { display: none; }
+  .mkt-vis-window { right: 0; }
+}
+

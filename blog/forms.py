@@ -5,7 +5,7 @@ from .models import BlogPost, BlogComment
 class BlogPostForm(forms.ModelForm):
     class Meta:
         model = BlogPost
-        fields = ['title', 'content', 'excerpt', 'featured_image', 'is_published']
+        fields = ['title', 'content', 'excerpt', 'meta_title', 'meta_description', 'og_image', 'featured_image', 'is_published']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Blog nomi'}),
             'excerpt': forms.Textarea(attrs={
@@ -13,6 +13,14 @@ class BlogPostForm(forms.ModelForm):
                 'placeholder': 'Qisqa matn (ixtiyoriy)',
                 'rows': 3
             }),
+            'meta_title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'SEO title (bo\'sh qoldirilsa post nomi)', 'maxlength': 70}),
+            'meta_description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Meta description (bo\'sh qoldirilsa excerpt)',
+                'rows': 2,
+                'maxlength': 160,
+            }),
+            'og_image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'content': forms.Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Blog mazmuni',

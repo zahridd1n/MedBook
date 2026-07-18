@@ -5,6 +5,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}BookFlow{% endblock %}</title>
+
+  {% block meta_tags %}
+  {% if meta_description %}<meta name="description" content="{{ meta_description }}">{% endif %}
+  {% if meta_keywords %}<meta name="keywords" content="{{ meta_keywords }}">{% endif %}
+  {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+  {% for hreflang_code, hreflang_url in hreflangs %}<link rel="alternate" hreflang="{{ hreflang_code }}" href="{{ hreflang_url }}">{% endfor %}
+  {% if google_site_verification %}<meta name="google-site-verification" content="{{ google_site_verification }}">{% endif %}
+  {% if yandex_verification %}<meta name="yandex-verification" content="{{ yandex_verification }}">{% endif %}
+
+  {% if seo_enabled and og_title %}
+  <meta property="og:title" content="{{ og_title }}">
+  <meta property="og:description" content="{{ og_description|default:meta_description }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:type" content="{{ og_type|default:'website' }}">
+  {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ og_title }}">
+  <meta name="twitter:description" content="{{ og_description|default:meta_description }}">
+  {% if og_image %}<meta name="twitter:image" content="{{ og_image }}">{% endif %}
+  {% endif %}
+
+  {% if json_ld_html %}{{ json_ld_html|safe }}{% endif %}
+  {% endblock %}
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
 
   <!-- Bootstrap 5 -->

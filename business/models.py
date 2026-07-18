@@ -125,6 +125,13 @@ class Business(models.Model):
     )
     # ─────────────────────────────────────────────────────────────────────────
 
+    # ─── SEO ────────────────────────────────────────────────────────────────────
+    meta_title = models.CharField(max_length=70, blank=True, help_text='SEO title (bo\'sh bo\'lsa biznes nomi ishlatiladi)')
+    meta_description = models.CharField(max_length=160, blank=True, help_text='Meta description (bo\'sh bo\'lsa "about" ishlatiladi)')
+    meta_keywords = models.CharField(max_length=255, blank=True, help_text='Meta keywords (vergul bilan ajrating)')
+    og_image = models.ImageField(upload_to='business/og/', blank=True, null=True, help_text='Open Graph rasm (link yuborilganda chiqadi)')
+    # ─────────────────────────────────────────────────────────────────────────
+
     # ─── White Label ───────────────────────────────────────────────────────────
     white_label_enabled = models.BooleanField(default=False, help_text='White Label (BookFlow brendi yashirish)')
     # ─────────────────────────────────────────────────────────────────────────
@@ -204,6 +211,7 @@ class Business(models.Model):
                 'google_calendar': plan.allow_google_calendar,
                 'api': plan.allow_api,
                 'white_label': plan.allow_white_label,
+                'advanced_seo': plan.allow_advanced_seo,
                 'price_monthly': plan.price_monthly,
                 'price_label': plan.price_label,
             }
@@ -220,6 +228,7 @@ class Business(models.Model):
             'google_calendar': False,
             'api': False,
             'white_label': False,
+            'advanced_seo': False,
             'price_monthly': 0,
             'price_label': "0 UZS",
         }
@@ -269,6 +278,9 @@ class Business(models.Model):
 
     def can_use_white_label(self):
         return self.plan_data.get('white_label', False)
+
+    def can_use_advanced_seo(self):
+        return self.plan_data.get('advanced_seo', False)
 
     def can_use_analytics(self):
         return self.subscription_plan != 'free'

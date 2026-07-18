@@ -5,7 +5,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/marketing.css' %}">
+  <link rel="stylesheet" href="{% static 'css/marketing.css' %}?v=1.2">
   {% block marketing_extra_css %}{% endblock %}
   {# Anti-flash: apply saved theme before CSS renders #}
   <script>
@@ -71,8 +71,8 @@
             {% endfor %}
           </div>
           <button class="mkt-theme-toggle" data-mkt-theme-toggle type="button" title="Yorug' rejim" aria-label="Yorug' rejimga o'tish">
-            <span class="icon-dark">☀️</span>
-            <span class="icon-light">🌙</span>
+            <span class="icon-dark"><i class="bi bi-sun-fill"></i></span>
+            <span class="icon-light"><i class="bi bi-moon-stars-fill"></i></span>
           </button>
           {% if user.is_authenticated %}
             <a class="mkt-btn mkt-btn-secondary mkt-btn-sm" href="{% url 'dashboard:home' %}">{{ m.nav.dashboard }}</a>
