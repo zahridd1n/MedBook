@@ -173,9 +173,11 @@ SUPERADMIN_CHAT_IDS = env('SUPERADMIN_CHAT_IDS', default='')  # vergul bilan ajr
 
 SITE_URL = env('SITE_URL', default='http://localhost:8000')
 
-# Google OAuth (for Google Calendar sync)
+# Google OAuth (for Google Calendar sync and Authentication)
 # JSON config from Google Cloud Console → Credentials → OAuth 2.0 Client ID → Download JSON
 GOOGLE_OAUTH_CLIENT_CONFIG = env.json('GOOGLE_OAUTH_CLIENT_CONFIG', default={})
+GOOGLE_CLIENT_ID = env('GOOGLE_CLIENT_ID', default='')
+GOOGLE_CLIENT_SECRET = env('GOOGLE_CLIENT_SECRET', default='')
 
 # DRF
 REST_FRAMEWORK = {
