@@ -16,8 +16,8 @@
 body { background: var(--surface-alt); color: var(--ink); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 
 /* ── Page wrapper ── */
-.booking-page { min-height: 100vh; padding-bottom: 4rem; }
-.booking-inner { max-width: 780px; margin: 0 auto; padding: 2.5rem 1rem 3rem; }
+.booking-page { min-height: 100vh; padding-bottom: 4rem; padding-top: calc(var(--nav-height, 68px) + 1rem); }
+.booking-inner { max-width: 780px; margin: 0 auto; padding: 1rem 1rem 3rem; }
 
 /* ── Progress Bar ── */
 .bk-progress { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 2.5rem; }
@@ -145,9 +145,61 @@ body { background: var(--surface-alt); color: var(--ink); font-family: 'Inter', 
 }
 .btn-back:hover { color: var(--ink); }
 
-/* Empty */
-.bk-empty { text-align: center; padding: 3rem 1rem; color: var(--ink-muted); }
-.bk-empty i { font-size: 2.5rem; opacity: 0.25; display: block; margin-bottom: 0.75rem; color: var(--brand); }
+/* ── Mobile Optimizations ── */
+@media (max-width: 768px) {
+  .booking-inner { padding: 1.5rem 1rem 3rem; }
+  .booking-heading { margin-bottom: 1.25rem; }
+  .booking-heading h2 { font-size: 1.3rem; }
+  
+  /* Compact Service Cards */
+  .service-card {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .service-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    margin-bottom: 0;
+    flex: 1;
+  }
+  .service-card-name { font-size: 0.95rem; }
+  .service-card-price { font-size: 1rem; order: 2; margin-top: 0.25rem; }
+  .service-card-duration { margin-bottom: 0; order: 1; border: none; background: transparent; padding: 0; }
+  .service-card-desc { display: none; } /* Hide descriptions on mobile to reduce scroll */
+  
+  .service-card-check {
+    position: static;
+    flex-shrink: 0;
+  }
+  
+  /* Staff Cards Horizontal Scroll */
+  .staff-grid-mobile {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 0.75rem;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: x mandatory;
+    margin: 0 -1rem;
+    padding: 0 1rem 0.5rem 1rem;
+  }
+  .staff-grid-mobile::-webkit-scrollbar { height: 4px; }
+  .staff-grid-mobile::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+  
+  .staff-grid-mobile > div {
+    flex: 0 0 140px;
+    scroll-snap-align: start;
+    width: auto;
+  }
+  
+  /* Progress Bar compact */
+  .bk-progress { margin-bottom: 1.5rem; }
+  .bk-step-circle { width: 32px; height: 32px; font-size: 0.75rem; }
+}
 </style>
 {% endblock %}
 
@@ -228,7 +280,7 @@ body { background: var(--surface-alt); color: var(--ink); font-family: 'Inter', 
       </p>
     </div>
 
-    <div class="row g-3 justify-content-center">
+    <div class="row g-3 justify-content-md-center staff-grid-mobile">
       <div class="col-6 col-sm-4 col-md-3">
         <a href="{% url 'public-booking-step2' business.slug selected_service.id|default:'0' 0 %}" class="staff-card">
           <div class="staff-avatar-wrap">

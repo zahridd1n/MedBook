@@ -1,0 +1,251 @@
+<style>
+/* ── Premium PWA Bottom Sheet ── */
+.pwa-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99998;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pwa-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.pwa-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px 32px;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+    transform: translateY(100%);
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    text-align: center;
+}
+.pwa-sheet.show {
+    transform: translateY(0);
+}
+
+.pwa-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    margin: -48px auto 16px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255,255,255,0.8);
+    overflow: hidden;
+}
+.pwa-icon img { width: 100%; height: 100%; object-fit: cover; }
+.pwa-icon i { font-size: 32px; color: var(--brand, #6366f1); }
+
+.pwa-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+}
+.pwa-desc {
+    font-size: 0.9rem;
+    color: #475569;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.pwa-btn-primary {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    background: var(--brand, #6366f1);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    margin-bottom: 12px;
+    transition: transform 0.2s;
+}
+.pwa-btn-primary:active { transform: scale(0.98); }
+
+.pwa-btn-secondary {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.05);
+    color: #475569;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+}
+
+.pwa-ios-instructions {
+    display: none;
+    background: rgba(0,0,0,0.03);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+    text-align: left;
+}
+.pwa-ios-instructions p {
+    font-size: 0.85rem;
+    color: #334155;
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.pwa-ios-instructions i { font-size: 18px; color: var(--brand, #6366f1); }
+</style>
+
+<!-- PWA Installation Sheet -->
+<div class="pwa-overlay" id="pwaOverlay"></div>
+<div class="pwa-sheet" id="pwaSheet">
+    <div class="pwa-icon">
+        {% if business.logo %}
+            <img src="{{ business.logo.url }}" alt="{{ business.name }}">
+        {% else %}
+            <i class="bi bi-calendar2-check"></i>
+        {% endif %}
+    </div>
+    
+    <div id="pwaAndroidContent">
+        <div class="pwa-title">Bosh ekranga qo'shing</div>
+        <div class="pwa-desc">Keyingi safar {{ business.name }} ga birgina bosish orqali tezkor band qilishingiz mumkin.</div>
+        <button class="pwa-btn-primary" id="pwaBtnInstall">Bosh ekranga qo'shish</button>
+    </div>
+
+    <div id="pwaIosContent" style="display: none;">
+        <div class="pwa-title">Bosh ekranga qo'shing</div>
+        <div class="pwa-desc">Keyingi safar birgina bosish orqali tezkor kirishingiz uchun.</div>
+        
+        <div class="pwa-ios-instructions">
+            <p><i class="bi bi-box-arrow-up"></i> 1. Pastdagi "Share" tugmasini bosing</p>
+            <p><i class="bi bi-plus-square"></i> 2. "Add to Home Screen" ni tanlang</p>
+        </div>
+    </div>
+
+    <button class="pwa-btn-secondary" id="pwaBtnClose">Keyinroq</button>
+</div>
+
+<script>
+(function() {
+    // 1. Check if we are already in standalone mode
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone) return;
+
+    // 2. Check dismissal (14 days)
+    const LAST_DISMISSED_KEY = 'pwa_dismissed_{{ business.slug }}';
+    const lastDismissed = localStorage.getItem(LAST_DISMISSED_KEY);
+    if (lastDismissed) {
+        const daysSince = (Date.now() - parseInt(lastDismissed)) / (1000 * 60 * 60 * 24);
+        if (daysSince < 14) return;
+    }
+
+    // 3. Platform Detection
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+    const isAndroid = /android/i.test(userAgent);
+    
+    // Only proceed on Mobile
+    if (!isIOS && !isAndroid && window.innerWidth > 768) return;
+
+    let deferredPrompt;
+    const sheet = document.getElementById('pwaSheet');
+    const overlay = document.getElementById('pwaOverlay');
+    let hasShown = false;
+
+    // Android Install Prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+    });
+
+    function showPwaSheet() {
+        if (hasShown) return;
+        hasShown = true;
+        
+        if (isIOS) {
+            document.getElementById('pwaAndroidContent').style.display = 'none';
+            document.getElementById('pwaIosContent').style.display = 'block';
+        }
+        
+        overlay.classList.add('show');
+        sheet.classList.add('show');
+    }
+
+    function closePwaSheet() {
+        overlay.classList.remove('show');
+        sheet.classList.remove('show');
+        localStorage.setItem(LAST_DISMISSED_KEY, Date.now().toString());
+    }
+
+    document.getElementById('pwaBtnClose').addEventListener('click', closePwaSheet);
+    overlay.addEventListener('click', closePwaSheet);
+
+    document.getElementById('pwaBtnInstall').addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                deferredPrompt = null;
+                closePwaSheet();
+            }
+        } else {
+            // Fallback instruction if prompt isn't available
+            alert("Sizning brauzeringiz avtomatik o'rnatishni qo'llab-quvvatlamaydi. Brauzer menyusidan 'Add to Home screen' tugmasini bosing.");
+        }
+    });
+
+    // Triggers
+    
+    // Trigger 1: 5 seconds delay
+    setTimeout(showPwaSheet, 5000);
+
+    // Trigger 2: 40% scroll
+    window.addEventListener('scroll', () => {
+        if (hasShown) return;
+        const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+        if (scrollPercent > 40) {
+            showPwaSheet();
+        }
+    });
+
+    // Trigger 3: Second visit
+    const VISITS_KEY = 'pwa_visits_{{ business.slug }}';
+    let visits = parseInt(localStorage.getItem(VISITS_KEY) || '0');
+    visits++;
+    localStorage.setItem(VISITS_KEY, visits.toString());
+    
+    if (visits >= 2 && !hasShown) {
+        // slight delay so it doesn't pop instantly
+        setTimeout(showPwaSheet, 1500);
+    }
+})();
+
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            console.log('ServiceWorker registration successful');
+        }).catch(function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    });
+}
+</script>

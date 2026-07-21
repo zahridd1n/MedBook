@@ -1,6 +1,8 @@
 from datetime import timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404
 
 from business.models import Business
 from services.models import Service
@@ -316,3 +318,38 @@ def qr_scan_redirect(request, slug):
     )
 
     return redirect('public-home', slug=slug)
+
+def pwa_manifest(request, slug):
+    business = get_object_or_404(Business, slug=slug, is_active=True)
+    if business.subscription_plan not in ['growth', 'enterprise']:
+        raise Http404("PWA is not available for this plan.")
+        
+    icon_url = request.build_absolute_uri(business.logo.url) if business.logo else "https://via.placeholder.com/512x512.png?text=" + business.name[:1]
+    
+    manifest = {
+        "name": business.name,
+        "short_name": business.name[:12],
+        "description": f"Book appointments with {business.name}",
+        "start_url": f"/{business.slug}/",
+        "display": "standalone",
+        "background_color": "#ffffff",
+        "theme_color": business.primary_color or "#6366f1",
+        "icons": [
+            {
+                "src": icon_url,
+                "sizes": "192x192",
+                "type": "image/png",
+                "purpose": "any maskable"
+            },
+            {
+                "src": icon_url,
+                "sizes": "512x512",
+                "type": "image/png",
+                "purpose": "any maskable"
+            }
+        ]
+    }
+    return JsonResponse(manifest)
+
+def service_worker(request):
+    return render(request, 'sw.js', content_type='application/javascript')

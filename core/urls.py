@@ -10,7 +10,7 @@ from blog.views import blog_public_list, blog_public_detail
 from public_site.views import (
     public_home, booking_step1_service,
     booking_step3_datetime, booking_step4_confirm, booking_success,
-    public_employee_detail, qr_scan_redirect,
+    public_employee_detail, qr_scan_redirect, pwa_manifest, service_worker
 )
 
 from core.sitemaps import sitemaps
@@ -48,11 +48,15 @@ urlpatterns = [
     # SEO
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
+    
+    # Service Worker
+    path('sw.js', service_worker, name='service_worker'),
 
     # Public business pages — slug-based, must be LAST
     # Home and booking (3-step flow)
     # QR scan tracking
     re_path(r'^(?P<slug>[\w-]+)/qr-scan/$', qr_scan_redirect, name='qr-scan'),
+    re_path(r'^(?P<slug>[\w-]+)/manifest\.json$', pwa_manifest, name='pwa_manifest'),
 
     re_path(r'^(?P<slug>[\w-]+)/$', public_home, name='public-home'),
     re_path(r'^(?P<slug>[\w-]+)/book/$', booking_step1_service, name='public-booking-step1'),

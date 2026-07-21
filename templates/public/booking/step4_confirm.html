@@ -15,8 +15,8 @@
 }
 body { background: var(--surface-alt); color: var(--ink); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 
-.booking-page { min-height: 100vh; padding-bottom: 4rem; }
-.booking-inner { max-width: 880px; margin: 0 auto; padding: 2.5rem 1rem 3rem; }
+.booking-page { min-height: 100vh; padding-bottom: 4rem; padding-top: calc(var(--nav-height, 68px) + 1rem); }
+.booking-inner { max-width: 880px; margin: 0 auto; padding: 1rem 1rem 3rem; }
 
 /* Progress */
 .bk-progress { display: flex; align-items: center; justify-content: center; margin-bottom: 2.5rem; }
@@ -119,6 +119,31 @@ body { background: var(--surface-alt); color: var(--ink); font-family: 'Inter', 
   text-decoration: none; transition: color 0.2s;
 }
 .btn-back:hover { color: var(--ink); }
+
+/* ── Mobile Optimizations ── */
+@media (max-width: 768px) {
+  .booking-inner { padding: 1.5rem 1rem 6rem; } /* Extra bottom padding for sticky button */
+  .bk-progress { margin-bottom: 1.5rem; }
+  .bk-step-circle { width: 32px; height: 32px; font-size: 0.75rem; }
+  .booking-heading { margin-bottom: 1.25rem; }
+  .booking-heading h2 { font-size: 1.3rem; }
+  .form-card { padding: 1.25rem; border-radius: 1rem; }
+  .summary-card { border-radius: 1rem; }
+  
+  .btn-confirm-wrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border-strong);
+    z-index: 1000;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+  }
+  .btn-confirm-wrapper .btn-confirm { margin-top: 0; }
+}
 </style>
 {% endblock %}
 
@@ -196,11 +221,13 @@ body { background: var(--surface-alt); color: var(--ink); font-family: 'Inter', 
               </div>
             </div>
 
-            <button type="submit" class="btn-confirm">
-              <i class="bi bi-calendar-check-fill"></i>
-              Bandni tasdiqlash
-              <i class="bi bi-arrow-right"></i>
-            </button>
+            <div class="btn-confirm-wrapper">
+              <button type="submit" class="btn-confirm">
+                <i class="bi bi-calendar-check-fill"></i>
+                Bandni tasdiqlash
+                <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
           </form>
         </div>
       </div>

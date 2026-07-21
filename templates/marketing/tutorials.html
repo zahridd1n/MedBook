@@ -1,5 +1,5 @@
 {% extends 'base_marketing.html' %}
-
+{% load youtube_filters %}
 {% block title %}BookFlow - {{ m.tutorials.hero_title }}{% endblock %}
 
 {% block marketing_content %}
@@ -19,9 +19,10 @@
           <div class="mkt-video-player">
             {% if video.youtube_id %}
               <iframe
-                src="https://www.youtube.com/embed/{{ video.youtube_id }}"
+                src="https://www.youtube.com/embed/{{ video.youtube_id|extract_youtube_id }}"
                 title="{{ video.title }}"
                 frameborder="0"
+                referrerpolicy="strict-origin-when-cross-origin"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
               ></iframe>
