@@ -51,10 +51,23 @@
           {% endif %}
         </a>
 
-        <button class="mkt-menu-btn" type="button" data-mkt-menu aria-label="Open menu">
-          <i class="bi bi-list"></i>
-        </button>
+        {# ── Mobile: always-visible quick controls ── #}
+        <div class="mkt-nav-quick">
+          <div class="mkt-lang-switch" aria-label="Language">
+            {% for code,label in languages %}
+              <a href="?lang={{ code }}" class="{% if current_lang == code %}active{% endif %}">{{ label }}</a>
+            {% endfor %}
+          </div>
+          <button class="mkt-theme-toggle" data-mkt-theme-toggle type="button" title="Yorug' rejim" aria-label="Yorug' rejimga o'tish">
+            <span class="icon-dark"><i class="bi bi-sun-fill"></i></span>
+            <span class="icon-light"><i class="bi bi-moon-stars-fill"></i></span>
+          </button>
+          <button class="mkt-menu-btn" type="button" data-mkt-menu aria-label="Open menu">
+            <i class="bi bi-list"></i>
+          </button>
+        </div>
 
+        {# ── Desktop/collapsible nav links ── #}
         <div class="mkt-nav-links" data-mkt-links>
           <a href="{% url 'marketing:features' %}">{{ m.nav.features }}</a>
           <a href="{% url 'marketing:tutorials' %}">{{ m.nav.tutorials }}</a>
@@ -64,7 +77,9 @@
           <a href="{% url 'marketing:businesses' %}"><i class="bi bi-shop me-1"></i>Bizneslar</a>
         </div>
 
+        {# ── Desktop auth actions ── #}
         <div class="mkt-nav-actions">
+          {# UZ/RU/EN + theme only shown on desktop here #}
           <div class="mkt-lang-switch" aria-label="Language">
             {% for code,label in languages %}
               <a href="?lang={{ code }}" class="{% if current_lang == code %}active{% endif %}">{{ label }}</a>

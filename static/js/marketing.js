@@ -43,9 +43,27 @@
   updateNav();
   window.addEventListener("scroll", updateNav, { passive: true });
 
-  if (menu && panel) {
-    menu.addEventListener("click", () => {
-      panel.classList.toggle("is-open");
+  // Menu button can now be inside .mkt-nav-quick on mobile
+  const menuBtn = document.querySelector("[data-mkt-menu]");
+
+  if (menuBtn && panel) {
+    menuBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = panel.classList.toggle("is-open");
+      // Update burger icon
+      const icon = menuBtn.querySelector("i");
+      if (icon) {
+        icon.className = isOpen ? "bi bi-x-lg" : "bi bi-list";
+      }
+    });
+
+    // Close menu on outside click
+    document.addEventListener("click", (e) => {
+      if (panel.classList.contains("is-open") && !panel.contains(e.target)) {
+        panel.classList.remove("is-open");
+        const icon = menuBtn.querySelector("i");
+        if (icon) icon.className = "bi bi-list";
+      }
     });
   }
 
