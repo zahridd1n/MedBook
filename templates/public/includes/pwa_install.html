@@ -26,7 +26,7 @@
     border-radius: 24px 24px 0 0;
     padding: 24px 20px 32px;
     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
-    transform: translateY(100%);
+    transform: translateY(150%); /* Hides the sheet and the -48px icon */
     transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     text-align: center;
@@ -159,11 +159,11 @@
 
     // 3. Platform Detection
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+    const isIOS = (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const isAndroid = /android/i.test(userAgent);
     
-    // Only proceed on Mobile
-    if (!isIOS && !isAndroid && window.innerWidth > 768) return;
+    // Only proceed on Mobile (strictly Android or iOS)
+    if (!isIOS && !isAndroid) return;
 
     let deferredPrompt;
     const sheet = document.getElementById('pwaSheet');
