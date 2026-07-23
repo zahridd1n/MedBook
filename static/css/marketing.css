@@ -1240,6 +1240,37 @@ body:has(.marketing-shell) {
   padding: 8px 12px;
 }
 
+/* ── Legal bottom bar ── */
+.mkt-footer-legal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 24px 8px;
+  margin-top: 8px;
+  border-top: 1px solid var(--mkt-border-soft);
+  font-size: .75rem;
+  color: var(--mkt-muted);
+  opacity: .7;
+}
+
+.mkt-footer-legal-links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.mkt-footer-legal-links a {
+  color: var(--mkt-muted);
+  text-decoration: none;
+  transition: color .15s;
+}
+
+.mkt-footer-legal-links a:hover {
+  color: var(--mkt-accent);
+}
+
 .mkt-feature {
   display: grid;
   grid-template-columns: 72px 1fr;

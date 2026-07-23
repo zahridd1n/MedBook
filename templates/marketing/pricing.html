@@ -3,7 +3,7 @@
 {% block title %}{{ m.nav.pricing }} - BookFlow{% endblock %}
 
 {% block marketing_content %}
-<section class="mkt-page-hero">
+<section class="mkt-page-hero" style="padding-bottom:2rem">
   <div class="mkt-container">
     <div class="mkt-section-head narrow reveal">
       <div class="mkt-eyebrow"><span></span> {{ m.pricing.eyebrow }}</div>
@@ -13,7 +13,7 @@
   </div>
 </section>
 
-<section class="mkt-section">
+<section class="mkt-section" style="padding-top:2rem">
   <div class="mkt-container">
     <div class="mkt-pricing-grid">
       {% for plan in plans %}
@@ -30,6 +30,39 @@
         </article>
       {% endfor %}
     </div>
+
+    {# ── Oferta note ── #}
+    <div class="mkt-oferta-note reveal">
+      <i class="bi bi-shield-check"></i>
+      <span>
+        Obuna olish orqali siz
+        <a href="{% url 'marketing:oferta' %}">Ommaviy Oferta</a> va
+        <a href="{% url 'marketing:terms' %}">Foydalanish Shartlari</a> bilan roziligi bildirasiz.
+        Ma'lumotlaringiz <a href="{% url 'marketing:privacy' %}">Maxfiylik Siyosati</a> asosida himoyalanadi.
+        Bepul boshlang — to'lov hech qachon avtomatik yechilmaydi.
+      </span>
+    </div>
   </div>
 </section>
+
+<style>
+.mkt-oferta-note {
+  margin-top: 2.5rem;
+  padding: 1.1rem 1.5rem;
+  background: rgba(99,240,189,.06);
+  border: 1px solid rgba(99,240,189,.18);
+  border-radius: 14px;
+  font-size: .82rem;
+  color: var(--mkt-text-muted);
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.mkt-oferta-note i { color: var(--mkt-accent); font-size: 1.1rem; margin-top: .05rem; flex-shrink: 0; }
+.mkt-oferta-note a { color: var(--mkt-accent); text-decoration: underline; }
+.mkt-oferta-note a:hover { opacity: .8; }
+</style>
 {% endblock %}

@@ -26,13 +26,17 @@
     border-radius: 24px 24px 0 0;
     padding: 24px 20px 32px;
     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
-    transform: translateY(150%); /* Hides the sheet and the -48px icon */
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateY(150%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s, visibility 0.5s;
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     text-align: center;
 }
 .pwa-sheet.show {
     transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
 }
 
 .pwa-icon {
@@ -151,11 +155,13 @@
 
     // 2. Check dismissal (14 days)
     const LAST_DISMISSED_KEY = 'pwa_dismissed_{{ business.slug }}';
-    const lastDismissed = localStorage.getItem(LAST_DISMISSED_KEY);
-    if (lastDismissed) {
-        const daysSince = (Date.now() - parseInt(lastDismissed)) / (1000 * 60 * 60 * 24);
-        if (daysSince < 14) return;
-    }
+    try {
+        const lastDismissed = localStorage.getItem(LAST_DISMISSED_KEY);
+        if (lastDismissed) {
+            const daysSince = (Date.now() - parseInt(lastDismissed)) / (1000 * 60 * 60 * 24);
+            if (daysSince < 14) return;
+        }
+    } catch(e) {}
 
     // 3. Platform Detection
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -192,7 +198,7 @@
     function closePwaSheet() {
         overlay.classList.remove('show');
         sheet.classList.remove('show');
-        localStorage.setItem(LAST_DISMISSED_KEY, Date.now().toString());
+        try { localStorage.setItem(LAST_DISMISSED_KEY, Date.now().toString()); } catch(e) {}
     }
 
     document.getElementById('pwaBtnClose').addEventListener('click', closePwaSheet);
@@ -228,9 +234,12 @@
 
     // Trigger 3: Second visit
     const VISITS_KEY = 'pwa_visits_{{ business.slug }}';
-    let visits = parseInt(localStorage.getItem(VISITS_KEY) || '0');
-    visits++;
-    localStorage.setItem(VISITS_KEY, visits.toString());
+    let visits = 0;
+    try {
+        visits = parseInt(localStorage.getItem(VISITS_KEY) || '0');
+        visits++;
+        localStorage.setItem(VISITS_KEY, visits.toString());
+    } catch(e) {}
     
     if (visits >= 2 && !hasShown) {
         // slight delay so it doesn't pop instantly

@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'marketing',
     'superadmin',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [

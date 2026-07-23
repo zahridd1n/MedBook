@@ -11,4 +11,8 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('businesses/', views.businesses_directory, name='businesses'),
     path('tutorials/', views.tutorials, name='tutorials'),
+    # Legal pages
+    path('oferta/', views.oferta, name='oferta'),
+    path('privacy/', views.privacy, name='privacy'),
+    path('terms/', views.terms, name='terms'),
 ]

@@ -1,0 +1,167 @@
+{% extends 'base_marketing.html' %}
+{% block title %}Maxfiylik Siyosati — BookFlow{% endblock %}
+
+{% block marketing_content %}
+<section class="mkt-page-hero" style="padding-bottom:2rem">
+  <div class="mkt-container narrow">
+    <div class="mkt-eyebrow"><span></span> Huquqiy hujjat</div>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-top:.75rem">Maxfiylik Siyosati</h1>
+    <p style="color:var(--mkt-text-muted);margin-top:.5rem">Oxirgi yangilanish: 2025-yil 1-yanvar</p>
+  </div>
+</section>
+
+<section class="mkt-section" style="padding-top:2rem">
+  <div class="mkt-container narrow">
+    <div class="legal-doc">
+
+      <div class="legal-notice">
+        <i class="bi bi-shield-lock-fill"></i>
+        <span>Biz sizning ma'lumotlaringizni himoya qilishni jiddiy qabul qilamiz. Ushbu hujjat
+          <strong>BookFlow</strong> platformasi qanday ma'lumot to'plashi, saqlashi va ishlatishi haqida
+          to'liq ma'lumot beradi.</span>
+      </div>
+
+      <h2>1. Qanday ma'lumotlar to'planadi?</h2>
+      <p><strong>Ro'yxatdan o'tishda:</strong></p>
+      <ul>
+        <li>Ism va familiya;</li>
+        <li>Email manzil;</li>
+        <li>Telefon raqami (ixtiyoriy);</li>
+        <li>Parol (shifrlangan holda saqlanadi, hech kim ko'ra olmaydi).</li>
+      </ul>
+      <p><strong>Xizmatdan foydalanishda:</strong></p>
+      <ul>
+        <li>Biznes ma'lumotlari (nomi, manzili, ish soatlari);</li>
+        <li>Xizmat va xodim ma'lumotlari;</li>
+        <li>Mijozlar bandlovi tarixi;</li>
+        <li>Platforma ichidagi harakatlar (log fayllar).</li>
+      </ul>
+      <p><strong>Brauzer orqali avtomatik:</strong></p>
+      <ul>
+        <li>IP manzil;</li>
+        <li>Brauzer turi va versiyasi;</li>
+        <li>Cookie fayllar (tizimga kirish uchun zaruriy).</li>
+      </ul>
+
+      <h2>2. Ma'lumotlar nima uchun ishlatiladi?</h2>
+      <ul>
+        <li>Platformani to'g'ri ishlashini ta'minlash;</li>
+        <li>Tizimga kirish va xavfsizlikni boshqarish;</li>
+        <li>Telegram bildirishnomalarini yuborish;</li>
+        <li>Texnik yordam ko'rsatish;</li>
+        <li>Xizmat sifatini yaxshilash maqsadida tahlil qilish.</li>
+      </ul>
+
+      <h2>3. Ma'lumotlar kimga beriladi?</h2>
+      <p>Ma'lumotlaringiz <strong>hech qachon</strong> reklama maqsadida sotilmaydi. Faqat quyidagi hollarda
+        uchinchi shaxslarga berilishi mumkin:</p>
+      <ul>
+        <li><strong>Texnik xizmatlar:</strong> Hosting, SMS, email xizmatlari (faqat zaruriy ma'lumotlar);</li>
+        <li><strong>Qonuniy talab:</strong> O'zbekiston qonunchiligiga muvofiq davlat organlari talabi bo'yicha;</li>
+        <li><strong>Biznes o'tkazish:</strong> Platforma boshqa kompaniyaga sotilsa, ma'lumotlar yangi egaga o'tishi haqida oldindan xabar beriladi.</li>
+      </ul>
+
+      <h2>4. Ma'lumotlar qancha saqlanadi?</h2>
+      <ul>
+        <li>Hisob o'chirilgandan so'ng 30 kun ichida barcha ma'lumotlar o'chiriladi;</li>
+        <li>Moliyaviy tranzaksiyalar qonun talabi bo'yicha 3 yil saqlanadi;</li>
+        <li>Log fayllar 90 kun saqlanadi.</li>
+      </ul>
+
+      <h2>5. Sizning huquqlaringiz</h2>
+      <p>Siz quyidagi huquqlarga egasiz:</p>
+      <ul>
+        <li><strong>Ko'rish:</strong> O'z ma'lumotlaringizni ko'rish va yuklab olish;</li>
+        <li><strong>Tuzatish:</strong> Noto'g'ri ma'lumotlarni o'zgartirish;</li>
+        <li><strong>O'chirish:</strong> Hisobingiz va barcha ma'lumotlaringizni o'chirish;</li>
+        <li><strong>Cheklash:</strong> Ma'lum turdagi ma'lumotlarni ishlatishni taqiqlash;</li>
+        <li><strong>Ko'chirib olish:</strong> Ma'lumotlaringizni standart formatda eksport qilish.</li>
+      </ul>
+      <p>Ushbu huquqlarni amalga oshirish uchun <a href="/contact/">Aloqa</a> sahifamizga murojaat qiling.</p>
+
+      <h2>6. Cookie fayllar</h2>
+      <p>Biz faqat zaruriy cookie fayllardan foydalanamiz:</p>
+      <ul>
+        <li><strong>Sessiya cookie:</strong> Tizimga kirishni saqlab turish uchun (brauzer yopilganda o'chadi);</li>
+        <li><strong>CSRF cookie:</strong> Xavfsizlik uchun (xakerlarga qarshi himoya);</li>
+        <li><strong>Til cookie:</strong> Tanlangan til sozlamasini eslab qolish.</li>
+      </ul>
+      <p>Reklama yoki kuzatuv cookie fayllar ishlatilmaydi.</p>
+
+      <h2>7. Ma'lumotlar xavfsizligi</h2>
+      <ul>
+        <li>Barcha ma'lumotlar HTTPS orqali uzatiladi;</li>
+        <li>Parollar BCrypt algoritmi bilan shifrlangan;</li>
+        <li>Serverlar O'zbekistonda joylashgan ma'lumotlar markazida xizmat qiladi;</li>
+        <li>Muntazam xavfsizlik tekshiruvlari o'tkaziladi.</li>
+      </ul>
+
+      <h2>8. Bolalar ma'lumotlari</h2>
+      <p>Platforma 18 yoshdan kichik shaxslarga mo'ljallanmagan. Agar voyaga etmagan shaxs ro'yxatdan
+        o'tgan bo'lsa, ota-onaning murojaatig a ko'ra hisob darhol o'chiriladi.</p>
+
+      <h2>9. Siyosatga o'zgarishlar</h2>
+      <p>Ushbu siyosat yangilanganda, elektron pochta orqali xabar yuboramiz. Muhim o'zgarishlar uchun
+        platformada e'lon qilinadi.</p>
+
+      <h2>10. Murojaat</h2>
+      <p>Maxfiylik bo'yicha savollar uchun: <a href="/contact/">Aloqa sahifamiz</a>.</p>
+
+      <div class="legal-footer-note">
+        <i class="bi bi-lock-fill"></i>
+        Sizning maxfiyligingiz bizning ustuvorligimiz. Ma'lumotlaringiz hech qachon reklama
+        maqsadida sotilmaydi.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+.legal-doc { line-height: 1.85; }
+.legal-doc h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: .75rem;
+  padding-bottom: .4rem;
+  border-bottom: 1px solid var(--mkt-border-soft);
+  color: var(--mkt-text);
+}
+.legal-doc p { margin-bottom: .85rem; color: var(--mkt-text-muted); }
+.legal-doc ul {
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--mkt-text-muted);
+}
+.legal-doc ul li { margin-bottom: .4rem; }
+.legal-doc a { color: var(--mkt-accent); text-decoration: underline; }
+.legal-notice {
+  background: rgba(99,240,189,.08);
+  border: 1px solid rgba(99,240,189,.22);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2.5rem;
+  font-size: .92rem;
+  color: var(--mkt-text-muted);
+  display: flex;
+  gap: .75rem;
+  align-items: flex-start;
+}
+.legal-notice i { color: var(--mkt-accent); margin-top: .1rem; flex-shrink: 0; font-size: 1.1rem; }
+.legal-notice strong { color: var(--mkt-text); }
+.legal-footer-note {
+  margin-top: 3rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(123,124,255,.08);
+  border: 1px solid rgba(123,124,255,.2);
+  border-radius: 14px;
+  font-size: .88rem;
+  color: var(--mkt-text-muted);
+  display: flex;
+  gap: .75rem;
+  align-items: center;
+}
+.legal-footer-note i { color: #7b7cff; font-size: 1.2rem; flex-shrink: 0; }
+</style>
+{% endblock %}

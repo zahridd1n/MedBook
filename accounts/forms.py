@@ -10,6 +10,12 @@ class RegisterForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Parol'}))
     password2 = forms.CharField(label='Parol (takroran)',
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Parol (takroran)'}))
+    agree_terms = forms.BooleanField(
+        required=True,
+        label='Foydalanish shartlari va Ommaviy oferta bilan roziman',
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input', 'id': 'agree_terms'}),
+        error_messages={'required': 'Foydalanish shartlarini qabul qilishingiz shart.'},
+    )
 
     class Meta:
         model = User

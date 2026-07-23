@@ -378,3 +378,33 @@ def businesses_directory(request):
     context.update(_marketing_seo(request, 'Bizneslar katalogi — BookFlow', 'Xizmat ko\'rsatuvchi bizneslarning katalogi. Klinika, salon, sartarosh va boshqalar.'))
 
     return render(request, 'marketing/businesses.html', context)
+
+
+def oferta(request):
+    ctx = _context(request)
+    ctx.update(_marketing_seo(
+        request,
+        'Ommaviy Oferta — BookFlow',
+        'BookFlow platformasidan foydalanish shartlarini belgilovchi ommaviy oferta shartnomasi.',
+    ))
+    return render(request, 'marketing/legal/oferta.html', ctx)
+
+
+def privacy(request):
+    ctx = _context(request)
+    ctx.update(_marketing_seo(
+        request,
+        'Maxfiylik Siyosati — BookFlow',
+        'BookFlow platformasi foydalanuvchilar ma\'lumotlarini qanday to\'plashi, saqlashi va himoya qilishi haqida.',
+    ))
+    return render(request, 'marketing/legal/privacy.html', ctx)
+
+
+def terms(request):
+    ctx = _context(request)
+    ctx.update(_marketing_seo(
+        request,
+        'Foydalanish Shartlari — BookFlow',
+        'BookFlow platformasidan foydalanish qoidalari va shartlari.',
+    ))
+    return render(request, 'marketing/legal/terms.html', ctx)

@@ -363,6 +363,9 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         ("To'lov", {
             'fields': ('payment_card_number', 'payment_card_holder'),
         }),
+        ('SEO', {
+            'fields': ('default_meta_description', 'default_og_image', 'google_site_verification', 'yandex_verification'),
+        }),
     )
 
     def has_add_permission(self, request):

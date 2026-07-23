@@ -3,27 +3,38 @@
 {% block extra_css %}
 <style>
 /* ════════════════════════════════════════════════════
-   DASHBOARD DESIGN SYSTEM v2
-   Premium SaaS — Stripe/Linear/Notion kabi
-═══════════════════════════════════════════════════ */
+   DASHBOARD DESIGN SYSTEM v3
+   Premium SaaS — Notion × Linear × Stripe uslubi
+════════════════════════════════════════════════════ */
 
 /* ── Tokens ── */
 :root {
-  --sb-w: 240px;
-  --sb-w-collapsed: 60px;
-  --sb-bg: #0c0e14;
-  --sb-border: rgba(255,255,255,.06);
-  --sb-item-hover: rgba(255,255,255,.055);
-  --sb-item-active: rgba(99,102,241,.18);
-  --sb-text: rgba(255,255,255,.5);
-  --sb-text-active: rgba(255,255,255,.95);
-  --sb-text-label: rgba(255,255,255,.22);
-  --sb-premium-bg: rgba(99,102,241,.06);
-  --sb-premium-border: rgba(99,102,241,.15);
+  --sb-w: 260px;
+  --sb-w-collapsed: 68px;
+  --sb-bg: linear-gradient(182deg, #0b0d17 0%, #111427 100%);
+  --sb-glass: rgba(255,255,255,0.035);
+  --sb-glass-hover: rgba(255,255,255,0.07);
+  --sb-border: rgba(255,255,255,0.07);
+  --sb-border-light: rgba(255,255,255,0.04);
+  --sb-text: rgba(255,255,255,0.5);
+  --sb-text-hover: rgba(255,255,255,0.9);
+  --sb-text-active: #fff;
+  --sb-text-label: rgba(255,255,255,0.25);
+  --sb-indicator: linear-gradient(180deg, #818cf8, #6366f1);
+  --sb-active-bg: rgba(99,102,241,0.13);
+  --sb-active-border: rgba(99,102,241,0.25);
+  --sb-premium: #f59e0b;
+  --sb-premium-bg: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02));
+  --sb-premium-border: rgba(245,158,11,0.15);
+  --sb-max: #a855f7;
+  --sb-max-bg: linear-gradient(135deg, rgba(168,85,247,0.08), rgba(168,85,247,0.02));
+  --sb-max-border: rgba(168,85,247,0.15);
+  --sb-radius: 10px;
+  --sb-radius-lg: 16px;
 
   --surface: #fff;
-  --bg: #f7f8fa;
-  --border: #e8eaed;
+  --bg: #f6f7fa;
+  --border: #e5e7eb;
   --border-strong: #d1d5db;
 
   --text: #0f1117;
@@ -46,7 +57,7 @@
   --p:       #6366f1;
   --p-dark:  #4f46e5;
   --p-light: #eef2ff;
-  --p-ring:  rgba(99,102,241,.2);
+  --p-ring:  rgba(99,102,241,.25);
 }
 
 /* ── Reset / Base ── */
@@ -62,15 +73,15 @@ body {
 
 /* ════════════════════════════════════════════════════
    LAYOUT
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .ds-layout {
   display: flex;
   min-height: 100vh;
 }
 
 /* ════════════════════════════════════════════════════
-   SIDEBAR
-═══════════════════════════════════════════════════ */
+   SIDEBAR — Premium SaaS
+════════════════════════════════════════════════════ */
 .ds-sidebar {
   width: var(--sb-w);
   background: var(--sb-bg);
@@ -81,138 +92,126 @@ body {
   z-index: 200;
   overflow-y: auto;
   overflow-x: hidden;
-  transition: width .22s cubic-bezier(.4,0,.2,1), transform .22s cubic-bezier(.4,0,.2,1);
+  transition: width .25s cubic-bezier(.4,0,.2,1), transform .25s cubic-bezier(.4,0,.2,1);
   border-right: 1px solid var(--sb-border);
   scrollbar-width: none;
 }
 .ds-sidebar::-webkit-scrollbar { display: none; }
 
-/* Brand */
-.sb-brand {
+/* ── Workspace Header ── */
+.sb-workspace {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 18px 16px 14px;
+  margin: 12px 10px 8px;
+  padding: 12px 14px;
+  border-radius: var(--sb-radius-lg);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--sb-border-light);
+  backdrop-filter: blur(12px);
   text-decoration: none;
+  transition: background .2s, border-color .2s;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--sb-border);
+  position: relative;
+  overflow: hidden;
 }
-.sb-brand-icon {
-  width: 30px; height: 30px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--p), #8b5cf6);
-  display: flex; align-items: center; justify-content: center;
+.sb-workspace::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 0% 50%, rgba(99,102,241,0.08), transparent 70%);
+  pointer-events: none;
+}
+.sb-workspace:hover { background: rgba(255,255,255,0.07); border-color: var(--sb-border); }
+.sb-workspace img { height: 28px; width: auto; }
+.sb-ws-name {
   font-size: 14px;
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(99,102,241,.4);
-}
-.sb-brand-icon i { color: #fff; }
-.sb-brand-name {
-  font-size: 14.5px;
   font-weight: 700;
   color: #fff;
-  letter-spacing: -.025em;
-}
-
-/* Plan badge */
-.sb-plan {
-  margin: 10px 10px 4px;
-  padding: 9px 12px;
-  border-radius: var(--radius);
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.07);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  transition: background .15s;
-  flex-shrink: 0;
-}
-.sb-plan:hover { background: rgba(255,255,255,.07); }
-.sb-plan-info { flex: 1; min-width: 0; }
-.sb-plan-name {
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(255,255,255,.85);
+  letter-spacing: -.02em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  position: relative;
+  z-index: 1;
 }
-.sb-plan-sub {
-  font-size: 10.5px;
-  color: rgba(255,255,255,.35);
-  margin-top: 1px;
-}
-.sb-plan-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.sb-plan-dot.green { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,.6); }
-.sb-plan-dot.amber { background: #f59e0b; }
-.sb-plan-dot.gray  { background: rgba(255,255,255,.2); }
 
-/* Nav */
+/* ── Navigation ── */
 .sb-nav {
   flex: 1;
   overflow-y: auto;
-  padding: 6px 0 8px;
+  padding: 4px 0;
   scrollbar-width: none;
 }
 .sb-nav::-webkit-scrollbar { display: none; }
 
+/* Section label */
 .sb-section {
-  padding: 16px 12px 4px;
-  font-size: 9.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 16px 6px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: .1em;
+  letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--sb-text-label);
 }
+.sb-section::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--sb-border-light);
+}
 
-/* Group toggles */
-.sb-group:not(:first-child) { margin-top: 4px; }
+/* ── Group toggle ── */
+.sb-group + .sb-group { margin-top: 2px; }
 .sb-group-head {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 12px 8px;
-  margin: 0 4px;
+  gap: 8px;
+  padding: 9px 14px 8px;
+  margin: 0 8px;
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: var(--sb-radius);
   transition: background .15s;
   user-select: none;
-  -webkit-user-select: none;
   position: relative;
 }
 .sb-group-head::after {
   content: '';
   position: absolute;
-  left: 12px; right: 12px; bottom: 0;
+  left: 14px; right: 14px; bottom: 0;
   height: 1px;
-  background: var(--sb-border);
+  background: var(--sb-border-light);
   opacity: .5;
 }
 .sb-group-head:hover::after { opacity: 0; }
-.sb-group-head:hover { background: rgba(255,255,255,.055); }
+.sb-group-head:hover { background: var(--sb-glass); }
 .sb-group-head-label {
   flex: 1;
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: .08em;
+  letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--sb-text-label);
   transition: color .15s;
 }
-.sb-group-head:hover .sb-group-head-label { color: rgba(255,255,255,.6); }
+.sb-group-head:hover .sb-group-head-label { color: rgba(255,255,255,.5); }
+.sb-group-head-icon {
+  font-size: 13px;
+  line-height: 1;
+  flex-shrink: 0;
+}
 .sb-group-head-arrow {
   font-size: 8px;
   color: rgba(255,255,255,.2);
   transition: transform .2s, color .15s;
+  flex-shrink: 0;
+  line-height: 1;
 }
 .sb-group-head:hover .sb-group-head-arrow { color: rgba(255,255,255,.3); }
 .sb-group-head-arrow.open { transform: rotate(180deg); }
-
 .sb-group-body {
   overflow: hidden;
   transition: max-height .25s cubic-bezier(.4,0,.2,1), opacity .2s;
@@ -220,68 +219,85 @@ body {
   opacity: 0;
 }
 .sb-group-body.open {
-  max-height: 800px;
+  max-height: 600px;
   opacity: 1;
 }
+.sb-group-body .sb-link { margin: 1px 10px; }
+.sb-group-body .sb-link.active { margin: 1px 10px; }
 
-/* Group divider inside body */
-.sb-group-divider {
-  height: 1px;
-  background: var(--sb-border);
-  margin: 2px 12px 0;
-}
-
+/* ── Link item ── */
 .sb-link {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 10px;
-  margin: 1px 6px;
-  border-radius: var(--radius-sm);
+  gap: 10px;
+  padding: 8px 14px;
+  margin: 1px 8px;
+  border-radius: var(--sb-radius);
   text-decoration: none;
   color: var(--sb-text);
   font-size: 13px;
-  font-weight: 450;
-  transition: color .12s, background .12s;
+  font-weight: 500;
+  transition: all .15s cubic-bezier(.4,0,.2,1);
   position: relative;
+  cursor: pointer;
 }
 .sb-link:hover {
-  background: var(--sb-item-hover);
-  color: rgba(255,255,255,.92);
+  background: var(--sb-glass);
+  color: var(--sb-text-hover);
+}
+.sb-link:hover .sb-link-icon {
+  color: var(--sb-text-hover);
+  transform: scale(1.05);
 }
 .sb-link.active {
-  background: var(--sb-item-active);
+  background: var(--sb-active-bg);
   color: var(--sb-text-active);
+  border: 1px solid var(--sb-active-border);
+  margin: 1px 8px;
+  padding: 7px 13px;
 }
-.sb-link.active i { color: var(--sb-text-active); opacity: 1; }
 .sb-link.active::before {
   content: '';
   position: absolute;
-  left: -6px;
+  left: -8px;
   top: 50%;
   transform: translateY(-50%);
   width: 3px;
-  height: 16px;
-  border-radius: 0 3px 3px 0;
-  background: var(--p);
+  height: 20px;
+  border-radius: 0 4px 4px 0;
+  background: var(--sb-indicator);
+  box-shadow: 0 0 12px rgba(99,102,241,0.5);
 }
-.sb-link i {
-  font-size: 15px;
-  width: 18px;
-  text-align: center;
+.sb-link.active .sb-link-icon {
+  color: var(--p);
+}
+.sb-link-icon {
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
-  transition: opacity .12s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s;
+  color: inherit;
 }
-.sb-link.active i,
-.sb-link:hover i { opacity: 1; }
+.sb-link-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Badge (counts) */
 .sb-link-badge {
   margin-left: auto;
-  font-size: 9.5px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
   padding: 2px 7px;
   border-radius: 99px;
   line-height: 1.4;
+  flex-shrink: 0;
 }
+
+/* Status dot */
 .sb-link-dot {
   margin-left: auto;
   width: 6px; height: 6px;
@@ -289,53 +305,322 @@ body {
   flex-shrink: 0;
 }
 
-/* Sidebar footer */
-.sb-footer {
-  padding: 8px 6px 10px;
-  border-top: 1px solid var(--sb-border);
+/* ── Premium / MAX badges ── */
+.sb-premium-badge {
+  margin-left: auto;
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+.sb-premium-badge--pro {
+  background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.05));
+  color: var(--sb-premium);
+  border: 1px solid rgba(245,158,11,0.2);
+}
+.sb-premium-badge--max {
+  background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(168,85,247,0.05));
+  color: var(--sb-max);
+  border: 1px solid rgba(168,85,247,0.2);
+}
+.sb-premium-lock {
+  margin-left: auto;
+  opacity: .4;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: rgba(255,255,255,0.4);
+}
+.sb-premium-lock svg { width: 12px; height: 12px; }
+
+/* Premium section wrapper */
+.sb-premium-section {
+  margin: 6px 8px;
+  border-radius: var(--sb-radius-lg);
+  background: var(--sb-premium-bg);
+  border: 1px solid var(--sb-premium-border);
+  overflow: hidden;
+}
+.sb-max-section {
+  margin: 6px 8px;
+  border-radius: var(--sb-radius-lg);
+  background: var(--sb-max-bg);
+  border: 1px solid var(--sb-max-border);
+  overflow: hidden;
+}
+.sb-premium-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background .15s;
+  user-select: none;
+}
+.sb-premium-head:hover { background: rgba(255,255,255,0.03); }
+.sb-premium-head-star {
+  font-size: 12px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.sb-premium-head-label {
+  flex: 1;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+}
+.sb-premium-head-arrow {
+  font-size: 7px;
+  color: rgba(255,255,255,0.2);
+  transition: transform .2s;
+}
+.sb-premium-head-arrow.open { transform: rotate(180deg); }
+.sb-premium-body {
+  overflow: hidden;
+  transition: max-height .25s cubic-bezier(.4,0,.2,1), opacity .2s;
+  max-height: 0;
+  opacity: 0;
+}
+.sb-premium-body.open {
+  max-height: 600px;
+  opacity: 1;
+}
+.sb-premium-body .sb-link { margin: 1px 6px; }
+
+/* ── Quick Actions ── */
+.sb-quick {
+  margin: 4px 10px;
+  padding: 12px 14px;
+  border-radius: var(--sb-radius-lg);
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.04));
+  border: 1px solid rgba(99,102,241,0.12);
   flex-shrink: 0;
 }
+.sb-quick-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 8px;
+}
+.sb-quick-actions {
+  display: grid;
+  gap: 4px;
+}
+.sb-quick-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: rgba(255,255,255,0.6);
+  font-size: 12px;
+  font-weight: 500;
+  transition: all .15s;
+}
+.sb-quick-btn:hover {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.9);
+}
+.sb-quick-btn svg {
+  width: 15px;
+  height: 15px;
+  color: var(--p);
+  flex-shrink: 0;
+}
+
+/* ── Sidebar Footer ── */
+.sb-footer {
+  border-top: 1px solid var(--sb-border-light);
+  padding: 6px 8px 8px;
+  flex-shrink: 0;
+}
+
+/* Plan card */
+.sb-plan-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  border-radius: var(--sb-radius-lg);
+  background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border: 1px solid var(--sb-border-light);
+  text-decoration: none;
+  transition: all .2s;
+}
+.sb-plan-card:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: var(--sb-border);
+}
+.sb-plan-card-icon {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.sb-plan-card-icon--free { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); }
+.sb-plan-card-icon--pro { background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(99,102,241,0.05)); color: #a5b4fc; }
+.sb-plan-card-icon--max { background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(168,85,247,0.05)); color: #d8b4fe; }
+.sb-plan-card-body { flex: 1; min-width: 0; }
+.sb-plan-card-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+}
+.sb-plan-card-days {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 1px;
+}
+.sb-plan-card-bar {
+  width: 100%;
+  height: 3px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.08);
+  margin-top: 6px;
+  overflow: hidden;
+}
+.sb-plan-card-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width .6s cubic-bezier(.4,0,.2,1);
+}
+.sb-plan-card-bar-fill--free { background: rgba(255,255,255,0.15); }
+.sb-plan-card-bar-fill--pro { background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+.sb-plan-card-bar-fill--max { background: linear-gradient(90deg, #a855f7, #d946ef); }
+.sb-plan-card-arrow {
+  color: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+  display: flex;
+  transition: transform .2s;
+}
+.sb-plan-card:hover .sb-plan-card-arrow {
+  transform: translateX(2px);
+}
+.sb-plan-card-arrow svg { width: 14px; height: 14px; }
+
+/* ── User Profile ── */
 .sb-user {
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 7px 8px;
-  border-radius: var(--radius);
+  padding: 8px;
+  border-radius: var(--sb-radius);
   cursor: pointer;
-  transition: background .12s;
+  transition: background .15s;
+  position: relative;
 }
-.sb-user:hover { background: rgba(255,255,255,.055); }
+.sb-user:hover { background: var(--sb-glass); }
 .sb-avatar {
-  width: 28px; height: 28px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, var(--p), #8b5cf6);
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
   display: flex; align-items: center; justify-content: center;
   font-size: 11px;
   font-weight: 700;
   color: #fff;
   flex-shrink: 0;
   letter-spacing: .5px;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.3);
 }
+.sb-user-info { flex: 1; min-width: 0; }
 .sb-user-name {
   font-size: 12px;
   font-weight: 600;
-  color: rgba(255,255,255,.82);
+  color: rgba(255,255,255,0.8);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .sb-user-email {
-  font-size: 10.5px;
-  color: rgba(255,255,255,.3);
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px;
+}
+.sb-user-chevron {
+  color: rgba(255,255,255,0.2);
+  font-size: 10px;
+  flex-shrink: 0;
+  display: flex;
+  transition: transform .2s;
+}
+.sb-user-chevron svg { width: 14px; height: 14px; }
+.sb-user.show .sb-user-chevron { transform: rotate(180deg); }
+
+/* ── Responsive: collapse ── */
+.ds-sidebar.collapsed { width: var(--sb-w-collapsed); }
+
+.ds-sidebar.collapsed .sb-workspace { gap: 0; margin: 10px 6px; padding: 10px; justify-content: center; }
+.ds-sidebar.collapsed .sb-workspace img { height: 22px; }
+.ds-sidebar.collapsed .sb-ws-name,
+.ds-sidebar.collapsed .sb-section,
+.ds-sidebar.collapsed .sb-link span,
+.ds-sidebar.collapsed .sb-link .sb-link-badge,
+.ds-sidebar.collapsed .sb-link .sb-link-dot,
+.ds-sidebar.collapsed .sb-premium-badge,
+.ds-sidebar.collapsed .sb-premium-lock,
+.ds-sidebar.collapsed .sb-premium-head-label,
+.ds-sidebar.collapsed .sb-premium-head-arrow,
+.ds-sidebar.collapsed .sb-premium-body,
+.ds-sidebar.collapsed .sb-plan-card-body,
+.ds-sidebar.collapsed .sb-plan-card-arrow,
+.ds-sidebar.collapsed .sb-user-info,
+.ds-sidebar.collapsed .sb-user-chevron,
+.ds-sidebar.collapsed .sb-footer .dropdown,
+.ds-sidebar.collapsed .sb-group-head-label,
+.ds-sidebar.collapsed .sb-group-head-arrow,
+.ds-sidebar.collapsed .sb-group-body { display: none; }
+
+
+.ds-sidebar.collapsed .sb-link { justify-content: center; padding: 8px; margin: 1px 6px; }
+.ds-sidebar.collapsed .sb-link.active { padding: 7px; margin: 1px 6px; }
+.ds-sidebar.collapsed .sb-link.active::before { left: -6px; }
+.ds-sidebar.collapsed .sb-link-icon svg { width: 20px; height: 20px; }
+.ds-sidebar.collapsed .sb-group-head { justify-content: center; padding: 10px 4px; }
+.ds-sidebar.collapsed .sb-group-head::after { width: 16px; height: 1.5px; left: auto; right: auto; background: rgba(255,255,255,.12); border-radius: 2px; }
+.ds-sidebar.collapsed .sb-group-head-icon { font-size: 16px; }
+.ds-sidebar.collapsed .sb-premium-section,
+.ds-sidebar.collapsed .sb-max-section { margin: 4px 6px; }
+.ds-sidebar.collapsed .sb-premium-head { justify-content: center; padding: 8px; }
+.ds-sidebar.collapsed .sb-premium-head-star { margin: 0; }
+.ds-sidebar.collapsed .sb-plan-card { justify-content: center; padding: 10px; }
+.ds-sidebar.collapsed .sb-user { justify-content: center; padding: 8px 0; }
+
+/* Tooltip for collapsed sidebar */
+.ds-sidebar.collapsed .sb-link[data-tooltip]:hover::after,
+.ds-sidebar.collapsed .sb-group-head[data-tooltip]:hover::after,
+.ds-sidebar.collapsed .sb-premium-head[data-tooltip]:hover::after,
+.ds-sidebar.collapsed .sb-plan-card[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: fixed;
+  left: calc(var(--sb-w-collapsed) + 8px);
+  background: #151829;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 9999;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  border: 1px solid rgba(255,255,255,0.08);
+  pointer-events: none;
+  backdrop-filter: blur(12px);
 }
 
 /* ════════════════════════════════════════════════════
    MAIN
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .ds-main {
   margin-left: var(--sb-w);
   flex: 1;
@@ -347,7 +632,7 @@ body {
 
 /* ════════════════════════════════════════════════════
    TOPBAR
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .ds-topbar {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -400,10 +685,10 @@ body {
   color: var(--text);
   border-color: var(--border-strong);
 }
-.ds-btn-icon i { font-size: 14px; }
+.ds-btn-icon svg { width: 15px; height: 15px; }
 .lang-btn { font-size:11px; font-weight:700; letter-spacing:.03em; }
 .lang-active { background:var(--p); color:#fff; border-color:var(--p); }
-.lang-active:hover { background:var(--p-hover); color:#fff; border-color:var(--p-hover); }
+.lang-active:hover { background:var(--p-dark); color:#fff; border-color:var(--p-dark); }
 
 /* Notif dot */
 .notif-dot {
@@ -511,13 +796,13 @@ body {
   color: var(--text-4);
   font-size: 12px;
 }
-.notif-empty i { font-size: 22px; display: block; margin-bottom: 6px; }
+.notif-empty svg { width: 22px; height: 22px; display: block; margin: 0 auto 6px; }
 .notif-loading { text-align: center; padding: 24px; color: var(--text-4); font-size: 12px; }
 @media(max-width:576px){.notif-menu{width:calc(100vw - 16px);right:-8px}}
 
 /* ════════════════════════════════════════════════════
    PAGE WRAPPER
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .ds-page {
   padding: 24px;
   flex: 1;
@@ -525,7 +810,7 @@ body {
 
 /* ════════════════════════════════════════════════════
    PAGE HEADER
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .page-hd {
   display: flex;
   align-items: flex-start;
@@ -555,7 +840,7 @@ body {
 
 /* ════════════════════════════════════════════════════
    ALERTS (Flash messages)
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .ds-alert {
   display: flex;
   align-items: flex-start;
@@ -566,7 +851,7 @@ body {
   margin-bottom: 16px;
   position: relative;
 }
-.ds-alert i { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+.ds-alert svg { width: 16px; height: 16px; margin-top: 1px; flex-shrink: 0; }
 .ds-alert-close {
   position: absolute;
   right: 10px; top: 50%;
@@ -588,7 +873,7 @@ body {
 
 /* ════════════════════════════════════════════════════
    CARDS
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -661,7 +946,7 @@ body {
 
 /* ════════════════════════════════════════════════════
    TABLES
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .ds-table {
   width: 100%;
   border-collapse: collapse;
@@ -697,7 +982,7 @@ body {
 
 /* ════════════════════════════════════════════════════
    STATUS BADGES
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .status {
   display: inline-flex;
   align-items: center;
@@ -716,12 +1001,10 @@ body {
   background: currentColor;
   flex-shrink: 0;
 }
-/* Appointment statuses */
 .status-new       { background: #eef2ff; color: #4f46e5; }
 .status-confirmed { background: #f0fdf4; color: #16a34a; }
 .status-completed { background: #f1f5f9; color: #475569; }
 .status-cancelled { background: #fef2f2; color: #b91c1c; }
-/* Generic */
 .status-green  { background: #f0fdf4; color: #16a34a; }
 .status-amber  { background: #fffbeb; color: #b45309; }
 .status-red    { background: #fef2f2; color: #b91c1c; }
@@ -731,7 +1014,7 @@ body {
 
 /* ════════════════════════════════════════════════════
    BUTTONS
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -811,7 +1094,7 @@ body {
 
 /* ════════════════════════════════════════════════════
    EMPTY STATES
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .ds-empty {
   display: flex;
   flex-direction: column;
@@ -846,7 +1129,7 @@ body {
 
 /* ════════════════════════════════════════════════════
    FORMS
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .form-label {
   font-size: 12.5px;
   font-weight: 600;
@@ -889,7 +1172,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 
 /* ════════════════════════════════════════════════════
    SECTION DIVIDER (form groups)
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .form-section {
   padding-bottom: 22px;
   margin-bottom: 22px;
@@ -915,7 +1198,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 
 /* ════════════════════════════════════════════════════
    PAGINATION
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .ds-pager {
   display: flex;
   align-items: center;
@@ -951,7 +1234,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 
 /* ════════════════════════════════════════════════════
    FILTER BAR
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .ds-filter {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -963,7 +1246,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 
 /* ════════════════════════════════════════════════════
    AVATAR INITIALS
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .av {
   border-radius: 8px;
   display: flex;
@@ -979,7 +1262,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 
 /* ════════════════════════════════════════════════════
    UPGRADE BANNER
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .upgrade-strip {
   display: flex;
   align-items: center;
@@ -999,142 +1282,8 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .upgrade-strip strong { color: #fff; }
 
 /* ════════════════════════════════════════════════════
-   SIDEBAR v2 — Premium SaaS
-═══════════════════════════════════════════════════ */
-
-/* Collapse mode */
-.ds-sidebar.collapsed { width: var(--sb-w-collapsed); }
-.ds-sidebar.collapsed .sb-brand-name,
-.ds-sidebar.collapsed .sb-plan-info,
-.ds-sidebar.collapsed .sb-section span,
-.ds-sidebar.collapsed .sb-link span,
-.ds-sidebar.collapsed .sb-link .sb-link-badge,
-.ds-sidebar.collapsed .sb-link .sb-link-dot,
-.ds-sidebar.collapsed .sb-plan-dot,
-.ds-sidebar.collapsed .sb-user .sb-user-name,
-.ds-sidebar.collapsed .sb-user .sb-user-email,
-.ds-sidebar.collapsed .sb-user i.bi-chevron-expand,
-.ds-sidebar.collapsed .sb-footer .dropdown { display: none; }
-.ds-sidebar.collapsed .sb-brand { justify-content: center; padding: 14px 0; }
-.ds-sidebar.collapsed .sb-plan { justify-content: center; padding: 8px; }
-.ds-sidebar.collapsed .sb-link { justify-content: center; padding: 8px; margin: 1px 4px; }
-.ds-sidebar.collapsed .sb-link i { margin: 0; font-size: 16px; }
-.ds-sidebar.collapsed .sb-link.active::before { left: -4px; }
-.ds-sidebar.collapsed .sb-section,
-.ds-sidebar.collapsed .sb-group-head { text-align: center; padding: 10px 4px 2px; }
-.ds-sidebar.collapsed .sb-section::after,
-.ds-sidebar.collapsed .sb-group-head::after {
-  content: ''; display: block; width: 16px; height: 1.5px;
-  background: rgba(255,255,255,.12); border-radius: 2px;
-  margin: 0 auto;
-}
-.ds-sidebar.collapsed .sb-group-head-label,
-.ds-sidebar.collapsed .sb-group-head-arrow { display: none; }
-.ds-sidebar.collapsed .sb-group-body { display: none !important; }
-.ds-sidebar.collapsed .sb-user { justify-content: center; padding: 7px 0; }
-.ds-sidebar.collapsed .sb-avatar { margin: 0; }
-.ds-sidebar.collapsed .sb-collapse-btn { transform: rotate(180deg); }
-
-/* Premium section styling */
-.premium-wrap {
-  margin: 4px 6px 8px;
-  border-radius: var(--radius);
-  background: var(--sb-premium-bg);
-  border: 1px solid var(--sb-premium-border);
-  overflow: hidden;
-}
-.premium-head {
-  display: flex; align-items: center; gap: 8px;
-  padding: 9px 12px; cursor: pointer;
-  transition: background .15s;
-  position: relative;
-}
-.premium-head:hover { background: rgba(255,255,255,.03); }
-.premium-head-star { font-size: 11px; flex-shrink: 0; }
-.premium-head-label {
-  font-size: 10.5px; font-weight: 700;
-  letter-spacing: .06em; text-transform: uppercase;
-  color: rgba(255,255,255,.55); flex: 1;
-}
-.premium-head-arrow {
-  font-size: 8px; color: rgba(255,255,255,.25);
-  transition: transform .2s;
-}
-.premium-head-arrow.open { transform: rotate(180deg); }
-.premium-section { padding: 0 0 4px; }
-
-/* Premium locked items */
-.sb-link.premium-locked { opacity: .55; }
-.sb-link.premium-locked:hover { opacity: .75; }
-.sb-link .premium-lock {
-  margin-left: auto; font-size: 9px; opacity: .5;
-  flex-shrink: 0; color: rgba(255,255,255,.3);
-}
-.sb-link .premium-cta {
-  display: none;
-  position: absolute;
-  left: calc(100% + 10px); top: 50%;
-  transform: translateY(-50%);
-  white-space: nowrap;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: #fff; font-size: 10.5px; font-weight: 600;
-  padding: 5px 10px; border-radius: 6px;
-  z-index: 300;
-  box-shadow: 0 4px 16px rgba(99,102,241,.35);
-  pointer-events: none;
-}
-.sb-link.premium-locked:hover .premium-cta { display: block; }
-.sb-link.premium-locked .premium-cta::before {
-  content: ''; position: absolute;
-  right: 100%; top: 50%;
-  transform: translateY(-50%);
-  border: 5px solid transparent;
-  border-right-color: #6366f1;
-}
-
-/* Collapse toggle button */
-.sb-collapse-btn {
-  display: flex; align-items: center; justify-content: center;
-  width: 24px; height: 24px; border-radius: 6px;
-  background: transparent; border: 1px solid rgba(255,255,255,.08);
-  color: rgba(255,255,255,.25); cursor: pointer;
-  font-size: 10px; transition: all .18s;
-  flex-shrink: 0;
-}
-.sb-collapse-btn:hover {
-  background: rgba(255,255,255,.06); color: rgba(255,255,255,.5);
-}
-.sb-footer-actions {
-  display: flex; align-items: center; gap: 6px;
-  padding: 0 6px 4px;
-}
-.ds-sidebar.collapsed .sb-footer-actions { justify-content: center; }
-.ds-sidebar.collapsed .sb-footer-actions .sb-user { display: none; }
-
-/* Sidebar divider */
-.sb-section-divider {
-  height: 1px; background: var(--sb-border);
-  margin: 4px 10px;
-}
-
-/* Tooltip for collapsed sidebar */
-.ds-sidebar.collapsed .sb-link[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  left: calc(100% + 8px); top: 50%;
-  transform: translateY(-50%);
-  background: #1a1d27; color: #fff;
-  font-size: 11px; font-weight: 500;
-  padding: 4px 10px; border-radius: 5px;
-  white-space: nowrap;
-  z-index: 300;
-  box-shadow: 0 4px 12px rgba(0,0,0,.3);
-  pointer-events: none;
-}
-
-/* ════════════════════════════════════════════════════
    DROPDOWN MENUS
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 .dropdown-menu {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1148,6 +1297,9 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   font-size: 13px;
   color: var(--text-2);
   transition: background .1s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .dropdown-item:hover {
   background: var(--bg);
@@ -1159,7 +1311,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 
 /* ════════════════════════════════════════════════════
    RESPONSIVE
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════════ */
 @media (max-width: 991px) {
   .ds-sidebar {
     transform: translateX(-100%);
@@ -1189,322 +1341,359 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 <!-- ════════════════ SIDEBAR ════════════════ -->
 <aside class="ds-sidebar" id="ds-sidebar">
 
-  <!-- Brand -->
-  <a class="sb-brand" href="{% url 'dashboard:home' %}">
+  <!-- Workspace Header -->
+  <a class="sb-workspace" href="{% url 'dashboard:home' %}">
     {% if site_settings.logo %}
-    <img src="{{ site_settings.logo.url }}" alt="BookFlow" style="height:26px;width:auto;border-radius:6px;">
+    <img src="{{ site_settings.logo.url }}" alt="BookFlow">
     {% else %}
-    <div class="sb-brand-icon"><i class="bi bi-calendar2-check"></i></div>
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
     {% endif %}
-    <span class="sb-brand-name">BookFlow</span>
+    <span class="sb-ws-name">{{ user.business.name|default:"BookFlow" }}</span>
   </a>
-
-  <!-- Plan badge -->
-  {% if user.is_authenticated %}
-  <a class="sb-plan" href="{% url 'business:upgrade' %}">
-    <div class="sb-plan-info">
-      <div class="sb-plan-name">{{ user.business.plan_display }}</div>
-      <div class="sb-plan-sub">
-        {% if user.business.subscription_plan == 'free' %}{% blocktrans %}Bepul tarif{% endblocktrans %}
-        {% elif user.business.subscription_status == 'active' %}{% blocktrans %}Faol obuna{% endblocktrans %}
-        {% elif user.business.subscription_status == 'trial' %}{% blocktrans %}Sinov davri{% endblocktrans %}
-        {% else %}{{ user.business.get_subscription_status_display }}{% endif %}
-      </div>
-    </div>
-    {% if user.business.subscription_status == 'active' and user.business.subscription_plan != 'free' %}
-    <span class="sb-plan-dot green"></span>
-    {% elif user.business.subscription_plan != 'free' %}
-    <span class="sb-plan-dot amber"></span>
-    {% else %}
-    <span class="sb-plan-dot gray"></span>
-    {% endif %}
-  </a>
-  {% endif %}
 
   <!-- Navigation -->
   <nav class="sb-nav">
 
     <!-- 🏠 ASOSIY -->
     <div class="sb-group" data-group="asosiy">
-      <div class="sb-group-head" onclick="toggleGroup('asosiy')" data-head>
-        <span class="sb-group-head-label">🏠 {% trans "Asosiy" %}</span>
+      <div class="sb-group-head" onclick="toggleGroup('asosiy')" data-tooltip="{% trans 'Asosiy' %}">
+        <span class="sb-group-head-icon">🏠</span>
+        <span class="sb-group-head-label">{% trans "Asosiy" %}</span>
         <span class="sb-group-head-arrow" data-arrow>▾</span>
       </div>
       <div class="sb-group-body" data-body>
-        <a href="{% url 'dashboard:home' %}" class="sb-link {% if request.path == '/dashboard/' %}active{% endif %}" title="{% trans 'Boshqaruv paneli' %}">
-          <i class="bi bi-grid-1x2-fill"></i><span>{% trans "Boshqaruv paneli" %}</span>
+        <a href="{% url 'dashboard:home' %}" class="sb-link {% if request.path == '/dashboard/' %}active{% endif %}" data-tooltip="{% trans 'Boshqaruv paneli' %}">
+          <span class="sb-link-icon" data-lucide="layout-dashboard"></span>
+          <span>{% trans "Boshqaruv paneli" %}</span>
         </a>
-        <a href="{% url 'appointments:list' %}" class="sb-link {% if 'appointments' in request.path %}active{% endif %}" title="{% trans 'Qabullar' %}">
-          <i class="bi bi-calendar3"></i><span>{% trans "Qabullar" %}</span>
+        <a href="{% url 'appointments:list' %}" class="sb-link {% if 'appointments' in request.path %}active{% endif %}" data-tooltip="{% trans 'Qabullar' %}">
+          <span class="sb-link-icon" data-lucide="calendar"></span>
+          <span>{% trans "Qabullar" %}</span>
         </a>
-        <a href="{% url 'customers:list' %}" class="sb-link {% if 'customers' in request.path %}active{% endif %}" title="{% trans 'Mijozlar' %}">
-          <i class="bi bi-people"></i><span>{% trans "Mijozlar" %}</span>
+        <a href="{% url 'customers:list' %}" class="sb-link {% if 'customers' in request.path %}active{% endif %}" data-tooltip="{% trans 'Mijozlar' %}">
+          <span class="sb-link-icon" data-lucide="users"></span>
+          <span>{% trans "Mijozlar" %}</span>
         </a>
-        <a href="{% url 'employees:list' %}" class="sb-link {% if 'employees' in request.path %}active{% endif %}" title="{% trans 'Xodimlar' %}">
-          <i class="bi bi-person-badge"></i><span>{% trans "Xodimlar" %}</span>
+        <a href="{% url 'employees:list' %}" class="sb-link {% if 'employees' in request.path %}active{% endif %}" data-tooltip="{% trans 'Xodimlar' %}">
+          <span class="sb-link-icon" data-lucide="user-check"></span>
+          <span>{% trans "Xodimlar" %}</span>
+        </a>
+        <a href="{% url 'services:list' %}" class="sb-link {% if 'services' in request.path %}active{% endif %}" data-tooltip="{% trans 'Xizmatlar' %}">
+          <span class="sb-link-icon" data-lucide="briefcase"></span>
+          <span>{% trans "Xizmatlar" %}</span>
+        </a>
+        <div style="height:1px;background:var(--sb-border-light);margin:3px 12px;"></div>
+        <a href="{% url 'appointments:create' %}" class="sb-link" data-tooltip="{% trans 'Yangi qabul' %}">
+          <span class="sb-link-icon" data-lucide="plus"></span>
+          <span>{% trans "Yangi qabul" %}</span>
+        </a>
+        <a href="{% url 'customers:list' %}" class="sb-link" data-tooltip="{% trans 'Mijoz qo\'shish' %}">
+          <span class="sb-link-icon" data-lucide="user-plus"></span>
+          <span>{% trans "Mijoz qo'shish" %}</span>
+        </a>
+        <a href="{% url 'services:create' %}" class="sb-link" data-tooltip="{% trans 'Xizmat qo\'shish' %}">
+          <span class="sb-link-icon" data-lucide="folder-plus"></span>
+          <span>{% trans "Xizmat qo'shish" %}</span>
         </a>
       </div>
     </div>
 
-    <!-- 🌍 SAYT -->
-    <div class="sb-group" data-group="sayt">
-      <div class="sb-group-head" onclick="toggleGroup('sayt')" data-head>
-        <span class="sb-group-head-label">🌍 {% trans "Sayt" %}</span>
-        <span class="sb-group-head-arrow" data-arrow>▾</span>
-      </div>
-      <div class="sb-group-body" data-body>
-        {% if user.is_authenticated %}
-        <a href="/{{ user.business.slug }}/" class="sb-link" target="_blank" title="{% trans 'Ommaviy sahifa' %}">
-          <i class="bi bi-box-arrow-up-right"></i><span>{% trans "Ommaviy sahifa" %}</span>
-          <span class="sb-link-badge" style="background:rgba(99,102,241,.15);color:var(--p);margin-left:auto;font-size:9px;letter-spacing:.05em;">{% trans "JONLI" %}</span>
-        </a>
-        {% endif %}
-        <a href="{% url 'services:list' %}" class="sb-link {% if 'services' in request.path %}active{% endif %}" title="{% trans 'Xizmatlar' %}">
-          <i class="bi bi-grid-3x3-gap"></i><span>{% trans "Xizmatlar" %}</span>
-        </a>
-        <a href="{% url 'blog:list' %}" class="sb-link {% if 'blog' in request.path %}active{% endif %}" title="{% trans 'Blog' %}">
-          <i class="bi bi-newspaper"></i><span>{% trans "Blog" %}</span>
-        </a>
-        <a href="{% url 'business:faq_list' %}" class="sb-link {% if 'faq' in request.path %}active{% endif %}" title="{% trans 'FAQ' %}">
-          <i class="bi bi-question-circle"></i><span>{% trans "FAQ" %}</span>
-        </a>
-        <a href="{% url 'business:working_hours' %}" class="sb-link {% if 'working-hours' in request.path %}active{% endif %}" title="{% trans 'Ish vaqtlari' %}">
-          <i class="bi bi-clock"></i><span>{% trans "Ish vaqtlari" %}</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ⚙️ BIZNES -->
+    <!-- 🌐 BIZNES -->
     <div class="sb-group" data-group="biznes">
-      <div class="sb-group-head" onclick="toggleGroup('biznes')" data-head>
-        <span class="sb-group-head-label">⚙️ {% trans "Biznes" %}</span>
-        <span class="sb-group-head-arrow" data-arrow>▾</span>
-      </div>
-      <div class="sb-group-body" data-body>
-        <a href="{% url 'business:setup' %}" class="sb-link {% if 'setup' in request.path %}active{% endif %}" title="{% trans "Biznes ma'lumotlari" %}">
-          <i class="bi bi-building"></i><span>{% trans "Biznes ma'lumotlari" %}</span>
-        </a>
-        <a href="{% url 'notifications:list' %}" class="sb-link {% if 'notifications' in request.path %}active{% endif %}" title="{% trans 'Bildirishnomalar' %}">
-          <i class="bi bi-bell"></i><span>{% trans "Bildirishnomalar" %}</span>
-          <span id="sb-notif-count" class="sb-link-badge" style="background:rgba(239,68,68,.15);color:#ef4444;margin-left:auto;display:none;"></span>
-        </a>
-        <a href="javascript:void(0)" class="sb-link" title="{% trans 'Integratsiyalar' %}" style="opacity:.4;cursor:default;">
-          <i class="bi bi-puzzle"></i><span>{% trans "Integratsiyalar" %}</span>
-          <span class="sb-link-badge" style="background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);font-size:8px;letter-spacing:.04em;">{% trans "TEZ KUN" %}</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- 📢 MARKETING -->
-    <div class="sb-group" data-group="marketing">
-      <div class="sb-group-head" onclick="toggleGroup('marketing')" data-head>
-        <span class="sb-group-head-label">📢 {% trans "Marketing" %}</span>
+      <div class="sb-group-head" onclick="toggleGroup('biznes')" data-tooltip="{% trans 'Biznes' %}">
+        <span class="sb-group-head-icon">🌐</span>
+        <span class="sb-group-head-label">{% trans "Biznes" %}</span>
         <span class="sb-group-head-arrow" data-arrow>▾</span>
       </div>
       <div class="sb-group-body" data-body>
         {% if user.is_authenticated %}
-        {% url 'business:qr_code' as qr_code_url %}
-        <a href="{% if user.business.subscription_plan == 'free' %}javascript:void(0){% else %}{{ qr_code_url }}{% endif %}"
-           class="sb-link {% if 'qr-code' in request.path and user.business.subscription_plan != 'free' %}active{% endif %} {% if user.business.subscription_plan == 'free' %}premium-locked{% endif %}"
-           title="{% trans 'QR Code' %}">
-          <i class="bi bi-qr-code"></i><span>{% trans "QR Code" %}</span>
-           {% if user.business.subscription_plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>{% endif %}
-          {% if user.business.subscription_plan == 'free' %}<span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
-        </a>
-        {% url 'business:link_sharing' as link_sharing_url %}
-        <a href="{% if user.business.subscription_plan == 'free' %}javascript:void(0){% else %}{{ link_sharing_url }}{% endif %}"
-           class="sb-link {% if 'link-sharing' in request.path and user.business.subscription_plan != 'free' %}active{% endif %} {% if user.business.subscription_plan == 'free' %}premium-locked{% endif %}"
-           title="{% trans 'Link ulashish' %}">
-          <i class="bi bi-share"></i><span>{% trans "Link ulashish" %}</span>
-          {% if user.business.subscription_plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
-        </a>
-        <a href="javascript:void(0)" class="sb-link" style="opacity:.5;cursor:default;" title="{% trans 'SMS marketing' %}">
-          <i class="bi bi-chat-dots"></i><span>{% trans "SMS marketing" %}</span>
-          <span class="sb-link-badge" style="background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);font-size:8px;letter-spacing:.04em;">{% trans "TEZ KUN" %}</span>
-        </a>
-        {% else %}
-        <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'QR Code' %}">
-          <i class="bi bi-qr-code"></i><span>{% trans "QR Code" %}</span>
-          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span>
-          <span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>
+        <a href="/{{ user.business.slug }}/" class="sb-link" target="_blank" data-tooltip="{% trans 'Ommaviy sahifa' %}">
+          <span class="sb-link-icon" data-lucide="external-link"></span>
+          <span>{% trans "Ommaviy sahifa" %}</span>
+          <span class="sb-link-badge" style="background:rgba(99,102,241,.15);color:#a5b4fc;font-size:9px;letter-spacing:.05em;">{% trans "JONLI" %}</span>
         </a>
         {% endif %}
+        <a href="{% url 'business:working_hours' %}" class="sb-link {% if 'working-hours' in request.path %}active{% endif %}" data-tooltip="{% trans 'Ish vaqtlari' %}">
+          <span class="sb-link-icon" data-lucide="clock"></span>
+          <span>{% trans "Ish vaqtlari" %}</span>
+        </a>
+        <a href="{% url 'business:setup' %}" class="sb-link {% if 'setup' in request.path %}active{% endif %}" data-tooltip="{% trans "Biznes ma'lumotlari" %}">
+          <span class="sb-link-icon" data-lucide="building"></span>
+          <span>{% trans "Biznes ma'lumotlari" %}</span>
+        </a>
       </div>
     </div>
 
-    <!-- ⭐ PREMIUM -->
-    <div class="sb-group" data-group="premium">
-      <div class="sb-group-head" onclick="toggleGroup('premium')" data-head style="border-radius:var(--radius-sm) var(--radius-sm) 0 0;">
-        <span class="sb-group-head-label">⭐ {% trans "Premium" %}</span>
+    <!-- 📝 KONTENT -->
+    <div class="sb-group" data-group="kontent">
+      <div class="sb-group-head" onclick="toggleGroup('kontent')" data-tooltip="{% trans 'Kontent' %}">
+        <span class="sb-group-head-icon">📝</span>
+        <span class="sb-group-head-label">{% trans "Kontent" %}</span>
         <span class="sb-group-head-arrow" data-arrow>▾</span>
       </div>
-      <div class="sb-group-body" data-body style="background:var(--sb-premium-bg);border:1px solid var(--sb-premium-border);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);margin:0 6px 6px;">
-        {% if user.is_authenticated %}
-        {% with plan=user.business.subscription_plan %}
-
-        {% url 'business:analytics' as analytics_url %}
-        <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ analytics_url }}{% endif %}"
-           class="sb-link {% if 'analytics' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
-           title="{% trans 'Analitika' %}">
-          <i class="bi bi-graph-up"></i><span>{% trans "Analitika" %}</span>
-          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>{% endif %}
-          {% if plan == 'free' %}<span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
+      <div class="sb-group-body" data-body>
+        <a href="{% url 'blog:list' %}" class="sb-link {% if 'blog' in request.path %}active{% endif %}" data-tooltip="{% trans 'Blog' %}">
+          <span class="sb-link-icon" data-lucide="newspaper"></span>
+          <span>{% trans "Blog" %}</span>
         </a>
+        <a href="{% url 'business:faq_list' %}" class="sb-link {% if 'faq' in request.path %}active{% endif %}" data-tooltip="{% trans 'FAQ' %}">
+          <span class="sb-link-icon" data-lucide="help-circle"></span>
+          <span>{% trans "FAQ" %}</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ✨ INTEGRATSIYALAR (Premium) -->
+    {% if user.is_authenticated %}
+    {% with plan=user.business.subscription_plan %}
+    <div class="sb-premium-section">
+      <div class="sb-premium-head" onclick="togglePremium(this)" data-tooltip="{% trans 'Integratsiyalar' %}">
+        <span class="sb-premium-head-star">✨</span>
+        <span class="sb-premium-head-label">{% trans "Integratsiyalar" %}</span>
+        <span class="sb-premium-head-arrow" data-arrow>▾</span>
+      </div>
+      <div class="sb-premium-body" data-body>
 
         {% url 'business:telegram' as telegram_url %}
         <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ telegram_url }}{% endif %}"
-           class="sb-link {% if 'telegram' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
-           title="{% trans 'Telegram' %}">
-          <i class="bi bi-telegram"></i><span>{% trans "Telegram" %}</span>
-          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>
+           class="sb-link {% if 'telegram' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked-item{% endif %}"
+           data-tooltip="{% trans 'Telegram' %}">
+          <span class="sb-link-icon" data-lucide="send"></span>
+          <span>Telegram</span>
+          {% if plan == 'free' %}
+            <span class="sb-premium-lock" data-lucide="lock"></span>
+            <span class="sb-premium-badge sb-premium-badge--pro">PRO</span>
           {% elif user.business.telegram_notifications_enabled %}
-            <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>
+            <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);"></span>
           {% elif user.business.telegram_chat_id %}
-            <span class="sb-link-dot" style="background:#f59e0b;margin-left:auto;"></span>
+            <span class="sb-link-dot" style="background:#f59e0b;"></span>
           {% endif %}
-          {% if plan == 'free' %}<span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
         </a>
 
         {% url 'business:google_calendar' as gcal_url %}
         <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ gcal_url }}{% endif %}"
-           class="sb-link {% if 'google-calendar' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
-           title="{% trans 'Google Calendar' %}">
-          <i class="bi bi-calendar2-week"></i><span>{% trans "Google Calendar" %}</span>
-          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>
+           class="sb-link {% if 'google-calendar' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked-item{% endif %}"
+           data-tooltip="{% trans 'Google Calendar' %}">
+          <span class="sb-link-icon" data-lucide="calendar-check"></span>
+          <span>Google Calendar</span>
+          {% if plan == 'free' %}
+            <span class="sb-premium-lock" data-lucide="lock"></span>
+            <span class="sb-premium-badge sb-premium-badge--pro">PRO</span>
           {% elif user.business.google_calendar_sync_enabled %}
-            <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>
+            <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);"></span>
           {% elif user.business.google_credentials %}
-            <span class="sb-link-dot" style="background:#f59e0b;margin-left:auto;"></span>
+            <span class="sb-link-dot" style="background:#f59e0b;"></span>
           {% endif %}
-          {% if plan == 'free' %}<span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
         </a>
 
         {% url 'business:custom_domain' as domain_url %}
         <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ domain_url }}{% endif %}"
-           class="sb-link {% if 'custom-domain' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
-           title="{% trans 'Maxsus domen' %}">
-          <i class="bi bi-globe2"></i><span>{% trans "Maxsus domen" %}</span>
-          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>
+           class="sb-link {% if 'custom-domain' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked-item{% endif %}"
+           data-tooltip="{% trans 'Maxsus domen' %}">
+          <span class="sb-link-icon" data-lucide="globe"></span>
+          <span>{% trans "Maxsus domen" %}</span>
+          {% if plan == 'free' %}
+            <span class="sb-premium-lock" data-lucide="lock"></span>
+            <span class="sb-premium-badge sb-premium-badge--pro">PRO</span>
           {% elif user.business.domain_verified %}
-            <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>
+            <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);"></span>
           {% elif user.business.custom_domain %}
-            <span class="sb-link-dot" style="background:#f59e0b;margin-left:auto;"></span>
+            <span class="sb-link-dot" style="background:#f59e0b;"></span>
           {% endif %}
-          {% if plan == 'free' %}<span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
         </a>
 
-        {% url 'business:branding' as branding_url %}
-        <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ branding_url }}{% endif %}"
-           class="sb-link {% if 'branding' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
-           title="{% trans 'Sahifa dizayni' %}">
-          <i class="bi bi-palette"></i><span>{% trans "Sahifa dizayni" %}</span>
-          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>{% endif %}
-          {% if plan == 'free' %}<span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
+        {% url 'business:qr_code' as qr_code_url %}
+        <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ qr_code_url }}{% endif %}"
+           class="sb-link {% if 'qr-code' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked-item{% endif %}"
+           data-tooltip="{% trans 'QR kod' %}">
+          <span class="sb-link-icon" data-lucide="qr-code"></span>
+          <span>QR kod</span>
+          {% if plan == 'free' %}
+            <span class="sb-premium-lock" data-lucide="lock"></span>
+            <span class="sb-premium-badge sb-premium-badge--pro">PRO</span>
+          {% endif %}
         </a>
 
         {% url 'business:seo' as seo_url %}
         <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ seo_url }}{% endif %}"
-           class="sb-link {% if 'seo' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked{% endif %}"
-           title="{% trans 'SEO' %}">
-          <i class="bi bi-search-heart"></i><span>{% trans "SEO" %}</span>
-          {% if plan == 'free' %}<span class="premium-lock"><i class="bi bi-lock-fill"></i></span>
-          <span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>{% endif %}
+           class="sb-link {% if 'seo' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked-item{% endif %}"
+           data-tooltip="{% trans 'SEO' %}">
+          <span class="sb-link-icon" data-lucide="search"></span>
+          <span>SEO</span>
+          {% if plan == 'free' %}
+            <span class="sb-premium-lock" data-lucide="lock"></span>
+            <span class="sb-premium-badge sb-premium-badge--pro">PRO</span>
+          {% endif %}
         </a>
 
-        <!-- Max-only -->
-        {% url 'business:white_label' as wl_url %}
-        <a href="{% if plan != 'enterprise' %}javascript:void(0){% else %}{{ wl_url }}{% endif %}"
-           class="sb-link {% if 'white-label' in request.path and plan == 'enterprise' %}active{% endif %} {% if plan != 'enterprise' %}premium-locked{% endif %}"
-           title="{% trans 'White Label' %}">
-          <i class="bi bi-brush"></i><span>{% trans "White Label" %}</span>
-          {% if plan != 'enterprise' %}<span class="premium-lock"><i class="bi bi-stars"></i></span>{% elif business.white_label_enabled %}<span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>{% endif %}
-          <span class="premium-cta">{% trans "Max tarifni faollashtiring →" %}</span>
-        </a>
-        {% url 'business:api' as api_url %}
-        <a href="{% if plan != 'enterprise' %}javascript:void(0){% else %}{{ api_url }}{% endif %}"
-           class="sb-link {% if 'api/' in request.path and plan == 'enterprise' and 'appointments' not in request.path and 'services' not in request.path and 'employees' not in request.path %}active{% endif %} {% if plan != 'enterprise' %}premium-locked{% endif %}"
-           title="{% trans 'API & Webhook' %}">
-          <i class="bi bi-code-slash"></i><span>{% trans "API & Webhook" %}</span>
-          {% if plan != 'enterprise' %}<span class="premium-lock"><i class="bi bi-stars"></i></span>{% elif business.webhook_url %}<span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);margin-left:auto;"></span>{% endif %}
-          <span class="premium-cta">{% trans "Max tarifni faollashtiring →" %}</span>
-        </a>
+        <div class="sb-max-section" style="margin:4px 0;border-radius:var(--sb-radius);">
+          <div class="sb-premium-head" onclick="togglePremium(this)" data-tooltip="{% trans 'MAX xususiyatlar' %}">
+            <span class="sb-premium-head-star">⭐</span>
+            <span class="sb-premium-head-label">MAX</span>
+            <span class="sb-premium-head-arrow" data-arrow>▾</span>
+          </div>
+          <div class="sb-premium-body" data-body>
+            {% url 'business:api' as api_url %}
+            <a href="{% if plan != 'enterprise' %}javascript:void(0){% else %}{{ api_url }}{% endif %}"
+               class="sb-link {% if 'api/' in request.path and plan == 'enterprise' and 'appointments' not in request.path and 'services' not in request.path and 'employees' not in request.path %}active{% endif %} {% if plan != 'enterprise' %}premium-locked-item{% endif %}"
+               data-tooltip="{% trans 'API' %}">
+              <span class="sb-link-icon" data-lucide="code"></span>
+              <span>API</span>
+              {% if plan != 'enterprise' %}
+                <span class="sb-premium-lock" data-lucide="lock"></span>
+                <span class="sb-premium-badge sb-premium-badge--max">MAX</span>
+              {% elif user.business.webhook_url %}
+                <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);"></span>
+              {% endif %}
+            </a>
+            {% url 'business:white_label' as wl_url %}
+            <a href="{% if plan != 'enterprise' %}javascript:void(0){% else %}{{ wl_url }}{% endif %}"
+               class="sb-link {% if 'white-label' in request.path and plan == 'enterprise' %}active{% endif %} {% if plan != 'enterprise' %}premium-locked-item{% endif %}"
+               data-tooltip="{% trans 'White Label' %}">
+              <span class="sb-link-icon" data-lucide="brush"></span>
+              <span>White Label</span>
+              {% if plan != 'enterprise' %}
+                <span class="sb-premium-lock" data-lucide="lock"></span>
+                <span class="sb-premium-badge sb-premium-badge--max">MAX</span>
+              {% elif user.business.white_label_enabled %}
+                <span class="sb-link-dot" style="background:#22c55e;box-shadow:0 0 5px rgba(34,197,94,.6);"></span>
+              {% endif %}
+            </a>
+          </div>
+        </div>
 
-        {% endwith %}
-        {% else %}
-        <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'Analitika' %}">
-          <i class="bi bi-graph-up"></i><span>{% trans "Analitika" %}</span>
-          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>
-        </a>
-        <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'Telegram' %}">
-          <i class="bi bi-telegram"></i><span>{% trans "Telegram" %}</span>
-          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>
-        </a>
-        <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'Google Calendar' %}">
-          <i class="bi bi-calendar2-week"></i><span>{% trans "Google Calendar" %}</span>
-          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>
-        </a>
-        <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'Maxsus domen' %}">
-          <i class="bi bi-globe2"></i><span>{% trans "Maxsus domen" %}</span>
-          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>
-        </a>
-        <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'Sahifa dizayni' %}">
-          <i class="bi bi-palette"></i><span>{% trans "Sahifa dizayni" %}</span>
-          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>
-        </a>
-        <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'SEO' %}">
-          <i class="bi bi-search-heart"></i><span>{% trans "SEO" %}</span>
-          <span class="premium-lock"><i class="bi bi-lock-fill"></i></span><span class="premium-cta">{% trans "Pro tarifni faollashtiring →" %}</span>
-        </a>
-        <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'White Label' %}">
-          <i class="bi bi-brush"></i><span>{% trans "White Label" %}</span>
-          <span class="premium-lock"><i class="bi bi-stars"></i></span><span class="premium-cta">{% trans "Max tarifni faollashtiring →" %}</span>
-        </a>
-        <a href="javascript:void(0)" class="sb-link premium-locked" title="{% trans 'API & Webhook' %}">
-          <i class="bi bi-code-slash"></i><span>{% trans "API & Webhook" %}</span>
-          <span class="premium-lock"><i class="bi bi-stars"></i></span><span class="premium-cta">{% trans "Max tarifni faollashtiring →" %}</span>
-        </a>
-        {% endif %}
       </div>
     </div>
+    {% endwith %}
+    {% endif %}
 
-    <!-- 💳 HISOB -->
-    <div class="sb-group" data-group="hisob">
-      <div class="sb-group-head" onclick="toggleGroup('hisob')" data-head>
-        <span class="sb-group-head-label">💳 {% trans "Hisob" %}</span>
+    <!-- 📈 TAHLIL -->
+    <div class="sb-group" data-group="tahlil">
+      <div class="sb-group-head" onclick="toggleGroup('tahlil')" data-tooltip="{% trans 'Tahlil' %}">
+        <span class="sb-group-head-icon">📈</span>
+        <span class="sb-group-head-label">{% trans "Tahlil" %}</span>
         <span class="sb-group-head-arrow" data-arrow>▾</span>
       </div>
       <div class="sb-group-body" data-body>
-        <a href="{% url 'business:upgrade' %}" class="sb-link {% if 'upgrade' in request.path or 'payment' in request.path %}active{% endif %}" title="{% trans "Tarif va to'lov" %}">
-          <i class="bi bi-credit-card"></i><span>{% trans "Tarif va to'lov" %}</span>
+        {% if user.is_authenticated %}
+        {% with plan=user.business.subscription_plan %}
+        {% url 'business:analytics' as analytics_url %}
+        <a href="{% if plan == 'free' %}javascript:void(0){% else %}{{ analytics_url }}{% endif %}"
+           class="sb-link {% if 'analytics' in request.path and plan != 'free' %}active{% endif %} {% if plan == 'free' %}premium-locked-item{% endif %}"
+           data-tooltip="{% trans 'Analitika' %}">
+          <span class="sb-link-icon" data-lucide="bar-chart-3"></span>
+          <span>{% trans "Analitika" %}</span>
+          {% if plan == 'free' %}
+            <span class="sb-premium-lock" data-lucide="lock"></span>
+            <span class="sb-premium-badge sb-premium-badge--pro">PRO</span>
+          {% endif %}
+        </a>
+        {% endwith %}
+        {% endif %}
+        <a href="javascript:void(0)" class="sb-link" style="opacity:.35;cursor:default;" data-tooltip="{% trans 'Hisobotlar' %}">
+          <span class="sb-link-icon" data-lucide="file-text"></span>
+          <span>{% trans "Hisobotlar" %}</span>
+          <span class="sb-link-badge" style="background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);font-size:8px;">{% trans "TEZ KUN" %}</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ⚙️ HISOB -->
+    <div class="sb-group" data-group="hisob">
+      <div class="sb-group-head" onclick="toggleGroup('hisob')" data-tooltip="{% trans 'Hisob' %}">
+        <span class="sb-group-head-icon">⚙️</span>
+        <span class="sb-group-head-label">{% trans "Hisob" %}</span>
+        <span class="sb-group-head-arrow" data-arrow>▾</span>
+      </div>
+      <div class="sb-group-body" data-body>
+        <a href="{% url 'business:upgrade' %}" class="sb-link {% if 'upgrade' in request.path or 'payment' in request.path %}active{% endif %}" data-tooltip="{% trans "Tarif va to'lov" %}">
+          <span class="sb-link-icon" data-lucide="credit-card"></span>
+          <span>{% trans "Tarif va to'lov" %}</span>
+        </a>
+        <a href="{% url 'notifications:list' %}" class="sb-link {% if 'notifications' in request.path %}active{% endif %}" data-tooltip="{% trans 'Bildirishnomalar' %}">
+          <span class="sb-link-icon" data-lucide="bell"></span>
+          <span>{% trans "Bildirishnomalar" %}</span>
+          <span id="sb-notif-count" class="sb-link-badge" style="background:rgba(239,68,68,.15);color:#ef4444;display:none;"></span>
         </a>
       </div>
     </div>
 
   </nav>
 
-  <!-- User footer -->
+  <!-- Footer -->
   {% if user.is_authenticated %}
   <div class="sb-footer">
-    <div class="sb-footer-actions">
-      <button class="sb-collapse-btn" onclick="toggleCollapse()" title="{% trans "Yig'ish" %}" aria-label="{% trans "Yig'ish" %}">
-        <i class="bi bi-chevron-left"></i>
+
+    <!-- Plan card -->
+    <a class="sb-plan-card" href="{% url 'business:upgrade' %}" data-tooltip="{% trans "Tarifni yangilash" %}">
+      <div class="sb-plan-card-icon
+        {% if user.business.subscription_plan == 'growth' %}sb-plan-card-icon--pro
+        {% elif user.business.subscription_plan == 'enterprise' %}sb-plan-card-icon--max
+        {% else %}sb-plan-card-icon--free{% endif %}">
+        {% if user.business.subscription_plan == 'growth' %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        {% elif user.business.subscription_plan == 'enterprise' %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+        {% else %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+        {% endif %}
+      </div>
+      <div class="sb-plan-card-body">
+        <div class="sb-plan-card-name">
+          {% if user.business.subscription_plan == 'growth' %}Pro
+          {% elif user.business.subscription_plan == 'enterprise' %}Max
+          {% else %}{% trans "Bepul" %}{% endif %}
+        </div>
+        <div class="sb-plan-card-days">
+          {% if user.business.subscription_status == 'active' %}
+            {% trans "Faol" %}
+          {% elif user.business.subscription_status == 'trial' %}
+            {% trans "Sinov muddati" %}
+          {% else %}
+            {% trans "Yangilash" %}
+          {% endif %}
+        </div>
+        <div class="sb-plan-card-bar">
+          <div class="sb-plan-card-bar-fill
+            {% if user.business.subscription_plan == 'growth' %}sb-plan-card-bar-fill--pro
+            {% elif user.business.subscription_plan == 'enterprise' %}sb-plan-card-bar-fill--max
+            {% else %}sb-plan-card-bar-fill--free{% endif %}"
+            style="width:60%"></div>
+        </div>
+      </div>
+      <span class="sb-plan-card-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </span>
+    </a>
+
+    <!-- User -->
+    <div style="display:flex;align-items:center;gap:6px;">
+      <button class="ds-btn-icon sb-toggle-btn" onclick="toggleCollapse()" style="width:28px;height:28px;border-color:rgba(255,255,255,.08);color:rgba(255,255,255,.3);background:transparent;border-radius:6px;flex-shrink:0;" data-tooltip="{% trans "Yig'ish" %}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="sb-chevron-icon"><path d="m15 18-6-6 6-6"/></svg>
       </button>
       <div class="dropdown" style="flex:1;min-width:0;">
         <div class="sb-user" data-bs-toggle="dropdown">
           <div class="sb-avatar">{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}</div>
-          <div style="overflow:hidden;flex:1;min-width:0;">
-            <div class="sb-user-name">{{ user.get_full_name }}</div>
+          <div class="sb-user-info">
+            <div class="sb-user-name">{{ user.get_full_name|default:user.email }}</div>
             <div class="sb-user-email">{{ user.email }}</div>
           </div>
-          <i class="bi bi-chevron-expand" style="color:rgba(255,255,255,.2);font-size:10px;flex-shrink:0;"></i>
+          <span class="sb-user-chevron">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </span>
         </div>
         <ul class="dropdown-menu dropdown-menu-end" style="min-width:190px;margin-bottom:4px;">
-          <li><a class="dropdown-item" href="{% url 'business:setup' %}"><i class="bi bi-gear me-2" style="color:var(--text-4);"></i>{% trans "Sozlamalar" %}</a></li>
-          <li><a class="dropdown-item" href="{% url 'business:upgrade' %}"><i class="bi bi-credit-card me-2" style="color:var(--text-4);"></i>{% trans "Tarif va to'lov" %}</a></li>
+          <li><a class="dropdown-item" href="{% url 'business:setup' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-4);flex-shrink:0;"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            {% trans "Sozlamalar" %}</a></li>
+          <li><a class="dropdown-item" href="{% url 'business:upgrade' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-4);flex-shrink:0;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+            {% trans "Tarif va to'lov" %}</a></li>
           <li><hr class="dropdown-divider"></li>
           <li>
             <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
-              <i class="bi bi-box-arrow-right me-2"></i>{% trans "Chiqish" %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              {% trans "Chiqish" %}
             </a>
           </li>
         </ul>
@@ -1522,7 +1711,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   <header class="ds-topbar">
     <div class="ds-topbar-left">
       <button class="ds-btn-icon d-lg-none" onclick="sbOpen()" style="border:none;background:none;" aria-label="{% trans 'Menyu' %}">
-        <i class="bi bi-list" style="font-size:17px;"></i>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
       </button>
       <span class="ds-topbar-title">{% block page_title %}{% trans "Boshqaruv paneli" %}{% endblock %}</span>
     </div>
@@ -1530,13 +1719,14 @@ textarea.form-control { resize: vertical; min-height: 80px; }
     <div class="ds-topbar-right">
       <!-- New appointment -->
       <a href="{% url 'appointments:create' %}" class="btn btn-primary btn-sm d-none d-md-inline-flex" style="height:32px;font-size:12.5px;">
-        <i class="bi bi-plus-lg"></i> {% trans "Yangi qabul" %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        {% trans "Yangi qabul" %}
       </a>
 
       <!-- Notifications -->
       <div class="notif-dropdown" id="notifDropdown">
         <button class="ds-btn-icon" id="notifToggle" aria-label="{% trans 'Bildirishnomalar' %}">
-          <i class="bi bi-bell"></i>
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
           <span class="notif-dot" id="notif-dot"></span>
         </button>
         <div class="notif-menu" id="notifMenu">
@@ -1548,10 +1738,14 @@ textarea.form-control { resize: vertical; min-height: 80px; }
             </form>
           </div>
           <div class="notif-menu-body" id="notifBody">
-            <div class="notif-loading">{% trans "Yuklanmoqda..." %}</div>
+            <div class="notif-loading">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 6px;opacity:.5;"><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg>
+              {% trans "Yuklanmoqda..." %}
+            </div>
           </div>
           <a href="{% url 'notifications:list' %}" class="notif-menu-foot">
-            {% trans "Barcha bildirishnomalar" %} <i class="bi bi-arrow-right ms-1"></i>
+            {% trans "Barcha bildirishnomalar" %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
         </div>
       </div>
@@ -1559,7 +1753,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
       <!-- Public page -->
       {% if user.is_authenticated %}
       <a href="/{{ user.business.slug }}/" target="_blank" class="ds-btn-icon" title="{% trans "Ommaviy sahifani ko'rish" %}">
-        <i class="bi bi-arrow-up-right-square" style="font-size:13px;"></i>
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
       </a>
       {% endif %}
 
@@ -1578,10 +1772,15 @@ textarea.form-control { resize: vertical; min-height: 80px; }
     <!-- Flash messages -->
     {% for msg in messages %}
     <div class="ds-alert {% if msg.tags == 'success' %}success{% elif msg.tags == 'error' or msg.tags == 'danger' %}danger{% elif msg.tags == 'warning' %}warning{% else %}info{% endif %} mb-3">
-      {% if msg.tags == 'success' %}<i class="bi bi-check-circle-fill"></i>
-      {% elif msg.tags == 'error' or msg.tags == 'danger' %}<i class="bi bi-x-circle-fill"></i>
-      {% elif msg.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill"></i>
-      {% else %}<i class="bi bi-info-circle-fill"></i>{% endif %}
+      {% if msg.tags == 'success' %}
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      {% elif msg.tags == 'error' or msg.tags == 'danger' %}
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      {% elif msg.tags == 'warning' %}
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      {% else %}
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      {% endif %}
       <span>{{ msg }}</span>
       <button class="ds-alert-close" onclick="this.parentElement.remove()">×</button>
     </div>
@@ -1593,7 +1792,15 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 </div>
 </div><!-- /.ds-layout -->
 
+<script src="https://unpkg.com/lucide@latest"></script>
 <script>
+// ── Lucide Icons ──────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+});
+
 // ── Sidebar ──────────────────────────
 function sbOpen() {
   document.getElementById('ds-sidebar').classList.add('open');
@@ -1642,11 +1849,11 @@ document.addEventListener('click', function(e) {
 
 async function loadNotif() {
   try {
-    notifBody.innerHTML = `<div class="notif-loading"><i class="bi bi-hourglass-split d-block mb-1"></i>{% trans "Yuklanmoqda..." %}</div>`;
+    notifBody.innerHTML = `<div class="notif-loading"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 6px;opacity:.5;"><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg>{% trans "Yuklanmoqda..." %}</div>`;
     const r = await fetch('{% url "notifications:popup" %}');
     const d = await r.json();
     if (!d.notifications.length) {
-      notifBody.innerHTML = `<div class="notif-empty"><i class="bi bi-bell-slash"></i>{% trans "Bildirishnomalar yo'q" %}</div>`;
+      notifBody.innerHTML = `<div class="notif-empty"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>{% trans "Bildirishnomalar yo'q" %}</div>`;
       return;
     }
     let html = '';
@@ -1689,6 +1896,7 @@ function toggleCollapse() {
   const sb = document.getElementById('ds-sidebar');
   const collapsed = sb.classList.toggle('collapsed');
   localStorage.setItem('sidebarCollapsed', collapsed);
+  setTimeout(function() { if (typeof lucide !== 'undefined') lucide.createIcons(); }, 50);
 }
 
 const savedCollapse = localStorage.getItem('sidebarCollapsed');
@@ -1723,10 +1931,37 @@ function initGroups() {
   });
 }
 
-// Auto-open groups on load
-document.addEventListener('DOMContentLoaded', initGroups);
+// ── Premium section toggles ────────────
+function togglePremium(head) {
+  const section = head.closest('.sb-premium-section, .sb-max-section');
+  if (!section) return;
+  const body = section.querySelector('[data-body]');
+  const arrow = section.querySelector('[data-arrow]');
+  if (!body || !arrow) return;
+  const open = body.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
 
-// AJAX mark-all-read
+// ── Auto-open premium sections ─────────
+function initPremium() {
+  document.querySelectorAll('.sb-premium-section, .sb-max-section').forEach(function(section) {
+    const body = section.querySelector('[data-body]');
+    const arrow = section.querySelector('[data-arrow]');
+    if (!body) return;
+    const hasActive = !!section.querySelector('.sb-link.active');
+    if (hasActive) {
+      body.classList.add('open');
+      if (arrow) arrow.classList.add('open');
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  initGroups();
+  initPremium();
+});
+
+// ── AJAX mark-all-read ─────────────────
 document.addEventListener('submit', function(e) {
   if (e.target.id === 'markAllForm') {
     e.preventDefault();
@@ -1734,5 +1969,20 @@ document.addEventListener('submit', function(e) {
       .then(r => r.json()).then(d => { if (d.ok) { pollNotif(); loadNotif(); } });
   }
 });
+
+// ── Re-init Lucide after dynamic content ──
+let lucideTimeout;
+const sbObs = document.getElementById('ds-sidebar');
+const mainObs = document.querySelector('.ds-main');
+if (sbObs && typeof MutationObserver !== 'undefined') {
+  const observer = new MutationObserver(function() {
+    clearTimeout(lucideTimeout);
+    lucideTimeout = setTimeout(function() {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }, 200);
+  });
+  observer.observe(sbObs, { childList: true, subtree: true });
+  if (mainObs) observer.observe(mainObs, { childList: true, subtree: true });
+}
 </script>
 {% endblock %}
