@@ -443,6 +443,11 @@ class SiteSettings(models.Model):
         null=True, blank=True,
         help_text='Sayt logotipi (yorug\'/light rejim uchun). Bo\'sh qoldirilsa, dark logo ishlatiladi.',
     )
+    favicon = models.ImageField(
+        upload_to='site_logos/',
+        null=True, blank=True,
+        help_text='Sayt favikoni (32x32 yoki 64x64 .png, .ico, .svg)',
+    )
     # ─── Global SEO ────────────────────────────────────────────────────────────
     default_meta_description = models.CharField(
         max_length=160, blank=True,

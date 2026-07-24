@@ -1,4 +1,6 @@
-from django.shortcuts import render
+import requests
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.db import models
 from django.db.models import Count
 from django.conf import settings
@@ -205,6 +207,35 @@ def faq(request):
     return render(request, 'marketing/faq.html', ctx)
 
 def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        message = request.POST.get('message', '').strip()
+
+        bot_token = settings.SUPERADMIN_BOT_TOKEN
+        chat_ids = settings.SUPERADMIN_CHAT_IDS
+
+        if bot_token and chat_ids:
+            text = f"📩 <b>Yangi xabar (Marketing)</b>\n\n👤 <b>Ism:</b> {name}\n📞 <b>Telefon:</b> {phone}\n💬 <b>Xabar:</b>\n{message}"
+            for chat_id in chat_ids.split(','):
+                chat_id = chat_id.strip()
+                if chat_id:
+                    try:
+                        requests.post(
+                            f"https://api.telegram.org/bot{bot_token}/sendMessage",
+                            json={
+                                "chat_id": chat_id,
+                                "text": text,
+                                "parse_mode": "HTML"
+                            },
+                            timeout=5
+                        )
+                    except Exception:
+                        pass
+        
+        messages.success(request, "Xabaringiz muvaffaqiyatli yuborildi. Tez orada siz bilan bog'lanamiz!")
+        return redirect('marketing:contact')
+
     ctx = _context(request)
     ctx.update(_marketing_seo(request, f"Aloqa — BookFlow", ctx['m']['contact']['subtitle']))
     return render(request, 'marketing/contact.html', ctx)

@@ -346,7 +346,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     list_display = ('hero_title', 'contact_phone', 'contact_email', 'updated_at')
     fieldsets = (
         ('Marketing', {
-            'fields': ('hero_title', 'hero_subtitle', 'marketing_content', 'logo')
+            'fields': ('hero_title', 'hero_subtitle', 'marketing_content', 'logo', 'logo_light', 'favicon')
         }),
         ('Narxlar', {
             'fields': (

@@ -213,8 +213,14 @@
     <div class="auth-card-inner">
       <div class="text-center mb-3">
         <a href="/" class="auth-logo">
-          <svg width="30" height="30" viewBox="0 0 100 100" fill="none"><rect x="10" y="20" width="80" height="65" rx="12" stroke="#818cf8" stroke-width="6" fill="rgba(129,140,248,.1)"/><path d="M30 38L45 53L70 28" stroke="#818cf8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="30" y="12" width="8" height="12" rx="3" fill="#6366f1"/><rect x="62" y="12" width="8" height="12" rx="3" fill="#6366f1"/></svg>
-          BookFlow
+          {% if site_settings and site_settings.logo_light %}
+            <img src="{{ site_settings.logo_light.url }}" alt="BookFlow" style="max-height: 30px;">
+          {% elif site_settings and site_settings.logo %}
+            <img src="{{ site_settings.logo.url }}" alt="BookFlow" style="max-height: 30px;">
+          {% else %}
+            <svg width="30" height="30" viewBox="0 0 100 100" fill="none"><rect x="10" y="20" width="80" height="65" rx="12" stroke="#818cf8" stroke-width="6" fill="rgba(129,140,248,.1)"/><path d="M30 38L45 53L70 28" stroke="#818cf8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="30" y="12" width="8" height="12" rx="3" fill="#6366f1"/><rect x="62" y="12" width="8" height="12" rx="3" fill="#6366f1"/></svg>
+            BookFlow
+          {% endif %}
         </a>
         <h5 class="auth-title">Hisob yaratish</h5>
         <p class="auth-subtitle">Bir necha daqiqada bepul booking sahifangizni yarating</p>

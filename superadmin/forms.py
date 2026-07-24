@@ -11,7 +11,7 @@ class SiteSettingsForm(forms.ModelForm):
             'growth_price_monthly', 'growth_price_yearly',
             'enterprise_price_monthly', 'enterprise_price_yearly',
             'stats_uptime', 'stats_appointments', 'stats_businesses',
-            'logo', 'logo_light', 'contact_phone', 'contact_email', 'contact_telegram',
+            'logo', 'logo_light', 'favicon', 'contact_phone', 'contact_email', 'contact_telegram',
             'payment_card_number', 'payment_card_holder',
             'default_meta_description', 'default_og_image',
             'google_site_verification', 'yandex_verification',
@@ -58,6 +58,9 @@ class SiteSettingsForm(forms.ModelForm):
             'logo_light': forms.FileInput(attrs={
                 'class': 'form-control',
             }),
+            'favicon': forms.FileInput(attrs={
+                'class': 'form-control',
+            }),
             'contact_phone': forms.TextInput(attrs={
                 'class': 'form-control', 'placeholder': '+998 90 123 45 67',
             }),
@@ -99,6 +102,7 @@ class SiteSettingsForm(forms.ModelForm):
             'stats_businesses': 'Faol Bizneslar',
             'logo': 'Sayt Logotipi (Dark rejim)',
             'logo_light': 'Sayt Logotipi (Light rejim)',
+            'favicon': 'Favicon (Sayt belgisi)',
             'contact_phone': 'Aloqa Telefon Raqami',
             'contact_email': 'Aloqa Email Manzili',
             'contact_telegram': 'Telegram Havolasi',
