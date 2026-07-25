@@ -424,7 +424,10 @@ def payment_view(request):
         return redirect('business:setup')
 
     plan_id = request.GET.get('plan') or request.POST.get('plan')
-    
+    duration = request.GET.get('duration', '3months') or request.POST.get('duration', '3months')
+    if duration not in ('3months', 'yearly'):
+        duration = '3months'
+
     from superadmin.models import PricingPlan
     plan = PricingPlan.objects.filter(slug=plan_id).first()
     if not plan or plan.slug == 'free':
@@ -433,18 +436,33 @@ def payment_view(request):
 
     site = SiteSettings.load()
     plan_name = plan.name
-    amount = plan.price_monthly
+    # Duration bo'yicha narx
+    if duration == 'yearly':
+        amount = plan.price_yearly
+        duration_label = '1 yillik (365 kun)'
+    else:
+        amount = plan.price_3months
+        duration_label = '3 oylik (90 kun)'
 
     if request.method == 'POST':
         receipt = request.FILES.get('receipt')
         note = request.POST.get('note', '')
+        post_duration = request.POST.get('duration', duration)
+        if post_duration not in ('3months', 'yearly'):
+            post_duration = '3months'
         if not receipt:
             messages.error(request, _('Chek rasmini yuklang.'))
         else:
+            # POST dan qayta narx hisoblash
+            if post_duration == 'yearly':
+                pay_amount = plan.price_yearly
+            else:
+                pay_amount = plan.price_3months
             Payment.objects.create(
                 business=business,
                 plan=plan_id,
-                amount=amount,
+                duration=post_duration,
+                amount=pay_amount,
                 receipt=receipt,
                 note=note,
             )
@@ -455,6 +473,8 @@ def payment_view(request):
         'business': business,
         'plan_name': plan_name,
         'plan_id': plan_id,
+        'duration': duration,
+        'duration_label': duration_label,
         'amount': amount,
         'card_number': site.payment_card_number,
         'card_holder': site.payment_card_holder,

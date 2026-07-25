@@ -124,8 +124,16 @@ def _plans(site, copy, lang):
         result.append({
             'id': p.slug,
             'name': p.name,
-            'price': _money(p.price_monthly),
-            'yearly_price': _money(p.price_yearly) if p.price_yearly else None,
+            # Yangi tizim: 3 oylik va 1 yillik narxlar
+            'price_3months': p.price_3months,
+            'price_yearly': p.price_yearly,
+            'price_3months_display': _money(p.price_3months),
+            'price_yearly_display': _money(p.price_yearly) if p.price_yearly else None,
+            'saving_3months_display': _money(p.saving_3months) if p.saving_3months > 0 else None,
+            'saving_yearly_display': _money(p.saving_yearly) if p.saving_yearly > 0 else None,
+            'yearly_badge': p.effective_yearly_badge,
+            # Eski maydon (backward compat)
+            'price': _money(p.price_3months or p.price_monthly),
             'period': copy['pricing']['monthly'],
             'yearly_label': copy['pricing']['yearly'],
             'featured': p.is_popular,

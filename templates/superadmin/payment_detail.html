@@ -47,6 +47,16 @@
             <div><span class="badge {% if payment.plan == 'pro' %}bg-primary{% else %}bg-dark{% endif %} fs-6">{{ payment.get_plan_display }}</span></div>
           </div>
           <div class="col-md-4">
+            <div class="text-muted small fw-semibold mb-1">{% trans "Davomiylik" %}</div>
+            <div>
+              {% if payment.duration == 'yearly' %}
+                <span class="badge bg-success">🎯 1 yillik (365 kun)</span>
+              {% else %}
+                <span class="badge bg-info text-dark">📅 3 oylik (90 kun)</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-4">
             <div class="text-muted small fw-semibold mb-1">{% trans "Summa" %}</div>
             <div class="fw-bold fs-5">{{ payment.amount|floatformat:0 }} UZS</div>
           </div>
@@ -78,8 +88,12 @@
           {% csrf_token %}
           <div class="alert alert-info">
             <i class="bi bi-info-circle me-1"></i>
-            {% blocktrans with plan=payment.get_plan_display %}<strong>{{ plan }}</strong> tarifi <strong>30 kun</strong> ga faollashtiriladi.
-            Biznes egasiga tarif tasdiqlangani haqida xabar beriladi.{% endblocktrans %}
+            {% if payment.duration == 'yearly' %}
+              <strong>{{ payment.get_plan_display }}</strong> tarifi <strong>1 yillik (365 kun)</strong> ga faollashtiriladi.
+            {% else %}
+              <strong>{{ payment.get_plan_display }}</strong> tarifi <strong>3 oylik (90 kun)</strong> ga faollashtiriladi.
+            {% endif %}
+            Biznes egasiga tarif tasdiqlangani haqida xabar beriladi.
           </div>
           <div class="d-flex gap-2">
             <button type="submit" name="action" value="approve" class="btn btn-success px-4">

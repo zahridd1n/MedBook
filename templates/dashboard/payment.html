@@ -34,7 +34,9 @@
         </div>
         <div class="d-flex align-items-center justify-content-between py-2" style="border-bottom:1px solid rgba(255,255,255,.07);">
           <span style="color:rgba(255,255,255,.6);font-size:13px;">{% trans "Davomiylik" %}</span>
-          <span style="color:#fff;font-weight:600;">{% trans "30 kun (1 oy)" %}</span>
+          <span style="color:#fff;font-weight:600;">
+            {% if duration == 'yearly' %}🎯 {% trans "1 yillik (365 kun)" %}{% else %}📅 {% trans "3 oylik (90 kun)" %}{% endif %}
+          </span>
         </div>
         <div class="d-flex align-items-center justify-content-between pt-3">
           <span style="color:rgba(255,255,255,.9);font-size:14px;font-weight:600;">{% trans "Jami to'lov" %}</span>
@@ -81,6 +83,7 @@
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <input type="hidden" name="plan" value="{{ plan_id }}">
+          <input type="hidden" name="duration" value="{{ duration }}">
           <div class="mb-3">
             <label class="form-label" style="font-size:13px;font-weight:500;">
               {% trans "Chek rasmi" %} <span style="color:#ef4444;">*</span>

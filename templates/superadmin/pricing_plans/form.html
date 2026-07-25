@@ -32,14 +32,63 @@
                             <label class="form-label fw-medium">{% trans "Ta'rif (Description)" %}</label>
                             {{ form.description }}
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-medium">{% trans "Oylik Narx (UZS)" %}</label>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold mb-1">{% trans "Oylik asosiy narx (UZS)" %}</label>
                             {{ form.price_monthly }}
+                            <div class="form-text text-muted">{% trans "Barcha narxlar mana shu asosiy narxdan hisoblanadi." %}</div>
+                        </div>
+
+                        <!-- Discount fields + live preview -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">
+                                {% trans "3 oylik chegirma" %} <span class="text-muted">(%)</span>
+                            </label>
+                            {{ form.discount_3months }}
+                            <div class="form-text text-success" id="preview3months">
+                                <!-- JS to'ldiradi -->
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-medium">{% trans "Yillik Narx (UZS)" %}</label>
-                            {{ form.price_yearly }}
+                            <label class="form-label fw-medium">
+                                {% trans "1 yillik chegirma" %} <span class="text-muted">(%)</span>
+                            </label>
+                            {{ form.discount_yearly }}
+                            <div class="form-text text-primary" id="previewYearly">
+                                <!-- JS to'ldiradi -->
+                            </div>
                         </div>
+                        <div class="col-12">
+                            <label class="form-label fw-medium">{% trans "Yillik badge matni (ixtiyoriy)" %}</label>
+                            {{ form.yearly_badge }}
+                            <div class="form-text">{% trans "Bo'sh qolsa chegirma % dan avtomatik: '🎁 20% tejaysiz'" %}</div>
+                        </div>
+
+                        <!-- Live price preview card -->
+                        <div class="col-12">
+                            <div class="rounded-3 p-3" style="background:#f8fafc;border:1.5px dashed #cbd5e1;">
+                                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#94a3b8;margin-bottom:10px;">
+                                    📊 {% trans "Hisoblangan narxlar (real-time)" %}
+                                </div>
+                                <div class="row g-3 text-center">
+                                    <div class="col-4">
+                                        <div style="font-size:11px;color:#64748b;margin-bottom:4px;">{% trans "1 oylik" %}</div>
+                                        <div id="calc1month" style="font-size:18px;font-weight:700;color:#0f172a;">—</div>
+                                        <div style="font-size:10px;color:#94a3b8;">UZS</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div style="font-size:11px;color:#64748b;margin-bottom:4px;">📅 {% trans "3 oylik" %}</div>
+                                        <div id="calc3month" style="font-size:18px;font-weight:700;color:#059669;">—</div>
+                                        <div style="font-size:10px;color:#94a3b8;">UZS <span id="save3" class="text-success"></span></div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div style="font-size:11px;color:#64748b;margin-bottom:4px;">🎯 {% trans "1 yillik" %}</div>
+                                        <div id="calcYearly" style="font-size:18px;font-weight:700;color:#6366f1;">—</div>
+                                        <div style="font-size:10px;color:#94a3b8;">UZS <span id="saveYearly" class="text-primary"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-md-4">
                             <label class="form-label fw-medium">{% trans "Xodimlar limiti" %}</label>
                             {{ form.max_employees }}
@@ -157,32 +206,74 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
+    // ─── Feature qo'shish ───────────────────────────────────────────────────
     const addButton = document.getElementById('add-feature-btn');
     const tableBody = document.querySelector('#features-table tbody');
     const totalFormsInput = document.querySelector('#id_features-TOTAL_FORMS');
-    
+
     addButton.addEventListener('click', function() {
         const formCount = parseInt(totalFormsInput.value);
         const rows = tableBody.querySelectorAll('.feature-form-row');
         if (rows.length === 0) return;
-        
         const emptyRow = rows[rows.length - 1].cloneNode(true);
-        
-        // Update input names and ids
         const regex = new RegExp(`features-(\\d+)-`, 'g');
         emptyRow.innerHTML = emptyRow.innerHTML.replace(regex, `features-${formCount}-`);
-        
-        // Clear inputs
         emptyRow.querySelectorAll('input:not([type=checkbox])').forEach(input => input.value = '');
         emptyRow.querySelectorAll('input[type=checkbox]').forEach(input => input.checked = true);
-        
-        // Set order incrementally
         const orderInput = emptyRow.querySelector(`input[name="features-${formCount}-order"]`);
         if(orderInput) orderInput.value = formCount + 1;
-
         tableBody.appendChild(emptyRow);
         totalFormsInput.value = formCount + 1;
     });
+
+    // ─── Live narx kalkulyatori ─────────────────────────────────────────────
+    const priceInput    = document.getElementById('id_price_monthly');
+    const disc3Input    = document.getElementById('id_discount_3months');
+    const discYInput    = document.getElementById('id_discount_yearly');
+
+    function fmt(n) {
+        return n.toLocaleString('ru-RU');  // 99 000 formatida
+    }
+
+    function calcPrices() {
+        const monthly = parseInt(priceInput.value) || 0;
+        const d3 = Math.min(100, Math.max(0, parseInt(disc3Input.value) || 0));
+        const dy = Math.min(100, Math.max(0, parseInt(discYInput.value) || 0));
+
+        const base3 = monthly * 3;
+        const baseY = monthly * 12;
+        const price3 = Math.round(base3 * (1 - d3 / 100));
+        const priceY = Math.round(baseY * (1 - dy / 100));
+        const save3  = base3 - price3;
+        const saveY  = baseY - priceY;
+
+        // 1 oylik
+        document.getElementById('calc1month').textContent = monthly ? fmt(monthly) : '—';
+
+        // 3 oylik
+        document.getElementById('calc3month').textContent = monthly ? fmt(price3) : '—';
+        document.getElementById('save3').textContent = save3 > 0 ? `(-${fmt(save3)} tejalsiz)` : '';
+        document.getElementById('preview3months').textContent =
+            monthly && d3 > 0
+                ? `3 × ${fmt(monthly)} = ${fmt(base3)} → chegirma: ${d3}% → 💰 ${fmt(price3)} UZS`
+                : monthly ? `3 × ${fmt(monthly)} = ${fmt(base3)} UZS (chegirmasiz)` : '';
+
+        // 1 yillik
+        document.getElementById('calcYearly').textContent = monthly ? fmt(priceY) : '—';
+        document.getElementById('saveYearly').textContent = saveY > 0 ? `(-${fmt(saveY)} tejalsiz)` : '';
+        document.getElementById('previewYearly').textContent =
+            monthly && dy > 0
+                ? `12 × ${fmt(monthly)} = ${fmt(baseY)} → chegirma: ${dy}% → 💰 ${fmt(priceY)} UZS`
+                : monthly ? `12 × ${fmt(monthly)} = ${fmt(baseY)} UZS (chegirmasiz)` : '';
+    }
+
+    priceInput && priceInput.addEventListener('input', calcPrices);
+    disc3Input && disc3Input.addEventListener('input', calcPrices);
+    discYInput && discYInput.addEventListener('input', calcPrices);
+
+    // Sahifa yuklanganda bir marta ishga tushir
+    calcPrices();
 });
 </script>
 {% endblock %}

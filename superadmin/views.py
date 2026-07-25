@@ -404,12 +404,15 @@ def payment_detail(request, pk):
             business.subscription_plan = 'growth' if payment.plan == 'pro' else 'enterprise'
             business.subscription_status = 'active'
             business.subscription_start = timezone.now()
-            business.subscription_end = timezone.now() + timedelta(days=30)
+            # Duration bo'yicha obuna muddati
+            duration_days = 365 if payment.duration == 'yearly' else 90
+            business.subscription_end = timezone.now() + timedelta(days=duration_days)
             business.save(update_fields=[
                 'subscription_plan', 'subscription_status',
                 'subscription_start', 'subscription_end',
             ])
-            messages.success(request, _(f'"{business.name}" to\'lovi tasdiqlandi — {payment.get_plan_display()} faollashtirildi.'))
+            duration_label = "1 yillik" if payment.duration == 'yearly' else "3 oylik"
+            messages.success(request, _(f'"{business.name}" to\'lovi tasdiqlandi — {payment.get_plan_display()} ({duration_label}) faollashtirildi.'))
         elif action == 'reject':
             reason = request.POST.get('rejected_reason', '').strip()
             payment.status = 'rejected'

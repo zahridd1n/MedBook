@@ -389,8 +389,17 @@ class Payment(models.Model):
         ('rejected', 'Bekor qilingan'),
     ]
 
+    DURATION_CHOICES = [
+        ('3months', '3 oylik (90 kun)'),
+        ('yearly',  '1 yillik (365 kun)'),
+    ]
+
     business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='payments')
     plan = models.CharField(max_length=20, choices=PAYMENT_PLAN_CHOICES)
+    duration = models.CharField(
+        max_length=20, choices=DURATION_CHOICES, default='3months',
+        help_text="Obuna davomiyligi: 3 oylik yoki 1 yillik",
+    )
     amount = models.PositiveIntegerField(help_text='To\'lov summasi (UZS)')
     receipt = models.FileField(upload_to='payments/receipts/', help_text='Chek rasmi')
     note = models.TextField(blank=True, help_text='Foydalanuvchi izohi')

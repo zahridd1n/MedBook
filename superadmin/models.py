@@ -528,14 +528,30 @@ class PricingPlan(models.Model):
     name = models.CharField(max_length=50, help_text="Tarif nomi (masalan: Start, Pro, Max)")
     slug = models.SlugField(max_length=20, unique=True, help_text="Sistemadagi ID (masalan: free, growth, enterprise)")
     description = models.CharField(max_length=200, blank=True, help_text="Qisqacha ta'rif")
-    
-    price_monthly = models.PositiveIntegerField(default=0, help_text="Oylik to'lov summasi (UZS)")
-    price_yearly = models.PositiveIntegerField(default=0, help_text="Yillik to'lovda bir oy uchun summa (UZS)")
-    
+
+    # ─── Narxlar ──────────────────────────────────────────────────────────────
+    price_monthly = models.PositiveIntegerField(
+        default=0,
+        help_text="Asosiy oylik narx (UZS). Masalan: 99 000"
+    )
+    discount_3months = models.PositiveIntegerField(
+        default=0,
+        help_text="3 oylik chegirma foizi (0–100%). Masalan: 10 → 10% chegirma"
+    )
+    discount_yearly = models.PositiveIntegerField(
+        default=0,
+        help_text="1 yillik chegirma foizi (0–100%). Masalan: 20 → 20% chegirma"
+    )
+    yearly_badge = models.CharField(
+        max_length=50, blank=True, default='',
+        help_text="Yillik tanlanganda badge matni. Bo'sh qolsa chegirma % dan avtomatik to'ldiriladi. Masalan: '🎁 2 oy bepul'",
+    )
+    # ──────────────────────────────────────────────────────────────────────────
+
     # Biznes mantiq cheklovlari
     max_employees = models.IntegerField(null=True, blank=True, help_text="Maksimal xodimlar soni (Bo'sh bo'lsa cheksiz)")
     max_appointments_monthly = models.IntegerField(null=True, blank=True, help_text="Oylik maksimal bandlovlar (Bo'sh bo'lsa cheksiz)")
-    
+
     allow_telegram = models.BooleanField(default=False, help_text="Telegram xabarnomalar va bot")
     allow_email = models.BooleanField(default=True, help_text="Email xabarnomalar")
     allow_custom_domain = models.BooleanField(default=False, help_text="Shaxsiy domen ulash imkoniyati")
@@ -545,7 +561,7 @@ class PricingPlan(models.Model):
     allow_api = models.BooleanField(default=False, help_text="API va Webhooklar")
     allow_white_label = models.BooleanField(default=False, help_text="White Label (BookFlow brendini yashirish)")
     allow_advanced_seo = models.BooleanField(default=False, help_text="Advanced SEO (sitemap, schema.org, JSON-LD, OG teglar)")
-    
+
     is_active = models.BooleanField(default=True, help_text="Aktiv tarif (Saytda ko'rinadi)")
     is_popular = models.BooleanField(default=False, help_text="Tavsiya etiladigan tarif belgisi (Mashhur)")
     order = models.PositiveIntegerField(default=0, help_text="Tartib raqami (kichigi oldin chiqadi)")
@@ -556,7 +572,44 @@ class PricingPlan(models.Model):
         verbose_name_plural = "Pricing Plans"
 
     def __str__(self):
-        return f"{self.name} ({self.price_monthly} UZS)"
+        return f"{self.name} ({self.price_monthly:,} UZS/oy)".replace(',', ' ')
+
+    # ─── Hisoblangan narxlar (DB da saqlanmaydi) ─────────────────────────────
+
+    @property
+    def price_3months(self):
+        """3 oylik umumiy to'lov = oylik × 3, chegirma ayirib."""
+        base = self.price_monthly * 3
+        if self.discount_3months:
+            return round(base * (1 - self.discount_3months / 100))
+        return base
+
+    @property
+    def price_yearly(self):
+        """Yillik umumiy to'lov = oylik × 12, chegirma ayirib."""
+        base = self.price_monthly * 12
+        if self.discount_yearly:
+            return round(base * (1 - self.discount_yearly / 100))
+        return base
+
+    @property
+    def saving_3months(self):
+        """3 oylikda tejash summasi."""
+        return (self.price_monthly * 3) - self.price_3months
+
+    @property
+    def saving_yearly(self):
+        """Yillikda tejash summasi."""
+        return (self.price_monthly * 12) - self.price_yearly
+
+    @property
+    def effective_yearly_badge(self):
+        """Badge matni: belgilangan bo'lsa uni qaytaradi, aks holda chegirmadan avtomatik."""
+        if self.yearly_badge:
+            return self.yearly_badge
+        if self.discount_yearly:
+            return f"🎁 {self.discount_yearly}% tejaysiz"
+        return ''
 
     @property
     def price_label(self):

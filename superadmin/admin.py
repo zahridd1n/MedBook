@@ -388,7 +388,13 @@ class PricingPlanAdmin(admin.ModelAdmin):
             'fields': ('name', 'slug', 'description', 'order')
         }),
         ('Narxlar', {
-            'fields': ('price_monthly', 'price_yearly'),
+            'fields': ('price_monthly', 'discount_3months', 'discount_yearly', 'yearly_badge'),
+            'description': (
+                'price_monthly = asosiy oylik narx (UZS) | '
+                'discount_3months = 3 oylik chegirma % | '
+                'discount_yearly = yillik chegirma % | '
+                'yearly_badge = badge (bo\'sh qolsa avtomatik)'
+            ),
         }),
         ('Cheklovlar', {
             'fields': ('max_employees', 'max_appointments_monthly'),

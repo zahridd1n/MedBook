@@ -126,8 +126,25 @@ class PricingPlanForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'slug': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.TextInput(attrs={'class': 'form-control'}),
-            'price_monthly': forms.NumberInput(attrs={'class': 'form-control'}),
-            'price_yearly': forms.NumberInput(attrs={'class': 'form-control'}),
+            'price_monthly': forms.NumberInput(attrs={
+                'class': 'form-control form-control-lg fw-bold',
+                'placeholder': '99000',
+                'min': '0',
+            }),
+            'discount_3months': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '0',
+                'min': '0', 'max': '100',
+            }),
+            'discount_yearly': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '0',
+                'min': '0', 'max': '100',
+            }),
+            'yearly_badge': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': "Bo'sh qolsa avtomatik (masalan: '🎁 20% tejaysiz')",
+            }),
             'max_employees': forms.NumberInput(attrs={'class': 'form-control'}),
             'max_appointments_monthly': forms.NumberInput(attrs={'class': 'form-control'}),
             'order': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -142,6 +159,12 @@ class PricingPlanForm(forms.ModelForm):
             'allow_advanced_seo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_popular': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'price_monthly': "Oylik narx (UZS)",
+            'discount_3months': "3 oylik chegirma (%)",
+            'discount_yearly': "1 yillik chegirma (%)",
+            'yearly_badge': "Yillik badge (ixtiyoriy)",
         }
 
 

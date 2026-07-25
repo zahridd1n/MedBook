@@ -15,18 +15,64 @@
 
 <section class="mkt-section" style="padding-top:2rem">
   <div class="mkt-container">
+
+    <!-- Duration Toggle -->
+    <div style="display:flex;justify-content:center;margin-bottom:2.5rem;">
+      <div style="display:inline-flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:5px;gap:5px;backdrop-filter:blur(8px);">
+        <button id="mktBtn3months" onclick="mktSetDuration('3months')"
+          style="padding:10px 32px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:all .25s;background:var(--mkt-accent);color:#000;box-shadow:0 2px 12px rgba(99,240,189,.35);">
+          📅 3 oylik
+        </button>
+        <button id="mktBtnYearly" onclick="mktSetDuration('yearly')"
+          style="padding:10px 32px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:all .25s;background:transparent;color:var(--mkt-text-muted);">
+          🎯 1 yillik
+        </button>
+      </div>
+    </div>
+
     <div class="mkt-pricing-grid">
       {% for plan in plans %}
-        <article class="mkt-price-card {% if plan.featured %}featured{% endif %} reveal">
+        <article class="mkt-price-card {% if plan.featured %}featured{% endif %} reveal" style="position:relative;">
+
+          <!-- Yillik badge -->
+          {% if plan.yearly_badge and plan.price_yearly %}
+          <div class="mkt-yearly-badge" data-plan="{{ plan.id }}"
+            style="display:none;position:absolute;top:-14px;right:18px;background:linear-gradient(90deg,#10b981,#059669);color:#fff;font-size:10.5px;font-weight:700;padding:3px 12px;border-radius:99px;white-space:nowrap;box-shadow:0 2px 10px rgba(16,185,129,.4);">
+            {{ plan.yearly_badge }}
+          </div>
+          {% endif %}
+
           <span class="mkt-plan">{{ plan.name }}</span>
-          <h2>{{ plan.price }}</h2>
-          <p>{{ plan.period }}{% if plan.yearly_price %} · {{ plan.yearly_price }} {{ plan.yearly_label }}{% endif %}</p>
+
+          <!-- 3 oylik narx -->
+          <div class="mkt-price-3months" data-plan="{{ plan.id }}">
+            <h2>{{ plan.price_3months_display }}</h2>
+            <p style="font-size:.85rem;opacity:.6;margin-bottom:2px;">3 oylik to'lov</p>
+            {% if plan.saving_3months_display %}
+            <p style="font-size:.85rem;color:var(--mkt-accent);font-weight:600;margin-top:0;">💰 {{ plan.saving_3months_display }} tejaysiz</p>
+            {% endif %}
+          </div>
+          <!-- 1 yillik narx -->
+          <div class="mkt-price-yearly" data-plan="{{ plan.id }}" style="display:none;">
+            {% if plan.price_yearly_display %}
+            <h2>{{ plan.price_yearly_display }}</h2>
+            <p style="font-size:.85rem;opacity:.6;margin-bottom:2px;">1 yillik to'lov</p>
+            {% if plan.saving_yearly_display %}
+            <p style="font-size:.85rem;color:var(--mkt-accent);font-weight:600;margin-top:0;">💰 {{ plan.saving_yearly_display }} tejaysiz</p>
+            {% endif %}
+            {% else %}
+            <h2>{{ plan.price_3months_display }}</h2>
+            <p style="font-size:.85rem;opacity:.6;">1 yillik narx kiritilmagan</p>
+            {% endif %}
+          </div>
+
           <ul>
             {% for item in plan.features %}
               <li><i class="bi bi-check2"></i> {{ item }}</li>
             {% endfor %}
           </ul>
-          <a class="mkt-btn {% if plan.featured %}mkt-btn-primary{% else %}mkt-btn-secondary{% endif %}" href="{% url 'accounts:register' %}">{{ m.pricing.current }}</a>
+          <a class="mkt-btn {% if plan.featured %}mkt-btn-primary{% else %}mkt-btn-secondary{% endif %}"
+            href="{% url 'accounts:register' %}">{{ m.pricing.current }}</a>
         </article>
       {% endfor %}
     </div>
@@ -65,4 +111,34 @@
 .mkt-oferta-note a { color: var(--mkt-accent); text-decoration: underline; }
 .mkt-oferta-note a:hover { opacity: .8; }
 </style>
+
+<script>
+let mktDuration = '3months';
+function mktSetDuration(dur) {
+  mktDuration = dur;
+  const btn3 = document.getElementById('mktBtn3months');
+  const btnY = document.getElementById('mktBtnYearly');
+  if (dur === '3months') {
+    btn3.style.background = 'var(--mkt-accent)';
+    btn3.style.color = '#000';
+    btn3.style.boxShadow = '0 2px 12px rgba(99,240,189,.35)';
+    btnY.style.background = 'transparent';
+    btnY.style.color = 'var(--mkt-text-muted)';
+    btnY.style.boxShadow = 'none';
+    document.querySelectorAll('.mkt-price-3months').forEach(el => el.style.display = '');
+    document.querySelectorAll('.mkt-price-yearly').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.mkt-yearly-badge').forEach(el => el.style.display = 'none');
+  } else {
+    btnY.style.background = 'var(--mkt-accent)';
+    btnY.style.color = '#000';
+    btnY.style.boxShadow = '0 2px 12px rgba(99,240,189,.35)';
+    btn3.style.background = 'transparent';
+    btn3.style.color = 'var(--mkt-text-muted)';
+    btn3.style.boxShadow = 'none';
+    document.querySelectorAll('.mkt-price-3months').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.mkt-price-yearly').forEach(el => el.style.display = '');
+    document.querySelectorAll('.mkt-yearly-badge').forEach(el => el.style.display = '');
+  }
+}
+</script>
 {% endblock %}
