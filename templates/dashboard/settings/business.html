@@ -8,272 +8,336 @@
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <style>
-/* iOS Toggle Switch */
-.ios-toggle-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+/* Modern Settings Card */
+.settings-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  margin-bottom: 24px;
+  overflow: hidden;
 }
-.ios-toggle-switch {
-  position: relative;
-  display: inline-block;
-  width: 52px;
-  height: 30px;
-  flex-shrink: 0;
-}
-.ios-toggle-switch input[type="checkbox"] {
-  opacity: 0;
-  width: 0;
-  height: 0;
-  position: absolute;
-}
-.ios-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: #d1d5db;
-  border-radius: 30px;
-  transition: background 0.3s cubic-bezier(.4,0,.2,1);
-}
-.ios-slider::before {
-  content: '';
-  position: absolute;
-  height: 24px;
-  width: 24px;
-  left: 3px;
-  bottom: 3px;
-  background: white;
-  border-radius: 50%;
-  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
-  box-shadow: 0 1px 4px rgba(0,0,0,.25);
-}
-.ios-toggle-switch input:checked + .ios-slider {
-  background: #6366f1;
-}
-.ios-toggle-switch input:checked + .ios-slider::before {
-  transform: translateX(22px);
-}
-.ios-toggle-info strong {
-  display: block;
-  font-size: .95rem;
-  font-weight: 600;
-}
-.ios-toggle-info small {
-  color: #6b7280;
-  font-size: .8rem;
-}
-
-/* Map container */
-#location-map {
-  height: 340px;
-  border-radius: 12px;
-  border: 1.5px solid #e2e8f0;
-  z-index: 0;
+.settings-card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
   background: #f8fafc;
 }
-.map-address-chip {
+.settings-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 4px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
+  gap: 10px;
+}
+.settings-card-desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+}
+.settings-card-body {
+  padding: 24px;
+}
+
+/* Custom form elements */
+.custom-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 8px;
+  display: block;
+}
+.custom-input {
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  width: 100%;
+  background: #fff;
+}
+.custom-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+  outline: none;
+}
+.input-group-custom {
+  display: flex;
+  align-items: stretch;
+}
+.input-group-custom .input-group-text {
   background: #f1f5f9;
-  border-radius: 8px;
-  font-size: .85rem;
-  color: #475569;
-  margin-bottom: 10px;
-  min-height: 36px;
+  border: 1px solid #cbd5e1;
+  border-right: none;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  color: #64748b;
+  font-size: 0.9rem;
 }
-.map-address-chip i { color: #6366f1; }
-.map-tip {
-  font-size: .8rem;
-  color: #94a3b8;
-  margin-top: 6px;
+.input-group-custom .custom-input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
+
+/* iOS Toggle Switch */
+.ios-toggle-wrapper { display: flex; align-items: center; gap: 14px; }
+.ios-toggle-switch { position: relative; display: inline-block; width: 52px; height: 30px; flex-shrink: 0; }
+.ios-toggle-switch input[type="checkbox"] { opacity: 0; width: 0; height: 0; position: absolute; }
+.ios-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #cbd5e1; border-radius: 30px; transition: background 0.3s ease; }
+.ios-slider::before { content: ''; position: absolute; height: 24px; width: 24px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: transform 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,.15); }
+.ios-toggle-switch input:checked + .ios-slider { background: #10b981; }
+.ios-toggle-switch input:checked + .ios-slider::before { transform: translateX(22px); }
+.ios-toggle-info strong { display: block; font-size: 0.95rem; font-weight: 600; color: #0f172a; }
+.ios-toggle-info small { color: #64748b; font-size: 0.85rem; }
+
+/* Map container */
+#location-map { height: 360px; border-radius: 12px; border: 1px solid #e2e8f0; z-index: 0; background: #f8fafc; }
+.map-address-chip { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem; color: #334155; margin-bottom: 16px; font-weight: 500; }
+.map-address-chip i { color: #ef4444; font-size: 1.1rem; }
+.map-tip { font-size: 0.85rem; color: #64748b; margin-top: 10px; display: flex; align-items: center; gap: 6px; }
 </style>
 {% endblock %}
 
 {% block dashboard_content %}
 <div class="page-hd">
   <div class="page-hd-left">
-    <div class="page-hd-title">{% trans "Biznes ma'lumotlari" %}</div>
-    <div class="page-hd-sub">{% trans "Kompaniya haqida asosiy ma'lumotlar va aloqa" %}</div>
+    <div class="page-hd-title">{% trans "Biznes sozlamalari" %}</div>
+    <div class="page-hd-sub">{% trans "Kompaniyangiz profilini tahrirlang" %}</div>
   </div>
   {% if business %}
   <div class="page-hd-actions">
     <a href="/{{ business.slug }}/" target="_blank" class="btn btn-secondary">
-      <i class="bi bi-box-arrow-up-right"></i> {% trans "Ommaviy sahifani ko'rish" %}
+      <i class="bi bi-box-arrow-up-right me-1"></i> {% trans "Sahifani ko'rish" %}
     </a>
+    <button type="submit" form="business-form" class="btn btn-primary shadow-sm">
+      <i class="bi bi-check2-all me-1"></i> {% trans "Saqlash" %}
+    </button>
   </div>
   {% endif %}
 </div>
-<div class="row">
+
+<div class="row g-4">
   <div class="col-lg-8">
-    <div class="card"><div class="card-body">
-      <form method="post" enctype="multipart/form-data" id="business-form">{% csrf_token %}
-        {{ form.latitude }}
-        {{ form.longitude }}
+    <form method="post" enctype="multipart/form-data" id="business-form">{% csrf_token %}
+      {{ form.latitude }}
+      {{ form.longitude }}
 
-        {# ── Asosiy ma'lumotlar ─── #}
-        <div class="form-section">
-          <div class="form-section-title">{% trans "Asosiy ma'lumotlar" %}</div>
-          <div class="form-section-desc">{% trans "Biznes nomi, kategoriya va haqida ma'lumot" %}</div>
-        <div class="row g-3 mb-4">
-          <div class="col-md-6"><label class="form-label fw-medium">{% trans "Biznes nomi" %} *</label>{{ form.name }}</div>
-          <div class="col-md-6"><label class="form-label fw-medium">{% trans "Kategoriya" %}</label>{{ form.category }}</div>
-          <div class="col-12"><label class="form-label fw-medium">{% trans "Haqida" %}</label>{{ form.about }}</div>
-          <div class="col-12">
-            <label class="form-label fw-medium">{% trans "Logo" %}</label>{{ form.logo }}
-            {% if business and business.logo %}<div class="mt-2"><img src="{{ business.logo.url }}" style="height:60px;border-radius:8px;"></div>{% endif %}
+      {# ── Asosiy ma'lumotlar ─── #}
+      <div class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-title"><i class="bi bi-building text-primary"></i> {% trans "Asosiy ma'lumotlar" %}</div>
+          <p class="settings-card-desc">{% trans "Biznesingiz nomi, toifasi va haqida ma'lumot" %}</p>
+        </div>
+        <div class="settings-card-body">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="custom-label">{% trans "Biznes nomi" %} <span class="text-danger">*</span></label>
+              {{ form.name }}
+            </div>
+            <div class="col-md-6">
+              <label class="custom-label">{% trans "Faoliyat turi (Kategoriya)" %}</label>
+              {{ form.category }}
+            </div>
+            <div class="col-12">
+              <label class="custom-label">{% trans "Haqida (Tavsif)" %}</label>
+              {{ form.about }}
+              <div class="form-text text-muted small mt-1">{% trans "Mijozlaringizga biznesingiz haqida qisqacha ma'lumot bering." %}</div>
+            </div>
+            <div class="col-12">
+              <label class="custom-label">{% trans "Kompaniya logotipi" %}</label>
+              <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3 border">
+                {% if business and business.logo %}
+                <img src="{{ business.logo.url }}" style="height:56px;width:56px;object-fit:cover;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,.1);">
+                {% else %}
+                <div style="height:56px;width:56px;border-radius:10px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;color:#94a3b8;"><i class="bi bi-image" style="font-size:24px;"></i></div>
+                {% endif %}
+                <div class="flex-grow-1">
+                  {{ form.logo }}
+                  <div class="form-text mt-1 text-muted small">Tavsiya etiladigan o'lcham: 512x512px (PNG, JPG)</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        {# ── Aloqa ─── #}
-        <div class="form-section">
-          <div class="form-section-title">{% trans "Aloqa ma'lumotlari" %}</div>
-          <div class="form-section-desc">{% trans "Telefon, email, manzil va shahar" %}</div>
-        <div class="row g-3 mb-4">
-          <div class="col-md-6"><label class="form-label fw-medium">{% trans "Telefon" %}</label>{{ form.phone }}</div>
-          <div class="col-md-6"><label class="form-label fw-medium">{% trans "Email" %}</label>{{ form.email }}</div>
-          <div class="col-md-8"><label class="form-label fw-medium">{% trans "Manzil" %}</label>{{ form.address }}</div>
-          <div class="col-md-4">
-            <label class="form-label fw-medium">{% trans "Shahar" %}</label>
-            {{ form.city }}
-            <datalist id="city-datalist">
-              {% for city in uzbekistan_cities %}
-              <option value="{{ city }}">{{ city }}</option>
-              {% endfor %}
-            </datalist>
+      {# ── Aloqa ─── #}
+      <div class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-title"><i class="bi bi-telephone text-success"></i> {% trans "Aloqa ma'lumotlari" %}</div>
+          <p class="settings-card-desc">{% trans "Mijozlar siz bilan qanday bog'lanishi mumkin" %}</p>
+        </div>
+        <div class="settings-card-body">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="custom-label">{% trans "Telefon raqami" %}</label>
+              {{ form.phone }}
+            </div>
+            <div class="col-md-6">
+              <label class="custom-label">{% trans "Elektron pochta (Email)" %}</label>
+              {{ form.email }}
+            </div>
+            <div class="col-md-8">
+              <label class="custom-label">{% trans "Manzil" %}</label>
+              {{ form.address }}
+            </div>
+            <div class="col-md-4">
+              <label class="custom-label">{% trans "Shahar" %}</label>
+              {{ form.city }}
+              <datalist id="city-datalist">
+                {% for city in uzbekistan_cities %}
+                <option value="{{ city }}">{{ city }}</option>
+                {% endfor %}
+              </datalist>
+            </div>
           </div>
         </div>
+      </div>
 
+      {# ── Xarita ─── #}
+      <div class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-title"><i class="bi bi-geo-alt text-danger"></i> {% trans "Xaritadagi joylashuv" %}</div>
+          <p class="settings-card-desc">{% trans "Mijozlar sizni oson topishi uchun xaritada belgilang" %}</p>
         </div>
-
-        {# ── Xarita ─── #}
-        <div class="form-section">
-          <div class="form-section-title"><i class="bi bi-geo-alt-fill" style="color:#ef4444;margin-right:6px;"></i>{% trans "Joylashuv (Xarita)" %}</div>
-          <div class="form-section-desc">{% trans "Xaritada klinikaningiz yoki ofis joylashuvini belgilang" %}</div>
-        <div class="mb-4">
+        <div class="settings-card-body pb-3">
           <div class="map-address-chip" id="map-chip">
-            <i class="bi bi-geo-alt"></i>
+            <i class="bi bi-geo-alt-fill"></i>
             <span id="map-chip-text">
               {% if business.latitude and business.longitude %}
                 {{ business.address|default:"Manzil belgilangan" }}
-                <small class="text-muted ms-2">({{ business.latitude }}, {{ business.longitude }})</small>
+                <span class="text-muted ms-2 fw-normal">({{ business.latitude }}, {{ business.longitude }})</span>
               {% else %}
                 {% trans "Xaritada joy tanlang — manzil avtomatik aniqlanadi" %}
               {% endif %}
             </span>
           </div>
           <div id="location-map"></div>
-          <p class="map-tip">
-            <i class="bi bi-info-circle me-1"></i>
-            {% trans "Xaritada istalgan joyni bosing. Marker sudrab ham ko'chirish mumkin." %}
-          </p>
-          {% if business.latitude and business.longitude %}
-          <button type="button" class="btn btn-sm btn-outline-danger mt-1" id="btn-clear-location">
-            <i class="bi bi-x-circle me-1"></i>{% trans "Joylashuvni o'chirish" %}
-          </button>
-          {% endif %}
-        </div>
-
-        </div>
-
-        {# ── Ijtimoiy tarmoqlar ─── #}
-        <div class="form-section">
-          <div class="form-section-title">{% trans "Ijtimoiy tarmoqlar va veb-sayt" %}</div>
-          <div class="form-section-desc">{% trans "Foydalanuvchilar bog'lanishi uchun havolalar" %}</div>
-        <div class="row g-3 mb-4">
-          <div class="col-md-6">
-            <label class="form-label fw-medium"><i class="bi bi-telegram text-info me-1"></i>Telegram</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light border-end-0 text-muted" style="font-size:.85rem;">t.me/</span>
-              <input type="text" name="telegram" id="id_telegram"
-                class="form-control border-start-0"
-                placeholder="username"
-                value="{{ form.telegram.value|default_if_none:''|cut:'@'|cut:'https://t.me/'|cut:'t.me/' }}">
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="map-tip">
+              <i class="bi bi-info-circle"></i> {% trans "Xaritada istalgan joyni bosing yoki markerni sudrang." %}
             </div>
-            <div class="form-text text-muted" style="font-size:.75rem;">
-              <i class="bi bi-info-circle me-1"></i>{% trans "Faqat username yozing, masalan:" %} <code>mybusiness</code>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label fw-medium"><i class="bi bi-instagram text-danger me-1"></i>Instagram</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light border-end-0 text-muted" style="font-size:.85rem;">instagram.com/</span>
-              <input type="text" name="instagram" id="id_instagram"
-                class="form-control border-start-0"
-                placeholder="username"
-                value="{{ form.instagram.value|default_if_none:''|cut:'@'|cut:'https://instagram.com/'|cut:'https://www.instagram.com/'|cut:'instagram.com/' }}">
-            </div>
-            <div class="form-text text-muted" style="font-size:.75rem;">
-              <i class="bi bi-info-circle me-1"></i>{% trans "Faqat username yozing, masalan:" %} <code>mybusiness</code>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label fw-medium"><i class="bi bi-globe2 me-1"></i>{% trans "Veb-sayt" %}</label>
-            {{ form.website }}
-            <div class="form-text text-muted" style="font-size:.75rem;">
-              <i class="bi bi-info-circle me-1"></i>{% trans "To'liq URL yozing:" %} <code>https://saytingiz.uz</code>
-            </div>
+            {% if business.latitude and business.longitude %}
+            <button type="button" class="btn btn-sm btn-outline-danger" id="btn-clear-location">
+              <i class="bi bi-trash3 me-1"></i> {% trans "O'chirish" %}
+            </button>
+            {% endif %}
           </div>
         </div>
+      </div>
 
+      {# ── Ijtimoiy tarmoqlar ─── #}
+      <div class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-title"><i class="bi bi-link-45deg text-info"></i> {% trans "Tarmoqlar va Veb-sayt" %}</div>
+          <p class="settings-card-desc">{% trans "Onlayn sahifalaringizga havolalar qo'shing" %}</p>
         </div>
-
-        {# ── Marketing katalog ─── #}
-        <div class="form-section">
-          <div class="form-section-title"><i class="bi bi-shop" style="color:var(--p);margin-right:6px;"></i>{% trans "Marketing katalogi" %}</div>
-          <div class="form-section-desc">{% trans "Biznesingizni umumiy yo'naltiruvchi sahifada ko'rsatish" %}</div>
-          <div class="card" style="background:#f9fafb;border-color:var(--border);">
-            <div class="card-body" style="padding:14px;">
-            <div class="ios-toggle-wrapper">
-              <label class="ios-toggle-switch">
-                <input type="checkbox" name="show_in_directory" id="id_show_in_directory"
-                  {% if business.show_in_directory %}checked{% endif %}>
-                <span class="ios-slider"></span>
-              </label>
-              <div class="ios-toggle-info">
-                <strong>{% trans "Katalogda ko'rsatish" %}</strong>
-                <small>{% trans "Yoqilsa, biznesingiz marketing sahifasidagi ro'yxatda ko'rinadi" %}</small>
+        <div class="settings-card-body">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="custom-label">Telegram</label>
+              <div class="input-group-custom">
+                <span class="input-group-text"><i class="bi bi-telegram text-info"></i><span class="ms-1">t.me/</span></span>
+                <input type="text" name="telegram" id="id_telegram"
+                  class="custom-input border-start-0"
+                  placeholder="username"
+                  value="{{ form.telegram.value|default_if_none:''|cut:'@'|cut:'https://t.me/'|cut:'t.me/' }}">
               </div>
             </div>
+            <div class="col-md-6">
+              <label class="custom-label">Instagram</label>
+              <div class="input-group-custom">
+                <span class="input-group-text"><i class="bi bi-instagram text-danger"></i><span class="ms-1">@</span></span>
+                <input type="text" name="instagram" id="id_instagram"
+                  class="custom-input border-start-0"
+                  placeholder="username"
+                  value="{{ form.instagram.value|default_if_none:''|cut:'@'|cut:'https://instagram.com/'|cut:'https://www.instagram.com/'|cut:'instagram.com/' }}">
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label class="custom-label">{% trans "Shaxsiy Veb-sayt" %}</label>
+              <div class="input-group-custom">
+                <span class="input-group-text"><i class="bi bi-globe2"></i><span class="ms-2">URL</span></span>
+                {{ form.website }}
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div style="display:flex;gap:10px;">
-          <button type="submit" class="btn btn-primary">
-            <i class="bi bi-check-lg"></i> {% trans "Saqlash" %}
-          </button>
-          {% if business %}<a href="/{{ business.slug }}/" target="_blank" class="btn btn-secondary"><i class="bi bi-box-arrow-up-right"></i> {% trans "Ko'rish" %}</a>{% endif %}
+      {# ── Marketing katalog ─── #}
+      <div class="settings-card mb-0">
+        <div class="settings-card-body" style="background:#f8fafc;border-radius:15px;">
+          <div class="ios-toggle-wrapper">
+            <label class="ios-toggle-switch">
+              <input type="checkbox" name="show_in_directory" id="id_show_in_directory"
+                {% if business.show_in_directory %}checked{% endif %}>
+              <span class="ios-slider"></span>
+            </label>
+            <div class="ios-toggle-info">
+              <strong>{% trans "Katalogda ko'rsatish" %}</strong>
+              <small>{% trans "Yoqilsa, biznesingiz tizimning ommaviy marketing sahifasida (MedBook katalogida) ko'rinadi" %}</small>
+            </div>
+          </div>
         </div>
-      </form>
-    </div></div>
+      </div>
+
+      <!-- Mobile submit -->
+      <div class="d-lg-none mt-4 pb-4">
+        <button type="submit" class="btn btn-primary w-100 btn-lg shadow-sm">
+          <i class="bi bi-check2-all me-1"></i> {% trans "O'zgarishlarni saqlash" %}
+        </button>
+      </div>
+
+    </form>
   </div>
 
   {% if business %}
   <div class="col-lg-4">
-    <div class="card" style="margin-bottom:16px;"><div class="card-body" style="padding:16px;">
-      <div class="card-head-title" style="margin-bottom:10px;">{% trans "Ommaviy sahifa" %}</div>
-      <code style="display:block;background:#f3f4f6;border-radius:6px;padding:8px 12px;font-size:12px;word-break:break-all;margin-bottom:12px;color:var(--text-2);">{{ request.META.HTTP_HOST }}/{{ business.slug }}/</code>
-      <a href="/{{ business.slug }}/" target="_blank" class="btn btn-primary" style="width:100%;justify-content:center;">
-        <i class="bi bi-globe"></i> {% trans "Ochish" %}
-      </a>
-    </div></div>
-    <div class="card" style="margin-bottom:16px;"><div class="card-body" style="padding:16px;">
-      <div class="card-head-title" style="margin-bottom:12px;">{% trans "Tezkor havolalar" %}</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <a href="{% url 'business:working_hours' %}" class="btn btn-secondary btn-sm"><i class="bi bi-clock"></i> {% trans "Ish vaqtlari" %}</a>
-        <a href="{% url 'business:faq_list' %}" class="btn btn-secondary btn-sm"><i class="bi bi-question-circle"></i> {% trans "Ko'p so'raladigan savollar" %}</a>
-        <a href="{% url 'business:telegram' %}" class="btn btn-secondary btn-sm"><i class="bi bi-telegram"></i> {% trans "Telegram xabarnomalar" %}</a>
+    
+    <div class="settings-card mb-4">
+      <div class="settings-card-body p-4">
+        <h6 class="fw-bold mb-2"><i class="bi bi-share text-primary me-2"></i>{% trans "Ommaviy sahifa" %}</h6>
+        <p class="text-muted small mb-3">Mijozlar orqali yozilishi mumkin bo'lgan sahifa manzili.</p>
+        <code class="d-block bg-light rounded-3 p-2 mb-3 text-break shadow-sm border text-primary" style="font-size:13px;">{{ request.META.HTTP_HOST }}/{{ business.slug }}/</code>
+        <a href="/{{ business.slug }}/" target="_blank" class="btn btn-primary w-100 shadow-sm rounded-3">
+          <i class="bi bi-globe me-1"></i> {% trans "Sahifani ochish" %}
+        </a>
       </div>
-    </div></div>
+    </div>
+
+    <div class="settings-card mb-4">
+      <div class="settings-card-body p-4">
+        <h6 class="fw-bold mb-3"><i class="bi bi-lightning-charge text-warning me-2"></i>{% trans "Tezkor havolalar" %}</h6>
+        <div class="d-flex flex-column gap-2">
+          <a href="{% url 'business:working_hours' %}" class="btn btn-light border text-start rounded-3">
+            <i class="bi bi-clock me-2 text-muted"></i> {% trans "Ish vaqtlari" %}
+          </a>
+          <a href="{% url 'business:faq_list' %}" class="btn btn-light border text-start rounded-3">
+            <i class="bi bi-question-circle me-2 text-muted"></i> {% trans "Ko'p so'raladigan savollar" %}
+          </a>
+          <a href="{% url 'business:telegram' %}" class="btn btn-light border text-start rounded-3">
+            <i class="bi bi-telegram me-2 text-info"></i> {% trans "Telegram xabarnomalar" %}
+          </a>
+        </div>
+      </div>
+    </div>
+
     {% if business.latitude and business.longitude %}
-    <div class="card"><div class="card-body" style="padding:12px;">
-      <div class="card-head-title" style="margin-bottom:10px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-4);"><i class="bi bi-geo-alt-fill" style="color:#ef4444;margin-right:4px;"></i>{% trans "Saqlangan joylashuv" %}</div>
-      <div id="preview-map" style="height:160px;border-radius:var(--radius-sm);"></div>
-    </div></div>
+    <div class="settings-card mb-4">
+      <div class="settings-card-body p-3">
+        <h6 class="fw-bold mb-2 text-uppercase" style="font-size:11px;letter-spacing:0.5px;color:#64748b;">
+          <i class="bi bi-geo-alt-fill text-danger me-1"></i>{% trans "Saqlangan joylashuv" %}
+        </h6>
+        <div id="preview-map" style="height:160px;border-radius:12px;border:1px solid #e2e8f0;"></div>
+      </div>
+    </div>
     {% endif %}
+
   </div>
   {% endif %}
 </div>
