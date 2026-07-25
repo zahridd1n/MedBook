@@ -63,11 +63,11 @@
   <div id="durationToggle" style="display:inline-flex;background:#f1f5f9;border-radius:12px;padding:4px;gap:4px;box-shadow:0 1px 3px rgba(0,0,0,.08);">
     <button id="btn3months" onclick="setDuration('3months')"
       style="padding:9px 28px;border-radius:9px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;background:var(--p);color:#fff;box-shadow:0 2px 8px rgba(99,102,241,.35);">
-      📅 {% trans "3 oylik" %}
+      <i class="bi bi-calendar-event me-1"></i> {% trans "3 oylik" %}
     </button>
     <button id="btnYearly" onclick="setDuration('yearly')"
       style="padding:9px 28px;border-radius:9px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:#64748b;">
-      🎯 {% trans "1 yillik" %}
+      <i class="bi bi-star me-1"></i> {% trans "1 yillik" %}
     </button>
   </div>
 </div>
@@ -112,7 +112,7 @@
             </div>
             <div style="font-size:12px;color:{% if plan.slug == 'enterprise' %}rgba(255,255,255,.4){% else %}var(--gray-500){% endif %};margin-bottom:4px;">{% trans "3 oylik to'lov" %}</div>
             {% if plan.saving_3months > 0 %}
-            <div style="font-size:12px;color:#10b981;font-weight:600;margin-bottom:4px;">💰 {{ plan.saving_3months|intcomma }} UZS {% trans "tejaysiz" %}</div>
+            <div style="font-size:12px;color:#10b981;font-weight:600;margin-bottom:4px;"><i class="bi bi-check-circle me-1"></i>{{ plan.saving_3months|intcomma }} UZS {% trans "tejaysiz" %}</div>
             {% endif %}
             {% else %}
             <div style="font-size:28px;font-weight:800;{% if plan.slug == 'enterprise' %}color:#fff;{% endif %}">
@@ -129,7 +129,7 @@
             </div>
             <div style="font-size:12px;color:{% if plan.slug == 'enterprise' %}rgba(255,255,255,.4){% else %}var(--gray-500){% endif %};margin-bottom:4px;">{% trans "1 yillik to'lov" %}</div>
             {% if plan.saving_yearly > 0 %}
-            <div style="font-size:12px;color:#10b981;font-weight:600;margin-bottom:4px;">💰 {{ plan.saving_yearly|intcomma }} UZS {% trans "tejaysiz" %}</div>
+            <div style="font-size:12px;color:#10b981;font-weight:600;margin-bottom:4px;"><i class="bi bi-check-circle me-1"></i>{{ plan.saving_yearly|intcomma }} UZS {% trans "tejaysiz" %}</div>
             {% endif %}
             {% else %}
             <div style="font-size:28px;font-weight:800;{% if plan.slug == 'enterprise' %}color:#fff;{% endif %}">

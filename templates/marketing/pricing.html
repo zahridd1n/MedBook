@@ -21,11 +21,11 @@
       <div style="display:inline-flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:5px;gap:5px;backdrop-filter:blur(8px);">
         <button id="mktBtn3months" onclick="mktSetDuration('3months')"
           style="padding:10px 32px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:all .25s;background:var(--mkt-accent);color:#000;box-shadow:0 2px 12px rgba(99,240,189,.35);">
-          📅 3 oylik
+          <i class="bi bi-calendar-event me-1"></i> 3 oylik
         </button>
         <button id="mktBtnYearly" onclick="mktSetDuration('yearly')"
           style="padding:10px 32px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:all .25s;background:transparent;color:var(--mkt-text-muted);">
-          🎯 1 yillik
+          <i class="bi bi-star me-1"></i> 1 yillik
         </button>
       </div>
     </div>
@@ -49,7 +49,7 @@
             <h2>{{ plan.price_3months_display }}</h2>
             <p style="font-size:.85rem;opacity:.6;margin-bottom:2px;">3 oylik to'lov</p>
             {% if plan.saving_3months_display %}
-            <p style="font-size:.85rem;color:var(--mkt-accent);font-weight:600;margin-top:0;">💰 {{ plan.saving_3months_display }} tejaysiz</p>
+            <p style="font-size:.85rem;color:var(--mkt-accent);font-weight:600;margin-top:0;"><i class="bi bi-check-circle"></i> {{ plan.saving_3months_display }} tejaysiz</p>
             {% endif %}
           </div>
           <!-- 1 yillik narx -->
@@ -58,7 +58,7 @@
             <h2>{{ plan.price_yearly_display }}</h2>
             <p style="font-size:.85rem;opacity:.6;margin-bottom:2px;">1 yillik to'lov</p>
             {% if plan.saving_yearly_display %}
-            <p style="font-size:.85rem;color:var(--mkt-accent);font-weight:600;margin-top:0;">💰 {{ plan.saving_yearly_display }} tejaysiz</p>
+            <p style="font-size:.85rem;color:var(--mkt-accent);font-weight:600;margin-top:0;"><i class="bi bi-check-circle"></i> {{ plan.saving_yearly_display }} tejaysiz</p>
             {% endif %}
             {% else %}
             <h2>{{ plan.price_3months_display }}</h2>

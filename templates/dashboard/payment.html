@@ -35,7 +35,7 @@
         <div class="d-flex align-items-center justify-content-between py-2" style="border-bottom:1px solid rgba(255,255,255,.07);">
           <span style="color:rgba(255,255,255,.6);font-size:13px;">{% trans "Davomiylik" %}</span>
           <span style="color:#fff;font-weight:600;">
-            {% if duration == 'yearly' %}🎯 {% trans "1 yillik (365 kun)" %}{% else %}📅 {% trans "3 oylik (90 kun)" %}{% endif %}
+            {% if duration == 'yearly' %}<i class="bi bi-star me-1"></i>{% trans "1 yillik (365 kun)" %}{% else %}<i class="bi bi-calendar-event me-1"></i>{% trans "3 oylik (90 kun)" %}{% endif %}
           </span>
         </div>
         <div class="d-flex align-items-center justify-content-between pt-3">
