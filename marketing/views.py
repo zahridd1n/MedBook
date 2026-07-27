@@ -182,10 +182,16 @@ def _context(request):
                 
             text_hash = hashlib.md5(text.encode('utf-8')).hexdigest()
             cache_key = f"auto_trans_{text_hash}_{target_lang}"
-            cached_text = cache.get(cache_key)
-            if cached_text:
-                return cached_text
+            
+            # Try to get from cache
+            try:
+                cached_text = cache.get(cache_key)
+                if cached_text:
+                    return cached_text
+            except Exception:
+                pass
                 
+            # Try to fetch from API
             try:
                 url = "https://translate.googleapis.com/translate_a/single"
                 params = {
@@ -198,10 +204,15 @@ def _context(request):
                 res = requests.get(url, params=params, timeout=3)
                 if res.status_code == 200:
                     result = "".join([chunk[0] for chunk in res.json()[0] if chunk[0]])
-                    cache.set(cache_key, result, timeout=86400 * 30)
+                    # Try to save to cache
+                    try:
+                        cache.set(cache_key, result, timeout=86400 * 30)
+                    except Exception:
+                        pass
                     return result
             except Exception:
                 pass
+                
             return text
 
         copy['tutorials']['videos'] = [

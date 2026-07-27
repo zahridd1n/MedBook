@@ -69,14 +69,16 @@ jobs:
             echo "🔄 Restarting Gunicorn..."
             sudo systemctl restart book
 
-            if systemctl list-unit-files | grep -q '^book-celery.service'; then
-              echo "🔄 Restarting Celery..."
-              sudo systemctl restart book-celery
+            if systemctl list-unit-files | grep -q '^medbook-celery.service'; then
+              echo "🔄 Restarting Celery Worker..."
+              sudo systemctl restart medbook-celery
+              sudo systemctl is-active --quiet medbook-celery
             fi
 
-            if systemctl list-unit-files | grep -q '^book-celerybeat.service'; then
+            if systemctl list-unit-files | grep -q '^medbook-celerybeat.service'; then
               echo "🔄 Restarting Celery Beat..."
-              sudo systemctl restart book-celerybeat
+              sudo systemctl restart medbook-celerybeat
+              sudo systemctl is-active --quiet medbook-celerybeat
             fi
 
             echo "🩺 Checking service status..."
