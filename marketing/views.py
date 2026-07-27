@@ -166,15 +166,48 @@ def _context(request):
     site = SiteSettings.load()
     copy = site.marketing_copy(lang)
 
-    # Published videolarni modeldan olish (agar bo'lsa, defaultlarni bekor qiladi)
+    # Hozircha barcha tillar uchun 'uz' videolarni asos qilib olamiz
     model_videos = MarketingVideo.objects.filter(
-        language=lang, is_published=True
+        language='uz', is_published=True
     ).order_by('order', 'created_at')
+    
     if model_videos.exists():
+        from django.core.cache import cache
+        import requests
+        import hashlib
+
+        def _auto_translate(text, target_lang):
+            if not text or target_lang == 'uz':
+                return text
+                
+            text_hash = hashlib.md5(text.encode('utf-8')).hexdigest()
+            cache_key = f"auto_trans_{text_hash}_{target_lang}"
+            cached_text = cache.get(cache_key)
+            if cached_text:
+                return cached_text
+                
+            try:
+                url = "https://translate.googleapis.com/translate_a/single"
+                params = {
+                    "client": "gtx",
+                    "sl": "uz",
+                    "tl": target_lang,
+                    "dt": "t",
+                    "q": text
+                }
+                res = requests.get(url, params=params, timeout=3)
+                if res.status_code == 200:
+                    result = "".join([chunk[0] for chunk in res.json()[0] if chunk[0]])
+                    cache.set(cache_key, result, timeout=86400 * 30)
+                    return result
+            except Exception:
+                pass
+            return text
+
         copy['tutorials']['videos'] = [
             {
-                'title': v.title,
-                'description': v.description,
+                'title': _auto_translate(v.title, lang),
+                'description': _auto_translate(v.description, lang),
                 'youtube_id': v.youtube_id,
                 'file_url': v.file_url(),
                 'duration': v.duration,
