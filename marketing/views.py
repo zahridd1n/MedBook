@@ -143,9 +143,24 @@ def _plans(site, copy, lang):
 
 
 def _marketing_seo(request, title, description, og_type='website'):
+    from core.seo import _get_og_image_url
+    import json
+    
     site_settings = _get_site_settings()
     canonical = request.build_absolute_uri(request.path)
-    og_image = site_settings.default_og_image.url if site_settings.default_og_image and hasattr(site_settings.default_og_image, 'url') else ''
+    
+    og_image = _get_og_image_url(site_settings.default_og_image) or _get_og_image_url(site_settings.logo) or ''
+    
+    # Organization schema for Google to recognize the logo
+    org_schema = {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        'name': 'BookFlow',
+        'url': settings.SITE_URL,
+        'logo': _get_og_image_url(site_settings.logo) or '',
+    }
+    json_ld_html = f'<script type="application/ld+json">{json.dumps(org_schema, ensure_ascii=False)}</script>\n'
+    
     return {
         'meta_title': title,
         'meta_description': description,
@@ -155,7 +170,7 @@ def _marketing_seo(request, title, description, og_type='website'):
         'og_description': description,
         'og_type': og_type,
         'og_image': og_image,
-        'json_ld_html': '',
+        'json_ld_html': json_ld_html,
         'seo_enabled': True,
         'meta_keywords': '',
     }
