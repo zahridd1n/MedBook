@@ -181,59 +181,21 @@ def _context(request):
     site = SiteSettings.load()
     copy = site.marketing_copy(lang)
 
-    # Hozircha barcha tillar uchun 'uz' videolarni asos qilib olamiz
     model_videos = MarketingVideo.objects.filter(
-        language='uz', is_published=True
+        language=lang, is_published=True
     ).order_by('order', 'created_at')
     
+    # Kiritilgan tilda videolar yo'q bo'lsa, 'uz' dagi videolarni ko'rsatamiz
+    if not model_videos.exists() and lang != 'uz':
+        model_videos = MarketingVideo.objects.filter(
+            language='uz', is_published=True
+        ).order_by('order', 'created_at')
+    
     if model_videos.exists():
-        from django.core.cache import cache
-        import requests
-        import hashlib
-
-        def _auto_translate(text, target_lang):
-            if not text or target_lang == 'uz':
-                return text
-                
-            text_hash = hashlib.md5(text.encode('utf-8')).hexdigest()
-            cache_key = f"auto_trans_{text_hash}_{target_lang}"
-            
-            # Try to get from cache
-            try:
-                cached_text = cache.get(cache_key)
-                if cached_text:
-                    return cached_text
-            except Exception:
-                pass
-                
-            # Try to fetch from API
-            try:
-                url = "https://translate.googleapis.com/translate_a/single"
-                params = {
-                    "client": "gtx",
-                    "sl": "uz",
-                    "tl": target_lang,
-                    "dt": "t",
-                    "q": text
-                }
-                res = requests.get(url, params=params, timeout=3)
-                if res.status_code == 200:
-                    result = "".join([chunk[0] for chunk in res.json()[0] if chunk[0]])
-                    # Try to save to cache
-                    try:
-                        cache.set(cache_key, result, timeout=86400 * 30)
-                    except Exception:
-                        pass
-                    return result
-            except Exception:
-                pass
-                
-            return text
-
         copy['tutorials']['videos'] = [
             {
-                'title': _auto_translate(v.title, lang),
-                'description': _auto_translate(v.description, lang),
+                'title': v.title,
+                'description': v.description,
                 'youtube_id': v.youtube_id,
                 'file_url': v.file_url(),
                 'duration': v.duration,
@@ -473,7 +435,7 @@ def businesses_directory(request):
         'total_count': total_all,
         'result_count': len(businesses_with_meta),
     }
-    context.update(_marketing_seo(request, 'Bizneslar katalogi — BookFlow', 'Xizmat ko\'rsatuvchi bizneslarning katalogi. Klinika, salon, sartarosh va boshqalar.'))
+    context.update(_marketing_seo(request, copy['businesses'].get('seo_title', 'Bizneslar katalogi — BookFlow'), copy['businesses'].get('seo_desc', '')))
 
     return render(request, 'marketing/businesses.html', context)
 
@@ -482,7 +444,7 @@ def oferta(request):
     ctx = _context(request)
     ctx.update(_marketing_seo(
         request,
-        'Ommaviy Oferta — BookFlow',
+        f"{ctx['m']['legal'].get('oferta', 'Ommaviy Oferta')} — BookFlow",
         'BookFlow platformasidan foydalanish shartlarini belgilovchi ommaviy oferta shartnomasi.',
     ))
     return render(request, 'marketing/legal/oferta.html', ctx)
@@ -492,7 +454,7 @@ def privacy(request):
     ctx = _context(request)
     ctx.update(_marketing_seo(
         request,
-        'Maxfiylik Siyosati — BookFlow',
+        f"{ctx['m']['legal'].get('privacy', 'Maxfiylik Siyosati')} — BookFlow",
         'BookFlow platformasi foydalanuvchilar ma\'lumotlarini qanday to\'plashi, saqlashi va himoya qilishi haqida.',
     ))
     return render(request, 'marketing/legal/privacy.html', ctx)
@@ -502,7 +464,7 @@ def terms(request):
     ctx = _context(request)
     ctx.update(_marketing_seo(
         request,
-        'Foydalanish Shartlari — BookFlow',
+        f"{ctx['m']['legal'].get('terms', 'Foydalanish Shartlari')} — BookFlow",
         'BookFlow platformasidan foydalanish qoidalari va shartlari.',
     ))
     return render(request, 'marketing/legal/terms.html', ctx)

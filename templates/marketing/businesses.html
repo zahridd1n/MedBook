@@ -690,10 +690,10 @@
   <div class="mkt-container">
     <div class="cat-hero-eyebrow reveal">
       <i class="bi bi-buildings-fill"></i>
-      Bizneslar katalogi
+      {{ m.businesses.eyebrow }}
     </div>
-    <h1 class="reveal">Xizmatni toping,<br>onlayn band qiling</h1>
-    <p class="reveal">Yaqingingizdagi eng yaxshi klinikalar, salonlar, sartaroshxonalar va boshqa bizneslarni toping</p>
+    <h1 class="reveal">{{ m.businesses.title|safe }}</h1>
+    <p class="reveal">{{ m.businesses.subtitle }}</p>
 
     {# Search #}
     <form method="get" action="" class="cat-search-wrap reveal" id="catalog-search-form">
@@ -706,18 +706,18 @@
         type="text"
         name="q"
         class="cat-search-input"
-        placeholder="Biznes nomi, xizmat turi, shahar..."
+        placeholder="{{ m.businesses.search_placeholder }}"
         value="{{ search_q }}"
         autocomplete="off"
       >
-      <button type="submit" class="cat-search-btn">Qidirish</button>
+      <button type="submit" class="cat-search-btn">{{ m.businesses.search_btn }}</button>
     </form>
 
     {# Quick category pills #}
     <div class="cat-pills reveal">
       <a href="?{% if search_q %}q={{ search_q }}&{% endif %}{% if sort_by %}sort={{ sort_by }}&{% endif %}{% if open_today %}open_today=1&{% endif %}"
          class="cat-pill {% if not selected_category %}active{% endif %}">
-        <i class="bi bi-grid-fill"></i> Hammasi
+        <i class="bi bi-grid-fill"></i> {{ m.businesses.all }}
         <span class="cnt">{{ total_count }}</span>
       </a>
       {% for cat in categories %}
@@ -742,12 +742,12 @@
         {# Bugun ochiq #}
         <div class="cat-filter-card">
           <div class="cat-filter-head">
-            <i class="bi bi-clock-fill"></i> Ish vaqti
+            <i class="bi bi-clock-fill"></i> {{ m.businesses.working_hours }}
           </div>
           <div class="cat-filter-body">
             <a href="?{% if open_today %}{% else %}open_today=1&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_city %}city={{ selected_city }}&{% endif %}{% if search_q %}q={{ search_q }}&{% endif %}{% if sort_by %}sort={{ sort_by }}{% endif %}"
                class="toggle-filter {% if open_today %}active{% endif %}">
-              <span>🟢 Bugun ochiq</span>
+              <span>🟢 {{ m.businesses.open_today }}</span>
               <span class="toggle-dot"></span>
             </a>
           </div>
@@ -757,12 +757,12 @@
         {% if cities %}
         <div class="cat-filter-card">
           <div class="cat-filter-head">
-            <i class="bi bi-geo-alt-fill"></i> Shahar
+            <i class="bi bi-geo-alt-fill"></i> {{ m.businesses.city }}
           </div>
           <div class="cat-filter-body">
             <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if search_q %}q={{ search_q }}&{% endif %}{% if sort_by %}sort={{ sort_by }}{% endif %}{% if open_today %}&open_today=1{% endif %}"
                class="cat-filter-opt {% if not selected_city %}active{% endif %}">
-              <i class="bi bi-globe"></i> Barcha shaharlar
+              <i class="bi bi-globe"></i> {{ m.businesses.all_cities }}
             </a>
             {% for city in cities %}
             <a href="?city={{ city }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_q %}&q={{ search_q }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}{% if open_today %}&open_today=1{% endif %}"
@@ -778,12 +778,12 @@
         {% if categories %}
         <div class="cat-filter-card">
           <div class="cat-filter-head">
-            <i class="bi bi-tag-fill"></i> Kategoriya
+            <i class="bi bi-tag-fill"></i> {{ m.businesses.category }}
           </div>
           <div class="cat-filter-body">
             <a href="?{% if selected_city %}city={{ selected_city }}&{% endif %}{% if search_q %}q={{ search_q }}&{% endif %}{% if sort_by %}sort={{ sort_by }}{% endif %}{% if open_today %}&open_today=1{% endif %}"
                class="cat-filter-opt {% if not selected_category %}active{% endif %}">
-              <i class="bi bi-grid"></i> Hammasi
+              <i class="bi bi-grid"></i> {{ m.businesses.all }}
               <span class="fopt-count">{{ total_count }}</span>
             </a>
             {% for cat in categories %}
@@ -862,15 +862,15 @@
               <div class="biz-badges">
                 {% if 'premium' in item.badges %}
                   <span class="biz-badge verified-premium">
-                    <i class="bi bi-patch-check-fill"></i> Verified Premium
+                    <i class="bi bi-patch-check-fill"></i> {{ m.businesses.badge_premium }}
                   </span>
                 {% elif 'pro' in item.badges %}
                   <span class="biz-badge verified-pro">
-                    <i class="bi bi-patch-check-fill"></i> Verified Pro
+                    <i class="bi bi-patch-check-fill"></i> {{ m.businesses.badge_pro }}
                   </span>
                 {% endif %}
                 {% if 'new' in item.badges %}
-                  <span class="biz-badge new-badge">Yangi</span>
+                  <span class="biz-badge new-badge">{{ m.businesses.badge_new }}</span>
                 {% endif %}
               </div>
 
@@ -905,13 +905,13 @@
               {# Open status + Employees #}
               <div class="biz-stats-row">
                 {% if item.is_open_today %}
-                  <span class="biz-open-badge open">Bugun ochiq
+                  <span class="biz-open-badge open">{{ m.businesses.badge_open }}
                     {% if item.today_wh %}
                       &middot; {{ item.today_wh.open_time|time:"H:i" }}–{{ item.today_wh.close_time|time:"H:i" }}
                     {% endif %}
                   </span>
                 {% else %}
-                  <span class="biz-open-badge closed"><i class="bi bi-moon-fill"></i> Yopiq</span>
+                  <span class="biz-open-badge closed"><i class="bi bi-moon-fill"></i> {{ m.businesses.badge_closed }}</span>
                 {% endif %}
                 {% if item.employee_count %}
                 <span class="biz-stat-chip">
@@ -937,9 +937,9 @@
             {# Card Footer #}
             <div class="biz-card-footer">
               <span class="biz-book-btn">
-                <i class="bi bi-calendar2-check-fill"></i> Band qilish
+                <i class="bi bi-calendar2-check-fill"></i> {{ m.businesses.book_btn }}
               </span>
-              <span class="biz-more-btn" title="Batafsil">
+              <span class="biz-more-btn" title="{{ m.businesses.more_btn }}">
                 <i class="bi bi-arrow-right"></i>
               </span>
             </div>
@@ -954,16 +954,9 @@
         {# Empty state #}
         <div class="cat-empty reveal">
           <i class="bi bi-search cat-empty-icon"></i>
-          <h3>Hech narsa topilmadi</h3>
+          <h3>{{ m.businesses.empty_title }}</h3>
           <p>
-            {% if search_q %}
-              "<strong>{{ search_q }}</strong>" bo'yicha biznes topilmadi. Boshqacha kalit so'z kiriting.
-            {% elif selected_category or selected_city or open_today %}
-              Tanlangan filtrlar bo'yicha biznes yo'q.
-              <br><a href="{% url 'marketing:businesses' %}" style="color:#818cf8">Filtrlarni tozalash</a>
-            {% else %}
-              Hozircha katalogda bizneslar yo'q.
-            {% endif %}
+            {{ m.businesses.empty_subtitle }}
           </p>
         </div>
         {% endif %}

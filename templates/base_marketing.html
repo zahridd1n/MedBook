@@ -58,7 +58,7 @@
               <a href="?lang={{ code }}" class="{% if current_lang == code %}active{% endif %}">{{ label }}</a>
             {% endfor %}
           </div>
-          <button class="mkt-theme-toggle" data-mkt-theme-toggle type="button" title="Yorug' rejim" aria-label="Yorug' rejimga o'tish">
+          <button class="mkt-theme-toggle" data-mkt-theme-toggle type="button" title="{{ m.nav.light_mode }}" aria-label="{{ m.nav.light_mode }}">
             <span class="icon-dark"><i class="bi bi-sun-fill"></i></span>
             <span class="icon-light"><i class="bi bi-moon-stars-fill"></i></span>
           </button>
@@ -74,7 +74,7 @@
           <a href="{% url 'marketing:pricing' %}">{{ m.nav.pricing }}</a>
           <a href="{% url 'marketing:faq' %}">{{ m.nav.faq }}</a>
           <a href="{% url 'marketing:contact' %}">{{ m.nav.contact }}</a>
-          <a href="{% url 'marketing:businesses' %}"><i class="bi bi-shop me-1"></i>Bizneslar</a>
+          <a href="{% url 'marketing:businesses' %}"><i class="bi bi-shop me-1"></i>{{ m.nav.businesses }}</a>
         </div>
 
         {# ── Desktop auth actions ── #}
@@ -85,7 +85,7 @@
               <a href="?lang={{ code }}" class="{% if current_lang == code %}active{% endif %}">{{ label }}</a>
             {% endfor %}
           </div>
-          <button class="mkt-theme-toggle" data-mkt-theme-toggle type="button" title="Yorug' rejim" aria-label="Yorug' rejimga o'tish">
+          <button class="mkt-theme-toggle" data-mkt-theme-toggle type="button" title="{{ m.nav.light_mode }}" aria-label="{{ m.nav.light_mode }}">
             <span class="icon-dark"><i class="bi bi-sun-fill"></i></span>
             <span class="icon-light"><i class="bi bi-moon-stars-fill"></i></span>
           </button>
@@ -137,16 +137,16 @@
           <a href="{% url 'marketing:pricing' %}">{{ m.nav.pricing }}</a>
           <a href="{% url 'marketing:faq' %}">{{ m.nav.faq }}</a>
           <a href="{% url 'marketing:contact' %}">{{ m.nav.contact }}</a>
-          <a href="{% url 'marketing:businesses' %}">Bizneslar</a>
+          <a href="{% url 'marketing:businesses' %}">{{ m.nav.businesses }}</a>
         </div>
       </div>
       {# ── Legal bottom bar ── #}
       <div class="mkt-footer-legal">
-        <span>© 2025 BookFlow. Barcha huquqlar himoyalangan.</span>
+        <span>{{ m.footer_copyright }}</span>
         <div class="mkt-footer-legal-links">
-          <a href="{% url 'marketing:oferta' %}">Ommaviy Oferta</a>
-          <a href="{% url 'marketing:terms' %}">Foydalanish Shartlari</a>
-          <a href="{% url 'marketing:privacy' %}">Maxfiylik Siyosati</a>
+          <a href="{% url 'marketing:oferta' %}">{{ m.legal.oferta }}</a>
+          <a href="{% url 'marketing:terms' %}">{{ m.legal.terms }}</a>
+          <a href="{% url 'marketing:privacy' %}">{{ m.legal.privacy }}</a>
         </div>
       </div>
     </div>
