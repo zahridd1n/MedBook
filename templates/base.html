@@ -2,10 +2,48 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}BookFlow{% endblock %}</title>
-
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Organization",
+  "name":"BookFlow",
+  "url":"https://bookflow.uz",
+  "logo":"https://bookflow.uz/static/logo.png",
+  "description":"BookFlow — xizmat ko'rsatuvchi bizneslar uchun onlayn band qilish va CRM platformasi.",
+  "sameAs":[
+    "https://instagram.com/bookflow_uz",
+    "https://t.me/bookflow"
+  ]
+}
+</script>
+  <script type="application/ld+json">
+{
+ "@context":"https://schema.org",
+ "@type":"WebSite",
+ "name":"BookFlow",
+ "url":"https://bookflow.uz"
+}
+</script>
+  <script type="application/ld+json">
+{
+ "@context":"https://schema.org",
+ "@type":"SoftwareApplication",
+ "name":"BookFlow",
+ "applicationCategory":"BusinessApplication",
+ "applicationSubCategory":"Booking Management Software",
+ "operatingSystem":"Web",
+ "url":"https://bookflow.uz",
+ "offers":{
+   "@type":"Offer",
+   "price":"0",
+   "priceCurrency":"UZS"
+ }
+}
+</script>
   {% block meta_tags %}
   {% if meta_description %}<meta name="description" content="{{ meta_description }}">{% endif %}
   {% if meta_keywords %}<meta name="keywords" content="{{ meta_keywords }}">{% endif %}
