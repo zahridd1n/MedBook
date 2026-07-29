@@ -19,42 +19,31 @@
   </div>
 </div>
 
-<!-- Active plan banner (non-free) -->
+<!-- Active plan strip (non-free) -->
 {% if business.subscription_plan != 'free' %}
-<div class="card mb-4" style="background:#0d1117;border-color:rgba(99,102,241,.3);">
-  <div class="card-body p-4">
-    <div class="row align-items-center g-3">
-      <div class="col-sm-6">
-        <div style="font-size:11px;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">{% trans "Faol tarif" %}</div>
-        <div style="font-size:22px;font-weight:700;color:#fff;letter-spacing:-.02em;">
-          {% if business.subscription_plan == 'growth' %}Pro{% else %}Max{% endif %}
-        </div>
-        <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:4px;">
-          {% if business.subscription_status == 'active' %}
-            <span style="color:#22c55e;">{% trans "● Faol" %}</span>
-          {% elif business.subscription_status == 'trial' %}
-            <span style="color:#f59e0b;">{% trans "● Sinov davri" %}</span>
-          {% else %}
-            <span style="color:#ef4444;">{% blocktrans %}● {{ business.get_subscription_status_display }}{% endblocktrans %}</span>
-          {% endif %}
-          {% if business.subscription_end %}
-            &mdash; {% blocktrans %}{{ business.subscription_end|date:"d.m.Y" }} gacha{% endblocktrans %}
-          {% endif %}
-        </div>
-      </div>
-      <div class="col-sm-6 text-sm-end">
-        <div style="font-size:13px;color:rgba(255,255,255,.5);">
-          {% blocktrans with emp_count=business.employees.count %}Xodimlar: {{ emp_count }}{% endblocktrans %}
-          {% if business.max_employees %}/{{ business.max_employees }}{% else %}/∞{% endif %}
-        </div>
-        {% if business.subscription_end %}
-        <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:4px;">
-          {% blocktrans %}Muddatgacha qoldi: <strong style="color:#fff;">{{ business.subscription_end|timeuntil }}</strong>{% endblocktrans %}
-        </div>
-        {% endif %}
-      </div>
-    </div>
+<div class="d-flex align-items-center gap-3 mb-4 px-4 py-3" style="background:var(--bs-body-bg,#f8fafc); border:1px solid var(--border,#e2e8f0); border-radius:14px;">
+  <!-- Plan badge -->
+  <div style="background:linear-gradient(135deg,var(--p),#8b5cf6); color:#fff; padding:6px 16px; border-radius:99px; font-size:13px; font-weight:700; white-space:nowrap;">
+    {{ business.plan_display }}
   </div>
+  <!-- Status dot -->
+  {% if business.subscription_status == 'active' %}
+    <span style="font-size:12px; color:#16a34a; font-weight:600;"><i class="bi bi-circle-fill" style="font-size:7px; vertical-align:middle; margin-right:4px;"></i>{% trans "Faol" %}</span>
+  {% elif business.subscription_status == 'trial' %}
+    <span style="font-size:12px; color:#d97706; font-weight:600;"><i class="bi bi-circle-fill" style="font-size:7px; vertical-align:middle; margin-right:4px;"></i>{% trans "Sinov" %}</span>
+  {% else %}
+    <span style="font-size:12px; color:#dc2626; font-weight:600;"><i class="bi bi-circle-fill" style="font-size:7px; vertical-align:middle; margin-right:4px;"></i>{{ business.get_subscription_status_display }}</span>
+  {% endif %}
+  <!-- Divider -->
+  <span style="color:var(--border,#e2e8f0); font-size:18px; font-weight:200;">|</span>
+  <!-- Time left -->
+  {% if business.subscription_end %}
+  <span style="font-size:12.5px; color:var(--gray-500,#64748b);">
+    <i class="bi bi-hourglass-split me-1"></i>
+    <strong style="color:var(--gray-800,#1e293b);">{{ business.subscription_end|timeuntil }}</strong> {% trans "qoldi" %}
+  </span>
+  <span style="font-size:12px; color:var(--gray-400,#94a3b8);">({{ business.subscription_end|date:"d.m.Y" }})</span>
+  {% endif %}
 </div>
 {% endif %}
 
@@ -263,4 +252,5 @@ function setDuration(dur) {
 }
 </script>
 
+{% include 'includes/pricing_help_modal.html' %}
 {% endblock %}

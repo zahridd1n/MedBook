@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.cache import cache
 
 
 class MarketingVideo(models.Model):
@@ -26,6 +27,14 @@ class MarketingVideo(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(f'marketing_videos_{self.language}')
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete(f'marketing_videos_{self.language}')
 
     def file_url(self):
         if self.file and hasattr(self.file, 'url'):

@@ -3,6 +3,7 @@ from copy import deepcopy
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+from django.core.cache import cache
 from business.models import Business
 
 
@@ -614,6 +615,11 @@ class SiteSettings(models.Model):
     def save(self, *args, **kwargs):
         self.pk = 1
         super().save(*args, **kwargs)
+        cache.delete('site_settings')
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete('site_settings')
 
     def marketing_copy(self, language='uz'):
         language = language if language in MARKETING_COPY_DEFAULTS else 'uz'
@@ -628,7 +634,12 @@ class SiteSettings(models.Model):
 
     @classmethod
     def load(cls):
-        obj, _ = cls.objects.get_or_create(pk=1)
+        # Try to get from cache first
+        obj = cache.get('site_settings')
+        if obj is None:
+            obj, _ = cls.objects.get_or_create(pk=1)
+            # Store in cache for 24 hours (it gets deleted on save anyway)
+            cache.set('site_settings', obj, 60 * 60 * 24)
         return obj
 
 
@@ -681,6 +692,18 @@ class PricingPlan(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.price_monthly:,} UZS/oy)".replace(',', ' ')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete('pricing_plans_uz')
+        cache.delete('pricing_plans_ru')
+        cache.delete('pricing_plans_en')
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete('pricing_plans_uz')
+        cache.delete('pricing_plans_ru')
+        cache.delete('pricing_plans_en')
 
     # ─── Hisoblangan narxlar (DB da saqlanmaydi) ─────────────────────────────
 
@@ -737,6 +760,18 @@ class PricingPlanFeature(models.Model):
 
     def __str__(self):
         return f"{self.plan.name} - {self.text}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete('pricing_plans_uz')
+        cache.delete('pricing_plans_ru')
+        cache.delete('pricing_plans_en')
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete('pricing_plans_uz')
+        cache.delete('pricing_plans_ru')
+        cache.delete('pricing_plans_en')
 
 
 class BusinessSubscription(Business):

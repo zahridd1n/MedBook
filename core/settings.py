@@ -145,15 +145,26 @@ CELERY_WORKER_CONCURRENCY = env.int('CELERY_WORKER_CONCURRENCY', default=4)
 CELERY_TASK_SOFT_TIME_LIMIT = 60
 CELERY_TASK_TIME_LIMIT = 120
 
-# Django Cache (Redis)
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': REDIS_URL,
-        'KEY_PREFIX': 'bookflow',
-        'TIMEOUT': 300,
+# Django Cache (Redis or LocMem)
+# Local development uchun Redis o'rnatilmagan bo'lsa LocMemCache ishlatamiz. 
+# USE_REDIS_CACHE ni .env da alohida ko'rsatish mumkin.
+if not env.bool('USE_REDIS_CACHE', default=not DEBUG):
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'bookflow-local',
+        }
     }
-}
+else:
+    # Serverda (DEBUG=False) yoki aniq USE_REDIS_CACHE=True bo'lganda RedisCache
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': REDIS_URL,
+            'KEY_PREFIX': 'bookflow',
+            'TIMEOUT': 300,
+        }
+    }
 
 # Email (SMTP)
 EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')

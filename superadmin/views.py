@@ -401,7 +401,7 @@ def payment_detail(request, pk):
         if action == 'approve':
             payment.status = 'approved'
             business = payment.business
-            business.subscription_plan = 'growth' if payment.plan == 'pro' else 'enterprise'
+            business.subscription_plan = payment.plan
             business.subscription_status = 'active'
             business.subscription_start = timezone.now()
             # Duration bo'yicha obuna muddati

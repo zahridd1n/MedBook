@@ -379,10 +379,6 @@ class FAQ(models.Model):
 
 
 class Payment(models.Model):
-    PAYMENT_PLAN_CHOICES = [
-        ('pro', 'Pro'),
-        ('max', 'Max'),
-    ]
     STATUS_CHOICES = [
         ('pending', 'Kutilmoqda'),
         ('approved', 'Tasdiqlangan'),
@@ -395,7 +391,7 @@ class Payment(models.Model):
     ]
 
     business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='payments')
-    plan = models.CharField(max_length=20, choices=PAYMENT_PLAN_CHOICES)
+    plan = models.CharField(max_length=50, help_text='Tarif slug (masalan: growth, enterprise)')
     duration = models.CharField(
         max_length=20, choices=DURATION_CHOICES, default='3months',
         help_text="Obuna davomiyligi: 3 oylik yoki 1 yillik",
@@ -410,6 +406,11 @@ class Payment(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+    def get_plan_display(self):
+        from superadmin.models import PricingPlan
+        plan_obj = PricingPlan.objects.filter(slug=self.plan).first()
+        return plan_obj.name if plan_obj else self.plan
 
     def __str__(self):
         return f'{self.business.name} – {self.get_plan_display()} ({self.get_status_display()})'

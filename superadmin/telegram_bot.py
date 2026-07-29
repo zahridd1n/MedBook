@@ -145,8 +145,24 @@ def handle_callback(chat_id, callback_data):
         if payment.status == 'approved':
             send_message(chat_id, "✅ Bu to'lov avval tasdiqlangan.")
             return
+        
+        from django.utils import timezone
+        from datetime import timedelta
+        
         payment.status = 'approved'
-        payment.save()
+        business = payment.business
+        business.subscription_plan = payment.plan
+        business.subscription_status = 'active'
+        business.subscription_start = timezone.now()
+        duration_days = 365 if payment.duration == 'yearly' else 90
+        business.subscription_end = timezone.now() + timedelta(days=duration_days)
+        
+        business.save(update_fields=[
+            'subscription_plan', 'subscription_status',
+            'subscription_start', 'subscription_end',
+        ])
+        payment.save(update_fields=['status'])
+        
         notify_payment_approved(payment)
         send_message(chat_id, f"✅ To'lov tasdiqlandi: {payment.business.name} — {payment.amount:,} UZS")
 

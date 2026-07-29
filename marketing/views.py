@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.db import models
 from django.db.models import Count
 from django.conf import settings
+from django.core.cache import cache
 
 from superadmin.models import SiteSettings
 from business.models import Business
@@ -117,6 +118,11 @@ def _money(amount):
 
 
 def _plans(site, copy, lang):
+    cache_key = f'pricing_plans_{lang}'
+    cached_plans = cache.get(cache_key)
+    if cached_plans is not None:
+        return cached_plans
+
     from superadmin.models import PricingPlan
     plans = PricingPlan.objects.filter(is_active=True).prefetch_related('features')
     result = []
@@ -139,6 +145,9 @@ def _plans(site, copy, lang):
             'featured': p.is_popular,
             'features': [f.text for f in p.features.filter(is_included=True).order_by('order')],
         })
+    
+    # Store in cache for 24 hours (cleared on save)
+    cache.set(cache_key, result, 60 * 60 * 24)
     return result
 
 
@@ -181,27 +190,36 @@ def _context(request):
     site = SiteSettings.load()
     copy = site.marketing_copy(lang)
 
-    model_videos = MarketingVideo.objects.filter(
-        language=lang, is_published=True
-    ).order_by('order', 'created_at')
-    
-    # Kiritilgan tilda videolar yo'q bo'lsa, 'uz' dagi videolarni ko'rsatamiz
-    if not model_videos.exists() and lang != 'uz':
+    cache_key = f'marketing_videos_{lang}'
+    videos_data = cache.get(cache_key)
+
+    if videos_data is None:
         model_videos = MarketingVideo.objects.filter(
-            language='uz', is_published=True
+            language=lang, is_published=True
         ).order_by('order', 'created_at')
-    
-    if model_videos.exists():
-        copy['tutorials']['videos'] = [
-            {
-                'title': v.title,
-                'description': v.description,
-                'youtube_id': v.youtube_id,
-                'file_url': v.file_url(),
-                'duration': v.duration,
-            }
-            for v in model_videos
-        ]
+        
+        # Kiritilgan tilda videolar yo'q bo'lsa, 'uz' dagi videolarni ko'rsatamiz
+        if not model_videos.exists() and lang != 'uz':
+            model_videos = MarketingVideo.objects.filter(
+                language='uz', is_published=True
+            ).order_by('order', 'created_at')
+        
+        videos_data = []
+        if model_videos.exists():
+            videos_data = [
+                {
+                    'title': v.title,
+                    'description': v.description,
+                    'youtube_id': v.youtube_id,
+                    'file_url': v.file_url(),
+                    'duration': v.duration,
+                }
+                for v in model_videos
+            ]
+        cache.set(cache_key, videos_data, 60 * 60 * 24)
+
+    if videos_data:
+        copy['tutorials']['videos'] = videos_data
 
     return {
         'site': site,
@@ -350,41 +368,53 @@ def businesses_directory(request):
         )
 
     # ─── Category counts for filter sidebar ────────────────────────
-    category_counts = (
-        Business.objects
-        .filter(show_in_directory=True, is_active=True, is_blocked=False)
-        .values('category')
-        .annotate(cnt=Count('id'))
-        .order_by('category')
-    )
-    cat_labels = CATEGORY_LABELS[lang]
-    categories = [
-        {
-            'value': row['category'],
-            'label': cat_labels.get(row['category'], row['category']),
-            'icon': CATEGORY_ICONS.get(row['category'], 'grid'),
-            'count': row['cnt'],
-        }
-        for row in category_counts
-    ]
+    categories = cache.get(f'cat_counts_{lang}')
+    if categories is None:
+        category_counts = (
+            Business.objects
+            .filter(show_in_directory=True, is_active=True, is_blocked=False)
+            .values('category')
+            .annotate(cnt=Count('id'))
+            .order_by('category')
+        )
+        cat_labels = CATEGORY_LABELS[lang]
+        categories = [
+            {
+                'value': row['category'],
+                'label': cat_labels.get(row['category'], row['category']),
+                'icon': CATEGORY_ICONS.get(row['category'], 'grid'),
+                'count': row['cnt'],
+            }
+            for row in category_counts
+        ]
+        cache.set(f'cat_counts_{lang}', categories, 60 * 15)  # cache for 15 minutes
+    else:
+        cat_labels = CATEGORY_LABELS[lang]
 
     # ─── City list for sidebar ─────────────────────────────────────
-    cities = (
-        Business.objects
-        .filter(show_in_directory=True, is_active=True, is_blocked=False)
-        .exclude(city='')
-        .values_list('city', flat=True)
-        .distinct()
-        .order_by('city')
-    )
+    cities = cache.get('biz_cities')
+    if cities is None:
+        cities = list(
+            Business.objects
+            .filter(show_in_directory=True, is_active=True, is_blocked=False)
+            .exclude(city='')
+            .values_list('city', flat=True)
+            .distinct()
+            .order_by('city')
+        )
+        cache.set('biz_cities', cities, 60 * 60)  # cache for 1 hour
 
     # ─── Open-today check per business ─────────────────────────────
     today_weekday = timezone.localdate().weekday()
-    open_biz_ids = set(
-        WorkingHours.objects
-        .filter(day=today_weekday, is_open=True)
-        .values_list('business_id', flat=True)
-    )
+    
+    open_biz_ids = cache.get('open_biz_ids')
+    if open_biz_ids is None:
+        open_biz_ids = set(
+            WorkingHours.objects
+            .filter(day=today_weekday, is_open=True)
+            .values_list('business_id', flat=True)
+        )
+        cache.set('open_biz_ids', open_biz_ids, 60 * 15)  # cache for 15 minutes
 
     # ─── Build business list with badges ───────────────────────────
     from datetime import timedelta
@@ -415,7 +445,10 @@ def businesses_directory(request):
             'employee_count': biz.employee_count,
         })
 
-    total_all = Business.objects.filter(show_in_directory=True, is_active=True, is_blocked=False).count()
+    total_all = cache.get('biz_total_all')
+    if total_all is None:
+        total_all = Business.objects.filter(show_in_directory=True, is_active=True, is_blocked=False).count()
+        cache.set('biz_total_all', total_all, 60 * 15)
 
     context = {
         'site': site,

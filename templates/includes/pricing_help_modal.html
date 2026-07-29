@@ -1,0 +1,60 @@
+<!-- Help Modal -->
+<div class="modal fade" id="pricingHelpModal" tabindex="-1" aria-labelledby="pricingHelpModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:16px;border:none;box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+      <div class="modal-header" style="border-bottom:1px solid rgba(0,0,0,0.05);padding:1.5rem;">
+        <h5 class="modal-title fw-bold" id="pricingHelpModalLabel">{% load i18n %}{% trans "Yordam kerakmi?" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding:1.5rem;">
+        <p class="mb-4" style="color:#6b7280;font-size:15px;line-height:1.5;">
+          Tarif, obuna yoki sayt haqida ma'lumot yoki savolingiz bo'lsa quyidagi raqamga qo'ngiroq qiling yoki telegramdan yozing.
+        </p>
+        <div class="d-flex flex-column gap-3">
+          {% if site.contact_phone %}
+          <a href="tel:{{ site.contact_phone }}" class="d-flex align-items-center justify-content-between p-3" style="border-radius:12px;text-decoration:none;background:#f9fafb;border:1px solid #e5e7eb;transition:all 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
+            <div class="d-flex align-items-center gap-3">
+              <div style="width:42px;height:42px;border-radius:10px;background:rgba(99,102,241,0.1);color:#6366f1;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">
+                <i class="bi bi-telephone-fill"></i>
+              </div>
+              <div class="text-start">
+                <div style="font-size:11px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Qo'ngiroq qiling</div>
+                <div style="font-weight:700;color:#111827;font-size:15px;">{{ site.contact_phone }}</div>
+              </div>
+            </div>
+            <i class="bi bi-chevron-right text-muted"></i>
+          </a>
+          {% endif %}
+          
+          {% if site.contact_telegram %}
+          <a href="{{ site.contact_telegram }}" target="_blank" class="d-flex align-items-center justify-content-between p-3" style="border-radius:12px;text-decoration:none;background:#f9fafb;border:1px solid #e5e7eb;transition:all 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
+            <div class="d-flex align-items-center gap-3">
+              <div style="width:42px;height:42px;border-radius:10px;background:rgba(14,165,233,0.1);color:#0ea5e9;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">
+                <i class="bi bi-telegram"></i>
+              </div>
+              <div class="text-start">
+                <div style="font-size:11px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Telegram orqali</div>
+                <div style="font-weight:700;color:#111827;font-size:15px;">Admin bilan bog'lanish</div>
+              </div>
+            </div>
+            <i class="bi bi-chevron-right text-muted"></i>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    if (!sessionStorage.getItem('pricingHelpModalShown')) {
+        setTimeout(function() {
+            if (typeof bootstrap !== 'undefined') {
+                var myModal = new bootstrap.Modal(document.getElementById('pricingHelpModal'));
+                myModal.show();
+                sessionStorage.setItem('pricingHelpModalShown', 'true');
+            }
+        }, 1500);
+    }
+});
+</script>
