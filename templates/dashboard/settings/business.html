@@ -108,16 +108,16 @@
     <div class="page-hd-title">{% trans "Biznes sozlamalari" %}</div>
     <div class="page-hd-sub">{% trans "Kompaniyangiz profilini tahrirlang" %}</div>
   </div>
-  {% if business %}
   <div class="page-hd-actions">
+    {% if business %}
     <a href="/{{ business.slug }}/" target="_blank" class="btn btn-secondary">
       <i class="bi bi-box-arrow-up-right me-1"></i> {% trans "Sahifani ko'rish" %}
     </a>
+    {% endif %}
     <button type="submit" form="business-form" class="btn btn-primary shadow-sm">
       <i class="bi bi-check2-all me-1"></i> {% trans "Saqlash" %}
     </button>
   </div>
-  {% endif %}
 </div>
 
 <div class="row g-4">
