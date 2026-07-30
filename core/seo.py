@@ -141,8 +141,9 @@ def _build_seo_context(request, business, page_type, post=None, employee=None):
 
     elif page_type == 'employee' and employee:
         emp_title = f"{employee.name} — {business.name}"
-        meta_title = employee.meta_title or emp_title if hasattr(employee, 'meta_title') and employee.meta_title else emp_title
-        meta_description = employee.meta_description or employee.bio[:150] if employee.bio else meta_description
+        meta_title = getattr(employee, 'meta_title', None) or emp_title
+        emp_bio = getattr(employee, 'bio', '') or ''
+        meta_description = getattr(employee, 'meta_description', None) or (emp_bio[:150] if emp_bio else meta_description)
         og_title = meta_title
         og_description = meta_description
         og_type = 'profile'

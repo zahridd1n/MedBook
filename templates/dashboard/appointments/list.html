@@ -100,15 +100,16 @@
             <td style="font-weight:500;color:var(--text-2);">{{ a.time|time:"H:i" }}</td>
             <td>
               <div class="dropdown">
-                <button class="status status-{{ a.status }}" style="cursor:pointer;border:none;background:none;" data-bs-toggle="dropdown">
+                <button class="status status-{{ a.status }}" style="cursor:pointer;border:none;background:none;"
+                  data-bs-toggle="dropdown" aria-expanded="false" id="status-btn-{{ a.pk }}">
                   {{ a.get_status_display }} <i class="bi bi-chevron-down" style="font-size:9px;opacity:.6;"></i>
                 </button>
-                <ul class="dropdown-menu" style="min-width:160px;">
+                <ul class="dropdown-menu shadow" style="min-width:160px;z-index:9999;">
                   {% for val,label in status_choices %}
                   <li>
                     <form method="post" action="{% url 'appointments:status' a.pk %}">{% csrf_token %}
                       <input type="hidden" name="status" value="{{ val }}">
-                      <button class="dropdown-item">{{ label }}</button>
+                      <button type="submit" class="dropdown-item {% if a.status == val %}fw-semibold text-primary{% endif %}">{{ label }}</button>
                     </form>
                   </li>
                   {% endfor %}
@@ -180,4 +181,19 @@
 </div>
 {% endif %}
 
+{% block extra_js %}
+<script>
+// Fix: dropdowns inside table-responsive (overflow) container get clipped.
+// Use Popper.js strategy:'fixed' so the menu is positioned relative to the viewport.
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(function (toggleEl) {
+    bootstrap.Dropdown.getOrCreateInstance(toggleEl, {
+      popperConfig: function (defaultConfig) {
+        return Object.assign({}, defaultConfig, { strategy: 'fixed' });
+      }
+    });
+  });
+});
+</script>
+{% endblock %}
 {% endblock %}
