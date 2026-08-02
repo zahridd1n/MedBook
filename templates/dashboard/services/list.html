@@ -72,6 +72,31 @@
       </tbody>
     </table>
   </div>
+  </div>
+  
+  {% if services.has_other_pages %}
+  <div class="ds-pager">
+    <span>{% blocktrans count total=services.paginator.count %}Jami {{ total }} ta xizmat{% plural %}Jami {{ total }} ta xizmat{% endblocktrans %}</span>
+    <div class="ds-pager-pages">
+      <a href="?page={% if services.has_previous %}{{ services.previous_page_number }}{% else %}1{% endif %}"
+         class="ds-page-btn {% if not services.has_previous %}disabled{% endif %}">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+      {% for num in services.paginator.page_range %}
+        {% if num == services.number %}
+          <span class="ds-page-btn active">{{ num }}</span>
+        {% elif num >= services.number|add:'-2' and num <= services.number|add:'2' %}
+          <a href="?page={{ num }}" class="ds-page-btn">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+      <a href="?page={% if services.has_next %}{{ services.next_page_number }}{% else %}{{ services.paginator.num_pages }}{% endif %}"
+         class="ds-page-btn {% if not services.has_next %}disabled{% endif %}">
+        <i class="bi bi-chevron-right"></i>
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
 </div>
 {% else %}
 <div class="card">

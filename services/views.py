@@ -10,8 +10,13 @@ from business.models import Business
 @login_required
 def service_list(request):
     business = get_object_or_404(Business, owner=request.user)
+    qs = business.services.all()
+    from django.core.paginator import Paginator
+    paginator = Paginator(qs, 15)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
     return render(request, 'dashboard/services/list.html', {
-        'business': business, 'services': business.services.all(),
+        'business': business, 'services': page_obj,
     })
 
 

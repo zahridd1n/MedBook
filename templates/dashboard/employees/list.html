@@ -67,6 +67,29 @@
   </div>
   {% endfor %}
 </div>
+
+{% if employees.has_other_pages %}
+<div class="ds-pager mt-3 mb-2" style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);">
+  <span>{% blocktrans count total=employees.paginator.count %}Jami {{ total }} ta xodim{% plural %}Jami {{ total }} ta xodim{% endblocktrans %}</span>
+  <div class="ds-pager-pages">
+    <a href="?page={% if employees.has_previous %}{{ employees.previous_page_number }}{% else %}1{% endif %}"
+       class="ds-page-btn {% if not employees.has_previous %}disabled{% endif %}">
+      <i class="bi bi-chevron-left"></i>
+    </a>
+    {% for num in employees.paginator.page_range %}
+      {% if num == employees.number %}
+        <span class="ds-page-btn active">{{ num }}</span>
+      {% elif num >= employees.number|add:'-2' and num <= employees.number|add:'2' %}
+        <a href="?page={{ num }}" class="ds-page-btn">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+    <a href="?page={% if employees.has_next %}{{ employees.next_page_number }}{% else %}{{ employees.paginator.num_pages }}{% endif %}"
+       class="ds-page-btn {% if not employees.has_next %}disabled{% endif %}">
+      <i class="bi bi-chevron-right"></i>
+    </a>
+  </div>
+</div>
+{% endif %}
 {% else %}
 <div class="card">
   <div class="ds-empty">

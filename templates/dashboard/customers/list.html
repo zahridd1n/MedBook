@@ -108,6 +108,30 @@
       </tbody>
     </table>
   </div>
+  
+  {% if customers_data.has_other_pages %}
+  <div class="ds-pager">
+    <span>{% blocktrans count total=customers_data.paginator.count %}Jami {{ total }} ta mijoz{% plural %}Jami {{ total }} ta mijoz{% endblocktrans %}</span>
+    <div class="ds-pager-pages">
+      <a href="?page={% if customers_data.has_previous %}{{ customers_data.previous_page_number }}{% else %}1{% endif %}&q={{ search }}"
+         class="ds-page-btn {% if not customers_data.has_previous %}disabled{% endif %}">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+      {% for num in customers_data.paginator.page_range %}
+        {% if num == customers_data.number %}
+          <span class="ds-page-btn active">{{ num }}</span>
+        {% elif num >= customers_data.number|add:'-2' and num <= customers_data.number|add:'2' %}
+          <a href="?page={{ num }}&q={{ search }}" class="ds-page-btn">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+      <a href="?page={% if customers_data.has_next %}{{ customers_data.next_page_number }}{% else %}{{ customers_data.paginator.num_pages }}{% endif %}&q={{ search }}"
+         class="ds-page-btn {% if not customers_data.has_next %}disabled{% endif %}">
+        <i class="bi bi-chevron-right"></i>
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
   {% else %}
   <div class="ds-empty">
     <div class="ds-empty-icon"><i class="bi bi-people"></i></div>

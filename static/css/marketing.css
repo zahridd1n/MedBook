@@ -2470,3 +2470,54 @@ body:has(.marketing-shell) {
   }
 }
 
+
+/* ── Pagination ── */
+.mkt-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 48px;
+  padding: 8px 0;
+}
+
+.mkt-pagination .page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--mkt-soft);
+  background: var(--mkt-card);
+  border: 1px solid var(--mkt-border);
+  transition: all 0.22s var(--mkt-ease);
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.mkt-pagination .page-link:hover {
+  color: var(--mkt-text);
+  border-color: var(--mkt-indigo);
+  background: var(--mkt-card-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(123, 124, 255, 0.2);
+}
+
+.mkt-pagination .page-link.active {
+  background: linear-gradient(135deg, var(--mkt-indigo), var(--mkt-blue));
+  border-color: var(--mkt-indigo);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(123, 124, 255, 0.35);
+  pointer-events: none;
+}
+
+.mkt-pagination .page-link.prev,
+.mkt-pagination .page-link.next {
+  border-radius: 14px;
+  font-size: 15px;
+}

@@ -238,49 +238,66 @@
 }
 .cat-filter-opt.active i { color: #6366f1; }
 
-/* Toggle switch for Open Today */
+/* Toggle switch for Open Today — iPhone style */
 .toggle-filter {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 10px;
-  border-radius: 10px;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 12px;
   cursor: pointer;
   text-decoration: none;
+  color: var(--mkt-soft);
+  font-size: .875rem;
+  font-weight: 600;
+  transition: background .2s, color .2s;
+  user-select: none;
+}
+.toggle-filter:hover {
+  background: rgba(255,255,255,.05);
   color: var(--mkt-text);
-  font-size: .865rem;
-  font-weight: 500;
-  transition: background .18s;
 }
-.toggle-filter:hover { background: rgba(99,102,241,.07); }
+.toggle-filter.active { color: var(--mkt-text); }
+
+/* The track */
 .toggle-dot {
-  width: 36px;
-  height: 20px;
-  border-radius: 999px;
-  background: var(--mkt-surface);
-  border: 1.5px solid var(--mkt-border-soft);
-  position: relative;
-  transition: all .2s;
   flex-shrink: 0;
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: transparent;
+  border: 2px solid var(--mkt-border);
+  position: relative;
+  transition: background .25s cubic-bezier(.4,0,.2,1),
+              border-color .25s cubic-bezier(.4,0,.2,1),
+              box-shadow .25s cubic-bezier(.4,0,.2,1);
 }
+/* The ball */
 .toggle-dot::after {
   content: '';
   position: absolute;
-  width: 14px;
-  height: 14px;
-  background: var(--mkt-subtle);
+  width: 18px;
+  height: 18px;
+  background: var(--mkt-muted);
   border-radius: 50%;
-  top: 1px;
-  left: 1px;
-  transition: all .2s;
+  top: 2px;
+  left: 2px;
+  transition: transform .25s cubic-bezier(.4,0,.2,1),
+              background .25s cubic-bezier(.4,0,.2,1),
+              box-shadow .25s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
 }
+/* ON state */
 .toggle-filter.active .toggle-dot {
-  background: #6366f1;
+  background: linear-gradient(135deg, #6366f1, #60a5fa);
   border-color: #6366f1;
+  box-shadow: 0 0 12px rgba(99,102,241,.45), 0 0 4px rgba(99,102,241,.2) inset;
 }
 .toggle-filter.active .toggle-dot::after {
-  left: 17px;
-  background: white;
+  transform: translateX(18px);
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,.3);
 }
 
 /* City select */
@@ -747,7 +764,10 @@
           <div class="cat-filter-body">
             <a href="?{% if open_today %}{% else %}open_today=1&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_city %}city={{ selected_city }}&{% endif %}{% if search_q %}q={{ search_q }}&{% endif %}{% if sort_by %}sort={{ sort_by }}{% endif %}"
                class="toggle-filter {% if open_today %}active{% endif %}">
-              <span>🟢 {{ m.businesses.open_today }}</span>
+              <span style="display:flex;align-items:center;gap:7px;">
+                <i class="bi bi-clock{% if open_today %}-fill{% endif %}" style="font-size:13px;"></i>
+                {{ m.businesses.open_today }}
+              </span>
               <span class="toggle-dot"></span>
             </a>
           </div>
@@ -949,6 +969,26 @@
           {% endwith %}
           {% endfor %}
         </div>
+
+        {% if page_obj.has_other_pages %}
+        <div class="mkt-pagination reveal">
+          {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_city %}&city={{ selected_city }}{% endif %}{% if search_q %}&q={{ search_q }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}{% if open_today %}&open_today=1{% endif %}" class="page-link prev"><i class="bi bi-chevron-left"></i></a>
+          {% endif %}
+          
+          {% for i in page_obj.paginator.page_range %}
+            {% if page_obj.number == i %}
+              <span class="page-link active">{{ i }}</span>
+            {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+              <a href="?page={{ i }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_city %}&city={{ selected_city }}{% endif %}{% if search_q %}&q={{ search_q }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}{% if open_today %}&open_today=1{% endif %}" class="page-link">{{ i }}</a>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_city %}&city={{ selected_city }}{% endif %}{% if search_q %}&q={{ search_q }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}{% if open_today %}&open_today=1{% endif %}" class="page-link next"><i class="bi bi-chevron-right"></i></a>
+          {% endif %}
+        </div>
+        {% endif %}
 
         {% else %}
         {# Empty state #}

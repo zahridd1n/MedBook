@@ -10,9 +10,14 @@ from business.models import Business
 @login_required
 def employee_list(request):
     business = get_object_or_404(Business, owner=request.user)
+    qs = business.employees.prefetch_related('services').all()
+    from django.core.paginator import Paginator
+    paginator = Paginator(qs, 15)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
     return render(request, 'dashboard/employees/list.html', {
         'business': business,
-        'employees': business.employees.prefetch_related('services').all(),
+        'employees': page_obj,
     })
 
 

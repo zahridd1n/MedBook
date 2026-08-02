@@ -26,8 +26,13 @@ def customer_list(request):
     total_customers = business.customers.count()
     total_appts_all = Appointment.objects.filter(business=business).count()
 
+    from django.core.paginator import Paginator
+    paginator = Paginator(qs, 15)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'dashboard/customers/list.html', {
-        'business': business, 'customers_data': qs, 'search': search,
+        'business': business, 'customers_data': page_obj, 'search': search,
         'total_customers': total_customers,
         'total_appts_all': total_appts_all,
     })

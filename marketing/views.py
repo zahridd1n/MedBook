@@ -445,6 +445,11 @@ def businesses_directory(request):
             'employee_count': biz.employee_count,
         })
 
+    from django.core.paginator import Paginator
+    paginator = Paginator(businesses_with_meta, 12)  # 12 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     total_all = cache.get('biz_total_all')
     if total_all is None:
         total_all = Business.objects.filter(show_in_directory=True, is_active=True, is_blocked=False).count()
@@ -455,7 +460,8 @@ def businesses_directory(request):
         'm': copy,
         'current_lang': lang,
         'languages': [('uz', 'UZ'), ('ru', 'RU'), ('en', 'EN')],
-        'businesses_with_meta': businesses_with_meta,
+        'businesses_with_meta': page_obj,  # Pass page_obj instead of the full list
+        'page_obj': page_obj,
         'categories': categories,
         'cities': list(cities),
         'selected_category': category_filter,
