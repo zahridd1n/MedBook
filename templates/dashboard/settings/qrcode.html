@@ -1,106 +1,403 @@
 {% extends 'base_dashboard.html' %}
 {% load i18n %}
 {% load static %}
+
 {% block page_title %}{% trans "QR Code" %} — {{ business.name }}{% endblock %}
+
 {% block dashboard_content %}
 
-<!-- Page header -->
-<div class="page-hd">
-  <div class="page-hd-left">
-    <div class="page-hd-title">{% trans "QR Code" %}</div>
-    <div class="page-hd-sub">
-      {% trans "Biznesingiz ommaviy sahifasiga havola qiluvchi QR kod. Bepul yuklab oling va istalgan joyga joylashtiring." %}
-    </div>
-  </div>
-</div>
+<!-- Load qrcodejs library inside content block to ensure it loads in base_dashboard -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
-{% if not can_use %}
-<div class="upgrade-strip">
-  <i class="bi bi-stars" style="color:#a5b4fc;font-size:1.25rem;"></i>
-  <p>{% blocktrans %}QR Code <strong>Pro</strong> va <strong>Max</strong> tariflarida mavjud.{% endblocktrans %}</p>
-  <a href="{% url 'business:upgrade' %}" class="btn btn-primary btn-sm" style="flex-shrink:0;">{% trans "Yangilash" %} →</a>
-</div>
-{% endif %}
+<style>
+/* ════════════════════════════════════════════════════
+   QR CODE DASHBOARD DESIGN
+   Premium SaaS Style
+   ════════════════════════════════════════════════════ */
 
-<div class="row g-4">
+/* Layout & Spacing */
+.qr-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-  <!-- LEFT: QR Code preview + downloads -->
-  <div class="col-lg-5">
-    <div class="card">
-      <div class="card-head">
-        <span class="card-head-title">{% trans "QR Code" %}</span>
+/* Card Styling override for modern look */
+.qr-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 14px);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+.qr-card:hover {
+  box-shadow: var(--shadow);
+}
+.qr-card-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.qr-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.qr-card-body {
+  padding: 20px;
+}
+
+/* QR Code Preview Box */
+.qr-preview-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  text-align: center;
+  background: var(--gray-50, #f9fafb);
+  border-radius: var(--radius, 10px);
+  border: 1px dashed var(--border);
+}
+
+.qr-canvas-holder {
+  width: 200px;
+  height: 200px;
+  background: #fff;
+  border-radius: var(--radius, 10px);
+  padding: 10px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  transition: transform 0.2s ease;
+}
+.qr-canvas-holder:hover {
+  transform: scale(1.02);
+}
+.qr-canvas-holder canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Style Buttons */
+.style-select-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.style-option-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 10px);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3);
+  transition: all 0.2s ease;
+  outline: none;
+  width: 100%;
+}
+.style-option-btn:hover {
+  border-color: var(--p);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+.style-option-btn.active {
+  border-color: var(--p);
+  color: var(--p);
+  background: color-mix(in srgb, var(--p) 8%, var(--surface));
+  box-shadow: 0 0 0 3px var(--p-ring);
+}
+.style-mini-preview {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.style-mini-preview canvas {
+  width: 50px !important;
+  height: 50px !important;
+  display: block;
+}
+
+/* Color Picker Row */
+.color-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--gray-50, #f9fafb);
+  padding: 12px 16px;
+  border-radius: var(--radius, 10px);
+  border: 1px solid var(--border);
+}
+.color-input-wrapper {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+.color-input-wrapper input[type="color"] {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 50px;
+  height: 50px;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+}
+
+/* Tabs for Marketing Materials */
+.marketing-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 20px;
+}
+.marketing-tab-btn {
+  padding: 10px 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-3);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.marketing-tab-btn:hover {
+  color: var(--text);
+}
+.marketing-tab-btn.active {
+  color: var(--p);
+  border-bottom-color: var(--p);
+}
+.marketing-panel {
+  display: none;
+}
+.marketing-panel.active {
+  display: block;
+}
+
+/* Preview Canvas Wrapper */
+.canvas-preview-card {
+  background: var(--gray-50, #f9fafb);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 14px);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  min-height: 250px;
+  position: relative;
+  overflow: hidden;
+}
+.canvas-preview-card canvas {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  display: block;
+}
+
+/* Use cases grid */
+.use-case-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 10px);
+  padding: 16px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+.use-case-card:hover {
+  border-color: var(--p);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+.use-case-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  font-size: 18px;
+}
+
+/* UI Utility Classes */
+.qr-url-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  background: var(--surface);
+  padding: 8px 16px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-xs);
+}
+
+@media (max-width: 768px) {
+  .style-select-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+
+<div class="qr-container">
+  
+  {% if not can_use %}
+  <div class="upg-strip mb-4" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-radius: 12px; background: color-mix(in srgb, var(--sb-premium) 8%, var(--surface)); border: 1px solid rgba(245,158,11,0.2);">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <i class="bi bi-stars" style="color: var(--sb-premium); font-size: 20px;"></i>
+      <div>
+        <h6 style="margin: 0; font-weight: 700; color: var(--text);">{% trans "Premium funksiyalar" %}</h6>
+        <p style="margin: 4px 0 0; font-size: 12.5px; color: var(--text-3);">{% blocktrans %}Zamonaviy dizaynli QR-kodlar, vizitka va stiker generatorlar faqat Pro/Max tariflarda ishlaydi.{% endblocktrans %}</p>
       </div>
-      <div class="card-body" style="text-align:center;padding:28px 24px 20px;">
-        <div id="qr-preview" style="display:inline-block;background:#fff;padding:16px;border-radius:12px;border:1px solid var(--border);margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,.04);">
-          <img src="data:image/svg+xml;base64,{{ qr_svg_b64|default:'' }}" alt="QR Code" id="qr-img" style="width:200px;height:200px;display:block;image-rendering:pixelated;">
-        </div>
+    </div>
+    <a href="{% url 'business:upgrade' %}" class="btn btn-warning btn-sm" style="font-weight: 600; color: #000; background: var(--sb-premium); border-color: var(--sb-premium);">{% trans "Yangilash" %}</a>
+  </div>
+  {% endif %}
 
-        <div style="font-size:12px;color:var(--text-3);margin-bottom:4px;">{% trans "Havola" %}</div>
-        <div style="font-size:12.5px;font-weight:600;color:var(--text);word-break:break-all;margin-bottom:20px;background:var(--bg);padding:8px 12px;border-radius:6px;" id="qr-url-display">
-          {{ qr_url }}
+  <div class="row g-4">
+    
+    <!-- LEFT PANEL: QR Preview and Styles -->
+    <div class="col-lg-5">
+      
+      <!-- Main QR Code Display -->
+      <div class="qr-card">
+        <div class="qr-card-head">
+          <span class="qr-card-title">{% trans "QR Kod" %}</span>
+          <span class="badge bg-success-subtle text-success border border-success-subtle">{% trans "Aktiv" %}</span>
         </div>
-
-        <div style="border-top:1px solid var(--border);padding-top:18px;">
-          <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:12px;">{% trans "Yuklab olish" %}</div>
-          <div class="row g-2">
-            {% for key, preset in size_presets.items %}
-            <div class="col-6">
-              <div class="card" style="border-color:var(--border);box-shadow:none;">
-                <div class="card-body" style="padding:10px;text-align:center;">
-                  <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px;">{{ preset.label }}</div>
-                  <div style="display:flex;gap:4px;justify-content:center;">
-                    <a href="{% url 'business:qr_download' size=key fmt='png' %}" class="btn btn-secondary btn-xs" style="font-size:11px;">
-                      <i class="bi bi-image"></i> PNG
-                    </a>
-                    <a href="{% url 'business:qr_download' size=key fmt='svg' %}" class="btn btn-secondary btn-xs" style="font-size:11px;">
-                      <i class="bi bi-file-earmark-code"></i> SVG
-                    </a>
-                  </div>
-                </div>
-              </div>
+        <div class="qr-card-body">
+          <div class="qr-preview-wrapper">
+            <div class="qr-canvas-holder">
+              <canvas id="cvs-main"></canvas>
             </div>
-            {% endfor %}
+            <div class="qr-url-badge" title="{{ qr_url }}">{{ qr_url }}</div>
+            <div style="display: flex; gap: 8px; justify-content: center; width: 100%;">
+              <button class="btn btn-primary btn-sm px-3" id="btn-png-main">
+                <i class="bi bi-download me-1"></i> PNG Yuklash
+              </button>
+              <a href="{% url 'business:qr_download' size='visitka' fmt='svg' %}" class="btn btn-outline-secondary btn-sm px-3">
+                <i class="bi bi-file-earmark-code me-1"></i> SVG
+              </a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- RIGHT: Stats + share links -->
-  <div class="col-lg-7">
-    <div style="display:flex;flex-direction:column;gap:16px;">
-
-      <!-- Stats -->
-      <div class="card">
-        <div class="card-head">
-          <span class="card-head-title">{% trans "QR statistika" %}</span>
+      <!-- QR Code Customization -->
+      <div class="qr-card">
+        <div class="qr-card-head">
+          <span class="qr-card-title">{% trans "QR Kod Dizayni" %}</span>
         </div>
-        <div class="card-body" style="padding:16px;">
-          <div class="row g-3">
+        <div class="qr-card-body">
+          <div class="mb-4">
+            <label class="form-label" style="font-weight: 600; font-size: 13px; color: var(--text-2);">{% trans "Dizayn uslubi" %}</label>
+            <div class="style-select-grid">
+              <button class="style-option-btn active" data-style="gradient" onclick="changeStyle(this)">
+                <div class="style-mini-preview" id="preview-gradient"></div>
+                <span>Gradient</span>
+              </button>
+              <button class="style-option-btn" data-style="dots" onclick="changeStyle(this)">
+                <div class="style-mini-preview" id="preview-dots"></div>
+                <span>{% trans "Doira" %}</span>
+              </button>
+              <button class="style-option-btn" data-style="dark" onclick="changeStyle(this)">
+                <div class="style-mini-preview" id="preview-dark"></div>
+                <span>Dark</span>
+              </button>
+              <button class="style-option-btn" data-style="classic" onclick="changeStyle(this)">
+                <div class="style-mini-preview" id="preview-classic"></div>
+                <span>Classic</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="form-label" style="font-weight: 600; font-size: 13px; color: var(--text-2);">{% trans "Branding rangi" %}</label>
+            <div class="color-picker-row">
+              <div class="color-input-wrapper">
+                <input type="color" id="qr-color" value="{{ primary_color }}" oninput="changeColor(this.value)">
+              </div>
+              <div style="flex: 1;">
+                <code id="qr-color-label" style="font-size: 13px; font-weight: 600; color: var(--text-2);">{{ primary_color }}</code>
+                <div style="font-size: 11px; color: var(--text-3); margin-top: 2px;">{% trans "Siz tanlagan asosiy rang" %}</div>
+              </div>
+              <button class="btn btn-light btn-xs border" onclick="resetColor()">{% trans "Qaytarish" %}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL: Stats and Marketing Templates -->
+    <div class="col-lg-7">
+      
+      <!-- Stats Summary -->
+      <div class="qr-card">
+        <div class="qr-card-head">
+          <span class="qr-card-title">{% trans "Skanerlashlar statistikasi" %}</span>
+        </div>
+        <div class="qr-card-body" style="padding-top: 14px;">
+          <div class="row g-3 mb-3">
             <div class="col-6">
-              <div class="stat-card" style="box-shadow:none;border-color:var(--border);padding:14px;">
-                <div class="stat-value" style="font-size:22px;">{{ this_month_scans }}</div>
-                <div class="stat-label">{% trans "Bu oy skaner qilindi" %}</div>
+              <div class="p-3 border rounded-3 text-center bg-light-subtle">
+                <div style="font-size: 24px; font-weight: 800; color: var(--p);">{{ this_month_scans }}</div>
+                <div style="font-size: 12px; color: var(--text-3); font-weight: 500;">{% trans "Shu oyda" %}</div>
               </div>
             </div>
             <div class="col-6">
-              <div class="stat-card" style="box-shadow:none;border-color:var(--border);padding:14px;">
-                <div class="stat-value" style="font-size:22px;">{{ total_scans }}</div>
-                <div class="stat-label">{% trans "Jami skaner" %}</div>
+              <div class="p-3 border rounded-3 text-center bg-light-subtle">
+                <div style="font-size: 24px; font-weight: 800; color: var(--text-2);">{{ total_scans }}</div>
+                <div style="font-size: 12px; color: var(--text-3); font-weight: 500;">{% trans "Jami skanerlashlar" %}</div>
               </div>
             </div>
           </div>
 
-          {% if can_use and scans_by_day %}
-          <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
-            <div style="font-size:11px;font-weight:600;color:var(--text-3);margin-bottom:8px;">{% trans "Oxirgi 30 kun" %}</div>
-            <div style="display:flex;align-items:end;gap:2px;height:48px;">
+          {% if scans_by_day %}
+          <div>
+            <div style="font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">{% trans "Oxirgi 30 kunlik grafika" %}</div>
+            <div class="scan-bars">
               {% for day in scans_by_day %}
-              <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:end;height:100%;">
+              <div class="scan-col" title="{{ day.date }}: {{ day.count }}">
                 {% if day.count > 0 %}
-                <div style="width:100%;background:var(--p);border-radius:2px 2px 0 0;min-height:4px;height:{% widthratio day.count max_scan_count 36 %}px;max-height:36px;opacity:{% if day.count > 0 %}0.5{% else %}0.1{% endif %};transition:opacity .2s;" title="{{ day.date }}: {{ day.count }} skaner"></div>
+                <div class="b" style="height: {% widthratio day.count max_scan_count 40 %}px;"></div>
                 {% else %}
-                <div style="width:100%;height:2px;background:var(--border);border-radius:1px;"></div>
+                <div class="e"></div>
                 {% endif %}
               </div>
               {% endfor %}
@@ -110,76 +407,885 @@
         </div>
       </div>
 
+      <!-- Marketing Material Builder -->
+      <div class="qr-card">
+        <div class="qr-card-head">
+          <span class="qr-card-title">
+            <i class="bi bi-shop me-1 text-primary"></i> {% trans "Chop etish uchun materiallar" %}
+          </span>
+        </div>
+        <div class="qr-card-body">
+          <div class="marketing-tabs">
+            <button class="marketing-tab-btn active" onclick="switchTab(this, 'panel-card')">
+              <i class="bi bi-person-vcard"></i> {% trans "Vizitka" %}
+            </button>
+            <button class="marketing-tab-btn" onclick="switchTab(this, 'panel-recep')">
+              <i class="bi bi-award"></i> {% trans "Resepshen Poster" %}
+            </button>
+            <button class="marketing-tab-btn" onclick="switchTab(this, 'panel-sticker')">
+              <i class="bi bi-circle"></i> {% trans "Stiker" %}
+            </button>
+          </div>
+
+          <!-- Business Card Panel -->
+          <div class="marketing-panel active" id="panel-card">
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+              <span style="font-size: 12.5px; color: var(--text-3); font-weight: 500;">
+                <i class="bi bi-info-circle me-1"></i> {% trans "Standart vizitka o'lchami: 85x54 mm" %}
+              </span>
+              <button class="btn btn-outline-secondary btn-xs" id="btn-card-toggle-dark" onclick="toggleCardTheme()">
+                <i class="bi bi-moon-stars me-1"></i> <span id="card-theme-text">{% trans "Qora fon" %}</span>
+              </button>
+            </div>
+            <div class="canvas-preview-card">
+              <canvas id="cvs-card"></canvas>
+            </div>
+            <button class="btn btn-primary w-100" onclick="downloadMaterial('cvs-card', 'vizitka_{{ business.slug }}.png')">
+              <i class="bi bi-download me-1"></i> {% trans "Vizitkani PNG yuklab olish" %}
+            </button>
+          </div>
+
+          <!-- Reception Poster Panel -->
+          <div class="marketing-panel" id="panel-recep">
+            <div class="mb-3">
+              <span style="font-size: 12.5px; color: var(--text-3); font-weight: 500;">
+                <i class="bi bi-info-circle me-1"></i> {% trans "Resepshen stoli uchun chiroyli A6 (148x105 mm) stol posteri" %}
+              </span>
+            </div>
+            <div class="canvas-preview-card">
+              <canvas id="cvs-recep"></canvas>
+            </div>
+            <button class="btn btn-primary w-100" onclick="downloadMaterial('cvs-recep', 'resepshen_{{ business.slug }}.png')">
+              <i class="bi bi-download me-1"></i> {% trans "Resepshen Posterni PNG yuklab olish" %}
+            </button>
+          </div>
+
+          <!-- Sticker Panel -->
+          <div class="marketing-panel" id="panel-sticker">
+            <div class="mb-3">
+              <span style="font-size: 12.5px; color: var(--text-3); font-weight: 500;">
+                <i class="bi bi-info-circle me-1"></i> {% trans "Har qanday narsaga yopishtirish uchun 5x5 sm dumaloq stiker" %}
+              </span>
+            </div>
+            <div class="canvas-preview-card">
+              <canvas id="cvs-sticker"></canvas>
+            </div>
+            <button class="btn btn-primary w-100" onclick="downloadMaterial('cvs-sticker', 'stiker_{{ business.slug }}.png')">
+              <i class="bi bi-download me-1"></i> {% trans "Stikerni PNG yuklab olish" %}
+            </button>
+          </div>
+
+        </div>
+      </div>
+
     </div>
+
   </div>
 
-</div>
-
-<div class="row g-4" style="margin-top:4px;">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-head">
-        <span class="card-head-title">{% trans "QR kodni qayerga joylashtirish mumkin?" %}</span>
-      </div>
-      <div class="card-body" style="padding:18px;">
-        <div class="row g-3">
-          <div class="col-md-3 col-6">
-            <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:10px;">
-              <div style="width:44px;height:44px;border-radius:10px;background:#eef2ff;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
-                <i class="bi bi-printer" style="color:#6366f1;font-size:18px;"></i>
+  <!-- Use Cases Section -->
+  <div class="row g-3 mt-2">
+    <div class="col-12">
+      <div class="qr-card">
+        <div class="qr-card-head">
+          <span class="qr-card-title">{% trans "QR kodni qayerlarda ishlatsa bo'ladi?" %}</span>
+        </div>
+        <div class="qr-card-body">
+          <div class="row g-3">
+            <div class="col-6 col-md-3">
+              <div class="use-case-card">
+                <div class="use-case-icon" style="background: rgba(99,102,241,0.08); color: var(--p);">
+                  <i class="bi bi-shop"></i>
+                </div>
+                <h6 style="font-size: 13px; font-weight: 700; margin: 0 0 4px;">{% trans "Kirish eshigida" %}</h6>
+                <div style="font-size: 11px; color: var(--text-3);">{% trans "Mijozlar kelganda ko'radi" %}</div>
               </div>
-              <div style="font-size:12px;font-weight:600;color:var(--text);">{% trans "Stol ustiga" %}</div>
-              <div style="font-size:10.5px;color:var(--text-3);margin-top:2px;">{% trans "A5 poster chop eting" %}</div>
             </div>
-          </div>
-          <div class="col-md-3 col-6">
-            <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:10px;">
-              <div style="width:44px;height:44px;border-radius:10px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
-                <i class="bi bi-person-vcard" style="color:#16a34a;font-size:18px;"></i>
+            <div class="col-6 col-md-3">
+              <div class="use-case-card">
+                <div class="use-case-icon" style="background: rgba(22,163,74,0.08); color: #16a34a;">
+                  <i class="bi bi-person-lines-fill"></i>
+                </div>
+                <h6 style="font-size: 13px; font-weight: 700; margin: 0 0 4px;">{% trans "Vizitkalarda" %}</h6>
+                <div style="font-size: 11px; color: var(--text-3);">{% trans "Qog'oz orqali ulanish" %}</div>
               </div>
-              <div style="font-size:12px;font-weight:600;color:var(--text);">{% trans "Vizitka" %}</div>
-              <div style="font-size:10.5px;color:var(--text-3);margin-top:2px;">{% trans "Vizitka dizayni" %}</div>
             </div>
-          </div>
-          <div class="col-md-3 col-6">
-            <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:10px;">
-              <div style="width:44px;height:44px;border-radius:10px;background:#fffbeb;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
-                <i class="bi bi-sticky" style="color:#d97706;font-size:18px;"></i>
+            <div class="col-6 col-md-3">
+              <div class="use-case-card">
+                <div class="use-case-icon" style="background: rgba(217,119,6,0.08); color: #d97706;">
+                  <i class="bi bi-envelope-paper"></i>
+                </div>
+                <h6 style="font-size: 13px; font-weight: 700; margin: 0 0 4px;">{% trans "Stol ustida" %}</h6>
+                <div style="font-size: 11px; color: var(--text-3);">{% trans "Resepshenda yopishtiring" %}</div>
               </div>
-              <div style="font-size:12px;font-weight:600;color:var(--text);">{% trans "Stiker" %}</div>
-              <div style="font-size:10.5px;color:var(--text-3);margin-top:2px;">{% trans "Reception stoliga" %}</div>
             </div>
-          </div>
-          <div class="col-md-3 col-6">
-            <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:10px;">
-              <div style="width:44px;height:44px;border-radius:10px;background:#fdf2f8;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">
-                <i class="bi bi-window-stack" style="color:#db2777;font-size:18px;"></i>
+            <div class="col-6 col-md-3">
+              <div class="use-case-card">
+                <div class="use-case-icon" style="background: rgba(219,39,119,0.08); color: #db2777;">
+                  <i class="bi bi-share"></i>
+                </div>
+                <h6 style="font-size: 13px; font-weight: 700; margin: 0 0 4px;">{% trans "Ijtimoiy tarmoqlar" %}</h6>
+                <div style="font-size: 11px; color: var(--text-3);">{% trans "Instagram linklarida" %}</div>
               </div>
-              <div style="font-size:12px;font-weight:600;color:var(--text);">{% trans "Instagram Bio" %}</div>
-              <div style="font-size:10.5px;color:var(--text-3);margin-top:2px;">{% trans "Havolani bio'ga qo'ying" %}</div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
 </div>
 
+<!-- Hidden container used strictly by qrcode.js to draw original image -->
+<div id="_qr_gen_source" style="position: absolute; left: -9999px; top: -9999px; width: 400px; height: 400px; overflow: hidden; opacity: 0; pointer-events: none;"></div>
+
+<!-- Implementation Logic -->
 <script>
-function copyLink(url, btn) {
-  navigator.clipboard.writeText(url).then(() => {
-    const orig = btn.innerHTML;
-    btn.innerHTML = '<i class="bi bi-check-lg"></i> ' + '{% trans "Nusxalandi" %}';
-    setTimeout(() => btn.innerHTML = orig, 2000);
-  }).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = url;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    ta.remove();
+/* Django context variables properly escaped */
+const QR_URL    = "{{ qr_url|escapejs }}";
+const BIZ_NAME  = "{{ business.name|escapejs }}";
+const BIZ_PHONE = "{{ business.phone|escapejs }}";
+const BIZ_EMAIL = "{{ business.email|escapejs }}";
+const BIZ_ADDR  = "{{ business.address|escapejs }}";
+const LOGO_URL  = "{{ logo_url|escapejs }}";
+const ORIG_COLOR= "{{ primary_color|escapejs }}" || "#6366f1";
+
+/* Global rendering state */
+let selectedStyle = 'gradient';
+let selectedColor = ORIG_COLOR;
+let cardThemeDark  = false;
+let loadedLogoImg  = null;
+let qrCodeMatrix   = null;
+
+/* Helper: Color conversion and styling helpers */
+function hexToRgb(hex) {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+  const num = parseInt(hex, 16);
+  return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+}
+
+function adjustColorBrightness(hex, amount) {
+  const { r, g, b } = hexToRgb(hex);
+  const clamp = val => Math.max(0, Math.min(255, val + amount));
+  const hexPart = val => val.toString(16).padStart(2, '0');
+  return '#' + [clamp(r), clamp(g), clamp(b)].map(hexPart).join('');
+}
+
+function getRgbaString(hex, alpha) {
+  const { r, g, b } = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function getBusinessInitials(name) {
+  return name.trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?';
+}
+
+/* Canvas Rounded Rect utility */
+function drawRoundedRect(ctx, x, y, width, height, radius, fill = true, stroke = false) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.arcTo(x + width, y, x + width, y + radius, radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+  ctx.lineTo(x + radius, y + height);
+  ctx.arcTo(x, y + height, x, y + height - radius, radius);
+  ctx.lineTo(x, y + radius);
+  ctx.arcTo(x, y, x + radius, y, radius);
+  ctx.closePath();
+  if (fill) ctx.fill();
+  if (stroke) ctx.stroke();
+}
+
+/* Load logo asynchronously */
+function initLogoLoad() {
+  return new Promise(resolve => {
+    if (!LOGO_URL) {
+      resolve();
+      return;
+    }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      loadedLogoImg = img;
+      resolve();
+    };
+    img.onerror = () => {
+      console.warn("Logo failed to load via CORS.");
+      resolve();
+    };
+    img.src = LOGO_URL;
   });
 }
+
+/* Build boolean module grid from qrcode.js rendering */
+function generateQrMatrix() {
+  return new Promise(resolve => {
+    const container = document.getElementById('_qr_gen_source');
+    container.innerHTML = '';
+    const SCALE = 400;
+
+    try {
+      new QRCode(container, {
+        text: QR_URL,
+        width: SCALE,
+        height: SCALE,
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    } catch (e) {
+      console.error(e);
+      resolve(null);
+      return;
+    }
+
+    // Wait slightly to ensure qrcode.js fully draws to DOM
+    setTimeout(() => {
+      const sourceElement = container.querySelector('canvas') || container.querySelector('img');
+      if (!sourceElement) {
+        resolve(null);
+        return;
+      }
+
+      const bufferCanvas = document.createElement('canvas');
+      bufferCanvas.width = bufferCanvas.height = SCALE;
+      const ctx = bufferCanvas.getContext('2d', { willReadFrequently: true });
+
+      const analyzePixels = () => {
+        try {
+          ctx.drawImage(sourceElement, 0, 0, SCALE, SCALE);
+        } catch (e) {
+          resolve(null);
+          return;
+        }
+
+        const imgData = ctx.getImageData(0, 0, SCALE, SCALE).data;
+
+        // Detect finder pattern borders
+        let firstY = -1, firstX = -1;
+        outer: for (let y = 0; y < SCALE; y++) {
+          for (let x = 0; x < SCALE; x++) {
+            const idx = (y * SCALE + x) * 4;
+            if (imgData[idx] < 100) { // dark pixel
+              firstY = y;
+              firstX = x;
+              break outer;
+            }
+          }
+        }
+        if (firstY < 0) {
+          resolve(null);
+          return;
+        }
+
+        // Measure cell size (the top row of finder pattern is 7 modules wide)
+        let finderWidth = 0;
+        for (let x = firstX; x < SCALE && imgData[(firstY * SCALE + x) * 4] < 100; x++) {
+          finderWidth++;
+        }
+        if (finderWidth < 7) {
+          resolve(null);
+          return;
+        }
+
+        const cellWidth = finderWidth / 7;
+        const quietZone = firstX;
+        const usableSize = SCALE - quietZone * 2;
+        const moduleCount = Math.round(usableSize / cellWidth);
+
+        const matrix = [];
+        for (let r = 0; r < moduleCount; r++) {
+          matrix.push([]);
+          for (let c = 0; c < moduleCount; c++) {
+            const pxX = Math.round(quietZone + (c + 0.5) * cellWidth);
+            const pxY = Math.round(quietZone + (r + 0.5) * cellWidth);
+            const idx = (pxY * SCALE + pxX) * 4;
+            matrix[r].push(imgData[idx] < 128); // True if dark
+          }
+        }
+
+        qrCodeMatrix = matrix;
+        resolve(matrix);
+      };
+
+      if (sourceElement.tagName === 'CANVAS') {
+        analyzePixels();
+      } else {
+        if (sourceElement.complete && sourceElement.naturalWidth) {
+          analyzePixels();
+        } else {
+          sourceElement.onload = analyzePixels;
+          sourceElement.onerror = () => resolve(null);
+        }
+      }
+    }, 150);
+  });
+}
+
+/* Custom styled QR drawing engine */
+function drawCustomQR(canvas, matrix, style, color, size, drawCenterBadge) {
+  if (!matrix) return;
+  const ctx = canvas.getContext('2d');
+  const count = matrix.length;
+  const padding = Math.round(size * 0.045);
+  const activeArea = size - padding * 2;
+  const cellSize = activeArea / count;
+  const darkerColor = adjustColorBrightness(color, -50);
+
+  ctx.clearRect(0, 0, size, size);
+
+  // Background
+  if (style === 'gradient') {
+    const bgGrad = ctx.createLinearGradient(0, 0, size, size);
+    bgGrad.addColorStop(0, '#0f172a');
+    bgGrad.addColorStop(1, '#1e293b');
+    ctx.fillStyle = bgGrad;
+  } else if (style === 'dark') {
+    ctx.fillStyle = '#0f172a';
+  } else {
+    ctx.fillStyle = '#ffffff';
+  }
+  drawRoundedRect(ctx, 0, 0, size, size, size * 0.06, true, false);
+
+  // Logo protection zone
+  const logoGridSize = Math.floor(count * 0.26);
+  const startGrid = Math.floor((count - logoGridSize) / 2);
+  const endGrid = startGrid + logoGridSize;
+  const isInLogoZone = (r, c) => drawCenterBadge && r >= startGrid && r < endGrid && c >= startGrid && c < endGrid;
+
+  // Render modules
+  for (let r = 0; r < count; r++) {
+    for (let c = 0; c < count; c++) {
+      if (!matrix[r][c] || isInLogoZone(r, c)) continue;
+
+      const x = padding + c * cellSize;
+      const y = padding + r * cellSize;
+      const s = cellSize * 0.82;
+      const offset = (cellSize - s) / 2;
+      const isFinder = (r < 7 && c < 7) || (r < 7 && c >= count - 7) || (r >= count - 7 && c < 7);
+
+      // Color fills
+      if (style === 'gradient') {
+        if (isFinder) {
+          ctx.fillStyle = color;
+        } else {
+          const modGrad = ctx.createLinearGradient(x, y, x + s, y + s);
+          modGrad.addColorStop(0, color);
+          modGrad.addColorStop(1, darkerColor);
+          ctx.fillStyle = modGrad;
+        }
+      } else {
+        ctx.fillStyle = color;
+      }
+
+      // Shapes
+      const rRad = style === 'classic' ? s * 0.08 : (style === 'dots' ? s / 2 : (isFinder ? s * 0.12 : s * 0.40));
+      ctx.beginPath();
+      if (style === 'dots') {
+        ctx.arc(x + offset + s/2, y + offset + s/2, s/2, 0, Math.PI * 2);
+      } else {
+        drawRoundedRect(ctx, x + offset, y + offset, s, s, rRad, true, false);
+      }
+      ctx.fill();
+    }
+  }
+
+  // Finder outer rings
+  if (style !== 'classic') {
+    [[0, 0], [0, count - 7], [count - 7, 0]].forEach(([fr, fc]) => {
+      const fx = padding + fc * cellSize;
+      const fy = padding + fr * cellSize;
+      const fs = cellSize * 7;
+      const strokeWidth = cellSize * 0.82;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = strokeWidth;
+      drawRoundedRect(ctx, fx + strokeWidth/2, fy + strokeWidth/2, fs - strokeWidth, fs - strokeWidth, cellSize * 0.85, false, true);
+    });
+  }
+
+  if (!drawCenterBadge) return;
+
+  // Drawing logo or initials card in center
+  const badgeSize = activeArea * 0.20;
+  const paddingInner = badgeSize * 0.26;
+  const outerBorder = badgeSize + paddingInner * 2;
+  const bx = (size - outerBorder) / 2;
+  const by = (size - outerBorder) / 2;
+
+  ctx.shadowColor = 'rgba(0,0,0,0.18)';
+  ctx.shadowBlur = 10;
+  ctx.fillStyle = '#ffffff';
+  drawRoundedRect(ctx, bx, by, outerBorder, outerBorder, outerBorder * 0.22, true, false);
+  ctx.shadowBlur = 0;
+
+  if (loadedLogoImg) {
+    ctx.save();
+    ctx.beginPath();
+    drawRoundedRect(ctx, bx + paddingInner, by + paddingInner, badgeSize, badgeSize, badgeSize * 0.16);
+    ctx.clip();
+    ctx.drawImage(loadedLogoImg, bx + paddingInner, by + paddingInner, badgeSize, badgeSize);
+    ctx.restore();
+  } else {
+    const badgeGrad = ctx.createLinearGradient(bx + paddingInner, by + paddingInner, bx + paddingInner + badgeSize, by + paddingInner + badgeSize);
+    badgeGrad.addColorStop(0, color);
+    badgeGrad.addColorStop(1, darkerColor);
+    ctx.fillStyle = badgeGrad;
+    drawRoundedRect(ctx, bx + paddingInner, by + paddingInner, badgeSize, badgeSize, badgeSize * 0.2, true, false);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `bold ${badgeSize * 0.44}px "Inter", sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(getBusinessInitials(BIZ_NAME), size / 2, size / 2);
+  }
+}
+
+/* Render all components */
+function renderAllDisplays() {
+  renderMainDisplay();
+  renderMiniPreviews();
+  renderCardMaterial();
+  renderRecepMaterial();
+  renderStickerMaterial();
+}
+
+/* Left panel main view */
+function renderMainDisplay() {
+  const canvas = document.getElementById('cvs-main');
+  canvas.width = canvas.height = 500;
+  drawCustomQR(canvas, qrCodeMatrix, selectedStyle, selectedColor, 500, true);
+}
+
+/* Design selector previews */
+function renderMiniPreviews() {
+  ['gradient', 'dots', 'dark', 'classic'].forEach(styleName => {
+    const container = document.getElementById('preview-' + styleName);
+    if (!container || !qrCodeMatrix) return;
+    container.innerHTML = '';
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 100;
+    drawCustomQR(canvas, qrCodeMatrix, styleName, selectedColor, 100, false);
+    container.appendChild(canvas);
+  });
+}
+
+/* Business Card material canvas */
+function renderCardMaterial() {
+  const canvas = document.getElementById('cvs-card');
+  const WIDTH = 1000;
+  const HEIGHT = 600;
+  canvas.width = WIDTH;
+  canvas.height = HEIGHT;
+
+  // Responsive constraint logic on UI
+  const displayWidth = Math.min(canvas.parentElement.clientWidth - 40, 480);
+  canvas.style.width = displayWidth + 'px';
+  canvas.style.height = Math.round(displayWidth * (HEIGHT / WIDTH)) + 'px';
+
+  const ctx = canvas.getContext('2d');
+  const primary = selectedColor;
+  const darkBlend = adjustColorBrightness(primary, -50);
+  const isDark = cardThemeDark;
+
+  // Background Fill
+  if (isDark) {
+    const cardBg = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
+    cardBg.addColorStop(0, '#0f172a');
+    cardBg.addColorStop(1, '#1e293b');
+    ctx.fillStyle = cardBg;
+  } else {
+    ctx.fillStyle = '#ffffff';
+  }
+  drawRoundedRect(ctx, 0, 0, WIDTH, HEIGHT, 24, true, false);
+
+  // Stripe
+  const stripe = ctx.createLinearGradient(0, 0, 0, HEIGHT);
+  stripe.addColorStop(0, primary);
+  stripe.addColorStop(1, darkBlend);
+  ctx.fillStyle = stripe;
+  drawRoundedRect(ctx, 0, 0, 12, HEIGHT, 12, true, false);
+
+  // Background geometric overlay decoration
+  ctx.fillStyle = getRgbaString(primary, isDark ? 0.08 : 0.04);
+  ctx.beginPath();
+  ctx.arc(WIDTH * 0.3, HEIGHT * 1.1, HEIGHT * 0.8, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Layout variables for QR and logo positioning
+  const qrBoxSize = 250;
+  const qrX = WIDTH - qrBoxSize - 60; // 690
+  const qrY = (HEIGHT - qrBoxSize) / 2 - 20; // 155
+
+  // Branding initials/logo frame
+  const frameRadius = 42;
+  const fx = 48 + frameRadius + 10; // 100
+  const fy = 95; // 95
+
+  const frameGrad = ctx.createLinearGradient(fx - frameRadius, fy - frameRadius, fx + frameRadius, fy + frameRadius);
+  frameGrad.addColorStop(0, primary);
+  frameGrad.addColorStop(1, darkBlend);
+  ctx.fillStyle = frameGrad;
+  ctx.shadowColor = getRgbaString(primary, 0.32);
+  ctx.shadowBlur = 18;
+  ctx.beginPath();
+  ctx.arc(fx, fy, frameRadius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(fx, fy, frameRadius - 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  if (loadedLogoImg) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(fx, fy, frameRadius - 6, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(loadedLogoImg, fx - (frameRadius - 6), fy - (frameRadius - 6), (frameRadius - 6) * 2, (frameRadius - 6) * 2);
+    ctx.restore();
+  } else {
+    const inlineGrad = ctx.createLinearGradient(fx - frameRadius, fy - frameRadius, fx + frameRadius, fy + frameRadius);
+    inlineGrad.addColorStop(0, primary);
+    inlineGrad.addColorStop(1, darkBlend);
+    ctx.fillStyle = inlineGrad;
+    ctx.beginPath();
+    ctx.arc(fx, fy, frameRadius - 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `bold ${frameRadius * 0.58}px "Inter", sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(getBusinessInitials(BIZ_NAME), fx, fy);
+  }
+
+  // Details Texts
+  const textX = fx + frameRadius + 20;
+  const nameAvailWidth = qrX - textX - 20;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.font = `bold 38px "Inter", sans-serif`;
+  ctx.fillStyle = isDark ? '#f8fafc' : '#0f172a';
+
+  let truncName = BIZ_NAME;
+  while (ctx.measureText(truncName).width > nameAvailWidth && truncName.length > 2) {
+    truncName = truncName.slice(0, -1);
+  }
+  if (truncName !== BIZ_NAME) truncName += '…';
+  ctx.fillText(truncName, textX, fy);
+
+  // Brand color underline
+  ctx.strokeStyle = primary;
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(textX, fy + 26);
+  ctx.lineTo(textX + Math.min(ctx.measureText(truncName).width * 0.9, nameAvailWidth * 0.95), fy + 26);
+  ctx.stroke();
+
+  // Contact list rows stacked below with auto-wrapping for long addresses
+  ctx.textBaseline = 'alphabetic';
+  ctx.font = `400 24px "Inter", sans-serif`;
+  ctx.fillStyle = isDark ? '#94a3b8' : '#475569';
+  const list = [];
+  if (BIZ_PHONE) list.push({ icon: '📞', text: BIZ_PHONE });
+  if (BIZ_EMAIL) list.push({ icon: '✉️', text: BIZ_EMAIL });
+  if (BIZ_ADDR)  list.push({ icon: '📍', text: BIZ_ADDR });
+
+  const contactX = 58;
+  const contactAvailWidth = qrX - contactX - 20;
+
+  let currentY = 220;
+
+  list.forEach((item) => {
+    // Draw icon
+    ctx.fillText(item.icon, contactX, currentY);
+
+    // Draw text with wrapping
+    const textStartX = contactX + 38;
+    const textMaxWidth = contactAvailWidth - 38;
+
+    const words = item.text.split(' ');
+    let line = '';
+    const lines = [];
+
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const testWidth = ctx.measureText(testLine).width;
+      if (testWidth > textMaxWidth && n > 0) {
+        lines.push(line.trim());
+        line = words[n] + ' ';
+      } else {
+        line = testLine;
+      }
+    }
+    lines.push(line.trim());
+
+    // Render at most 2 lines for spacing consistency
+    const linesToRender = lines.slice(0, 2);
+    linesToRender.forEach((lineText, lineIdx) => {
+      let finalLine = lineText;
+      if (lineIdx === 1 && lines.length > 2) {
+        while (ctx.measureText(finalLine).width > textMaxWidth - 20 && finalLine.length > 4) {
+          finalLine = finalLine.slice(0, -1);
+        }
+        finalLine += '…';
+      }
+      ctx.fillText(finalLine, textStartX, currentY + lineIdx * 32);
+    });
+
+    currentY += 46 + (linesToRender.length - 1) * 32;
+  });
+
+  // Right side QR Box container
+  ctx.fillStyle = isDark ? 'rgba(255,255,255,0.04)' : '#f8fafc';
+  ctx.shadowColor = 'rgba(0,0,0,0.08)';
+  ctx.shadowBlur = 15;
+  drawRoundedRect(ctx, qrX - 12, qrY - 12, qrBoxSize + 24, qrBoxSize + 24, 16, true, false);
+  ctx.shadowBlur = 0;
+
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = tempCanvas.height = qrBoxSize * 2;
+  drawCustomQR(tempCanvas, qrCodeMatrix, selectedStyle, primary, qrBoxSize * 2, true);
+  ctx.drawImage(tempCanvas, qrX, qrY, qrBoxSize, qrBoxSize);
+
+  // URL subtitle
+  const hostLabel = (QR_URL || '').replace(/^https?:\/\//, '');
+  ctx.fillStyle = isDark ? 'rgba(255,255,255,0.3)' : '#94a3b8';
+  ctx.font = `400 17px "Inter", sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText(hostLabel.length > 34 ? hostLabel.slice(0, 34) + '…' : hostLabel, qrX + qrBoxSize / 2, qrY + qrBoxSize + 24);
+}
+
+/* Reception Poster (A6 landscape display size) */
+function renderRecepMaterial() {
+  const canvas = document.getElementById('cvs-recep');
+  const WIDTH = 1200;
+  const HEIGHT = 850;
+  canvas.width = WIDTH;
+  canvas.height = HEIGHT;
+
+  const displayWidth = Math.min(canvas.parentElement.clientWidth - 40, 480);
+  canvas.style.width = displayWidth + 'px';
+  canvas.style.height = Math.round(displayWidth * (HEIGHT / WIDTH)) + 'px';
+
+  const ctx = canvas.getContext('2d');
+  const primary = selectedColor;
+  const darkBlend = adjustColorBrightness(primary, -55);
+
+  // Gradient Background
+  const cardBg = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
+  cardBg.addColorStop(0, '#0f172a');
+  cardBg.addColorStop(1, '#1e293b');
+  ctx.fillStyle = cardBg;
+  drawRoundedRect(ctx, 0, 0, WIDTH, HEIGHT, 32, true, false);
+
+  // Accent band top
+  const accentG = ctx.createLinearGradient(0, 0, WIDTH, 0);
+  accentG.addColorStop(0, primary);
+  accentG.addColorStop(1, darkBlend);
+  ctx.fillStyle = accentG;
+  ctx.fillRect(0, 0, WIDTH, 12);
+
+  // Deco lights
+  ctx.fillStyle = getRgbaString(primary, 0.1);
+  ctx.beginPath(); ctx.arc(WIDTH * 0.15, HEIGHT * 0.5, HEIGHT * 0.5, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = getRgbaString(darkBlend, 0.08);
+  ctx.beginPath(); ctx.arc(WIDTH * 0.85, HEIGHT * 0.5, HEIGHT * 0.45, 0, Math.PI * 2); ctx.fill();
+
+  // QR placement
+  const qrSize = HEIGHT * 0.52;
+  const qrX = (WIDTH - qrSize) / 2;
+  const qrY = (HEIGHT - qrSize) / 2 + 35;
+
+  ctx.fillStyle = 'rgba(255,255,255,0.05)';
+  ctx.shadowColor = getRgbaString(primary, 0.2);
+  ctx.shadowBlur = 40;
+  drawRoundedRect(ctx, qrX - 24, qrY - 24, qrSize + 48, qrSize + 48, 22, true, false);
+  ctx.shadowBlur = 0;
+
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = tempCanvas.height = qrSize * 2;
+  drawCustomQR(tempCanvas, qrCodeMatrix, 'gradient', primary, qrSize * 2, true);
+  ctx.drawImage(tempCanvas, qrX, qrY, qrSize, qrSize);
+
+  // Header circular badge
+  const badgeRad = 52;
+  const bx = WIDTH / 2;
+  const by = qrY - badgeRad - 24;
+
+  const bGrad = ctx.createLinearGradient(bx - badgeRad, by - badgeRad, bx + badgeRad, by + badgeRad);
+  bGrad.addColorStop(0, primary);
+  bGrad.addColorStop(1, darkBlend);
+  ctx.fillStyle = bGrad;
+  ctx.shadowColor = getRgbaString(primary, 0.35);
+  ctx.shadowBlur = 18;
+  ctx.beginPath(); ctx.arc(bx, by, badgeRad, 0, Math.PI * 2); ctx.fill();
+  ctx.shadowBlur = 0;
+
+  if (loadedLogoImg) {
+    ctx.save();
+    ctx.beginPath(); ctx.arc(bx, by, badgeRad - 4, 0, Math.PI * 2); ctx.clip();
+    ctx.drawImage(loadedLogoImg, bx - badgeRad + 4, by - badgeRad + 4, (badgeRad - 4) * 2, (badgeRad - 4) * 2);
+    ctx.restore();
+  } else {
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `bold ${badgeRad * 0.58}px "Inter", sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(getBusinessInitials(BIZ_NAME), bx, by);
+  }
+
+  // Titles
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = '#f8fafc';
+  ctx.font = `900 56px "Inter", sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText(BIZ_NAME, WIDTH / 2, qrY + qrSize + 64);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = `400 30px "Inter", sans-serif`;
+  ctx.fillText('QR kodni skaner qiling va band qiling', WIDTH / 2, qrY + qrSize + 110);
+
+  // Bottom address banner
+  const linkString = (QR_URL || '').replace(/^https?:\/\//, '');
+  ctx.font = `600 24px "Inter", sans-serif`;
+  const textWidth = ctx.measureText(linkString).width + 48;
+  const labelX = WIDTH / 2 - textWidth / 2;
+  const labelY = qrY + qrSize + 136;
+
+  ctx.fillStyle = getRgbaString(primary, 0.18);
+  ctx.strokeStyle = getRgbaString(primary, 0.4);
+  ctx.lineWidth = 1.5;
+  drawRoundedRect(ctx, labelX, labelY, textWidth, 44, 22, true, true);
+
+  ctx.fillStyle = primary;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(linkString, WIDTH / 2, labelY + 22);
+}
+
+/* Circular Sticker Template */
+function renderStickerMaterial() {
+  const canvas = document.getElementById('cvs-sticker');
+  const SIZE = 600;
+  canvas.width = canvas.height = SIZE;
+
+  // Responsive constraint logic on UI
+  const displayWidth = 180;
+  canvas.style.width = displayWidth + 'px';
+  canvas.style.height = displayWidth + 'px';
+
+  const ctx = canvas.getContext('2d');
+  const primary = selectedColor;
+  const darkBlend = adjustColorBrightness(primary, -50);
+
+  // Outer gradient circle
+  const grad = ctx.createLinearGradient(0, 0, SIZE, SIZE);
+  grad.addColorStop(0, primary);
+  grad.addColorStop(1, darkBlend);
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // White inner circle cutout
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 16, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Draw scaled QR inside
+  const qrSize = SIZE * 0.70;
+  const offset = (SIZE - qrSize) / 2;
+
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = tempCanvas.height = qrSize * 2;
+  drawCustomQR(tempCanvas, qrCodeMatrix, selectedStyle, primary, qrSize * 2, true);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 16, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.drawImage(tempCanvas, offset, offset, qrSize, qrSize);
+  ctx.restore();
+}
+
+/* Action: Switch QR Style */
+function changeStyle(buttonElement) {
+  document.querySelectorAll('.style-option-btn').forEach(btn => btn.classList.remove('active'));
+  buttonElement.classList.add('active');
+  selectedStyle = buttonElement.dataset.style;
+  renderAllDisplays();
+}
+
+/* Action: Change QR Primary Color */
+function changeColor(hexValue) {
+  selectedColor = hexValue;
+  document.getElementById('qr-color-label').textContent = hexValue;
+  renderAllDisplays();
+}
+
+/* Action: Reset custom primary color back to business original */
+function resetColor() {
+  document.getElementById('qr-color').value = ORIG_COLOR;
+  changeColor(ORIG_COLOR);
+}
+
+/* Action: Toggle Business Card dark/light theme */
+function toggleCardTheme() {
+  cardThemeDark = !cardThemeDark;
+  document.getElementById('card-theme-text').textContent = cardThemeDark ? "{% trans 'Oq fon' %}" : "{% trans 'Qora fon' %}";
+  renderCardMaterial();
+}
+
+/* Action: Switch between material tabs */
+function switchTab(buttonElement, panelId) {
+  document.querySelectorAll('.marketing-tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.marketing-panel').forEach(p => p.classList.remove('active'));
+
+  buttonElement.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+
+  // Trigger repaint to correct container sizes on tab switch
+  if (panelId === 'panel-card') renderCardMaterial();
+  if (panelId === 'panel-recep') renderRecepMaterial();
+  if (panelId === 'panel-sticker') renderStickerMaterial();
+}
+
+/* Download any canvas rendering directly */
+function downloadMaterial(canvasId, filename) {
+  const canvas = document.getElementById(canvasId);
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, 'image/png');
+}
+
+/* PNG download for main preview */
+document.getElementById('btn-png-main').addEventListener('click', () => {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 1200;
+  drawCustomQR(canvas, qrCodeMatrix, selectedStyle, selectedColor, 1200, true);
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'qr_{{ business.slug }}.png';
+    link.click();
+  }, 'image/png');
+});
+
+/* Initialize process */
+(async () => {
+  await initLogoLoad();
+  await generateQrMatrix();
+  renderAllDisplays();
+})();
 </script>
 
 {% endblock %}

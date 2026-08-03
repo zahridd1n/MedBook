@@ -1274,6 +1274,14 @@ def qr_code_settings(request):
     svg_buf = generate_qr_svg(business, border=2)
     qr_svg_b64 = base64.b64encode(svg_buf.getvalue()).decode('utf-8')
 
+    # Logo URL for QR center overlay
+    logo_url = ''
+    if business.logo:
+        try:
+            logo_url = request.build_absolute_uri(business.logo.url)
+        except Exception:
+            logo_url = ''
+
     context = {
         'business': business,
         'can_use': can_use,
@@ -1284,6 +1292,8 @@ def qr_code_settings(request):
         'qr_url': qr_url,
         'qr_svg_b64': qr_svg_b64,
         'size_presets': SIZE_PRESETS,
+        'logo_url': logo_url,
+        'primary_color': business.primary_color or '#6366f1',
     }
     return render(request, 'dashboard/settings/qrcode.html', context)
 

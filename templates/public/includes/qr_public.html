@@ -5,10 +5,10 @@
     <i class="bi bi-qr-code"></i> QR Code
   </div>
   <div style="text-align:center;">
-    <a href="{% url 'qr-scan' business.slug %}" target="_blank" rel="noopener">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data={{ request.scheme }}://{{ request.get_host }}{% url 'qr-scan' business.slug %}&margin=10" 
-           alt="QR Code" 
-           style="width:140px;height:140px;border-radius:10px;border:1px solid var(--border);padding:6px;background:#fff;">
+    <a href="{% url 'qr-scan' business.slug %}" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;">
+      <div style="padding:10px;background:#fff;border-radius:12px;border:1px solid var(--border);display:inline-block;box-shadow:var(--shadow-sm);transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+        <canvas id="pub-qr-cvs" style="width:140px;height:140px;display:block;"></canvas>
+      </div>
     </a>
     <div style="font-size:11px;color:var(--ink-subtle);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:4px;">
       <i class="bi bi-camera"></i> {% trans "Skaner qiling va band qiling" %}
@@ -20,4 +20,181 @@
     </div>
   </div>
 </div>
+
+<!-- Hidden source for qrcodejs -->
+<div id="pub-qr-gen-src" style="position:absolute;left:-9999px;top:-9999px;width:300px;height:300px;overflow:hidden;opacity:0;pointer-events:none;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+(function() {
+  const QR_DATA = "{{ request.scheme }}://{{ request.get_host }}{% url 'qr-scan' business.slug %}";
+  const COLOR   = "{{ business.primary_color|default:'#6366f1'|escapejs }}";
+  const BIZ_NAME= "{{ business.name|escapejs }}";
+  const LOGO_URL= {% if business.logo %}"{{ business.logo.url|escapejs }}"{% else %}""{% endif %};
+
+  let logoImg = null;
+
+  function loadLogo() {
+    return new Promise(res => {
+      if (!LOGO_URL) { res(); return; }
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => { logoImg = img; res(); };
+      img.onerror = () => res();
+      img.src = LOGO_URL;
+    });
+  }
+
+  function drawRounded(ctx,x,y,w,h,r,fill=true,stroke=false) {
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+    ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+    ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+    ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);
+    ctx.closePath();
+    if(fill) ctx.fill();
+    if(stroke) ctx.stroke();
+  }
+
+  function generateMatrix() {
+    return new Promise(res => {
+      const src = document.getElementById('pub-qr-gen-src');
+      src.innerHTML = '';
+      const S = 300;
+      try {
+        new QRCode(src, { text: QR_DATA, width: S, height: S, correctLevel: QRCode.CorrectLevel.H });
+      } catch(e) { res(null); return; }
+
+      setTimeout(() => {
+        const el = src.querySelector('canvas') || src.querySelector('img');
+        if (!el) { res(null); return; }
+
+        const buf = document.createElement('canvas');
+        buf.width = buf.height = S;
+        const ctx = buf.getContext('2d', { willReadFrequently: true });
+
+        const analyze = () => {
+          try { ctx.drawImage(el, 0, 0, S, S); } catch(e) { res(null); return; }
+          const px = ctx.getImageData(0, 0, S, S).data;
+
+          let fy = -1, fx = -1;
+          outer: for (let y=0; y<S; y++) {
+            for (let x=0; x<S; x++) {
+              if (px[(y*S+x)*4] < 100) { fy=y; fx=x; break outer; }
+            }
+          }
+          if (fy<0) { res(null); return; }
+
+          let fw = 0;
+          for (let x=fx; x<S && px[(fy*S+x)*4]<100; x++) fw++;
+          if (fw < 7) { res(null); return; }
+
+          const cell  = fw / 7;
+          const quiet = fx;
+          const N     = Math.round((S - quiet*2) / cell);
+
+          const m = [];
+          for (let r=0; r<N; r++) {
+            m.push([]);
+            for (let c=0; c<N; c++) {
+              const pxX = Math.round(quiet + (c + 0.5) * cell);
+              const pxY = Math.round(quiet + (r + 0.5) * cell);
+              m[r].push(px[(pxY*S+pxX)*4] < 128);
+            }
+          }
+          res(m);
+        };
+
+        if (el.tagName === 'CANVAS') analyze();
+        else {
+          if (el.complete && el.naturalWidth) analyze();
+          else { el.onload = analyze; el.onerror = () => res(null); }
+        }
+      }, 100);
+    });
+  }
+
+  function draw(canvas, m) {
+    if (!m) return;
+    const ctx = canvas.getContext('2d');
+    const size = 300;
+    canvas.width = canvas.height = size;
+    const N = m.length;
+    const pad = Math.round(size * 0.045);
+    const inn = size - pad*2;
+    const cel = inn / N;
+
+    ctx.clearRect(0,0,size,size);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0,0,size,size);
+
+    const lz = Math.floor(N * 0.26);
+    const lzS = Math.floor((N - lz) / 2);
+    const lzE = lzS + lz;
+    const inL = (r,c) => r >= lzS && r < lzE && c >= lzS && c < lzE;
+
+    // Draw dots
+    ctx.fillStyle = COLOR;
+    for (let r=0; r<N; r++) {
+      for (let c=0; c<N; c++) {
+        if (!m[r][c] || inL(r,c)) continue;
+        const x = pad + c*cel, y = pad + r*cel;
+        const s = cel*0.82, o = (cel-s)/2;
+        const finder = (r<7&&c<7)||(r<7&&c>=N-7)||(r>=N-7&&c<7);
+
+        ctx.beginPath();
+        const rRad = finder ? s*0.12 : s*0.4;
+        drawRounded(ctx, x+o, y+o, s, s, rRad, true, false);
+      }
+    }
+
+    // Finder outer rings
+    [[0,0],[0,N-7],[N-7,0]].forEach(([fr,fc]) => {
+      const fx = pad + fc*cel, fy = pad + fr*cel, fs = cel*7;
+      const sw = cel*0.82;
+      ctx.strokeStyle = COLOR;
+      ctx.lineWidth = sw;
+      drawRounded(ctx, fx + sw/2, fy + sw/2, fs - sw, fs - sw, cel * 0.85, false, true);
+    });
+
+    // Draw logo badge
+    const badge = inn * 0.2;
+    const lp = badge * 0.28;
+    const outer = badge + lp*2;
+    const bx = (size - outer)/2, by = (size - outer)/2;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(0,0,0,0.1)';
+    ctx.shadowBlur = 6;
+    drawRounded(ctx, bx, by, outer, outer, outer * 0.22, true, false);
+    ctx.shadowBlur = 0;
+
+    if (logoImg) {
+      ctx.save();
+      ctx.beginPath();
+      drawRounded(ctx, bx + lp, by + lp, badge, badge, badge * 0.16, false, false);
+      ctx.clip();
+      ctx.drawImage(logoImg, bx+lp, by+lp, badge, badge);
+      ctx.restore();
+    } else {
+      ctx.fillStyle = COLOR;
+      drawRounded(ctx, bx+lp, by+lp, badge, badge, badge*0.2, true, false);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${badge * 0.44}px sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const ini = BIZ_NAME.trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?';
+      ctx.fillText(ini, size/2, size/2);
+    }
+  }
+
+  async function init() {
+    await loadLogo();
+    const matrix = await generateMatrix();
+    const cvs = document.getElementById('pub-qr-cvs');
+    draw(cvs, matrix);
+  }
+
+  init();
+})();
+</script>
 {% endif %}
