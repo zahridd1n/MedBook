@@ -10,6 +10,7 @@ from business.models import Business
 MARKETING_COPY_DEFAULTS = {
     'uz': {
         'nav': {
+            'home': 'Asosiy sahifa',
             'features': 'Imkoniyatlar',
             'pricing': 'Tariflar',
             'faq': 'Savollar',
@@ -63,8 +64,8 @@ MARKETING_COPY_DEFAULTS = {
             'eyebrow': 'Aloqa',
             'title': 'Bandlov jarayoningizni birga sozlaymiz.',
             'subtitle': 'Savollar, hamkorlik yoki sozlash bo‘yicha biz bilan bog‘laning.',
-            'support_title': 'BookFlow aloqa',
-            'support_text': 'Quyidagi ma’lumotlar superadmin sozlamalaridan olinadi.',
+            'support_title': 'Bog‘lanish',
+            'support_text': 'Savol, taklif yoki hamkorlik bo‘yicha murojaat qiling — tez orada javob beramiz.',
             'name': 'Ism',
             'email': 'Email',
             'message': 'Xabar',
@@ -169,6 +170,7 @@ MARKETING_COPY_DEFAULTS = {
     },
     'ru': {
         'nav': {
+            'home': 'Главная',
             'features': 'Возможности',
             'pricing': 'Тарифы',
             'faq': 'FAQ',
@@ -222,8 +224,8 @@ MARKETING_COPY_DEFAULTS = {
             'eyebrow': 'Контакты',
             'title': 'Поможем настроить ваш процесс записи.',
             'subtitle': 'Свяжитесь с нами по вопросам настройки, сотрудничества или продукта.',
-            'support_title': 'Контакты BookFlow',
-            'support_text': 'Эти данные берутся из настроек superadmin.',
+            'support_title': 'Свяжитесь с нами',
+            'support_text': 'Если у вас есть вопросы, предложения или вы хотите сотрудничать — напишите, мы быстро ответим.',
             'name': 'Имя',
             'email': 'Email',
             'message': 'Сообщение',
@@ -328,6 +330,7 @@ MARKETING_COPY_DEFAULTS = {
     },
     'en': {
         'nav': {
+            'home': 'Home',
             'features': 'Features',
             'pricing': 'Pricing',
             'faq': 'FAQ',
@@ -381,8 +384,8 @@ MARKETING_COPY_DEFAULTS = {
             'eyebrow': 'Contact',
             'title': 'Let us shape your booking workflow.',
             'subtitle': 'Reach out for setup, partnership, or product questions.',
-            'support_title': 'BookFlow contact',
-            'support_text': 'These details come from superadmin settings.',
+            'support_title': 'Get in touch',
+            'support_text': 'Have a question, suggestion or want to partner? Reach out and we\'ll get back to you shortly.',
             'name': 'Name',
             'email': 'Email',
             'message': 'Message',

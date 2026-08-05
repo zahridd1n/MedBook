@@ -1386,6 +1386,21 @@ body:has(.marketing-shell) {
   color: var(--mkt-soft);
 }
 
+a.mkt-contact-method {
+  text-decoration: none;
+  color: var(--mkt-soft);
+  transition: color 200ms ease, transform 200ms ease;
+}
+
+a.mkt-contact-method:hover {
+  color: var(--mkt-mint);
+  transform: translateX(4px);
+}
+
+a.mkt-contact-method i {
+  flex-shrink: 0;
+}
+
 .mkt-contact-form {
   display: grid;
   gap: 18px;

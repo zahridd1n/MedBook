@@ -41,7 +41,7 @@ def generate_sitemap():
     urls = []
 
     # Marketing pages
-    for name in ['marketing:home', 'marketing:features', 'marketing:pricing', 'marketing:faq', 'marketing:contact', 'marketing:businesses', 'marketing:tutorials']:
+    for name in ['marketing:home', 'marketing:pricing', 'marketing:faq', 'marketing:contact', 'marketing:businesses', 'marketing:tutorials']:
         try:
             urls.append({
                 'loc': f"{settings.SITE_URL.rstrip('/')}{reverse(name)}",

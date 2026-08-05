@@ -64,8 +64,8 @@ class SiteSettingsForm(forms.ModelForm):
             'contact_phone': forms.TextInput(attrs={
                 'class': 'form-control', 'placeholder': '+998 90 123 45 67',
             }),
-            'contact_email': forms.EmailInput(attrs={
-                'class': 'form-control', 'placeholder': 'support@BookFlow.com',
+            'contact_email': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'support@BookFlow.com', 'type': 'email',
             }),
             'contact_telegram': forms.TextInput(attrs={
                 'class': 'form-control', 'placeholder': 'https://t.me/BookFlowBot',

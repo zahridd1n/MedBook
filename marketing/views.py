@@ -239,9 +239,8 @@ def home(request):
     return render(request, 'marketing/home.html', ctx)
 
 def features(request):
-    ctx = _context(request)
-    ctx.update(_marketing_seo(request, f"Imkoniyatlar — BookFlow", ctx['m']['features']['subtitle']))
-    return render(request, 'marketing/features.html', ctx)
+    # Imkoniyatlar sahifasi olib tashlandi; eski havolalar uchun redirect
+    return redirect('marketing:home')
 
 def pricing(request):
     ctx = _context(request)

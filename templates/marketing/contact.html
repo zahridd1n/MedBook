@@ -19,10 +19,29 @@
       <div class="mkt-contact-panel reveal">
         <h2>{{ m.contact.support_title }}</h2>
         <p>{{ m.contact.support_text }}</p>
-        <div class="mkt-contact-method"><i class="bi bi-telephone"></i><span>{{ site.contact_phone }}</span></div>
-        <div class="mkt-contact-method"><i class="bi bi-envelope"></i><span>{{ site.contact_email }}</span></div>
-        <div class="mkt-contact-method"><i class="bi bi-telegram"></i><span>{{ site.contact_telegram }}</span></div>
+
+        {% if site.contact_phone %}
+        <a class="mkt-contact-method" href="tel:{{ site.contact_phone }}">
+          <i class="bi bi-telephone-fill"></i>
+          <span>{{ site.contact_phone }}</span>
+        </a>
+        {% endif %}
+
+        {% if site.contact_email %}
+        <a class="mkt-contact-method" href="mailto:{{ site.contact_email }}">
+          <i class="bi bi-envelope-fill"></i>
+          <span>{{ site.contact_email }}</span>
+        </a>
+        {% endif %}
+
+        {% if site.contact_telegram %}
+        <a class="mkt-contact-method" href="{{ site.contact_telegram }}" target="_blank" rel="noopener">
+          <i class="bi bi-telegram"></i>
+          <span>Telegram</span>
+        </a>
+        {% endif %}
       </div>
+
       <form class="mkt-contact-form reveal reveal-delay-1" method="POST" action="{% url 'marketing:contact' %}">
         {% if messages %}
           {% for message in messages %}

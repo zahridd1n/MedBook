@@ -10,7 +10,7 @@ class MarketingSitemap(Sitemap):
     changefreq = 'monthly'
 
     def items(self):
-        return ['marketing:home', 'marketing:features', 'marketing:pricing', 'marketing:faq', 'marketing:contact', 'marketing:businesses', 'marketing:tutorials']
+        return ['marketing:home', 'marketing:pricing', 'marketing:faq', 'marketing:contact', 'marketing:businesses', 'marketing:tutorials']
 
     def location(self, item):
         return reverse(item)
