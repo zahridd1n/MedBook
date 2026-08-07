@@ -102,9 +102,47 @@
     display: none;
     background: rgba(0,0,0,0.03);
     border-radius: 12px;
-    padding: 12px;
+    padding: 12px 14px;
     margin-bottom: 16px;
     text-align: left;
+}
+.pwa-ios-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    font-size: 0.88rem;
+    color: #334155;
+    line-height: 1.5;
+}
+.pwa-ios-step:last-child { border-bottom: none; }
+.pwa-ios-step-num {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--brand, #6366f1);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+.pwa-share-arrow {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 1.1rem;
+    animation: pwa-bounce 1.2s infinite;
+}
+@keyframes pwa-bounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(4px); }
+}
+.pwa-btn-ios-ok {
+    background: #22c55e !important;
 }
 .pwa-ios-instructions p {
     font-size: 0.85rem;
@@ -127,21 +165,48 @@
             <i class="bi bi-calendar2-check"></i>
         {% endif %}
     </div>
-    
+
+    <!-- Android: native install button -->
     <div id="pwaAndroidContent">
-        <div class="pwa-title">Bosh ekranga qo'shing</div>
-        <div class="pwa-desc">Keyingi safar {{ business.name }} ga birgina bosish orqali tezkor band qilishingiz mumkin.</div>
-        <button class="pwa-btn-primary" id="pwaBtnInstall">Bosh ekranga qo'shish</button>
+        <div class="pwa-title">Ilovani o'rnating</div>
+        <div class="pwa-desc">{{ business.name }} ilovasini qurilmangizga o'rnating — internet bo'lmasa ham tezkor ishlaydi.</div>
+        <button class="pwa-btn-primary" id="pwaBtnInstall">
+            ⬇️ &nbsp;Bosh ekranga qo'shish
+        </button>
     </div>
 
+    <!-- iOS: manual step-by-step instructions -->
     <div id="pwaIosContent" style="display: none;">
-        <div class="pwa-title">Bosh ekranga qo'shing</div>
-        <div class="pwa-desc">Keyingi safar birgina bosish orqali tezkor kirishingiz uchun.</div>
-        
+        <div class="pwa-title">Ilovani o'rnating</div>
+        <div class="pwa-desc">{{ business.name }} ni telefon ekraniga qo'shish uchun 2 ta qadam:</div>
+
         <div class="pwa-ios-instructions">
-            <p><i class="bi bi-box-arrow-up"></i> 1. Pastdagi "Share" tugmasini bosing</p>
-            <p><i class="bi bi-plus-square"></i> 2. "Add to Home Screen" ni tanlang</p>
+            <div class="pwa-ios-step">
+                <div class="pwa-ios-step-num">1</div>
+                <div>
+                    Quyi paneldagi
+                    <strong>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-3px">
+                            <path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                        </svg>
+                    </strong>
+                    <strong>Share</strong> (ulashish) tugmasini bosing
+                    <span class="pwa-share-arrow">↓</span>
+                </div>
+            </div>
+            <div class="pwa-ios-step">
+                <div class="pwa-ios-step-num">2</div>
+                <div>
+                    Ro'yxatni pastga aylantiring va
+                    <strong>「 Add to Home Screen 」</strong>
+                    ni tanlang
+                </div>
+            </div>
         </div>
+
+        <button class="pwa-btn-primary pwa-btn-ios-ok" id="pwaBtnIosOk">
+            Tushundim ✓
+        </button>
     </div>
 
     <button class="pwa-btn-secondary" id="pwaBtnClose">Keyinroq</button>
@@ -203,6 +268,12 @@
 
     document.getElementById('pwaBtnClose').addEventListener('click', closePwaSheet);
     overlay.addEventListener('click', closePwaSheet);
+
+    // iOS "Tushundim" button
+    const iosOkBtn = document.getElementById('pwaBtnIosOk');
+    if (iosOkBtn) {
+        iosOkBtn.addEventListener('click', closePwaSheet);
+    }
 
     document.getElementById('pwaBtnInstall').addEventListener('click', async () => {
         if (deferredPrompt) {
