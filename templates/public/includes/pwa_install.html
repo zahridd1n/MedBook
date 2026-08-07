@@ -209,6 +209,27 @@
         </button>
     </div>
 
+    <!-- iOS Chrome/non-Safari: must use Safari -->
+    <div id="pwaIosChromeContent" style="display: none;">
+        <div class="pwa-title">Safari'da oching</div>
+        <div class="pwa-desc">iOS Chrome ilovalarni o'rnatishni qo'llab-quvvatlamaydi. <strong>Safari</strong> brauzerida oching:</div>
+        <div class="pwa-ios-instructions">
+            <div class="pwa-ios-step">
+                <div class="pwa-ios-step-num">1</div>
+                <div>Safari'ni oching</div>
+            </div>
+            <div class="pwa-ios-step">
+                <div class="pwa-ios-step-num">2</div>
+                <div>Quyi paneldagi <strong>Share ⬆</strong> tugmasini bosing</div>
+            </div>
+            <div class="pwa-ios-step">
+                <div class="pwa-ios-step-num">3</div>
+                <div><strong>Add to Home Screen</strong> ni tanlang</div>
+            </div>
+        </div>
+        <button class="pwa-btn-primary pwa-btn-ios-ok" id="pwaBtnIosChromeOk">Tushundim ✓</button>
+    </div>
+
     <button class="pwa-btn-secondary" id="pwaBtnClose">Keyinroq</button>
 </div>
 
@@ -232,8 +253,11 @@
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     const isIOS = (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const isAndroid = /android/i.test(userAgent);
-    
-    // Only proceed on Mobile (strictly Android or iOS)
+    // iOS Safari detection: Safari has 'Safari' but NOT 'CriOS'/'FxiOS'/'OPiOS' in UA
+    const isIOSSafari = isIOS && /Safari/.test(userAgent) && !/CriOS|FxiOS|OPiOS|EdgiOS|GSA/.test(userAgent);
+    const isIOSChrome = isIOS && !isIOSSafari;
+
+    // Only proceed on Mobile
     if (!isIOS && !isAndroid) return;
 
     let deferredPrompt;
@@ -250,12 +274,18 @@
     function showPwaSheet() {
         if (hasShown) return;
         hasShown = true;
-        
-        if (isIOS) {
+
+        if (isIOSChrome) {
+            // iOS but not Safari — can't install, show Safari guide
+            document.getElementById('pwaAndroidContent').style.display = 'none';
+            document.getElementById('pwaIosChromeContent').style.display = 'block';
+        } else if (isIOS) {
+            // iOS Safari — show manual steps
             document.getElementById('pwaAndroidContent').style.display = 'none';
             document.getElementById('pwaIosContent').style.display = 'block';
         }
-        
+        // Android: pwaAndroidContent stays visible
+
         overlay.classList.add('show');
         sheet.classList.add('show');
     }
@@ -269,11 +299,13 @@
     document.getElementById('pwaBtnClose').addEventListener('click', closePwaSheet);
     overlay.addEventListener('click', closePwaSheet);
 
-    // iOS "Tushundim" button
+    // iOS Safari "Tushundim" button
     const iosOkBtn = document.getElementById('pwaBtnIosOk');
-    if (iosOkBtn) {
-        iosOkBtn.addEventListener('click', closePwaSheet);
-    }
+    if (iosOkBtn) iosOkBtn.addEventListener('click', closePwaSheet);
+
+    // iOS Chrome "Tushundim" button
+    const iosChromeOkBtn = document.getElementById('pwaBtnIosChromeOk');
+    if (iosChromeOkBtn) iosChromeOkBtn.addEventListener('click', closePwaSheet);
 
     document.getElementById('pwaBtnInstall').addEventListener('click', async () => {
         if (deferredPrompt) {
