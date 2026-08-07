@@ -247,14 +247,18 @@
     }
 })();
 
-// Register Service Worker for PWA
+// Register Service Worker for PWA — scope = /{slug}/
 if ('serviceWorker' in navigator) {
+    const SW_SCOPE = '/{{ business.slug }}/';
+    const SW_URL   = '/{{ business.slug }}/sw.js';
     window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js').then(function(registration) {
-            console.log('ServiceWorker registration successful');
-        }).catch(function(err) {
-            console.log('ServiceWorker registration failed: ', err);
-        });
+        navigator.serviceWorker.register(SW_URL, { scope: SW_SCOPE })
+            .then(function(reg) {
+                console.log('[SW] Registered, scope:', reg.scope);
+            })
+            .catch(function(err) {
+                console.warn('[SW] Registration failed:', err);
+            });
     });
 }
 </script>

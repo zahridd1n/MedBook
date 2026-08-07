@@ -49,8 +49,10 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     
-    # Service Worker
+    # Service Worker — global (eski)
     path('sw.js', service_worker, name='service_worker'),
+    # Service Worker — slug-based (to'g'ri scope uchun)
+    re_path(r'^(?P<slug>[\w-]+)/sw\.js$', service_worker, name='service_worker_scoped'),
 
     # Public business pages — slug-based, must be LAST
     # Home and booking (3-step flow)

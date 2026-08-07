@@ -122,3 +122,37 @@ def build_booking_message(appointment) -> str:
         f'━━━━━━━━━━━━━━━━━\n'
         f'<i>Manage in your dashboard</i>'
     )
+
+
+def send_with_inline_keyboard(chat_id: str, text: str, buttons: list) -> bool:
+    """
+    Send a Telegram message with an inline keyboard.
+
+    buttons format:
+        [[{'text': 'Label', 'callback_data': 'my_data'}], ...]
+        Each inner list is a row of buttons.
+
+    Returns True on success.
+    """
+    if not chat_id:
+        return False
+    result = _bot_request('sendMessage', {
+        'chat_id': chat_id,
+        'text': text,
+        'parse_mode': 'HTML',
+        'reply_markup': {'inline_keyboard': buttons},
+    })
+    return result.get('ok', False)
+
+
+def answer_callback_query(callback_query_id: str, text: str = '') -> bool:
+    """
+    Answer a Telegram callback query (dismisses the loading spinner on the button).
+    Optionally show a small popup notification to the user.
+    """
+    result = _bot_request('answerCallbackQuery', {
+        'callback_query_id': callback_query_id,
+        'text': text,
+        'show_alert': False,
+    })
+    return result.get('ok', False)

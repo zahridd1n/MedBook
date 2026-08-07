@@ -72,7 +72,7 @@ MARKETING_COPY_DEFAULTS = {
             'send': 'Xabar yuborish',
         },
         'footer': 'Online bandlov, mijozlar oqimi va kundalik operatsiyalar uchun yagona platforma.',
-        'footer_copyright': '© 2025 BookFlow. Barcha huquqlar himoyalangan.',
+        'footer_copyright': '© 2026 BookFlow. Barcha huquqlar himoyalangan.',
         'legal': {
             'oferta': 'Ommaviy Oferta',
             'terms': 'Foydalanish Shartlari',
@@ -232,7 +232,7 @@ MARKETING_COPY_DEFAULTS = {
             'send': 'Отправить',
         },
         'footer': 'Единая платформа для онлайн-записи, клиентского потока и ежедневных операций.',
-        'footer_copyright': '© 2025 BookFlow. Все права защищены.',
+        'footer_copyright': '© 2026 BookFlow. Все права защищены.',
         'legal': {
             'oferta': 'Публичная Оферта',
             'terms': 'Условия Использования',
@@ -392,7 +392,7 @@ MARKETING_COPY_DEFAULTS = {
             'send': 'Send message',
         },
         'footer': 'One platform for online booking, customer flow, and daily operations.',
-        'footer_copyright': '© 2025 BookFlow. All rights reserved.',
+        'footer_copyright': '© 2026 BookFlow. All rights reserved.',
         'legal': {
             'oferta': 'Public Oferta',
             'terms': 'Terms of Use',

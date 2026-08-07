@@ -68,14 +68,17 @@
   {% endblock %}
 
   {% if business %}
-  {% if business.subscription_plan == 'growth' or business.subscription_plan == 'enterprise' %}
   <link rel="manifest" href="{% url 'pwa_manifest' business.slug %}">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="{{ business.name }}">
+  <meta name="theme-color" content="{{ business.primary_color|default:'#6366f1' }}">
   {% if business.logo %}
   <link rel="apple-touch-icon" href="{{ business.logo.url }}">
-  {% endif %}
+  <link rel="apple-touch-icon" sizes="152x152" href="{{ business.logo.url }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ business.logo.url }}">
+  <link rel="apple-touch-icon" sizes="167x167" href="{{ business.logo.url }}">
   {% endif %}
   {% endif %}
 
@@ -189,9 +192,7 @@
   {% block extra_js %}{% endblock %}
   
   {% if business %}
-  {% if business.subscription_plan == 'growth' or business.subscription_plan == 'enterprise' %}
     {% include 'public/includes/pwa_install.html' %}
-  {% endif %}
   {% endif %}
 </body>
 </html>

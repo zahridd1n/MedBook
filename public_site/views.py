@@ -320,36 +320,67 @@ def qr_scan_redirect(request, slug):
     return redirect('public-home', slug=slug)
 
 def pwa_manifest(request, slug):
+    from django.http import HttpResponse
     business = get_object_or_404(Business, slug=slug, is_active=True)
-    if business.subscription_plan not in ['growth', 'enterprise']:
-        raise Http404("PWA is not available for this plan.")
-        
-    icon_url = request.build_absolute_uri(business.logo.url) if business.logo else "https://via.placeholder.com/512x512.png?text=" + business.name[:1]
-    
+
+    base_url = request.build_absolute_uri('/')
+    start_url = f'/{business.slug}/'
+
+    if business.logo:
+        icon_url = request.build_absolute_uri(business.logo.url)
+    else:
+        icon_url = f'https://ui-avatars.com/api/?name={business.name[:2]}&size=512&background={business.primary_color.lstrip("#") if business.primary_color else "6366f1"}&color=fff&rounded=true'
+
     manifest = {
         "name": business.name,
         "short_name": business.name[:12],
-        "description": f"Book appointments with {business.name}",
-        "start_url": f"/{business.slug}/",
+        "description": f"{business.name} — online bandlov",
+        "start_url": start_url,
+        "scope": f'/{business.slug}/',
         "display": "standalone",
+        "orientation": "portrait",
         "background_color": "#ffffff",
         "theme_color": business.primary_color or "#6366f1",
+        "lang": "uz",
         "icons": [
             {
                 "src": icon_url,
                 "sizes": "192x192",
                 "type": "image/png",
-                "purpose": "any maskable"
+                "purpose": "any"
             },
             {
                 "src": icon_url,
                 "sizes": "512x512",
                 "type": "image/png",
-                "purpose": "any maskable"
+                "purpose": "any"
+            },
+            {
+                "src": icon_url,
+                "sizes": "512x512",
+                "type": "image/png",
+                "purpose": "maskable"
+            },
+        ],
+        "shortcuts": [
+            {
+                "name": "Qabul olish",
+                "short_name": "Qabul",
+                "description": "Yangi qabul yaratish",
+                "url": f'/{business.slug}/book/',
+                "icons": [{"src": icon_url, "sizes": "96x96"}]
             }
-        ]
+        ],
+        "categories": ["business", "health", "lifestyle"],
     }
-    return JsonResponse(manifest)
+    import json
+    response = HttpResponse(
+        json.dumps(manifest, ensure_ascii=False),
+        content_type='application/manifest+json; charset=utf-8'
+    )
+    response['Cache-Control'] = 'public, max-age=86400'
+    return response
+
 
 def service_worker(request):
-    return render(request, 'sw.js', content_type='application/javascript')
+    return render(request, 'sw.js', content_type='application/javascript; charset=utf-8')
