@@ -17,9 +17,13 @@ from business.models import Business
 logger = logging.getLogger(__name__)
 
 
-# ─── Upcoming‑appointments inline button definition ───────────────────────────
+# ─── Telegram keyboard / button definitions ────────────────────────────────────
 
+# Inline button (for callback_query, used in non-reply-keyboard messages)
 _UPCOMING_BTN = [[{'text': '📋 Bugungi qabullar', 'callback_data': 'upcoming_appointments'}]]
+
+# Text that reply keyboard button sends when tapped
+_UPCOMING_TEXT_TRIGGER = '📋 Bugungi qabullar'
 
 
 # ─── Dashboard: Notification Popup (last 5 for bell dropdown) ─────────────────
@@ -177,8 +181,8 @@ def _build_upcoming_message(business):
 
 
 def _send_upcoming_to_chat(chat_id: str):
-    """Find the business for this chat_id, build message and send it with the button."""
-    from .utils import send_with_inline_keyboard, send_telegram_message
+    """Find the business for this chat_id, build message and send it with reply keyboard."""
+    from .utils import send_with_reply_keyboard, send_telegram_message
 
     try:
         business = Business.objects.get(telegram_chat_id=chat_id)
@@ -191,7 +195,7 @@ def _send_upcoming_to_chat(chat_id: str):
         return
 
     text, _ = _build_upcoming_message(business)
-    send_with_inline_keyboard(chat_id, text, _UPCOMING_BTN)
+    send_with_reply_keyboard(chat_id, text)
 
 
 # ─── Telegram Webhook ─────────────────────────────────────────────────────────
@@ -215,7 +219,7 @@ def telegram_webhook(request, token):
     # ── 1. Inline keyboard button pressed ─────────────────────────────────────
     callback_query = data.get('callback_query', {})
     if callback_query:
-        from .utils import answer_callback_query
+        from .utils import answer_callback_query, send_with_reply_keyboard
 
         cb_id      = callback_query.get('id', '')
         cb_data    = callback_query.get('data', '')
@@ -236,7 +240,7 @@ def telegram_webhook(request, token):
     if not chat_id or not text:
         return JsonResponse({'ok': True})
 
-    from .utils import send_telegram_message, send_with_inline_keyboard
+    from .utils import send_telegram_message, send_with_reply_keyboard
 
     # /start — connect business or welcome
     if text.startswith('/start'):
@@ -255,12 +259,11 @@ def telegram_webhook(request, token):
                     'telegram_connect_token',
                 ])
                 logger.info(f'[Telegram] Business "{business.name}" connected to chat_id={chat_id}')
-                send_with_inline_keyboard(
+                send_with_reply_keyboard(
                     chat_id,
                     f'✅ <b>{business.name}</b> muvaffaqiyatli ulandi!\n\n'
                     f'Yangi qabullar haqida xabar olasiz. 📲\n'
-                    f'Quyidagi tugma orqali bugungi qolgan qabullarni ko\'ring:',
-                    _UPCOMING_BTN,
+                    f'Pastdagi tugmadan bugungi qo\'lgan qabullarni ko\'ring 👇',
                 )
             except Business.DoesNotExist:
                 logger.warning(f'[Telegram] Invalid connect_token: {connect_token}')
@@ -270,13 +273,12 @@ def telegram_webhook(request, token):
                     'Dashboard → Sozlamalar → Telegram orqali yangi havola oling.',
                 )
         else:
-            send_with_inline_keyboard(
+            send_with_reply_keyboard(
                 chat_id,
                 '👋 <b>BookFlow botiga xush kelibsiz!</b>\n\n'
                 'Biznesingizni ulash uchun:\n'
                 'Dashboard → Sozlamalar → Telegram xabarnomalar → '
                 '<b>"Ulanish havolasini yaratish"</b> tugmasini bosing.',
-                _UPCOMING_BTN,
             )
 
     # /stop — disable notifications
@@ -293,20 +295,19 @@ def telegram_webhook(request, token):
         except Business.DoesNotExist:
             pass
 
-    # /qabullar — show upcoming appointments now
-    elif text in ('/qabullar', '/appointments'):
+    # /qabullar or keyboard button tap — show upcoming appointments now
+    elif text in ('/qabullar', '/appointments', _UPCOMING_TEXT_TRIGGER):
         _send_upcoming_to_chat(chat_id)
 
     # /help — available commands
     elif text == '/help':
-        send_with_inline_keyboard(
+        send_with_reply_keyboard(
             chat_id,
             '📖 <b>Mavjud buyruqlar:</b>\n\n'
-            '/qabullar — bugungi qolgan qabullar ro\'yxati\n'
+            '/qabullar — bugungi qo\'lgan qabullar ro\'yxati\n'
             '/stop — xabarnomalarni to\'xtatish\n'
             '/help — yordam\n\n'
-            'Yoki quyidagi tugmadan foydalaning:',
-            _UPCOMING_BTN,
+            '💡 Pastdagi tugmani bosib ham qabullarni ko\'rishingiz mumkin 👇',
         )
 
     return JsonResponse({'ok': True})

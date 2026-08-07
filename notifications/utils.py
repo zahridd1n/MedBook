@@ -156,3 +156,49 @@ def answer_callback_query(callback_query_id: str, text: str = '') -> bool:
         'show_alert': False,
     })
     return result.get('ok', False)
+
+
+# ─── Reply Keyboard (doimiy pastki tugmalar) ──────────────────────────────────
+
+# Pastki klaviatura tugmasi — foydalanuvchi doim ko'radi
+_REPLY_KEYBOARD = {
+    'keyboard': [
+        [{'text': '📋 Bugungi qabullar'}],
+    ],
+    'resize_keyboard': True,    # kichikroq hajm
+    'persistent': True,         # doim ko'rinsin (Telegram 6.9+)
+    'one_time_keyboard': False,
+}
+
+
+def send_with_reply_keyboard(chat_id: str, text: str) -> bool:
+    """
+    Send a message with a persistent Reply Keyboard at the bottom
+    (where the user types). The keyboard stays visible until explicitly removed.
+
+    Returns True on success.
+    """
+    if not chat_id:
+        return False
+    result = _bot_request('sendMessage', {
+        'chat_id': chat_id,
+        'text': text,
+        'parse_mode': 'HTML',
+        'reply_markup': _REPLY_KEYBOARD,
+    })
+    return result.get('ok', False)
+
+
+# ─── Bot Commands (setMyCommands) ─────────────────────────────────────────────
+
+def set_bot_commands() -> dict:
+    """
+    Register bot commands so they appear in Telegram's '/' command menu.
+    Call this once after deployment or when commands change.
+    """
+    commands = [
+        {'command': 'qabullar',    'description': "📋 Bugungi qo'lgan qabullar ro'yxati"},
+        {'command': 'help',        'description': '❓ Yordam va mavjud buyruqlar'},
+        {'command': 'stop',        'description': '🔕 Xabarnomalarni to\'xtatish'},
+    ]
+    return _bot_request('setMyCommands', {'commands': commands})

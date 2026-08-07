@@ -66,6 +66,9 @@ jobs:
             echo "📁 Collecting static files..."
             python manage.py collectstatic --noinput
 
+            echo "🤖 Registering Telegram bot commands..."
+            python manage.py set_bot_commands || true
+
             echo "🔄 Restarting Gunicorn..."
             sudo systemctl restart book
 
