@@ -30,48 +30,70 @@ def send_telegram_notification_task(self, chat_id: str, message: str):
 def send_daily_appointments_task():
     """
     Sends today's appointments to businesses that have connected a Telegram bot.
-    Scheduled to run daily at 08:00 AM via Celery Beat.
+    Scheduled to run daily at 08:00 AM (Asia/Tashkent) via Celery Beat.
     """
     from django.utils import timezone
     from business.models import Business
     from appointments.models import Appointment
 
     today = timezone.localdate()
-    
-    # Get all active businesses with a connected telegram bot
-    businesses = Business.objects.exclude(telegram_chat_id='').exclude(telegram_chat_id__isnull=True).filter(is_active=True)
-    
+    logger.info(f'[DailyTask] Running for date: {today}')
+
+    businesses = (
+        Business.objects
+        .filter(
+            is_active=True,
+            telegram_notifications_enabled=True,
+        )
+        .exclude(telegram_chat_id='')
+        .exclude(telegram_chat_id__isnull=True)
+    )
+
+    logger.info(f'[DailyTask] Telegram ulangan faol bizneslar: {businesses.count()}')
+
+    sent_count = 0
     for biz in businesses:
-        if not biz.telegram_chat_id:
-            continue
-            
-        appointments = Appointment.objects.filter(
-            business=biz, 
-            date=today
-        ).exclude(status=Appointment.STATUS_CANCELLED).order_by('time')
-        
-        if not appointments.exists():
-            continue
-            
-        date_str = today.strftime('%d.%m.%Y')
-        msg_lines = [
-            f"📅 <b>Bugungi qabullar ro'yxati ({date_str})</b>\n",
-            f"Sizda bugun jami <b>{appointments.count()}</b> ta qabul mavjud:\n"
-        ]
-        
-        for idx, appt in enumerate(appointments, 1):
-            time_str = appt.time.strftime('%H:%M') if appt.time else '--:--'
-            customer_name = appt.customer.full_name if appt.customer else 'Noma\'lum'
-            service_name = appt.service.name if appt.service else 'Xizmat belgilanmagan'
-            emp_name = appt.employee.name if appt.employee else 'Barchaga'
-            
-            msg_lines.append(
-                f"{idx}. 🕒 <b>{time_str}</b> | 👤 {customer_name}\n"
-                f"   💼 {service_name} (👨‍⚕️ {emp_name})\n"
+        try:
+            appointments = (
+                Appointment.objects
+                .filter(business=biz, date=today)
+                .exclude(status=Appointment.STATUS_CANCELLED)
+                .select_related('customer', 'service', 'employee')
+                .order_by('time')
             )
-            
-        msg_lines.append(f"<i>Batafsil ma'lumotni tizimning admin panelida ko'rishingiz mumkin.</i>")
-        final_message = "\n".join(msg_lines)
-        
-        # Send using the existing async task
-        send_telegram_notification_task.delay(biz.telegram_chat_id, final_message)
+
+            if not appointments.exists():
+                logger.info(f'[DailyTask] {biz.name}: bugun qabul yo\'q, o\'tkazib yuborildi.')
+                continue
+
+            date_str = today.strftime('%d.%m.%Y')
+            count = appointments.count()
+            msg_lines = [
+                f"📅 <b>Bugungi qabullar ro'yxati ({date_str})</b>\n",
+                f"Sizda bugun jami <b>{count}</b> ta qabul mavjud:\n",
+            ]
+
+            for idx, appt in enumerate(appointments, 1):
+                time_str = appt.time.strftime('%H:%M') if appt.time else '--:--'
+                customer_name = appt.customer.full_name if appt.customer else "Noma'lum"
+                service_name = appt.service.name if appt.service else 'Xizmat belgilanmagan'
+                emp_name = appt.employee.name if appt.employee else '—'
+
+                msg_lines.append(
+                    f"{idx}. 🕒 <b>{time_str}</b> | 👤 {customer_name}\n"
+                    f"   💼 {service_name}  👨‍⚕️ {emp_name}\n"
+                )
+
+            msg_lines.append("<i>Batafsil ma'lumotni dashboard'dan ko'rishingiz mumkin.</i>")
+            final_message = "\n".join(msg_lines)
+
+            send_telegram_notification_task.delay(biz.telegram_chat_id, final_message)
+            logger.info(f'[DailyTask] {biz.name}: {count} ta qabul — xabar navbatga qo\'yildi.')
+            sent_count += 1
+
+        except Exception as e:
+            logger.error(f'[DailyTask] {biz.name} uchun xatolik: {e}', exc_info=True)
+            continue
+
+    logger.info(f'[DailyTask] Yakunlandi. {sent_count} ta biznesga xabar jo\'natildi.')
+    return {'sent': sent_count, 'date': str(today)}
