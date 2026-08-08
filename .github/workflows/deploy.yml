@@ -42,7 +42,6 @@ jobs:
             git reset --hard origin/main
 
             echo "🐍 Detecting virtual environment..."
-
             if [ -d "venv" ]; then
               source venv/bin/activate
             elif [ -d ".venv" ]; then
@@ -69,26 +68,36 @@ jobs:
             echo "🤖 Registering Telegram bot commands..."
             python manage.py set_bot_commands || true
 
-            echo "🔄 Restarting Gunicorn..."
-            sudo systemctl restart book
+            # ── Restart services ─────────────────────────────────────────────
 
-            if systemctl list-unit-files | grep -q '^medbook-celery.service'; then
-              echo "🔄 Restarting Celery Worker..."
-              sudo systemctl restart medbook-celery
-              sudo systemctl is-active --quiet medbook-celery
-            fi
+            restart_service() {
+              local SVC="$1"
+              local LABEL="$2"
+              if sudo systemctl list-unit-files "${SVC}.service" | grep -q "${SVC}"; then
+                echo "🔄 Restarting ${LABEL}..."
+                sudo systemctl restart "${SVC}"
+                sleep 2
+                if sudo systemctl is-active --quiet "${SVC}"; then
+                  echo "✅ ${LABEL} — ishlayapti"
+                else
+                  echo "⚠️  ${LABEL} — ishga tushmadi, log:"
+                  sudo journalctl -u "${SVC}" -n 10 --no-pager || true
+                fi
+              else
+                echo "ℹ️  ${LABEL} service topilmadi (${SVC}) — o'tkazib yuborildi."
+              fi
+            }
 
-            if systemctl list-unit-files | grep -q '^medbook-celerybeat.service'; then
-              echo "🔄 Restarting Celery Beat..."
-              sudo systemctl restart medbook-celerybeat
-              sudo systemctl is-active --quiet medbook-celerybeat
-            fi
+            restart_service "book"              "Gunicorn"
+            restart_service "medbook-celery"    "Celery Worker"
+            restart_service "medbook-celerybeat" "Celery Beat"
 
-            echo "🩺 Checking service status..."
+            # ── Final check ──────────────────────────────────────────────────
+
+            echo "🩺 Checking main service status..."
             sudo systemctl is-active --quiet book
 
+            echo "===================================="
             echo "✅ Deployment completed successfully!"
-            echo "------------------------------------"
-            echo "Current commit:"
-            git rev-parse --short HEAD
-            echo "------------------------------------"1
+            echo "Current commit: $(git rev-parse --short HEAD)"
+            echo "===================================="
