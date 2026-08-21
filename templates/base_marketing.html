@@ -27,6 +27,80 @@
 {% endblock %}
 
 {% block body %}
+<div id="mkt-loader" aria-hidden="true">
+  <div id="mkt-loader-inner">
+    <span id="mkt-loader-icon"><i class="bi bi-calendar2-check"></i></span>
+    <div id="mkt-loader-track">
+      <div id="mkt-loader-bar"></div>
+    </div>
+  </div>
+</div>
+<style>
+  #mkt-loader {
+    position: fixed; inset: 0;
+    z-index: 99999;
+    background: var(--mkt-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+  #mkt-loader.hide {
+    opacity: 0;
+    visibility: hidden;
+  }
+  #mkt-loader-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  #mkt-loader-icon {
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--mkt-mint), var(--mkt-blue));
+    color: #06111c;
+    font-size: 1.4rem;
+    box-shadow: 0 0 28px rgba(99,240,189,0.35);
+  }
+  #mkt-loader-track {
+    width: 120px; height: 3px;
+    background: var(--mkt-border-soft);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  #mkt-loader-bar {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--mkt-mint), var(--mkt-blue));
+    border-radius: 99px;
+    box-shadow: 0 0 10px rgba(99,240,189,0.5);
+    transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+</style>
+<script>
+  (function() {
+    var bar = document.getElementById('mkt-loader-bar');
+    var loader = document.getElementById('mkt-loader');
+    var w = 0;
+    var done = false;
+    function hide() {
+      if (done) return;
+      done = true;
+      bar.style.width = '100%';
+      setTimeout(function() { loader.classList.add('hide'); }, 300);
+    }
+    var t = setInterval(function() {
+      w = w < 80 ? w + (Math.random() * 30) : w + 0.5;
+      if (w > 88) { clearInterval(t); w = 88; }
+      bar.style.width = w + '%';
+    }, 40);
+    // Hide on DOMContentLoaded (much faster than window.load)
+    document.addEventListener('DOMContentLoaded', function() { clearInterval(t); hide(); });
+    // Hard cap: never show more than 900ms
+    setTimeout(function() { clearInterval(t); hide(); }, 900);
+  })();
+</script>
 <div class="marketing-shell">
   <div class="mkt-mesh" aria-hidden="true"></div>
   <div class="mkt-ribbon mkt-ribbon-a" data-parallax="0.12" aria-hidden="true"></div>

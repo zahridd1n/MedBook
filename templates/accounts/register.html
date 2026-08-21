@@ -203,6 +203,33 @@
     text-decoration: underline;
   }
   .auth-terms-label a:hover { color: #c7d2fe; }
+  .auth-back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px 9px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.75);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: background 0.2s, color 0.2s, transform 0.2s, border-color 0.2s;
+  }
+  .auth-back-btn:hover {
+    background: rgba(255,255,255,0.13);
+    border-color: rgba(255,255,255,0.22);
+    color: #fff;
+    transform: translateX(-2px);
+  }
+  .auth-back-btn i { font-size: 1rem; }
 </style>
 <div class="auth-wrap">
   <div class="auth-orb auth-orb--1"></div>
@@ -210,6 +237,9 @@
   <div class="auth-orb auth-orb--3"></div>
   <div class="auth-grid"></div>
   <div class="auth-card">
+    <a href="javascript:void(0)" class="auth-back-btn" onclick="history.length > 1 ? history.back() : (window.location='/')" title="Orqaga">
+      <i class="bi bi-arrow-left"></i> Orqaga
+    </a>
     <div class="auth-card-inner">
       <div class="text-center mb-3">
         <a href="/" class="auth-logo">

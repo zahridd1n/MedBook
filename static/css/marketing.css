@@ -1812,27 +1812,36 @@ a.mkt-contact-method i {
   }
 
   .mkt-nav-panel.is-open .mkt-nav-links {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4px;
-    padding: 8px 0 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 10px 0 6px;
     border-top: 1px solid var(--mkt-border-soft);
     margin-top: 8px;
   }
 
   .mkt-nav-panel.is-open .mkt-nav-links a {
-    text-align: center;
-    padding: 11px 10px;
+    text-align: left;
+    padding: 13px 16px;
     border-radius: 14px;
-    font-size: 0.88rem;
+    font-size: 0.95rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
   }
 
   .mkt-nav-panel.is-open .mkt-nav-actions {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 8px 0 0;
+    padding: 10px 0 0;
     border-top: 1px solid var(--mkt-border-soft);
+  }
+
+  /* Hide lang/theme inside actions on mobile — they're in quick bar */
+  .mkt-nav-panel.is-open .mkt-nav-actions .mkt-lang-switch,
+  .mkt-nav-panel.is-open .mkt-nav-actions .mkt-theme-toggle {
+    display: none !important;
   }
 
   .mkt-nav-panel.is-open .mkt-nav-actions .mkt-login,
@@ -1841,6 +1850,8 @@ a.mkt-contact-method i {
     text-align: center;
     justify-content: center;
     border-radius: 14px;
+    min-height: 46px;
+    font-size: 0.95rem;
   }
 
   /* Quick bar lang switcher: compact */
