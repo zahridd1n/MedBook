@@ -81,7 +81,14 @@ body { background: var(--surface-alt); font-family: 'Inter', sans-serif; }
 }
 .product-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
 .product-name { font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-.product-desc { font-size: 0.875rem; color: var(--ink-muted); margin-bottom: 16px; flex: 1; line-height: 1.6; }
+.product-desc { 
+  font-size: 0.875rem; color: var(--ink-muted); margin-bottom: 16px; 
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .product-footer {
   display: flex; align-items: center; justify-content: space-between;
   border-top: 1px solid var(--border); padding-top: 16px; margin-top: auto;
@@ -191,28 +198,15 @@ body { background: var(--surface-alt); font-family: 'Inter', sans-serif; }
 {% include 'public/includes/brand_colors.html' %}
 
 <!-- Navbar -->
-<nav class="cat-nav">
-  <div class="cat-nav-inner">
-    <a href="{% url 'public-home' business.slug %}" class="cat-logo">
-      {% if business.logo %}
-        <img src="{{ business.logo.url }}" alt="{{ business.name }}">
-      {% endif %}
-      <span class="cat-logo-name">{{ business.name }}</span>
-    </a>
-    <a href="{% url 'public-home' business.slug %}" class="cat-back">
-      <i class="bi bi-arrow-left"></i> Asosiy sahifa
-    </a>
-  </div>
-</nav>
-
-<!-- Hero -->
-<div class="cat-hero">
-  <h1>📦 Mahsulotlar Katalogi</h1>
-  <p>{{ business.name }} — barcha mahsulotlar bir joyda</p>
-</div>
+{% include 'public/includes/navbar.html' %}
 
 <!-- Products -->
-<div class="cat-main">
+<div class="cat-main" style="margin-top:20px;">
+  <div style="margin-bottom:30px;">
+    <h1 style="font-size:1.8rem; font-weight:800; color:var(--ink); margin:0;">Bizning mahsulotlar</h1>
+    <p style="color:var(--ink-muted); margin-top:5px;">O'zingizga kerakli mahsulotni tanlang va buyurtma bering.</p>
+  </div>
+
   {% if products %}
   <div class="product-grid">
     {% for product in products %}
@@ -221,7 +215,7 @@ body { background: var(--surface-alt); font-family: 'Inter', sans-serif; }
       <div class="product-body">
         <div class="product-name">{{ product.name }}</div>
         {% if product.description %}
-        <div class="product-desc">{{ product.description }}</div>
+        <div class="product-desc">{{ product.description|truncatechars:120 }}</div>
         {% endif %}
         <div class="product-footer">
           <div class="product-price">{{ product.price_display }}</div>
