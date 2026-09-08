@@ -198,7 +198,7 @@ def public_order_submit(request, slug):
 
     # ── Telegram notification (only if connected) ─────────────────────────────
     try:
-        if business.telegram_notifications_enabled and business.telegram_chat_id:
+        if business.telegram_notifications_enabled and business.telegram_chat_id and business.can_use_telegram():
             from notifications.tasks import send_telegram_notification_task
             product_name = product.name if product else 'Umumiy so\'rov'
             msg = (

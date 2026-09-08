@@ -245,7 +245,7 @@ def booking_step4_confirm(request, slug):
             )
 
             # ── Telegram notification (async Celery task) ─────────────────
-            if business.telegram_notifications_enabled and business.telegram_chat_id:
+            if business.telegram_notifications_enabled and business.telegram_chat_id and business.can_use_telegram():
                 msg = build_booking_message(appt)
                 send_telegram_notification_task.delay(business.telegram_chat_id, msg)
 

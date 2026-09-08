@@ -49,7 +49,11 @@ def send_daily_appointments_task():
         .exclude(telegram_chat_id__isnull=True)
     )
 
-    logger.info(f'[DailyTask] Telegram ulangan faol bizneslar: {businesses.count()}')
+    # Reja (tarif) tekshiruvi: 
+    # faqat haqiqatda Telegram xizmatidan foydalana oladigan bizneslarni qoldiramiz.
+    businesses = [biz for biz in businesses if biz.can_use_telegram()]
+
+    logger.info(f'[DailyTask] Telegram ulangan faol bizneslar: {len(businesses)}')
 
     sent_count = 0
     for biz in businesses:
