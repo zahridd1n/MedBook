@@ -372,6 +372,14 @@
           <i class="bi bi-people"></i><span>Mutaxassislar</span>
         </a>
       </li>
+      {% if catalog_products %}
+      <li>
+        <a class="nav-mod-link" href="{% url 'public-catalog' business.slug %}">
+          <span class="nav-mod-link-bg"></span>
+          <i class="bi bi-box-seam"></i><span>Mahsulotlar</span>
+        </a>
+      </li>
+      {% endif %}
       <li>
         <a class="nav-mod-link" href="{% url 'public-blog-list' business.slug %}">
           <span class="nav-mod-link-bg"></span>
@@ -399,6 +407,11 @@
     <a href="{% url 'public-home' business.slug %}#employees" class="nav-mod-overlay-item nav-mod-overlay-link" onclick="closeModMenu()">
       <i class="bi bi-people"></i>Mutaxassislar
     </a>
+    {% if catalog_products %}
+    <a href="{% url 'public-catalog' business.slug %}" class="nav-mod-overlay-item nav-mod-overlay-link" onclick="closeModMenu()">
+      <i class="bi bi-box-seam"></i>Mahsulotlar
+    </a>
+    {% endif %}
     <a href="{% url 'public-blog-list' business.slug %}" class="nav-mod-overlay-item nav-mod-overlay-link" onclick="closeModMenu()">
       <i class="bi bi-journal"></i>Blog
     </a>

@@ -274,6 +274,7 @@
     <ul class="nav-min-links">
       <li><a class="nav-min-link" href="{% url 'public-home' business.slug %}">Bosh sahifa</a></li>
       <li><a class="nav-min-link" href="{% url 'public-home' business.slug %}#employees">Mutaxassislar</a></li>
+      {% if catalog_products %}<li><a class="nav-min-link" href="{% url 'public-catalog' business.slug %}">Mahsulotlar</a></li>{% endif %}
       <li><a class="nav-min-link" href="{% url 'public-blog-list' business.slug %}">Blog</a></li>
     </ul>
 
@@ -296,6 +297,11 @@
     <a href="{% url 'public-home' business.slug %}#employees" class="nav-min-overlay-item nav-min-overlay-link" onclick="closeMinMenu()">
       <i class="bi bi-people"></i>Mutaxassislar
     </a>
+    {% if catalog_products %}
+    <a href="{% url 'public-catalog' business.slug %}" class="nav-min-overlay-item nav-min-overlay-link" onclick="closeMinMenu()">
+      <i class="bi bi-box-seam"></i>Mahsulotlar
+    </a>
+    {% endif %}
     <a href="{% url 'public-blog-list' business.slug %}" class="nav-min-overlay-item nav-min-overlay-link" onclick="closeMinMenu()">
       <i class="bi bi-journal"></i>Blog
     </a>

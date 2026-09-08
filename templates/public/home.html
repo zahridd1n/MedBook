@@ -414,6 +414,104 @@ body {
   .bk-cta { padding:2.5rem 1.5rem; }
   .bk-hero__card { margin-top:2rem; }
 }
+
+/* ── Mahsulot kartalar ──────────────────────────────────────── */
+.bk-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+.bk-catalog-card {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+  display: flex; flex-direction: column;
+}
+.bk-catalog-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+.bk-catalog-img-wrap { width:100%; aspect-ratio:4/3; overflow:hidden; background:var(--surface-alt); }
+.bk-catalog-img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s; }
+.bk-catalog-card:hover .bk-catalog-img { transform:scale(1.05); }
+.bk-catalog-body { padding:16px; flex:1; display:flex; flex-direction:column; }
+.bk-catalog-name { font-size:0.95rem; font-weight:700; color:var(--ink); margin-bottom:4px; }
+.bk-catalog-desc { font-size:0.8rem; color:var(--ink-muted); line-height:1.55; margin-bottom:12px; flex:1; }
+.bk-catalog-footer {
+  display:flex; align-items:center; justify-content:space-between;
+  border-top:1px solid var(--border); padding-top:12px; margin-top:auto;
+}
+.bk-catalog-price { font-size:1rem; font-weight:800; color:var(--indigo); }
+.bk-catalog-btn {
+  padding:8px 14px; border-radius:8px;
+  background:var(--indigo); color:#fff;
+  border:none; font-size:0.8rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.bk-catalog-btn:hover { background:var(--indigo-dark); transform:scale(1.04); }
+
+/* ── Buyurtma modal ──────────────────────────────────────────── */
+.cat-order-overlay {
+  position:fixed; inset:0; z-index:9998;
+  background:rgba(10,15,30,0.45); backdrop-filter:blur(4px);
+  display:none; align-items:flex-end; justify-content:center;
+}
+.cat-order-overlay.open { display:flex; }
+.cat-order-sheet {
+  background:#fff; border-radius:24px 24px 0 0;
+  width:100%; max-width:520px;
+  padding:28px 24px 36px;
+  animation:catSlideUp 0.3s cubic-bezier(.22,1,.36,1);
+  max-height:88vh; overflow-y:auto;
+}
+@keyframes catSlideUp {
+  from { transform:translateY(100%); opacity:0; }
+  to   { transform:translateY(0);    opacity:1; }
+}
+.cat-order-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; }
+.cat-order-title { font-size:1.1rem; font-weight:800; color:var(--ink); }
+.cat-order-sub { font-size:0.82rem; color:var(--ink-muted); margin-top:2px; }
+.cat-close-btn {
+  background:#f1f5f9; border:none; border-radius:50%;
+  width:30px; height:30px; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; flex-shrink:0;
+}
+.cat-close-btn:hover { background:#e2e8f0; }
+.cat-field { margin-bottom:14px; }
+.cat-field label { font-size:0.82rem; font-weight:600; color:#334155; margin-bottom:5px; display:block; }
+.cat-field input, .cat-field textarea {
+  width:100%; padding:11px 13px;
+  border:1.5px solid var(--border-strong); border-radius:10px;
+  font-size:0.9rem; font-family:inherit;
+  transition:border-color 0.2s; background:#fff;
+}
+.cat-field input:focus, .cat-field textarea:focus {
+  outline:none; border-color:var(--indigo);
+  box-shadow:0 0 0 3px var(--indigo-glow);
+}
+.cat-field textarea { resize:none; height:72px; }
+.cat-submit-btn {
+  width:100%; padding:14px; margin-top:6px;
+  background:var(--indigo); color:#fff;
+  border:none; border-radius:12px;
+  font-size:0.95rem; font-weight:700;
+  cursor:pointer; transition:background 0.2s;
+}
+.cat-submit-btn:hover { background:var(--indigo-dark); }
+.cat-submit-btn:disabled { opacity:0.65; cursor:not-allowed; }
+.cat-success { text-align:center; padding:16px 0 8px; }
+.cat-success-icon {
+  width:64px; height:64px; border-radius:50%;
+  background:var(--indigo-light); margin:0 auto 12px;
+  display:flex; align-items:center; justify-content:center; font-size:1.8rem;
+}
+@media (max-width:600px) {
+  .bk-catalog-grid { grid-template-columns:1fr 1fr; gap:12px; }
+  .bk-catalog-body { padding:12px; }
+}
+@media (max-width:380px) {
+  .bk-catalog-grid { grid-template-columns:1fr; }
+}
 </style>
 {% endblock %}
 
@@ -578,6 +676,47 @@ body {
         </div>
       </section>
 
+      {% if catalog_products %}
+      <div class="bk-divider"></div>
+
+      <!-- Mahsulotlar katalogi -->
+      <section id="catalog" class="bk-section" style="padding-top:0;">
+        <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+          <div>
+            <div class="bk-label">Bizning taklif</div>
+            <h2 class="bk-title mb-0">Mahsulotlar</h2>
+          </div>
+          <a href="{% url 'public-catalog' business.slug %}" class="btn-service" style="width:auto;padding:.5rem 1.15rem;">
+            Barchasini ko'rish <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="bk-catalog-grid">
+          {% for product in catalog_products|slice:":4" %}
+          <div class="bk-catalog-card">
+            <div class="bk-catalog-img-wrap">
+              <img src="{{ product.image.url }}" alt="{{ product.name }}" class="bk-catalog-img">
+            </div>
+            <div class="bk-catalog-body">
+              <div class="bk-catalog-name">{{ product.name }}</div>
+              {% if product.description %}
+              <div class="bk-catalog-desc">{{ product.description|truncatechars:70 }}</div>
+              {% endif %}
+              <div class="bk-catalog-footer">
+                <span class="bk-catalog-price">{{ product.price_display }}</span>
+                <button class="bk-catalog-btn"
+                  onclick="openCatalogOrder({{ product.pk }}, '{{ product.name|escapejs }}', '{{ product.price_display|escapejs }}')"
+                >
+                  Buyurtma
+                </button>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
       {% if employees %}
       <div class="bk-divider"></div>
 
@@ -675,41 +814,6 @@ body {
               </a>
             </div>
           {% endfor %}
-        </div>
-      </section>
-      {% endif %}
-
-      {% if catalog_products %}
-      <div class="bk-divider"></div>
-
-      <!-- Katalog Banner -->
-      <section class="bk-section" style="padding-top:0;">
-        <div style="
-          background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-dark) 100%);
-          border-radius: var(--radius-lg);
-          padding: 2.5rem 2rem;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 1.5rem;
-          flex-wrap: wrap;
-        ">
-          <div>
-            <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:0.5rem;">
-              Mahsulotlar
-            </div>
-            <h3 style="font-weight:800; color:#fff; margin:0; font-size:1.5rem;">
-              📦 Bizning katalog
-            </h3>
-            <p style="color:rgba(255,255,255,0.75); margin:0.5rem 0 0; font-size:0.925rem;">
-              {{ catalog_products.count }} ta mahsulot — tanlang va buyurtma bering
-            </p>
-          </div>
-          <a href="{% url 'public-catalog' business.slug %}"
-             class="btn-book-primary d-inline-flex"
-             style="background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border:1.5px solid rgba(255,255,255,0.3);white-space:nowrap;width:auto;">
-            Katalogni ko'rish <i class="bi bi-arrow-right"></i>
-          </a>
         </div>
       </section>
       {% endif %}
@@ -887,5 +991,94 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 {% include 'public/includes/footer.html' %}
+
+{% if catalog_products %}
+<!-- Buyurtma modal (home page) -->
+<div class="cat-order-overlay" id="catOrderOverlay" onclick="if(event.target===this)closeCatModal()">
+  <div class="cat-order-sheet">
+
+    <div id="catFormState">
+      <div class="cat-order-header">
+        <div>
+          <div class="cat-order-title" id="catModalName">Buyurtma berish</div>
+          <div class="cat-order-sub" id="catModalPrice"></div>
+        </div>
+        <button class="cat-close-btn" onclick="closeCatModal()">
+          <i class="bi bi-x-lg" style="font-size:0.8rem;"></i>
+        </button>
+      </div>
+      <form id="catOrderForm">
+        <input type="hidden" id="catProductId" name="product_id">
+        <div class="cat-field">
+          <label for="catName">Ismingiz *</label>
+          <input type="text" id="catName" name="customer_name" placeholder="To'liq ismingiz" required autocomplete="name">
+        </div>
+        <div class="cat-field">
+          <label for="catPhone">Telefon *</label>
+          <input type="tel" id="catPhone" name="customer_phone" placeholder="+998 90 000 00 00" required autocomplete="tel">
+        </div>
+        <div class="cat-field">
+          <label for="catNotes">Izoh <span style="font-weight:400;color:#94a3b8;">(ixtiyoriy)</span></label>
+          <textarea id="catNotes" name="notes" placeholder="O'lcham, rang, boshqa talablar..."></textarea>
+        </div>
+        <button type="submit" class="cat-submit-btn" id="catSubmitBtn">✅ Buyurtma berish</button>
+      </form>
+    </div>
+
+    <div id="catSuccessState" style="display:none;">
+      <div class="cat-success">
+        <div class="cat-success-icon">✅</div>
+        <h5 style="font-weight:800;color:#0a0f1e;margin-bottom:8px;">Buyurtma qabul qilindi!</h5>
+        <p style="color:#475569;" id="catSuccessMsg">Tez orada siz bilan bog'lanamiz.</p>
+        <button class="cat-submit-btn" onclick="closeCatModal()" style="max-width:180px;margin:12px auto 0;">Yopish</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const CAT_ORDER_URL = '{% url "public-catalog-order" business.slug %}';
+const CAT_CSRF = '{{ csrf_token }}';
+
+function openCatalogOrder(productId, productName, productPrice) {
+  document.getElementById('catProductId').value = productId;
+  document.getElementById('catModalName').textContent = productName;
+  document.getElementById('catModalPrice').textContent = productPrice;
+  document.getElementById('catFormState').style.display = 'block';
+  document.getElementById('catSuccessState').style.display = 'none';
+  document.getElementById('catOrderForm').reset();
+  document.getElementById('catProductId').value = productId;
+  document.getElementById('catOrderOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCatModal() {
+  document.getElementById('catOrderOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('catOrderForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('catSubmitBtn');
+  btn.disabled = true; btn.textContent = 'Yuborilmoqda...';
+  const fd = new FormData(this);
+  fd.append('csrfmiddlewaretoken', CAT_CSRF);
+  try {
+    const r = await fetch(CAT_ORDER_URL, { method:'POST', body:fd });
+    const d = await r.json();
+    if (d.ok) {
+      document.getElementById('catFormState').style.display = 'none';
+      document.getElementById('catSuccessMsg').textContent = d.message;
+      document.getElementById('catSuccessState').style.display = 'block';
+    } else {
+      alert(d.error || 'Xatolik yuz berdi');
+      btn.disabled = false; btn.textContent = '✅ Buyurtma berish';
+    }
+  } catch {
+    alert('Tarmoq xatosi. Qayta urinib ko\'ring.');
+    btn.disabled = false; btn.textContent = '✅ Buyurtma berish';
+  }
+});
+</script>
+{% endif %}
 
 {% endblock %}

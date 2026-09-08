@@ -379,6 +379,7 @@
     <ul class="nav-glass-links">
       <li><a class="nav-glass-link" href="{% url 'public-home' business.slug %}"><i class="bi bi-house"></i>Bosh sahifa</a></li>
       <li><a class="nav-glass-link" href="{% url 'public-home' business.slug %}#employees"><i class="bi bi-people"></i>Mutaxassislar</a></li>
+      {% if catalog_products %}<li><a class="nav-glass-link" href="{% url 'public-catalog' business.slug %}"><i class="bi bi-box-seam"></i>Mahsulotlar</a></li>{% endif %}
       <li><a class="nav-glass-link" href="{% url 'public-blog-list' business.slug %}"><i class="bi bi-journal"></i>Blog</a></li>
     </ul>
 
@@ -402,6 +403,11 @@
     <a href="{% url 'public-home' business.slug %}#employees" class="nav-glass-overlay-item nav-glass-overlay-link" onclick="closeGlassMenu()">
       <i class="bi bi-people"></i>Mutaxassislar
     </a>
+    {% if catalog_products %}
+    <a href="{% url 'public-catalog' business.slug %}" class="nav-glass-overlay-item nav-glass-overlay-link" onclick="closeGlassMenu()">
+      <i class="bi bi-box-seam"></i>Mahsulotlar
+    </a>
+    {% endif %}
     <a href="{% url 'public-blog-list' business.slug %}" class="nav-glass-overlay-item nav-glass-overlay-link" onclick="closeGlassMenu()">
       <i class="bi bi-journal"></i>Blog
     </a>
