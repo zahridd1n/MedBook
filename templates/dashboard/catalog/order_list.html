@@ -1,0 +1,144 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}Katalog — Buyurtmalar{% endblock %}
+{% block dashboard_content %}
+
+<div class="page-hd">
+  <div class="page-hd-left">
+    <div class="page-hd-title">🛒 Buyurtmalar</div>
+    <div class="page-hd-sub">Katalog orqali kelgan buyurtmalar</div>
+  </div>
+  <div class="page-hd-actions">
+    <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-secondary">
+      <i class="bi bi-box-seam"></i> Mahsulotlar
+    </a>
+  </div>
+</div>
+
+<!-- Status tabs -->
+<div class="d-flex gap-2 mb-4 flex-wrap">
+  <a href="{% url 'catalog:order_list' %}"
+     class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+    Barchasi <span class="badge bg-white text-dark ms-1">{{ counts.all }}</span>
+  </a>
+  <a href="?status=new"
+     class="btn btn-sm {% if status_filter == 'new' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+    Yangi <span class="badge bg-primary ms-1">{{ counts.new }}</span>
+  </a>
+  <a href="?status=confirmed"
+     class="btn btn-sm {% if status_filter == 'confirmed' %}btn-success{% else %}btn-outline-secondary{% endif %}">
+    Tasdiqlangan <span class="badge bg-success ms-1">{{ counts.confirmed }}</span>
+  </a>
+  <a href="?status=completed"
+     class="btn btn-sm {% if status_filter == 'completed' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">
+    Yakunlangan <span class="badge bg-secondary ms-1">{{ counts.completed }}</span>
+  </a>
+  <a href="?status=cancelled"
+     class="btn btn-sm {% if status_filter == 'cancelled' %}btn-danger{% else %}btn-outline-secondary{% endif %}">
+    Bekor <span class="badge bg-danger ms-1">{{ counts.cancelled }}</span>
+  </a>
+</div>
+
+{% if messages %}
+  {% for m in messages %}
+  <div class="alert alert-{{ m.tags }} alert-dismissible fade show mb-3">
+    {{ m }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+{% endif %}
+
+{% if orders %}
+<div class="card">
+  <div class="card-body-flush">
+    <table class="ds-table">
+      <thead>
+        <tr>
+          <th style="padding-left:18px;">Mijoz</th>
+          <th>Telefon</th>
+          <th>Mahsulot</th>
+          <th>Izoh</th>
+          <th>Sana</th>
+          <th>Holat</th>
+          <th style="text-align:right; padding-right:18px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td style="padding-left:18px;">
+            <span class="fw-600">{{ order.customer_name }}</span>
+          </td>
+          <td>
+            <a href="tel:{{ order.customer_phone }}" class="text-decoration-none">
+              <i class="bi bi-telephone text-success me-1"></i>{{ order.customer_phone }}
+            </a>
+          </td>
+          <td>
+            {% if order.product %}
+              {% if order.product.image %}
+                <img src="{{ order.product.image.url }}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;vertical-align:middle;" class="me-2">
+              {% endif %}
+              <span>{{ order.product.name }}</span>
+            {% else %}
+              <span class="text-muted">—</span>
+            {% endif %}
+          </td>
+          <td>
+            <span class="text-muted small">
+              {{ order.notes|truncatechars:50|default:"—" }}
+            </span>
+          </td>
+          <td>
+            <span class="text-muted small">{{ order.created_at|date:"d.m.Y H:i" }}</span>
+          </td>
+          <td>
+            <select class="form-select form-select-sm status-select"
+                    data-url="{% url 'catalog:order_update_status' order.pk %}"
+                    style="min-width:130px;">
+              {% for value, label in status_choices %}
+              <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td style="text-align:right; padding-right:18px;">
+            <form method="post" action="{% url 'catalog:order_delete' order.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger"
+                      onclick="return confirm('Bu buyurtmani o\'chirmoqchimisiz?')">
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% else %}
+<div class="card">
+  <div class="card-body text-center py-5">
+    <i class="bi bi-bag" style="font-size:3rem; color:#cbd5e1;"></i>
+    <h5 class="mt-3 fw-600">Hozircha buyurtma yo'q</h5>
+    <p class="text-muted">Mijozlar katalog orqali buyurtma berganda shu yerda ko'rinadi</p>
+  </div>
+</div>
+{% endif %}
+
+<script>
+document.querySelectorAll('.status-select').forEach(sel => {
+  sel.addEventListener('change', function() {
+    const url = this.dataset.url;
+    const status = this.value;
+    const formData = new FormData();
+    formData.append('status', status);
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    fetch(url, { method: 'POST', body: formData })
+      .then(r => r.json())
+      .then(data => {
+        if (!data.ok) alert('Xatolik yuz berdi');
+      });
+  });
+});
+</script>
+{% endblock %}

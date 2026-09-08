@@ -7,6 +7,7 @@ from django.contrib.sitemaps.views import sitemap
 from notifications.views import telegram_webhook
 from superadmin.views import superadmin_webhook
 from blog.views import blog_public_list, blog_public_detail
+from catalog.views import public_catalog, public_order_submit
 from public_site.views import (
     public_home, booking_step1_service,
     booking_step3_datetime, booking_step4_confirm, booking_success,
@@ -44,6 +45,7 @@ urlpatterns = [
     path('dashboard/customers/', include('customers.urls')),
     path('dashboard/notifications/', include('notifications.urls')),
     path('dashboard/', include('blog.urls')),
+    path('dashboard/catalog/', include('catalog.urls')),
 
     # SEO
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
@@ -72,6 +74,10 @@ urlpatterns = [
     # Blog URLs
     re_path(r'^(?P<slug>[\w-]+)/blog/$', blog_public_list, name='public-blog-list'),
     re_path(r'^(?P<slug>[\w-]+)/blog/(?P<post_slug>[\w-]+)/$', blog_public_detail, name='public-blog-detail'),
+
+    # Catalog URLs (public)
+    re_path(r'^(?P<slug>[\w-]+)/catalog/$', public_catalog, name='public-catalog'),
+    re_path(r'^(?P<slug>[\w-]+)/catalog/order/$', public_order_submit, name='public-catalog-order'),
 ]
 
 if settings.DEBUG:

@@ -445,7 +445,7 @@ body {
             </div>
 
             <h1 class="bk-hero__title">
-              Tashrifingizni band qiling<br>
+              <!-- Tashrifingizni band qiling<br> -->
               <em>{{ business.name }}</em>
             </h1>
 
@@ -675,6 +675,41 @@ body {
               </a>
             </div>
           {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      {% if catalog_products %}
+      <div class="bk-divider"></div>
+
+      <!-- Katalog Banner -->
+      <section class="bk-section" style="padding-top:0;">
+        <div style="
+          background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-dark) 100%);
+          border-radius: var(--radius-lg);
+          padding: 2.5rem 2rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1.5rem;
+          flex-wrap: wrap;
+        ">
+          <div>
+            <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:0.5rem;">
+              Mahsulotlar
+            </div>
+            <h3 style="font-weight:800; color:#fff; margin:0; font-size:1.5rem;">
+              📦 Bizning katalog
+            </h3>
+            <p style="color:rgba(255,255,255,0.75); margin:0.5rem 0 0; font-size:0.925rem;">
+              {{ catalog_products.count }} ta mahsulot — tanlang va buyurtma bering
+            </p>
+          </div>
+          <a href="{% url 'public-catalog' business.slug %}"
+             class="btn-book-primary d-inline-flex"
+             style="background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border:1.5px solid rgba(255,255,255,0.3);white-space:nowrap;width:auto;">
+            Katalogni ko'rish <i class="bi bi-arrow-right"></i>
+          </a>
         </div>
       </section>
       {% endif %}

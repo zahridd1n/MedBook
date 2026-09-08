@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'customers',
     'notifications',
     'blog',
+    'catalog',
     'public_site',
     'marketing',
     'superadmin',

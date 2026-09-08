@@ -37,6 +37,7 @@ def public_home(request, slug):
         'faqs': business.faqs.filter(is_active=True).order_by('order'),
         'working_hours': business.working_hours.all().order_by('day'),
         'blog_posts': business.blog_posts.filter(is_published=True).order_by('-created_at')[:3],
+        'catalog_products': business.products.filter(is_active=True),
         **seo,
         'json_ld_html': get_json_ld_html(seo['json_ld']),
         'seo_enabled': seo['show_advanced_seo'],

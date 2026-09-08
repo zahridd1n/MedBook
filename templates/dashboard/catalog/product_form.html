@@ -1,0 +1,161 @@
+{% extends 'base_dashboard.html' %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block dashboard_content %}
+
+<div class="page-hd">
+  <div class="page-hd-left">
+    <a href="{% url 'catalog:product_list' %}" class="btn btn-sm btn-outline-secondary me-2">
+      <i class="bi bi-arrow-left"></i>
+    </a>
+    <div>
+      <div class="page-hd-title">{{ title }}</div>
+      <div class="page-hd-sub">Mahsulot ma'lumotlarini to'ldiring</div>
+    </div>
+  </div>
+</div>
+
+{% if messages %}
+  {% for m in messages %}
+  <div class="alert alert-{{ m.tags }} alert-dismissible fade show mb-3">
+    {{ m }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+{% endif %}
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="fw-700 mb-4" style="color:#1e293b;">Asosiy ma'lumotlar</h6>
+
+          <div class="mb-3">
+            <label class="form-label fw-500">{{ form.name.label }}</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+              <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-500">{{ form.description.label }}</label>
+            {{ form.description }}
+          </div>
+
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label fw-500">{{ form.price.label }}</label>
+              {{ form.price }}
+              {% if form.price.errors %}
+                <div class="text-danger small mt-1">{{ form.price.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-500">{{ form.price_label.label }}</label>
+              {{ form.price_label }}
+              <div class="form-text">Masalan: so'm, USD, yevro</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="fw-700 mb-4" style="color:#1e293b;">Rasm</h6>
+
+          {% if product and product.image %}
+          <div class="mb-3">
+            <p class="text-muted small mb-2">Joriy rasm:</p>
+            <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                 style="max-height:200px; border-radius:12px; border:1px solid #e2e8f0;">
+          </div>
+          {% endif %}
+
+          <div class="mb-3">
+            <label class="form-label fw-500">{{ form.image.label }}</label>
+            {{ form.image }}
+            {% if form.image.errors %}
+              <div class="text-danger small mt-1">{{ form.image.errors.0 }}</div>
+            {% endif %}
+            <div class="form-text">Tavsiya etilgan o'lcham: 800×800px, JPG yoki PNG</div>
+          </div>
+
+          <!-- Image preview -->
+          <div id="imagePreview" style="display:none; margin-top:12px;">
+            <p class="text-muted small mb-2">Yangi rasm ko'rinishi:</p>
+            <img id="previewImg" style="max-height:180px; border-radius:12px; border:1px solid #e2e8f0;">
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="fw-700 mb-3" style="color:#1e293b;">Qo'shimcha</h6>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label fw-500">{{ form.order.label }}</label>
+              {{ form.order }}
+              <div class="form-text">Kichik raqam — birinchi ko'rinadi</div>
+            </div>
+            <div class="col-sm-6 d-flex align-items-end">
+              <div class="form-check mb-1">
+                {{ form.is_active }}
+                <label class="form-check-label fw-500" for="{{ form.is_active.id_for_label }}">
+                  {{ form.is_active.label }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-check-lg"></i> {{ action }}
+        </button>
+        <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-secondary">
+          Bekor qilish
+        </a>
+        {% if product %}
+        <form method="post" action="{% url 'catalog:product_delete' product.pk %}" class="ms-auto">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger"
+                  onclick="return confirm('{{ product.name }} mahsulotini o\'chirishni tasdiqlaysizmi?')">
+            <i class="bi bi-trash"></i> O'chirish
+          </button>
+        </form>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card sticky-top" style="top:80px;">
+      <div class="card-body">
+        <h6 class="fw-700 mb-3">💡 Maslahat</h6>
+        <ul class="list-unstyled text-muted small">
+          <li class="mb-2"><i class="bi bi-image text-primary me-2"></i>Sifatli rasm — ko'proq buyurtma</li>
+          <li class="mb-2"><i class="bi bi-card-text text-primary me-2"></i>Qisqa va aniq tavsif yozing</li>
+          <li class="mb-2"><i class="bi bi-tag text-primary me-2"></i>Narxni to'g'ri ko'rsating</li>
+          <li class="mb-2"><i class="bi bi-sort-numeric-up text-primary me-2"></i>Tartib raqami bilan saralab qo'ying</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('{{ form.image.id_for_label }}').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      document.getElementById('previewImg').src = ev.target.result;
+      document.getElementById('imagePreview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+</script>
+{% endblock %}

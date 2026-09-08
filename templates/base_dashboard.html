@@ -1474,6 +1474,25 @@ textarea.form-control { resize: vertical; min-height: 80px; }
       </div>
     </div>
 
+    <!-- 📦 KATALOG -->
+    <div class="sb-group {% if 'catalog' in request.path %}open{% endif %}">
+      <div class="sb-group-head" onclick="toggleGroup('katalog')" data-tooltip="Katalog">
+        <span class="sb-group-head-icon">📦</span>
+        <span class="sb-group-head-label">Katalog</span>
+        <span class="sb-group-head-arrow" data-arrow>▾</span>
+      </div>
+      <div class="sb-group-body" data-body>
+        <a href="{% url 'catalog:product_list' %}" class="sb-link {% if 'catalog/products' in request.path %}active{% endif %}" data-tooltip="Mahsulotlar">
+          <span class="sb-link-icon" data-lucide="box"></span>
+          <span>Mahsulotlar</span>
+        </a>
+        <a href="{% url 'catalog:order_list' %}" class="sb-link {% if 'catalog/orders' in request.path %}active{% endif %}" data-tooltip="Buyurtmalar">
+          <span class="sb-link-icon" data-lucide="shopping-bag"></span>
+          <span>Buyurtmalar</span>
+        </a>
+      </div>
+    </div>
+
     <!-- ✨ INTEGRATSIYALAR (Premium) -->
     {% if user.is_authenticated %}
     {% with plan=user.business.subscription_plan %}
